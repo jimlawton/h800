@@ -1,7 +1,7 @@
 # h800
 Tools for the Honeywell H-800 mainframe family of computers.
 
-The Honeywell H-800 (https://en.wikipedia.org/wiki/Honeywell_800) was a 48-bit transistorized mainframe computer developed at the end of the 1950s. It was later followed by other more-powerful versions, the H-1800 and H-1800-II. 
+The Honeywell H-800 (https://en.wikipedia.org/wiki/Honeywell_800) was a transistorized mainframe computer developed at the end of the 1950s. It was later followed by other more-powerful versions, the H-1800 and H-1800-II. 
 
 The reason for my interest in the H-x800 family is that these were the machines that the original Apollo Guidance Computer (https://github.com/virtualagc/virtualagc) software was developed on at the MIT Instrumentation Lab (now Draper Labs). 
 
