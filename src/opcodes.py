@@ -1,73 +1,80 @@
 
 OPCODES = {
+
     # General, masked or unmasked.
-    "BA":   "Binary Add",
-    "DA":   "Decimal Add",
-    "WA":   "Word Add",
-    "BS":   "Binary Subtract",
-    "DS":   "Decimal Subtract",
-    "WD":   "Word Difference",
-    "NA":   "Not equal, Alphabetic",
-    "NN":   "Not equal, Numeric",
-    "LA":   "Less than or equal, Alphabetic",
-    "LN":   "Less than or equal, Numeric",
-    "TX":   "Transfer A to C",
-    "TS":   "Transfer A to B and go to C",
-    "HA":   "Half Add (mod 2)",
-    "SM":   "Superimpose",
-    "CP":   "Check Parity",
+    "BA":   0o13,                   # Binary Add
+    "DA":   0o01,                   # Decimal Add
+    "WA":   0o15,                   # Word Add
+    "BS":   0o31.                   # Binary Subtract
+    "DS":   0o21,                   # Decimal Subtract
+    "WD":   0o35,                   # Word Difference
+    "NA":   0o16,                   # Not equal, Alphabetic
+    "NN":   0o10,                   # Not equal, Numeric
+    "LA":   0o36,                   # Less than or equal, Alphabetic
+    "LN":   0o30,                   # Less than or equal, Numeric
+    "TX":   0o20,                   # Transfer A to C
+    "TS":   0o06,                   # Transfer A to B and go to C
+    "HA":   0o23,                   # Half Add (mod 2)
+    "SM":   0o05,                   # Superimpose
+    "CP":   0o26,                   # Check Parity
+
     # General, unmasked.
-    "BM":   "Binary Multiply",
-    "DM":   "Decimal Multiply",
-    "BT":   "Binary Accumulate",
-    "DT":   "Decimal Accumulate",
-    "MT":   "Multiple Transfer",
-    "TN":   "Transfer N words",
-    "CC":   "Compute Orthocount",
-    "IT":   "Item Transfer",
-    "EBA":  "Extended Binary Add",
-    "EBS":  "Extended Binary Subtract",
-    "RT":   "Record Transfer",
-    "MPC":  "Control Program",
-    "PR":   "Proceed",
+    "BM":   0o13,                   # Binary Multiply
+    "DM":   0o03,                   # Decimal Multiply
+    "BT":   0o13,                   # Binary Accumulate
+    "DT":   0o03,                   # Decimal Accumulate
+    "MT":   0o20,                   # Multiple Transfer
+    "TN":   0o20,                   # Transfer N words
+    "CC":   0o10,                   # Compute Orthocount
+    "IT":   0o30,                   # Item Transfer
+    "EBA":  0o13,                   # Extended Binary Add
+    "EBS":  0o33,                   # Extended Binary Subtract
+    "RT":   0o30,                   # Record Transfer
+    "MPC":  0o00,                   # Control Program
+    "PR":   0o00,                   # Proceed
+
     # Inherent mask.
-    "SWS":  "Shift Word and Substitute",
-    "SPS":  "Shift Preserving sign and Substitute",
-    "SWE":  "Shift Word and Extract",
-    "SPE":  "Shift Preserving sign and Extract",
-    "SSL":  "Shift and Select",
-    "SS":   "Substitute",
-    "EX":   "Extract",
+    "SWS":  0o06,                   # Shift Word and Substitute
+    "SPS":  0o02,                   # Shift Preserving sign and Substitute
+    "SWE":  0o36,                   # Shift Word and Extract
+    "SPE":  0o12,                   # Shift Preserving sign and Extract
+    "SSL":  0o26,                   # Shift and Select
+    "SS":   0o06,                   # Substitute
+    "EX":   0o16,                   # Extract
+
     # Peripheral and print.
-    "RF":   "Read Forward",
-    "RB":   "Read Backward",
-    "WF":   "Write Forward",
-    "RW":   "Rewind",
-    "PRA":  "Print Alphanumeric",
-    "PRD":  "Print Decimal",
-    "PRO":  "Print Octal",
+    "RF":   0o32,                   # Read Forward
+    "RB":   0o00,                   # Read Backward
+    "WF":   0o00,                   # Write Forward
+    "RW":   0o00,                   # Rewind
+    "PRA":  0o00,                   # Print Alphanumeric
+    "PRD":  0o00,                   # Print Decimal
+    "PRO":  0o00,                   # Print Octal
+
     # Simulator.
-    "S":    "Simulate",
+    "S":    0o00,                   # Simulate
+
     # Scientific.
-    "FBA":  "Floating Binary Add",
-    "FDA":  "Floating Decimal Add",
-    "FBS":  "Floating Binary Subtract",
-    "FDS":  "Floating Decimal Subtract",
-    "FBD":  "Floating Binary Divide",
-    "FDD":  "Floating Decimal Divide",
-    "FBAU": "Floating Binary Add, Unnormalized",
-    "FDAU": "Floating Decimal Add, Unnormalized",
-    "FBSU": "Floating Binary Subtract, Unnormalized",
-    "FDSU": "Floating Decimal Subtract, Unnormalized",
-    "FBM":  "Floating Binary Multiply",
-    "FDM":  "Floating Decimal Multiply",
-    "ULD":  "Multiple Unload",
-    "FBAE": "Floating Binary Add, Extended precision",
-    "FBSE": "Floating Binary Subtract, Extended precision",
-    "BD":   "Fixed Binary Divide",
-    "DD":   "Fixed Decimal Divide",
-    "FFN":  "Fixed-to-Floating Normalize",
-    "FCON": "Conversion",
-    "FLN":  "Floating Less than, Normalized",
-    "FNN":  "Floating Not equal, Normalized"
+    "FBA":  0o00,                   # Floating Binary Add
+    "FDA":  0o00,                   # Floating Decimal Add
+    "FBS":  0o00,                   # Floating Binary Subtract
+    "FDS":  0o00,                   # Floating Decimal Subtract
+    "FBD":  0o00,                   # Floating Binary Divide
+    "FDD":  0o00,                   # Floating Decimal Divide
+    "FBAU": 0o00,                   # Floating Binary Add, Unnormalized
+    "FDAU": 0o00,                   # Floating Decimal Add, Unnormalized
+    "FBSU": 0o00,                   # Floating Binary Subtract, Unnormalized
+    "FDSU": 0o00,                   # Floating Decimal Subtract, Unnormalized
+    "FBM":  0o00,                   # Floating Binary Multiply
+    "FDM":  0o00,                   # Floating Decimal Multiply
+    "ULD":  0o00,                   # Multiple Unload
+    "FBAE": 0o00,                   # Floating Binary Add, Extended precision
+    "FBSE": 0o00,                   # Floating Binary Subtract, Extended precision
+    "BD":   0o00,                   # Fixed Binary Divide
+    "DD":   0o00,                   # Fixed Decimal Divide
+    "FFN":  0o00,                   # Fixed-to-Floating Normalize
+    "FCON": 0o00,                   # Conversion
+    "FLN":  0o00,                   # Floating Less than, Normalized
+    "FNN":  0o00,                   # Floating Not equal, Normalized
+
 }
