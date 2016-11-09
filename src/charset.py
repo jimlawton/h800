@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # The H-x800 character set, as described in Table I, Appendix E of the
 # Honeywell 1800 Programmers Reference Manual.
 #
