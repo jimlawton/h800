@@ -1,5 +1,5 @@
-# H-800/H-1800 Opcode Format
-# ==========================
+# H-800/H-1800 Instruction Format
+# ===============================
 #
 #   S       Sequence/cosequence bit, 0=sequence, 1=cosequence. [? TODO]
 #   MASK    5-bit mask.
@@ -39,10 +39,10 @@
 # |            PADDRESS         |  1 |         OPCODE         |
 # +----+----+----+----+----+----+----+----+----+----+----+----+
 
-class Opcode(object):
+class Instruction(object):
     """Base opcode class."""
     def __init__(self, mnemonic, sequence, mask, group, a, b, c, paddr, opcode):
-        self._mnemonic = mnemonic               # Opcode mnemonic string.
+        self._mnemonic = mnemonic               # Mnemonic string.
         self._sequence = sequence               # Sequence/cosequence code.
         self._mask = mask                       # Mask.
         self._group = group                     # Group code.
@@ -50,36 +50,36 @@ class Opcode(object):
         self._b = b                             # B register active.
         self._c = c                             # C register active.
         self._paddr = paddr                     # Peripheral address (6 bits).
-        self._opcode = opcode                   # Opcode.
-        # Form the resulting machine code.
+        self._opcode = opcode                   # Opcode binary.
+        # TODO: form the resulting machine code.
         pass
 
 
-class GeneralMasked(Opcode):
+class GeneralMasked(Instruction):
     """General masked instruction class."""
     def __init__(self, mnemonic, sequence, mask, opcode):
-        Opcode.__init__(self, mnemonic, sequence, mask, None, None, None, None, None, opcode)
+        Instruction.__init__(self, mnemonic, sequence, mask, None, None, None, None, None, opcode)
 
 
-class GeneralUnmasked(Opcode):
+class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
     def __init__(self, mnemonic, sequence, group, a, b, c, opcode):
-        Opcode.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
+        Instruction.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
 
 
-class Peripheral(Opcode):
+class Peripheral(Instruction):
     """Peripheral instruction class."""
     def __init__(self, mnemonic, paddr, opcode):
-        Opcode.__init__(self, mnemonic, None, None, None, None, None, None, paddr, opcode)
+        Instruction.__init__(self, mnemonic, None, None, None, None, None, None, paddr, opcode)
 
 
-class Simulator(Opcode):
+class Simulator(Instruction):
     """Simulator instruction class."""
     def __init__(self, mnemonic, sequence, opcode):
-        Opcode.__init__(self, mnemonic, sequence, None, None, None, None, None, None, 7)
+        Instruction.__init__(self, mnemonic, sequence, None, None, None, None, None, None, 7)
 
 
-class Scientific(Opcode):
+class Scientific(Instruction):
     """Scientific instruction class."""
     def __init__(self, mnemonic, sequence, group, a, b, c, opcode):
-        Opcode.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
+        Instruction.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
