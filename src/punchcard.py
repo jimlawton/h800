@@ -17,6 +17,9 @@
 #    A  B  C  D  E   F   G   H   I   J
 #   [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
 #
+# The default field start columns and widths are then:
+# [(1, 1), (2, 6), (8, 1), (9, 11), (20, 13), (33, 14), (47, 14), (61, 15), (76, 5), (81, 40)]
+#
 # These classes take input in the form of strings representing lines of text
 # and split it into fields, as defined by the layout.
 
