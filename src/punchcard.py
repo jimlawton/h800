@@ -27,11 +27,12 @@
 
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
+_DEFAULT_FIELDNAMES = ["col1", "lognum", "col8", "label", "operation", "operand1", "operand2", "operand3", "misc", "remarks"]
 
 
 class PunchCard(object):
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS):
+    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES):
         self._line = line
         self._layout = []
         for i, col in enumerate(fields):
@@ -45,11 +46,13 @@ class PunchCard(object):
         for s, w in self._layout:
             self._fields.append(line[s-1:s-1+w])
         self._strippedFields = []
-        for field in self._fields:
+        self._record = {}
+        for i, field in enumerate(self._fields):
             if field.rstrip() == "":
                 self._strippedFields.append(None)
             else:
                 self._strippedFields.append(field.rstrip())
+                self._record[fieldnames[i]] = field.rstrip()
 
     @property
     def line(self):
@@ -67,6 +70,10 @@ class PunchCard(object):
     def strippedFields(self):
         return self._strippedFields
 
+    @property
+    def record(self):
+        return self._record
+
 
 class Deck(object):
     """A simple class to represent a deck of punch-cards."""
@@ -79,9 +86,11 @@ class Deck(object):
             self._cards.append(PunchCard(line, width=width, fields=fields))
         self._fields = []
         self._strippedFields = []
+        self._records = []
         for card in self._cards:
             self._fields.append(card.fields)
             self._strippedFields.append(card.strippedFields)
+            self._records.append(card.record)
 
     @property
     def fields(self):
@@ -90,6 +99,10 @@ class Deck(object):
     @property
     def strippedFields(self):
         return self._strippedFields
+
+    @property
+    def records(self):
+        return self._records
 
 
 def main():
@@ -100,6 +113,8 @@ def main():
     assert c.layout == [(1, 1), (2, 6), (8, 1), (9, 11), (20, 13), (33, 14), (47, 14), (61, 15), (76, 5), (81, 40)]
     assert c.fields == [' ', '0981  ', ' ', 'BACKUP     ', 'TS           ', 'S ZERO        ', 'COMMON        ', 'SET UP GPB     ', 'C    ', 'COMMUNICATION FLAG FOR END.']
     assert c.strippedFields == [None, '0981', None, 'BACKUP', 'TS', 'S ZERO', 'COMMON', 'SET UP GPB', 'C', 'COMMUNICATION FLAG FOR END.']
+    assert len(c.record) == 8
+    assert c.record == {"lognum": '0981', "label": 'BACKUP', "operation": 'TS', "operand1": 'S ZERO', "operand2": 'COMMON', "operand3": 'SET UP GPB', "misc": 'C', "remarks": 'COMMUNICATION FLAG FOR END.'}
     print "PASS"
 
     lines = """
@@ -195,7 +210,9 @@ R0979   TO EACH.  WHEN THE LISTING IS FINISHED, GROUP B HOISTS A FLAG AND EXPIRE
 """.splitlines()
 
     d = Deck(lines)
-    print d.strippedFields
+
+    import pprint
+    pprint.pprint(d.records)
 
 
 if __name__ == '__main__':
