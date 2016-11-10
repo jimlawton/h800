@@ -32,9 +32,10 @@ _DEFAULT_FIELDNAMES = ["col1", "lognum", "col8", "label", "operation", "operand1
 
 class PunchCard(object):
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES):
+    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, linenum=0):
         self._line = line
         self._layout = []
+        self._linenum = linenum
         for i, col in enumerate(fields):
             fstart = col
             if i == len(fields) - 1:
@@ -47,6 +48,8 @@ class PunchCard(object):
             self._fields.append(line[s-1:s-1+w])
         self._strippedFields = []
         self._record = {}
+        if linenum != 0:
+            self._record["linenum"] = linenum
         for i, field in enumerate(self._fields):
             if field.rstrip() == "":
                 self._strippedFields.append(None)
@@ -80,10 +83,10 @@ class Deck(object):
     def __init__(self, lines, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS):
         self._lines = lines
         self._cards = []
-        for line in lines:
+        for i, line in enumerate(lines):
             if line.startswith('#'):
                 continue
-            self._cards.append(PunchCard(line, width=width, fields=fields))
+            self._cards.append(PunchCard(line, width=width, fields=fields, linenum=i+1))
         self._fields = []
         self._strippedFields = []
         self._records = []
