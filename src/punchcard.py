@@ -24,12 +24,44 @@
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
 
+
 class PunchCard(object):
     """A simple class to represent a punch card."""
     def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS):
         self._line = line
-        self._fields = fields
-        pass
+        self._layout = []
+        for i, col in enumerate(fields):
+            fstart = col
+            if i == len(fields) - 1:
+                fwidth = width - col + 1
+            else:
+                fwidth = fields[i+1] - col
+            self._layout.append((fstart, fwidth))
+        self._fields = []
+        for s, w in self._layout:
+            self._fields.append(line[s-1:s-1+w])
+        self._strippedFields = []
+        for field in self._fields:
+            if field.rstrip() == "":
+                self._strippedFields.append(None)
+            else:
+                self._strippedFields.append(field.rstrip())
+
+    @property
+    def line(self):
+        return self._line
+
+    @property
+    def layout(self):
+        return self._layout
+
+    @property
+    def fields(self):
+        return self._fields
+
+    @property
+    def strippedFields(self):
+        return self._strippedFields
 
 
 class Deck(object):
