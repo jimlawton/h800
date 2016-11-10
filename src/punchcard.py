@@ -27,7 +27,7 @@
 
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
-_DEFAULT_FIELDNAMES = ["col1", "lognum", "col8", "label", "operation", "operand1", "operand2", "operand3", "misc", "remarks"]
+_DEFAULT_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "operand1", "operand2", "operand3", "misc", "remarks"]
 
 
 class PunchCard(object):
@@ -53,6 +53,7 @@ class PunchCard(object):
         for i, field in enumerate(self._fields):
             if field.rstrip() == "":
                 self._strippedFields.append(None)
+                self._record[fieldnames[i]] = None
             else:
                 self._strippedFields.append(field.rstrip())
                 self._record[fieldnames[i]] = field.rstrip()
@@ -116,8 +117,8 @@ def main():
     assert c.layout == [(1, 1), (2, 6), (8, 1), (9, 11), (20, 13), (33, 14), (47, 14), (61, 15), (76, 5), (81, 40)]
     assert c.fields == [' ', '0981  ', ' ', 'BACKUP     ', 'TS           ', 'S ZERO        ', 'COMMON        ', 'SET UP GPB     ', 'C    ', 'COMMUNICATION FLAG FOR END.']
     assert c.strippedFields == [None, '0981', None, 'BACKUP', 'TS', 'S ZERO', 'COMMON', 'SET UP GPB', 'C', 'COMMUNICATION FLAG FOR END.']
-    assert len(c.record) == 8
-    assert c.record == {"lognum": '0981', "label": 'BACKUP', "operation": 'TS', "operand1": 'S ZERO', "operand2": 'COMMON', "operand3": 'SET UP GPB', "misc": 'C', "remarks": 'COMMUNICATION FLAG FOR END.'}
+    assert len(c.record) == 10
+    assert c.record == {"column1": None, "lognum": '0981', "column8": None, "label": 'BACKUP', "operation": 'TS', "operand1": 'S ZERO', "operand2": 'COMMON', "operand3": 'SET UP GPB', "misc": 'C', "remarks": 'COMMUNICATION FLAG FOR END.'}
     print "PASS"
 
     lines = """
