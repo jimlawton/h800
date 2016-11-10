@@ -74,5 +74,20 @@ class Deck(object):
         self._lines = lines
         self._cards = []
         for line in lines:
-            self._cards.append(PunchCard(lines, width=width, fields=fields))
+            if line.startswith('#'):
+                continue
+            self._cards.append(PunchCard(line, width=width, fields=fields))
+        self._fields = []
+        self._strippedFields = []
+        for card in self._cards:
+            self._fields.append(card.fields)
+            self._strippedFields.append(card.strippedFields)
+
+    @property
+    def fields(self):
+        return self._fields
+
+    @property
+    def strippedFields(self):
+        return self._strippedFields
 
