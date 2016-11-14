@@ -97,6 +97,10 @@ class Deck(object):
             self._records.append(card.record)
 
     @property
+    def lines(self):
+        return self._lines
+
+    @property
     def fields(self):
         return self._fields
 
