@@ -81,13 +81,13 @@ class PunchCard(object):
 
 class Deck(object):
     """A simple class to represent a deck of punch-cards."""
-    def __init__(self, lines, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS):
+    def __init__(self, lines, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, cardclass=PunchCard):
         self._lines = lines
         self._cards = []
         for i, line in enumerate(lines):
             if line.startswith('#'):
                 continue
-            self._cards.append(PunchCard(line, width=width, fields=fields, linenum=i+1))
+            self._cards.append(cardclass(line, width=width, fields=fields, linenum=i+1))
         self._fields = []
         self._strippedFields = []
         self._records = []
