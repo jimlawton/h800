@@ -27,6 +27,7 @@ class Deck(punchcard.Deck):
     def __init__(self, lines, width=_WIDTH, fields=_FIELDS, cardclass=Card):
         super(Deck, self).__init__(lines, width=width, fields=fields)
         self._logSection = None
+        self._logSectionCol8 = None
         for card in self._cards:
             if card.record["column1"] == 'L':
                 # This will only recognise the first log section in a deck.
