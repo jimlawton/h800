@@ -126,6 +126,8 @@ def main():
     print "PASS"
 
     lines = """
+L      @XYZ TESTING 123
+
  0020   L BACKUP   SPEC                                       BACKUP
  0021   L PRINT PS SPEC                                       PRINT PS
 
