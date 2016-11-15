@@ -45,7 +45,7 @@ def main():
                 if '.' in infilename:
                     infilename = infilename[:infilename.index('.')]
                 logsection = infilename.replace('_', ' ')
-                logsectioncol8 = ' '
+                logsectioncol8 = '@'
         if line.startswith("# Pages: "):
             pageRange = line.split()[2].strip()
             if '-' in pageRange:
