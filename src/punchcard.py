@@ -147,6 +147,30 @@ class Deck(object):
     def records(self):
         return self._records
 
+    def _readSource(self, filename, recurse=True):
+        """Read an ARGUS source file. If the file includes $ directives,
+           include those files recursively into the deck."""
+        lines = []
+        if not os.path.isfile(filename):
+            sys.exit("ERROR: File \"%s\" does not exist!" % filename)
+        flines = []
+        with open(filename, 'r') as f:
+            print("Reading %s..." % filename)
+            flines = f.readlines()
+        for line in flines:
+            if line.startswith('$'):
+                incname = line[1:].split()[0]
+                if not os.path.isfile(incname):
+                    sys.exit("File \"%s\" does not exist" % incname)
+                if recurse:
+                    ilines = self._readSource(incname)
+                    lines.extend(ilines)
+                else:
+                    lines.append(line)
+            else:
+                lines.append(line)
+        return lines
+
 
 def main():
     # TODO: simple tester.
