@@ -19,14 +19,80 @@ _FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "operand1",
 
 class Card(punchcard.PunchCard):
     """A simple class to represent an ARGUS punch card."""
-    def __init__(self, line, width=_WIDTH, fields=_FIELDS, fieldnames=_FIELDNAMES, linenum=0):
-        super(ArgusCard, self).__init__(line, width=width, fields=fields, fieldnames=fieldnames, linenum=linenum)
+    def __init__(self, line, width=_WIDTH, fields=_FIELDS, fieldnames=_FIELDNAMES, filename=None, linenum=0):
+        super(Card, self).__init__(line, width=width, fields=fields, fieldnames=fieldnames, filename=filename, linenum=linenum)
+        if self.column1 == 'P' or self.column1 == 'R':
+            self._record["label"] = None
+            self._record["operation"] = None
+            self._record["operand1"] = None
+            self._record["operand2"] = None
+            self._record["operand3"] = None
+            self._record["misc"] = None
+            self._record["remarks"] = self._line[9:].strip()
+        if self.column1 == 'L':
+            self._record["remarks"] = self._line[9:].strip()
+
+    @property
+    def column1(self):
+        return self._record["column1"]
+
+    @property
+    def lognum(self):
+        return self._record["lognum"]
+
+    @property
+    def column8(self):
+        return self._record["column8"]
+
+    @property
+    def label(self):
+        return self._record["label"]
+
+    @property
+    def location(self):
+        return self._record["label"]
+
+    @property
+    def operation(self):
+        return self._record["operation"]
+
+    @property
+    def operand1(self):
+        return self._record["operand1"]
+
+    @property
+    def addressa(self):
+        return self._record["operand1"]
+
+    @property
+    def operand2(self):
+        return self._record["operand2"]
+
+    @property
+    def addressb(self):
+        return self._record["operand2"]
+
+    @property
+    def operand3(self):
+        return self._record["operand3"]
+
+    @property
+    def addressc(self):
+        return self._record["operand3"]
+
+    @property
+    def sequence(self):
+        return self._record["misc"]
+
+    @property
+    def remarks(self):
+        return self._record["remarks"]
 
 
 class Deck(punchcard.Deck):
     """A simple class to represent a deck of ARGUS punch-cards."""
-    def __init__(self, lines, width=_WIDTH, fields=_FIELDS, cardclass=Card):
-        super(Deck, self).__init__(lines, width=width, fields=fields)
+    def __init__(self, lines=None, file=None, width=_WIDTH, fields=_FIELDS, cardclass=Card):
+        super(Deck, self).__init__(lines=lines, file=file, width=width, fields=fields, cardclass=cardclass)
         self._logSection = None
         self._logSectionCol8 = None
         for card in self._cards:
