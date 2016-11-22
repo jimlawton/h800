@@ -85,16 +85,40 @@ class PunchCard(object):
     def record(self):
         return self._record
 
+    @property
+    def filename(self):
+        return self._filename
+
+    @property
+    def linenum(self):
+        return self._linenum
+
+    @property
+    def isComment(self):
+        return self._comment
+
+    @property
+    def comment(self):
+        if self.isComment:
+            return self._line
+        else:
+            return None
+
 
 class Deck(object):
     """A simple class to represent a deck of punch-cards."""
-    def __init__(self, lines, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, cardclass=PunchCard):
-        self._lines = lines
+    def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, cardclass=PunchCard):
+        if lines is None and file is None:
+            sys.exit("ERROR: no input supplied to class constructor!")
+        if file:
+            self._lines = self._readSource(file)
+        else:
+            self._lines = lines
         self._cards = []
-        for i, line in enumerate(lines):
+        for i, line in enumerate(self._lines):
             if line.startswith('#'):
                 continue
-            self._cards.append(cardclass(line, width=width, fields=fields, linenum=i+1))
+            self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1))
         self._fields = []
         self._strippedFields = []
         self._records = []
@@ -106,6 +130,10 @@ class Deck(object):
     @property
     def lines(self):
         return self._lines
+
+    @property
+    def cards(self):
+        return self._cards
 
     @property
     def fields(self):
