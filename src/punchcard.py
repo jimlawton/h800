@@ -24,6 +24,10 @@
 # These classes take input in the form of strings representing lines of text
 # and split it into fields, as defined by the layout.
 
+import sys
+import os
+import os.path
+
 
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
