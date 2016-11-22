@@ -32,31 +32,34 @@ _DEFAULT_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "op
 
 class PunchCard(object):
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, linenum=0):
+    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0):
         self._line = line
         self._layout = []
+        self._filename = filename
         self._linenum = linenum
-        for i, col in enumerate(fields):
-            fstart = col
-            if i == len(fields) - 1:
-                fwidth = width - col + 1
-            else:
-                fwidth = fields[i+1] - col
-            self._layout.append((fstart, fwidth))
-        self._fields = []
-        for s, w in self._layout:
-            self._fields.append(line[s-1:s-1+w])
-        self._strippedFields = []
-        self._record = {}
-        if linenum != 0:
-            self._record["linenum"] = linenum
-        for i, field in enumerate(self._fields):
-            if field.rstrip() == "":
-                self._strippedFields.append(None)
-                self._record[fieldnames[i]] = None
-            else:
-                self._strippedFields.append(field.rstrip())
-                self._record[fieldnames[i]] = field.rstrip()
+        self._comment = line.startswith('#')
+        if not self._comment:
+            for i, col in enumerate(fields):
+                fstart = col
+                if i == len(fields) - 1:
+                    fwidth = width - col + 1
+                else:
+                    fwidth = fields[i+1] - col
+                self._layout.append((fstart, fwidth))
+            self._fields = []
+            for s, w in self._layout:
+                self._fields.append(line[s-1:s-1+w])
+            self._strippedFields = []
+            self._record = {}
+            if linenum != 0:
+                self._record["linenum"] = linenum
+            for i, field in enumerate(self._fields):
+                if field.rstrip() == "":
+                    self._strippedFields.append(None)
+                    self._record[fieldnames[i]] = None
+                else:
+                    self._strippedFields.append(field.rstrip())
+                    self._record[fieldnames[i]] = field.rstrip()
 
     @property
     def line(self):
