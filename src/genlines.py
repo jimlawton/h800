@@ -30,6 +30,18 @@ def main():
         parser.error("Start and End numbers must be supplied!")
         sys.exit(1)
 
+    leftzero = False
+    if args[0].startswith('0') or args[1].startswith('0'):
+        leftzero = True
+    ndigits = len(args[0])
+    if ndigits > 6:
+        parser.error("Number of digits cannot be greater than 6!")
+        sys.exit(1)
+    ndigits = len(args[1])
+    if ndigits > 6:
+        parser.error("Number of digits cannot be greater than 6!")
+        sys.exit(1)
+
     start = int(args[0])
     end = int(args[1])
 
@@ -42,6 +54,8 @@ def main():
     width = numdigits
     if width < minwidth:
         width = minwidth
+    if width < ndigits:
+        width = ndigits
 
     step = 1
     if len(args) >= 3:
@@ -53,7 +67,7 @@ def main():
 
     endcol = 7
     if len(args) >= 5:
-        prefix = int(args[4])
+        endcol = int(args[4])
 
     for i in range(start, end+step, step):
         print "%s%s%s" % ((startcol - 1) * ' ', "{num:{fill}{width}}".format(num=i, fill='0', width=width), (endcol + 2 - startcol - width) * ' ')
