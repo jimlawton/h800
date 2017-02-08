@@ -407,11 +407,17 @@ Variable-length recording is a basic feature of the Honeywell 1800, and records 
 
 Three different tape units are available for the Honeywell 1800.  Their recording and rewind speeds, recording densities, and transfer rates are shown in the table below.  All three tape systems are compatible: data recorded by one system can be read at recording density by the others.
 
-Model|Speed (inches per second) Read/Write|Speed (inches per second) Rewind|Recording Density (frames per inch)|Transfer Rate (decimal digits per second)
------|-------------------------|-----------------------------------|-----------------------------------------
-804-1 Magnetic Tape Unit | 120 | 360 | 400 | 96,000
-804-2 High-Density Magnetic Tape Unit | 120 | 360 | 555.5 | 133,300
-804-3 Economy Magnetic Tape Unit | 60 | 180 | 400 | 48,000
+```
+Model                               Speed     Recording Density   Transfer Rate
+                            (inches per second) (frames per inch) (decimal digits per second)
+
+                               Read/Write Rewind
+
+804-1 Magnetic Tape Unit            120     360     400      96,000
+804-2 High-Density Magnetic         120     360     555.5   133,300
+      Tape Unit
+804-3 Economy Magnetic Tape Unit     60     180     400      48,000
+```
 
 When rewinding, the tape moves at three times normal speed.  A small photo-electric device in the tape unit senses the presence of edge "windows" (clear Mylar) in the tape to provide beginning-of-tape and end-of-tape indications for the programmer.  A physical slot in each leader is sued to negate the vacuum and stop the unit when the end of tape is reached.
 
