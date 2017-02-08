@@ -375,7 +375,7 @@ Note that high-order zeros in the fixed-point numbers are suppressed in the floa
 
 A Honeywell 1800 Electronic Data Processing System consists of a central processor plus varying types and numbers of input and output units.  The programmer must know the system configuration with which he is to work.  An understanding of the function of each component and its relation to the entire system will make his task easier.
 
-1.  _The Central Processor (1801)_
+##### 1. _The Central Processor (1801)_
 
 The basic central processor consists of a control unit, a control or special-register memory, an arithmetic unit, and four banks of main (or high-speed) memory, each able to store 2048 Honeywell 1800 words.  (A Honeywell 1800 word is composed of 48 information bits and six checking bits.)  To this basic unit, additional memory banks can be added in modules of 8192 words (model 1802) up to 32,768 words; further expansion is available in modules of 16,384 words (model 1802-1) up to a maximum of 65,536 words.  An optional floating-point unit (1801-B, discussed below) is also available.
 
@@ -387,15 +387,15 @@ The control memory is a magnetic-core array providing storage for 356 eighteen-b
 
 The arithmetic unit is the portion of the central processor in which digits are combined to form new arrays in accordance with the logical rules of the command codes.  The Honeywell 1800 central processor has provision for both binary and decimal arithmetic, complete logical abilities, and competent internal checking.  For the interested reader, a complete description of the fixed-point addition logic can be found in Appendix A.
 
-2.  _The Floating-Point Option (1801-B)_
+##### 2. _The Floating-Point Option (1801-B)_
 
 The floating-point option (1801-B) is a second control and arithmetic unit which provides the Honeywell 1800 user with 19 instructions that manipulate data in floating-point form, plus two fixed-point division instructions.  The control portion of the unit selects, interprets, and directs the execution of these instructions by the arithmetic portion.  In an 1800 system not equipped with an 1801-B, these instructions are not executed directly but are interpreted as pseudo instructions which call in library routines to perform the desired operations.  Descriptions of this unit, its component registers, and the instructions it provides are presented in Section XIII.
 
-3.  _The Console_
+##### 3. _The Console_
 
 The Honeywell 1800 console is basically a part of the central processor and is multiplexed into the system via multiprogram control (see below).  A monitor typewriter is used by the operator to communicate directly with the central processor.  Manual operations on the typewriter can start and stop individual programs and interrogate Honeywell 1800 storage.  Under program control, the console typewriter can also print information useful to the operator.  An additional typewriter, called the console slave typewriter, can be added to the system.  No manual operations can be performed from the slave typewriter, but printing can be programmed to occur on either the slave or the console monitor typewriter.  In addition to the typewriter(s), the console includes display lights that give the operator an at-a-glance summary of the number of active programs, their control centers, and their progress.  The console also includes a modular display panel which has indicators and displays for monitoring the status of tape units and other peripheral devices.
 
-4.  _Magnetic Tape Units (804) and Tape Controls (803)_
+##### 4. _Magnetic Tape Units (804) and Tape Controls (803)_
 
 The Honeywell 1800 magnetic tape units are designed for reliability and accuracy.  The recording surface of the tape is untouched except by the read/record head, insuring that wear and damage to the the surface are held to an absolute minimum.  Vacuum is used to seat the reels on the hubs, to maintain loops in the loop chambers, and to provide contact with the capstans which cause the tape to move under the head, giving accurate control without the dangers inherent in mechanical techniques.  The tape is edge guided along its entire path to protect the tape from damage and to avoid skew.
 
@@ -408,15 +408,15 @@ Variable-length recording is a basic feature of the Honeywell 1800, and records 
 Three different tape units are available for the Honeywell 1800.  Their recording and rewind speeds, recording densities, and transfer rates are shown in the table below.  All three tape systems are compatible: data recorded by one system can be read at recording density by the others.
 
 ```
-Model                               Speed     Recording Density   Transfer Rate
-                            (inches per second) (frames per inch) (decimal digits per second)
+Model                                  Speed         Recording Density   Transfer Rate
+                                (inches per second)  (frames per inch)   (decimal digits per second)
 
-                               Read/Write Rewind
+                                Read/Write  Rewind
 
-804-1 Magnetic Tape Unit            120     360     400      96,000
-804-2 High-Density Magnetic         120     360     555.5   133,300
+804-1 Magnetic Tape Unit            120      360            400              96,000
+804-2 High-Density Magnetic         120      360            555.5           133,300
       Tape Unit
-804-3 Economy Magnetic Tape Unit     60     180     400      48,000
+804-3 Economy Magnetic Tape Unit     60      180            400              48,000
 ```
 
 When rewinding, the tape moves at three times normal speed.  A small photo-electric device in the tape unit senses the presence of edge "windows" (clear Mylar) in the tape to provide beginning-of-tape and end-of-tape indications for the programmer.  A physical slot in each leader is sued to negate the vacuum and stop the unit when the end of tape is reached.
@@ -425,9 +425,9 @@ When a metal ring is inserted in the front of a tape reel, writing is allowed to
 
 A tape control can control up to eight tape units.  The model 803-1, 803-2, and 803-3 tape controls are used with 804-1, 804-2, and 804-3 tape units, respectively.  Each control uses an input and an output channel so that one of the tape units attached to the control may be reading and another writing simultaneously.  Designation of tape units as active or inactive is accomplished through the use of the tape address patchboard on the maintenance and indicator panel of the tape control.  The patchboard also allows for the re-addressing of tape units; for example, the unit physically designated as number 1 may have, as a result if oatchboard plugging, an effective address of 3.
 
-5.  _The Card Equipment_
+##### 5. _The Card Equipment_
 
-a.  Card Readers (823)
+###### a. Card Readers (823)
 
 Two 80-column card readers are available with the Honeyqwell 1800 System.  From the programmer's point of view, these two readers differ only in that the 823-1 reads 240 cards per minute and the 823-2 reads 650 cards per minute.  In the manner in which they respond to instructions and transmit information, they are identical.  Either may be used on-line (connected to the control processor via a card reader control) or off-line (connected to a tape unit via a card reader control and an off-line auxiliary control, see below).
 
@@ -449,18 +449,18 @@ One extra word is appended to each card record as it is sent to memory, indicati
 
 Note:  In the event that an illegal punch coincides with an incorrect read or conversion, the latter signal takes precedence (i.e., bits 15-16 are 10).
 
-b.  Card Punch (824-1)
+###### b. Card Punch (824-1)
 
 The 824-1 punches 100 cards per minute, operating either on-line or off-line.  the card punch is capable of punching in the same two modes 
 in which the card readers can operate, and the relationship between the card format and the format of information within the Honeywell 800 is identical (see see Figure II-1).  The selection of the mode to be used in punching an individual card, however, is made by the program.  A control word _precedes_ the actual information to be punched, sets the punch to accept either 10 or 20 information words, and informs the punch control as to which conversion mode is desired.  Only four bits of the control word are used by the punch control.  The values of bits 16 and 17 specify the desired conversion mode and hence the number of words to be accepted.  If the control word contains zeros in both bit 16 and bit 17, the alphanumeric mode is used; if these bit positions are both ones, the transcription mode is used.  A zero-one or one-zero combination is illegal, and can cause the punch to enter either mode.  Ones in bit positions 13 and 14 cause the punch to stop with an indicator lit, signifying that the punching of a file is completed.  The control word is coded identically for both on-line and off-line operation.
 
-c.  Card Reader - Card Punch (827-1)
+###### c. Card Reader - Card Punch (827-1)
 
 The card reader - card punch, model 827-1, reads 800 cards per minute and punches 250 cards per minute.  Otherwise, it has all of the properties of the card readers and punch described above, including the capability for either on-line or off-line operation.  The 827-1 requires separate peripheral controls (or a single model 811 multiple terminal control unit, see page 21) to handle the reader and punch sections.  This unit is capable of simultaneous reading and punching, except when connected to a multiple terminal unit control.
 
-6,  _The Printers (822)_
+##### 6. _The Printers (822)_
 
-a.  Standard-Speed Printers
+###### a. Standard-Speed Printers
 
 The standard-speed printers, models 822-1 and 822-2, are 407 and 408 tabulating machines, printing 150 lines per minute.  Both printers can operate either on-line or off-line.  Ten characters are printed to the inch over a spread of 12 inches, providing a total of 120 characters per line.  Vertical spacing is six or eight lines to the inch.  Forty-seven different characters are available: 26 alphabetic, 10 numeric, and 11 special symbols.
 
@@ -468,7 +468,7 @@ A 12-channel, punched paper carriage tape is used for vertical format control.  
 
 The tabulators retain most of the abilities normally provided through plugboard wiring.  In parituclar, the comparison abilities of the 408 are retained.  The 822-2 (bill-feed printer) can print on cut forms as well as on continuous forms.
 
-b.  High-Speed Printer
+###### b. High-Speed Printer
 
 The high-speed printer, model 822-3, has a rated speed of 900 lines per minute for continuous single-space printing and approximately 800 lines per minute for continuous double-space printing.  Printing can be accomplished either on-line or off-line.  There are 160 print positions of which any prescribed array of up to 120 can be activated during a run.  At each print position, a total of 56 characters is available: 26 alphabetic, 10 numeric, and 20 special symbols in either standard or selfchek #12F font.
 
@@ -492,9 +492,9 @@ For each printed line, 16 words are sent to the printer control.  The first word
 
 Values of bit positions other than those described above are ignored, making it possible to edit a record for listing on either a standard-speed or high-speed printer.  The coding of the control word is identical for both on-line and off-line operation.
 
-7.  _The Paper Tape Equipment_
+##### 7. _The Paper Tape Equipment_
 
-a.  Paper Tape Reader and Control (809)
+###### a.  Paper Tape Reader and Control (809)
 
 The model 809 paper tape reader and control operates on-line in the Honeywell 1800 System, reading punched paper tape into the central processor.  The input tape must be chadded (clean hole), opaque, non-oiled, and non-metallic, although a special option permits the use of metallic paper tape.  Three sizes of tape can be used with the reader:  11/16 inch, five-channel tape; 7/8 inch, six- or seven-channel tape; and one-inch, eight-channel tape.  The tape may be read under reel-servo control or as strip segments.  Two reel sizes are available: 5-1/2 inch reels which store 350 feet of tape, and seven-inch reels which store 700 feet, plus four feet of leader at each end.
 
