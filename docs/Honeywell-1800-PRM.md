@@ -38,6 +38,7 @@ This is the second printing of _The Programmers' Reference Manual_.  The princip
 
 ## TABLE OF CONTENTS
 
+```
                                                                            Page
   Section I     Introduction ..............................................   1
                     Programming Aids ......................................   1
@@ -226,10 +227,11 @@ This is the second printing of _The Programmers' Reference Manual_.  The princip
   Appendix F.   Memory Extensions beyond 32,768 Words ..................... 169
 
   Appendix G.   Memory Barricade .......................................... 173
-
+```
 
 ## LIST OF ILLUSTRATIONS
 
+```
 Figure   II-1.  Conversion of Punch Positions to Honeywell 1800 Character
                     Positions .............................................  10
 
@@ -303,6 +305,7 @@ Figure    G-2.  Limited and Critical Control Errors ....................... 177
 Table       I.  Honeywell 1800 Coding and Punched or Printed Equivalents .. 167
 
 Table      II.  Honeywell 1800 Command Codes .............................. 168
+```
 
 ## SECTION I
 
@@ -404,9 +407,8 @@ Variable-length recording is a basic feature of the Honeywell 1800, and records 
 
 Three different tape units are available for the Honeywell 1800.  Their recording and rewind speeds, recording densities, and transfer rates are shown in the table below.  All three tape systems are compatible: data recorded by one system can be read at recording density by the others.
 
-Model|Speed (inches per second)|Recording Density (frames per inch)|Transfer Rate (decimal digits per second)
+Model|Speed (inches per second) Read/Write|Speed (inches per second) Rewind|Recording Density (frames per inch)|Transfer Rate (decimal digits per second)
 -----|-------------------------|-----------------------------------|-----------------------------------------
- | Read/Write | Rewind | | |
 804-1 Magnetic Tape Unit | 120 | 360 | 400 | 96,000
 804-2 High-Density Magnetic Tape Unit | 120 | 360 | 555.5 | 133,300
 804-3 Economy Magnetic Tape Unit | 60 | 180 | 400 | 48,000
