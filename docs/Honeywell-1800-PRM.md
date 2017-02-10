@@ -375,7 +375,7 @@ Note that high-order zeros in the fixed-point numbers are suppressed in the floa
 
 A Honeywell 1800 Electronic Data Processing System consists of a central processor plus varying types and numbers of input and output units.  The programmer must know the system configuration with which he is to work.  An understanding of the function of each component and its relation to the entire system will make his task easier.
 
-##### 1. _The Central Processor (1801)_
+##### 1. The Central Processor (1801)
 
 The basic central processor consists of a control unit, a control or special-register memory, an arithmetic unit, and four banks of main (or high-speed) memory, each able to store 2048 Honeywell 1800 words.  (A Honeywell 1800 word is composed of 48 information bits and six checking bits.)  To this basic unit, additional memory banks can be added in modules of 8192 words (model 1802) up to 32,768 words; further expansion is available in modules of 16,384 words (model 1802-1) up to a maximum of 65,536 words.  An optional floating-point unit (1801-B, discussed below) is also available.
 
@@ -387,15 +387,15 @@ The control memory is a magnetic-core array providing storage for 356 eighteen-b
 
 The arithmetic unit is the portion of the central processor in which digits are combined to form new arrays in accordance with the logical rules of the command codes.  The Honeywell 1800 central processor has provision for both binary and decimal arithmetic, complete logical abilities, and competent internal checking.  For the interested reader, a complete description of the fixed-point addition logic can be found in Appendix A.
 
-##### 2. _The Floating-Point Option (1801-B)_
+##### 2. The Floating-Point Option (1801-B)
 
 The floating-point option (1801-B) is a second control and arithmetic unit which provides the Honeywell 1800 user with 19 instructions that manipulate data in floating-point form, plus two fixed-point division instructions.  The control portion of the unit selects, interprets, and directs the execution of these instructions by the arithmetic portion.  In an 1800 system not equipped with an 1801-B, these instructions are not executed directly but are interpreted as pseudo instructions which call in library routines to perform the desired operations.  Descriptions of this unit, its component registers, and the instructions it provides are presented in Section XIII.
 
-##### 3. _The Console_
+##### 3. The Console
 
 The Honeywell 1800 console is basically a part of the central processor and is multiplexed into the system via multiprogram control (see below).  A monitor typewriter is used by the operator to communicate directly with the central processor.  Manual operations on the typewriter can start and stop individual programs and interrogate Honeywell 1800 storage.  Under program control, the console typewriter can also print information useful to the operator.  An additional typewriter, called the console slave typewriter, can be added to the system.  No manual operations can be performed from the slave typewriter, but printing can be programmed to occur on either the slave or the console monitor typewriter.  In addition to the typewriter(s), the console includes display lights that give the operator an at-a-glance summary of the number of active programs, their control centers, and their progress.  The console also includes a modular display panel which has indicators and displays for monitoring the status of tape units and other peripheral devices.
 
-##### 4. _Magnetic Tape Units (804) and Tape Controls (803)_
+##### 4. Magnetic Tape Units (804) and Tape Controls (803)
 
 The Honeywell 1800 magnetic tape units are designed for reliability and accuracy.  The recording surface of the tape is untouched except by the read/record head, insuring that wear and damage to the the surface are held to an absolute minimum.  Vacuum is used to seat the reels on the hubs, to maintain loops in the loop chambers, and to provide contact with the capstans which cause the tape to move under the head, giving accurate control without the dangers inherent in mechanical techniques.  The tape is edge guided along its entire path to protect the tape from damage and to avoid skew.
 
@@ -425,7 +425,7 @@ When a metal ring is inserted in the front of a tape reel, writing is allowed to
 
 A tape control can control up to eight tape units.  The model 803-1, 803-2, and 803-3 tape controls are used with 804-1, 804-2, and 804-3 tape units, respectively.  Each control uses an input and an output channel so that one of the tape units attached to the control may be reading and another writing simultaneously.  Designation of tape units as active or inactive is accomplished through the use of the tape address patchboard on the maintenance and indicator panel of the tape control.  The patchboard also allows for the re-addressing of tape units; for example, the unit physically designated as number 1 may have, as a result if patchboard plugging, an effective address of 3.
 
-##### 5. _The Card Equipment_
+##### 5. The Card Equipment
 
 ###### a. Card Readers (823)
 
@@ -458,7 +458,7 @@ in which the card readers can operate, and the relationship between the card for
 
 The card reader - card punch, model 827-1, reads 800 cards per minute and punches 250 cards per minute.  Otherwise, it has all of the properties of the card readers and punch described above, including the capability for either on-line or off-line operation.  The 827-1 requires separate peripheral controls (or a single model 811 multiple terminal control unit, see page 21) to handle the reader and punch sections.  This unit is capable of simultaneous reading and punching, except when connected to a multiple terminal unit control.
 
-##### 6. _The Printers (822)_
+##### 6. The Printers (822)
 
 ###### a. Standard-Speed Printers
 
@@ -492,7 +492,7 @@ For each printed line, 16 words are sent to the printer control.  The first word
 
 Values of bit positions other than those described above are ignored, making it possible to edit a record for listing on either a standard-speed or high-speed printer.  The coding of the control word is identical for both on-line and off-line operation.
 
-##### 7. _The Paper Tape Equipment_
+##### 7. The Paper Tape Equipment
 
 ###### a.  Paper Tape Reader and Control (809)
 
@@ -512,7 +512,7 @@ All bits of the frame to be punched, including parity bits (if any), must be sto
 
 A standard parity check is sued to verify the correct transfer of information from main memory to the punch control.  The amount of tape on the supply and takeup reels is sensed by detectors which signal the central processor when the supply of tape drops below approximately 20 feet or the takeup reel becomes full.
 
-##### 8. _Off-Line Controls (815, 816, 817, and 818)_
+##### 8. Off-Line Controls (815, 816, 817, and 818)
 
 When a terminal unit is used with a magnetic tape unit independently of the central processor, as in a card-to-tape or tape-to-printer operation, an off-line auxiliary control is placed between the peripheral control and the tape unit to provide control signals and power normally supplied by the central processor.  If the terminal unit is a card reader, then an off-line input auxiliary control (816) must be used.  In like manner, a printer or card punch requires an off-line output auxiliary control (815) and a multiple terminal unit control (see "System Configurations," below) calls for an off-line input/output auxiliary control (817).
 
@@ -529,7 +529,7 @@ An alternative off-line printing configuration is available, using the model 818
 When reading cards off-line, each card is read, converted, and checked in the same manner as on-line reading, then written on tape as a record.  In alphanumeric mode, each record consists of 10 information words, one control word, two orthotronic control words, and one end-of-record word, in that order. In transcription mode, each record consists of 20 information words, one control word, two orthotronic control words, and one end-of-record word, in that order. 
 The two orthotronic control words and the end-of-record word are automatically generated by the off-line auxiliary control.
 
-##### 9. _Additional Equipment Available in the Honeywell 1800 System_
+##### 9. Additional Equipment Available in the Honeywell 1800 System
 
 ###### a. Random Access Storage and Control (860)
 
@@ -645,7 +645,7 @@ Orthotronic control is a checking device peculiar to the magnetic tape units.  I
 
 In addition to orthotronic control, and in some ways complementing it, a parity bit is written on tape accompanying each frame.  The parity bit is read from tape together with the eight information bits of the frame and remains with these bits as frames are collected to form words.  As each word of six frames is transmitted to memory, the accompanying parity bits are monitored to insure an error-free transmission.  Each time a word is sent to or from main memory, a transmission check is performed using these six parity bits, and when the word is again written on tape, each bit accompanies its corresponding frame.
 
-When a word is brought to the arithmetic unit, the computer generates a modulo-3 check on each frame pair (16 information bits) for us in checking arithmetic operations.  The value of the 2-bit mod-3 check digit is the remainder (a value from 0 to 3, where either 0 or 3 may represent no remainder) which results when the decimal equivalent of the 16 bits is divided by 3.  After the mod-3 check is generated, the parity bits are checked and then replaced by the six mod-3 checking bits.  When arithmetic operations have been completed and the mod-3 check has been performed to insure that they have been completed correctly, the parity bits are again generated, replacing the mod-3 bits.
+When a word is brought to the arithmetic unit, the computer generates a modulo-3 check on each frame pair (16 information bits) for use in checking arithmetic operations.  The value of the 2-bit mod-3 check digit is the remainder (a value from 0 to 3, where either 0 or 3 may represent no remainder) which results when the decimal equivalent of the 16 bits is divided by 3.  After the mod-3 check is generated, the parity bits are checked and then replaced by the six mod-3 checking bits.  When arithmetic operations have been completed and the mod-3 check has been performed to insure that they have been completed correctly, the parity bits are again generated, replacing the mod-3 bits.
 
 The control unit of the central processor checks the interpretation and execution of the program instructions.  Selection of instructions and operand locations is checked.  The checking process of an add instruction illustrates the thoroughness of the Honeywell 1800 checking system.
 
@@ -673,3 +673,101 @@ In the general case where carries might occur between the operand groups, correc
 Each of the special registers retains a mod-3 check on the 16 information bits it contains, which is used to check transmissions and arithmetic operations within the control unit.  When the contents of a special register are transferred to the arithmetic unit or to main memory, they are expanded to full-word form and the mod-3 check is replaced by parity bits.
 
 Card reading is checked not only for correct reading by the equipment, but, in the alphanumeric mode, for correctness of conversion and proper keypunching also.  Card punching is checked on the 824-1 punch for double-punched and blank columns.  Thirty columns of double-punch, blank-column detection are provided in the standard-speed punch; 80 columns are provided in the high-speed punch.  The punch section of the 827-1 reads each punched card and checks it contents against the punch image.  Printing is also checked by comparing echo pulses generated by the printer against the print image.
+
+## SECTION III
+
+### THE HONEYWELL 1800 WORD
+
+The basic unit of information in the Honeywell 1800 System is a fixed-length word consisting of 54 binary digits, of which six are parity bits used by the automatic checking circuitry and 48 are information bits.  Each main memory location is capable of storing one such word, and each arithmetic register is one word in length.  A main memory word may represent a machine instruction or one or more pieces of data.  In addition to the main memory, the central processor includes the control memory of 256 special registers, used primarily for control purposes and address modification.  A special register has the capacity to store a partial word consisting of 16 information bits and two checking bits.  The extension of the special register word to 24 bits to handle memory capacities in excess of 32,768 words is described in Appendix F.
+
+The check bits of the main memory and special register words are not directly available to the programmer, nor are their values subject to program control.  Subsequent discussions of the Honeywell 1800 word, therefore, will refer only to the information bits, unless otherwise noted.
+
+#### Data Words
+
+A computer program generally manipulates data in one or more different forms: decimal, alphanumeric, binary, or a combination of these.  The Honeywell 1800 is capable of handling all these types of information.  It may interpret the 48 bits of a word in groups of four for the purpose of binary-coded-decimal operation, in groups of six for alphanumeric operation, or as individual units of information for pure binary operation.  It may also interpret the 48 bits as a mantissa and an exponent for floating-point operation.  Figure III-1 illustrates the structures of these different words.
+
+A decimal word in the Honeywell 1800 contains either 11 decimal digits with a sign, or 12 decimal digits without sign.  The decimal arithmetic instructions interpret all operands as a sign and 11 digits.  The sign consists of four bits which may represent either the sign of the entire word or individual, 1-bit signs for as many as four different pieces of information within the word.  Although a positive sign is normally represented by four binary ones and a negative sign by four binary zeros, a non-standard configuration is perfectly acceptable as input to the arithmetic unit, which interprets any combination of bits except four binary zeros as a positive sign.  The sign supplied with the result of an arithmetic operation, however, is always one of the two standard conventions, either four binary ones or four binary zeros.  A more detailed discussion of sign conventions can be found in Section VI.
+
+[Figure III-1]
+
+A Honeywell 1800 alphanumeric word comprises eight 6-bit groups.  Each group can represent any of 26 alphabetic characters, 10 decimal digits, or 20 such special characters as punctuation marks, etc., (see Table I, page 167).  Numbers may be stored in alphanumeric (6-bit) form, but the arithmetic unit cannot manipulate them as such; it handles numbers in pure binary or binary-coded decimal form.  Between the central processor and the printers, information is transferred in the alphanumeric mode; between the central processor and the card equipment, information is transmitted in either the alphanumeric or the transcription mode.
+
+The 48 binary digits of a word may also represent a pure binary number, which may be stored as a sign and 44 bits, or as 48 unsigned bits.  With the exception of the instructions word add and word difference, which treat their operands as 48-bit unsigned numbers, the binary arithmetic instructions interpret operands as signed 44-bit numbers.  The sign convention in binary arithmetic is identical to that described for decimal words.
+
+The Honeywell 1800 word can also be handled as a floating-point number, composed of one-bit sign, seven-bit exponent, and 40-bit mantissa.  The floating-point decimal word has an exponent that can represent a power of 10 from the -64<sup>th</sup> to the +63<sup>rd</sup>, and a mantissa that can represent a 10-digit number from .1000000000 through .9999999999 (when normalized).  In floating-point binary form (represented in hexadecimal notation), the exponent can represent a power of 16 from the -64<sup>th</sup> to the +63<sup>rd</sup>, and the mantissa a 40-bit number from .00010000...0000 through .1111...1111 (when normalized); the mantissa can represent the equivalent of approximately 12 decimal digits.  A one in the sign bit position of the floating-point word indicates that the number is positive, and a zero that it is negative.  Floating-point numbers are discussed in Section XIII.
+
+The data words above are identified in ARGUS language by the following constant codes: DEC, fixed-point decimal number (signed or unsigned); ALF, alphanumeric word; FXBIN, fixed-point binary number; M (mixed constant), compressed alphanumeric word; FLDEC, floating-point decimal number; and FLBIN, floating-point binary number.  In addition, ARGUS recognizes an octal word identified by the constant code OCT.  This word contains 16 unsigned or 15 signed octal digits.  If 15 signed digits are specified, the most significant digit must be less than four, since a sign is represented by four bits, leaving only two bits for the high-order octal digit.
+
+Several differences should be noted between ARGUS notation for data words and the format shown in Figure III-1.  When ARGUS notation is used for decimal words, high-order zeros in signed decimal numbers and low-order zeros in unsigned decimal numbers need not be expressed.  For example, ARGUS converts the number +125 to the signed 11-digit number +00000000125 and the unsigned number 32 to the 12-digit number 320000000000.  A binary word in ARGUS notation is not expressed as a 44- or 48-bit binary number, but as the decimal equivalent of the desired information bits.  Therefore, a binary word in ARGUS may contain up to 14 decimal digits and a sign.  For complete details on the specification of data words in ARGUS language, reference should be made to the ARGUS _Manual of Assembly Language_.
+
+#### Special register Words
+
+As previously noted, a special register can store 16 information bits, or one-third of a full Honeywell 1800 word.  When these bits are manipulated within the special register circuitry, the high-order bit is interpreted as a sign (1 = plus, 0 = minus).  Depending upon the type of addressing used, the remaining 15 bits of a special register word may be interpreted as a main memory address, consisting of a bank indicator and subaddress, or as a special register address, consisting of a group indicator and subaddress (see Figures IV-1 and IV-2).  When a special register word is modified arithmetically within the special register circuitry, the value of the sign bit determines whether it is incremented or decremented.  A special register word is identified in ARGUS language by the constant code SPEC.
+
+#### Instruction Words
+
+The 48 bits of a Honeywell 1800 instruction word are interpreted as four groups of 12 bits each.  Bits 1-12 represent the command code; bits 13-24, 25-36, and 37-48 are designated as the A address group, B address group, and C address group, respectively.  The address portions of instructions normally are used to designate the locations of operands and results, but in certain instructions they may contain special information such as the number of words to be moved, the number of bits to be shifted, a change of sequence counter, and so forth.  A detailed discussion of addressing in the Honeywell 1800 will be found in Section IV.
+
+Machine instructions fall into five major categories: general instructions, unmasked and masked; inherent mask instructions; peripheral and print instructions; simulator instructions; and scientific instructions.  The masked general instructions and the peripheral and print instructions are uniquely designated by six-bits - bits 7 through 12 of the instruction word.  The unmasked general instructions, the inherent mask instructions, and the scientific instructions are uniquely designated by eight bits - bits 7 though 12, plus bits 2 and 3.  The simulator instructions are uniquely defined by only three bits - bits 10 through 12.  These groups of bits which uniquely specify the operation to be performed are called the operation code.  The bits of the command code which are not used for the operation code serve various other purposes which will be described as the instruction types are discussed.  A graphic summary of the format of the major command code types appears in Figure III-2.  The command codes for the individual instructions, together with their mnemonic operation codes in ARGUS language, are set forth by major instruction type in Table II, page 168.
+
+#### General Instructions
+
+General instructions include the arithmetic operations, logical operations, decisions, and information transfers.  As notes in Table II, certain of these instructions may only be performed without masks; others may be performed either with or without masks.  Regardless of masking, bit 1 of a general instruction command code, called the bisequence bit, always specifies the source of the next instruction (see Figure III-2).  If bit 1 is zero, the next instruction will be taken from the sequence counter; if bit 1 is a one, the next instruction will be selected from the cosequence counter.  In ARGUS language, the source of the next instruction is specified in column 23 of the ARGUS input card by an "S" or blank for sequence counter or by a "C" for cosequence counter.
+
+#### Unmasked General Instructions
+
+Unmasked general operation codes are specified by command code bits 2, 3, and 7 through 12.  Bits 4, 5, and 6 designate whether the A, B, and C addresses, respectively refer to a main memory or a control memory location.  If a memory designator bit is zero, then the corresponding address refers to main memory; a designator bit of one denotes a control memory address.  In ARGUS language, the memory designator bit is not explicitly stated but is implied by the type of addressing used (see Section IV).
+
+[Figure III-2]
+
+#### Masked General Instructions
+
+When general instructions are performed under the control of masks, they usually designate partial words as operands and results.  For this reason, they are frequently referred to as "field" instructions.  When a field instruction is performed, the same mask is applied to operands and result.  Only those bit positions of the operand which correspond to binary ones in the mask word are used in the operation.  The positions of the result location which do not correspond to binary ones in the mask are not altered by the operation.  The location of a mask used in a field instruction is specified by bits 2 through 6 of the command code, in conjunction with bits 2 through 5 and 11 through 16 of a special register called the mask index register (MXR).  A complete description of the way in which the five command code bits, called the partial mask address, are united with the ten bits of the MXR to designate the location of the mask will be found in Section V under the discussion of the mask index register.
+
+In ARGUS language the location of the mask is specified by writing its symbolic tag in the command code field, following the operation code and separated from it by a comma.  Thus, the instruction
+```
+        DS, MASK2   WAGES   DEDUCTNS    WEEKSPAY
+```
+is performed under the control of the mask stored in the memory location assigned by ARGUS to the symbolic tag MASK2.  Since field instructions use the memory designator bit positions in the partial mask address, it is impossible for these instructions to address control memory.
+
+#### Inherent Mask Instructions
+
+The use of masks is not restricted to field instructions, but extends to the inherent mask instructions.  These instructions, which have the same command code format as the unmasked general category, include five shift instructions, a substitute, and an extract instruction.  The chief distinction between the two types of masked instructions lies in the fact that the inherent mask instructions use bits from the B address group rather than from the command code to specify the location of the mask.  For the shift instructions, the low-order six bits of the B address group are used in conjunction with bits 2 through 5 and 6 through 10 of the mask index register to locate the mask.  In the substitute and extract instructions, the entire B address group is used to specify the location of the mask, without reference to the MXR.
+
+A further difference between inherent mask and field instructions is that the latter always operate in "protected" mode; in other words, the portions of the result location corresponding to binary zeros in the mask are preserved during the operation.  The inherent mask group, on the other hand, includes three instructions which operate in the "unprotected" mode, in which the unmasked portions of the result location are cleared to zeros.  In ARGUS language, the location of the mask for a shift instruction is specified in the same way as for field instructions: by writing its symbolic tag in the command code field following the operation code.
+
+#### Peripheral and Print Instructions
+
+Every instruction in the peripheral group performs some function involving a magnetic tape unit or a peripheral device.  The high-order six bits of the peripheral instruction command codes are used to specify a magnetic tape or a peripheral address.  Thus, these instructions cannot specify the source of the next instruction or address the control memory.  The peripheral address bits are divided into two groups of three bits each.  Bits 1 through 3 specify one of eight input or output channels (the operation code itself defines whether the channel is input or output) and bits 4 through 6 specify one of the devices attached to this channel.  A more detailed explanation of the assignment of peripheral address bits will be found in Section XI.
+
+The print instructions involve the use of the console typewriter.  In this instruction, the high-order six bits of the command code are used as follows: bit 1 designates the sequence or cosequence counter as the source of the next instruction; bits 2 and 2 are irrelevant; and bits 4, 5, and 6 serve as A, B, and C address memory designators, respectively.  Thus, this instruction _can_ specify the source of the next instruction and address the control memory.
+
+Several differences should be noted between the machine command code and ARGUS notation for these instructions.  First, the peripheral command codes in ARGUS language are reversed in terms of machine language.  In other words the mnemonic operation code is written first, followed by the device address expressed as an alphabetic code from AA to HH.  Secondly, although there is but one machine instruction for the print function, ARGUS recognizes three distinct mnemonic codes to indicate alphanumeric (PRA), hexadecimal (PRD), or octal (PRO) print format.  In machine language, the type of print format is specified by bits 5 and 6 of the B address group.
+
+#### Simulator Instructions
+
+Any instruction in which command code bits 10 through 12 are all ones is called a simulator instruction, since it permits the programmer to represent with a single instruction any function not built into the equipment logic, such as a machine instruction for some other data processing system.  Each such instruction provides an entry to a simulator routine which is coded by the programmer and stored beginning with the next memory location after the address specified by command code bits 2 through 12.  When the instruction is performed, it is transferred to the memory location specified by command code bits 2 through 12, the cosequence counter is set to the next higher address, and the next instruction is taken from the cosequence counter.  If bit 1 of the command code is zero, bits 2 through 12 are interpreted as a main memory subaddress.  If bit 1 is one, bits 2 through 12 are interpreted as a 3-bit index register designator and an 8-bit augmenter (see Section IV).  The address portions of a simulator instruction have no assigned function and may be used to store parameters used by the simulator routine.  The command code for an ARGUS simulator instruction is S, followed by a comma and an address designated by a symbolic tag or by an index register designator with an augmenter of seven.
+
+#### Scientific Instructions
+
+Eighteen of the twenty-one scientific instructions manipulate data ion floating-point form, two provide for fixed-point decimal and binary division, and one converts data between floating-point decimal form and floating-point binary form.  In an 1800 system equipped with the 1801-B option, these instructions are executed directly; in a system that does not include an 1801-B, they are interpreted as pseudo instructions that call in library routines to perform the desired operations.
+
+The operation codes for the scientific instructions are uniquely designated by eight bits in the command code field; bits 2, 3, and 7 through 12.  Bit 1 is the bisequence bit, and bits 4, 5, and 6 are the memory designator bits referring to the A, B, and C address groups.  Thus, these instructions _can_ specify the source of the next instruction and address the control memory.
+
+#### Special Words
+
+Two special Honeywell 1800 words - the end-of-record word and the end-of-item word - deserve separate mention in this section.  The end-of-record word is a word whose 48 information bits are:
+```
+1010 1010 0000 0000 1110 1110 1110 1110 1101 1101 1101 1101
+```
+This word is used to designate the end of a group of words constituting a single record.  When records are being written on magnetic tape, the write operation stops only when an end-of-record word is sensed in memory.  End-of-record words are automatically generated in the central processor during execution of compute orthocount and record transfer instructions. Their function will be detailed further as these instructions are discussed.
+
+The end-of-item word is a word whose high-order 32 bits are identical to the high-order 32 bits of the end-of-record word.  The low-order 16 bits are irrelevant for purposes of identification.  As the name implies, and end-of-item word is used to designate the end of a group of words constituting a single item within a record.  A record may contain an unspecified number of items, each of which is followed by an end-of-item word, or in the case of the last item, by an end-of-record word.  End-of-item words are automatically generated in the central processor during execution of an item transfer instruction, while certain other instructions sense for these words during execution.  Their function will be highlighted in the discussion of these instructions.
+
+
+
+
+
+
+
+
