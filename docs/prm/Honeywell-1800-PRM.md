@@ -439,7 +439,7 @@ Each of the card readers has tow reading stations.  The results of the two readi
 
 One extra word is appended to each card record as it is sent to memory, indicating the status of the error indicators at the completion of the reading and conversion operation for that card.  Thus, a standard card record is either 11 words (alphanumeric mode) or 21 words (transcription mode).  When cards are read on-line, the control word is composed entirely of zero bits with the exception of bits 15 and 16, which are used to indicate:
 
-!(images/figure_II-1.png)
+!(./images/figure_II-1.png)
 
 1.  That the card was punched, read, and converted correctly (11 in bits 15-16);
 
@@ -579,7 +579,7 @@ The peripheral buffer control is an interface which makes the 6-microsecond buff
 
 As its name implies, traffic control monitors the transmission of information to and from main memory.  Its operation is represented schematically in Figure II-2.  The 17 divisions of the band are called "stages" and one stage is assigned to each of the eight output channels, each of the eight input channels, and the central processor.
 
-!(images/figure_II-2.png)
+!(./images/figure_II-2.png)
 
 The creation of a demand signal by any device is represented in Figure II-2 by the closing of the switch shown in the corresponding control stage.  When any program has been turned on in the central processor, the switch corresponding to the central processor stage is continually closed.  Traffic control begins each scan at the left end of the band.  It proceeds to the right, ignoring all stages which show no demand signal, until a demand stage is reached.  This stage is allowed access to the main memory for one memory cycle only.  Traffic control then returns to the left end of the band to begin the next scan.  Because the control search is anticipatory, no system time is consumed in bypassing stages in which no demand exists.
 
@@ -688,7 +688,7 @@ A computer program generally manipulates data in one or more different forms: de
 
 A decimal word in the Honeywell 1800 contains either 11 decimal digits with a sign, or 12 decimal digits without sign.  The decimal arithmetic instructions interpret all operands as a sign and 11 digits.  The sign consists of four bits which may represent either the sign of the entire word or individual, 1-bit signs for as many as four different pieces of information within the word.  Although a positive sign is normally represented by four binary ones and a negative sign by four binary zeros, a non-standard configuration is perfectly acceptable as input to the arithmetic unit, which interprets any combination of bits except four binary zeros as a positive sign.  The sign supplied with the result of an arithmetic operation, however, is always one of the two standard conventions, either four binary ones or four binary zeros.  A more detailed discussion of sign conventions can be found in Section VI.
 
-!(images/figure_III-1.png)
+!(./images/figure_III-1.png)
 
 A Honeywell 1800 alphanumeric word comprises eight 6-bit groups.  Each group can represent any of 26 alphabetic characters, 10 decimal digits, or 20 such special characters as punctuation marks, etc., (see Table I, page 167).  Numbers may be stored in alphanumeric (6-bit) form, but the arithmetic unit cannot manipulate them as such; it handles numbers in pure binary or binary-coded decimal form.  Between the central processor and the printers, information is transferred in the alphanumeric mode; between the central processor and the card equipment, information is transmitted in either the alphanumeric or the transcription mode.
 
@@ -718,7 +718,7 @@ General instructions include the arithmetic operations, logical operations, deci
 
 Unmasked general operation codes are specified by command code bits 2, 3, and 7 through 12.  Bits 4, 5, and 6 designate whether the A, B, and C addresses, respectively refer to a main memory or a control memory location.  If a memory designator bit is zero, then the corresponding address refers to main memory; a designator bit of one denotes a control memory address.  In ARGUS language, the memory designator bit is not explicitly stated but is implied by the type of addressing used (see Section IV).
 
-!(images/figure_III-2.png)
+!(./images/figure_III-2.png)
 
 #### Masked General Instructions
 
