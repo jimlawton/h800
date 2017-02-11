@@ -700,7 +700,7 @@ The data words above are identified in ARGUS language by the following constant 
 
 Several differences should be noted between ARGUS notation for data words and the format shown in Figure III-1.  When ARGUS notation is used for decimal words, high-order zeros in signed decimal numbers and low-order zeros in unsigned decimal numbers need not be expressed.  For example, ARGUS converts the number +125 to the signed 11-digit number +00000000125 and the unsigned number 32 to the 12-digit number 320000000000.  A binary word in ARGUS notation is not expressed as a 44- or 48-bit binary number, but as the decimal equivalent of the desired information bits.  Therefore, a binary word in ARGUS may contain up to 14 decimal digits and a sign.  For complete details on the specification of data words in ARGUS language, reference should be made to the ARGUS _Manual of Assembly Language_.
 
-#### Special register Words
+#### Special Register Words
 
 As previously noted, a special register can store 16 information bits, or one-third of a full Honeywell 1800 word.  When these bits are manipulated within the special register circuitry, the high-order bit is interpreted as a sign (1 = plus, 0 = minus).  Depending upon the type of addressing used, the remaining 15 bits of a special register word may be interpreted as a main memory address, consisting of a bank indicator and subaddress, or as a special register address, consisting of a group indicator and subaddress (see Figures IV-1 and IV-2).  When a special register word is modified arithmetically within the special register circuitry, the value of the sign bit determines whether it is incremented or decremented.  A special register word is identified in ARGUS language by the constant code SPEC.
 
@@ -764,10 +764,188 @@ This word is used to designate the end of a group of words constituting a single
 
 The end-of-item word is a word whose high-order 32 bits are identical to the high-order 32 bits of the end-of-record word.  The low-order 16 bits are irrelevant for purposes of identification.  As the name implies, and end-of-item word is used to designate the end of a group of words constituting a single item within a record.  A record may contain an unspecified number of items, each of which is followed by an end-of-item word, or in the case of the last item, by an end-of-record word.  End-of-item words are automatically generated in the central processor during execution of an item transfer instruction, while certain other instructions sense for these words during execution.  Their function will be highlighted in the discussion of these instructions.
 
+## SECTION IV
 
+### ADDRESSING
 
+The basic main memory of the Honeywell 1800 consists of four banks, each capable of storing 2048 words, giving a total basic capacity of 8192 words.  Up to three model 1802 memory modules of 8192 words each can be added to the basic memory to expand the memory capacity to 16,384 words, 24,576 words, or 32,768 words.<sup>1(#section-iv-note-1)</sup>  Each main memory location is directly addressable and is uniquely designated by a 15-bit configuration.  This array of bits may also be thought of as an 11-bit subaddress to specify, in binary, one of the 2048 locations in a bank and a 4-bit bank indicator to specify a memory bank.  The bit structure of a main memory address is shown in Figure IV-1.  (It is sometimes convenient to express the value of such a 15-bit array as five octal digits.  In this notation, the memory addresses of a 32,768-word system range from 00000 to 77777.)
 
+<a name="section-iv-note-1">1</a>: Up to two model 1802-1 memory modules of 16,384 words each can be added to the three model 1802 modules to expand the memory to 49,152 or 65,536 words, as explained in Appendix F.
 
+![Figure IV-1](images/figure_IV-1.png?raw=true)
 
+The control memory consists of 256 special registers divided into eight groups of 32 registers each.  Every special register is directly addressable by a unique 8-bit configuration.  This array of bits may also be thought of as a 3-bit group indicator designating one of the eight special register groups and a 5-bit subaddress specifying one of the 32 registers in a group (see Figure IV-2).
 
+![Figure IV-2](images/figure_IV-2.png?raw=true)
+
+Since both the main and control memories are directly addressable, some means must be provided to specify which memory is being addressed in each of the three address groups of an instruction.  This is accomplished by defining one memory designator bit position in the command code of the instruction for each of the three address groups.  A zero designator bit indicates that the respective address refers to main memory; a designator bit of one indicates that the address refers to a control memory location (special register).  For those command cods which do not provide the memory designator bit positions, designators of zero are always implied and the respective addresses are always interpreted as main memory addresses.  During the execution of an instruction, the designator bit does not appear in the address selectors, but is stored in a separate unit of the control circuitry.
+
+Since an instruction address includes 13 bits (12 bits in the address group plus a memory designator bit, explicit or implied), it does not precisely specify a complete main memory address (15 bits) or a complete control memory address (8 bits).  The instruction address bits may be interpreted by the central processor in a number of ways to form a complete main or control memory address.  For example, direct addressing is the explicit statement of the desired main or control memory subaddress in the instruction.  Indexed addressing refers to the technique of augmenting a main or control memory address stored in an index register to form the desired address.  Indirect addressing refers to the technique of stating the address of a special register in which the desired main memory address is stored.  Main memory locations can be addressed in any of these ways; special registers are addressed either directly or by indexing.
+
+As noted in Section III, the main memory may be addressed by all instructions in any of the five major categories.  Special registers, on the other hand, may be addressed only by general unmasked instructions, inherent mask instructions, scientific instructions, and the print instruction, since these are the only types of instruction which provide for the memory designator bits in the command code.
+
+#### Direct Memory Location Address
+
+Each address group in a Honeywell 1800 instruction word consists of 12 binary digits. Bit 1 of this 12-bit configuration specifies whether the address is direct or indexed.  If bit 1 is zero, the address is direct; if bit 1 is one, the address is indexed.
+
+If bit 1 of an address group is zero (direct) and the corresponding memory designator bit is zero (main memory), then the remaining 11 bits of the address group are interpreted as a subaddress designating one of the 2048 locations in a bank of memory.  The bank indicator stored in the sequencing counter<sup>1(#section-iv-note-2)</sup> which selected the instruction is appended to this subaddress to form a complete 15-bit address (see Figure IV-3).  Thus, every direct memory location address in an instruction always refers to the bank in which the instruction was stored.
+
+<a name="section-iv-note-2">1</a>: Although instructions are normally selected by a sequence or cosequence counter, they may be selected by an unprogrammed transfer register (see Section V).  In this case, the bank indicator is taken from the unprogrammed transfer register to form a direct memory location address.
+
+![Figure IV-3](images/figure_IV-3.png?raw=true)
+
+In an ARGUS instruction, a direct memory location address is specified by a symbolic tag or by address arithmetic, in which the address is designated according to its relative position with reference to the instruction in which it appears or with reference to a symbolic tag.  These three types of direct memory location addressing are illustrated in the ARGUS instruction:
+```
+        DS      SALARY      C, +20      SALARY - 2
+```
+`SALARY` is the symbolic tag of a main memory location; `C, +20` represents the location 20 after the location of the instruction itself; and `SALARY - 2` represents the location two before that tagged `SALARY`.
+
+#### Direct Special Register Address
+
+f bit 1 of the address group is zero (direct) and the memory designator bit is one (control memory), bits 8-12 of the address group are interpreted as the subaddress of one of the 32 special registers in the group which includes the sequencing counter that selected the instruction.  The central processor attaches to this subaddress the group indicator associated with the sequencing counter to form a complete 8-bit special register address (see Figure IV-2).  If bit 7 of the address group (called the tabular bit) is zero, then the 8-bit array is interpreted as a direct special register address; that is, the specified register is used as an operand location or as a result location.  Bits 2 through 6 of the address group specify an increment in the range 0 through 31 (in binary), which may be added, under control of the special register sign bit, to the low-order bits of the special register _after_ use, thereby altering them permanently.  If the special register sign bit is positive, the value of the increment is added to the contents of the special register, and the contents are said to be incremented.  If the sign is negative, the value of the increment is subtracted from the contents of the special register and the contents are said to be decremented.  Incrementing (or decrementing) always occurs when the special register is addressed as the source of the operand, never when the special register is addressed as a result location.  The formation of a direct special register address is illustrated in Figure IV-4.
+
+![Figure IV-4](images/figure_IV-4.png?raw=true)
+
+Since the group indicator attached to the special register subaddress is always that of the sequencing counter which selected the instruction, a direct special register address always refers to the special register group containing the sequence counter which selected the instruction.
+
+In ARGUS language, the direct address of a special register is indicated by the letter Z, followed by a special register designation and an unsigned increment from 0 to 31, all separated by commas.  The letter Z, in effect, represents a one in the memory designator bit position of the command code, a zero in the first bit position of the address group, and a zero in the tabular bit position of the address group.  The special register designation may be either the numeric subaddress or the mnemonic subaddress of the desired register, as shown in Figure V-1 (page 52).  If the contents of the special register are not to be altered, the programmer may specify an increment of zero or may omit the increment entirely.  The ARGUS address
+```
+        Z, R1, 10
+```
+indicates that general purpose register 1 is addressed directly as the source of an operand or as a result location; if addressed as an operand source, its contents are to be incremented (or decremented) by 10 after use.  The address
+```
+        Z, X0
+```
+indicates that index register 0 is directly addressed and that no incrementing is to take place.
+
+It should be noted that the relative positions of the special register subaddress and the increment are reversed in ARGUS language from their machine language arrangement.  In other words, the increment appears in the low-order position of the ARGUS address, but in the high-order bits of the machine address group.
+
+#### Indexed Memory Location Address
+
+Each special register group includes eight index registers.  An indexed address refers to one of these registers in the special register group of the sequencing counter which selected the instruction and is defined by a one in bit 1 of the address group.  The remaining 11 bits of the address group are interpreted as an index register number and an augmenter to be added to the contents of that index register _before_ use.  Bits 2 through 4 designate one of the eight registers in the group, while bits 5 through 12 specify, in binary, a number from 0 to 255 which augments the low-order bits of the contents of the index register.  (Note that an indexed address specifying index register 7 with an augmenter of 255 is interpreted as an inactive address, see page 47).  It should be emphasized that in indexed addressing the index register is not identified by its 5-bit subaddress, but by only three bits which designate its position within the group of eight index registers.  Whenever a special register is addressed in an instruction by its full 5-bit subaddress, it is said to be explicitly addressed.  When it is referenced in any other way, it is said to be implicitly addressed or referenced.  Since the index register in an indexed address is denoted by only three bits, an index register is always referenced implicitly in indexed addressing.
+
+Like all special registers, an index register has the capacity to store 16 information bits of which bit 1 is a sign bit.  If the memory designator bit in the command code of the instruction is zero (either explicit or implied), the low-order 15 bits stored in the referenced index register are interpreted as a bank indicator and an 11-bit main memory subaddress.  When the instruction is performed, the 8-bit augmenter is added to the stored 15-bit address, under control of the index register sign, to form the desired main memory address.  This process has no effect upon the contents of the index register, which retains the unaugmented address.  The interpretation of an indexed memory location address is shown in Figure IV-5.
+
+![Figure IV-5](images/figure_IV-5.png?raw=true)
+
+Since the index register contains a full 15-bit memory address, indexed addressing, unlike direct addressing, permits the programmer to address locations in any main memory bank, regardless of the bank indicator stored in the controlling sequence counter.  This type of addressing is also useful in processing multi-word items or in referring to a stored table, where the address of the first word of the item or table is stored in an index register and all references to the item or table are made using the index register with appropriate augmenter.  It must be remembered, however, that positive augmentation occurs only if the index register sign is positive.  If the sum of the augmenter plus the stored subaddress exceeds 2047, a carry occurs into the bank indicator, and the resulting address designates a location in a different bank from the address stored in the index register.
+
+In ARGUS language, an indexed memory location address is indicated by writing an index register number (from 0 to 7) followed by a comma and a number from 0 to 255 or a symbolic tag to represent the augmenter.  Thus the address
+```
+        5, 10
+```
+specifies that the contents of index register 5 in the related special register group are to be augmented by 10 to form the complete memory address of an operand or result location.  Reference should be made to the ARGUS _Manual of Assembly Language_ for details on the use of symbolic tags to represent the augmenter.
+
+#### Indexed Special Register Address
+
+If bit 1 of the address group is one (indexed) and the memory designator bit is one (control memory), the address group is interpreted as an index register number and an augmenter, but the augmented contents of the referenced index register are interpreted as a special register address rather than a main memory address.  When the augmenter has been added to the low-order eight bits of the index register, the resulting configuration is interpreted as shown in Figure IV-6.
+
+![Figure IV-6](images/figure_IV-6.png?raw=true)
+
+Two facts illustrated by Figure IV-6 should be particularly noted.  Since the augmented contents of the index register are interpreted as a special register address complete with group indicator, this type of addressing, unlike direct special register addressing, permits the programmer to address special registers in any group.  As noted in Section V, this facility has particular significance in connection with access to certain special registers involved in reading and writing operations.
+
+The second point involves the value of the tabular bit.  Depending on the original contents of the index register and the value of the augmenter, the tabular bit in the modified index register contents may be zero or one.  If this bit is zero, the the special register is directly addressed, as defined under the discussion of direct special register addressing.  If the tab bit is one, on the other hand, the type of addressing is indirect, as described below under the discussion of indirect addressing.  Regardless of the value of the tabular bit, the contents of the special register will be permanently modified, _after_ use, by the value of the 5-bit increment, under control of the sign of the special register itself, provided that the special register is not addresses as a result location.  As always, the contents of the index register are _not_ altered by the indexing process.
+
+In ARGUS language, an indexed special register address takes the form
+```         Index Register Designator, Z, Special Register Designator, Increment```
+
+The index register designator is a number from 0 to 7 which specifies one of the eight index registers related to the controlling sequencing counter.  The special register designator may be a number from 0 to 31 or it may be mnemonic (see Figure V-1, page 52).  The increment may be a number from 0 to 3 or it may be omitted.  The manner in which these numbers are used to modify the index register contents and form a special register address is discussed in detail in the ARGUS _Manual of Assembly Language_.
+
+#### Indirect Memory Location Address
+
+In some instances, it is useful to be able to specify in the address group of the instruction the address of a special register where the main memory address of the desired operand is stored, rather than to specify the location of the operand directly.  This method of locating an operand is called indirect memory location addressing.
+
+In this type of addressing, the bit configuration of the address group is identical to that described under direct special register addressing with the exception that the tabular bit (bit 7) in the address group has the value of one rather than zero.  Since the memory designator bit must also have the value of one (control memory), this type of addressing may be used only in unmasked general instructions, inherent mask instructions, scientific instructions, and print instructions.  The special register whose address is generated, as shown in Figure IV-7, contains not the operand for the instruction, but the address of the operand in main memory.
+
+The address generated is that of a special register in the same group as the sequencing counter which selected the instruction.  The contents of this special register are interpreted as a sign, followed by a 4-bit bank indicator and an 11-bit subaddress designating the main memory location (in any bank) where the operand will be found.  Thus, indirect memory location addressing, like indexed memory location addressing, provides access to operands in any bank of memory regardless of the bank indicator stored in the sequencing counter.  After the contents of the special register have been used to locate the desired operand, the low-order bits of the stored contents are permanently modified by the increment specified in the address group of the instruction, under control of the special register sign.  This incrementing (or decrementing) takes place regardless of whether the memory location addressed is an operand or a result location.
+
+![Figure IV-7](images/figure_IV-7.png?raw=true)
+
+Indirect addressing is a useful tool for stepping sequentially through an array of items, processing the n<sup>th</sup> word of each item.  The location of word n of the first item is stored in a special register.  When this location is addressed indirectly, the use of the proper increment (equal to the item size) sets the contents of the special register to the location of word n of the second item, and so forth, until word n of each item has been processed.
+
+ARGUS recognizes the use of indirect memory location addressing by the notation
+```         N, Special Register Designator, Increment```
+where N represents a memory designator bit of one in the command code, a zero in the first bit position of the address group, and a one in the tabular bit position of the address group.  The special register designator specifies one of the registers in the related group, either numerically or mnemonically (see Figure V-1, page 52), and the increment is a number from 0 to 31.  The computer interprets the contents of the specified register as the bank indicator and subaddress of a memory location in any bank.  The increment is added to the low-order bits of the contents of the special register _after_ use, permanently altering them.  Thus, the address
+```         N, R1, 10```
+designates the contents of the related special register R1, which are interpreted as the location of an operand in main memory.  After use, the contents of R1 are incremented by 10.
+
+#### Indexed Indirect Memory Location Address
+
+As noted in the discussion of indexed special register addressing, the contents of an index register may be interpreted as a special register group indicator and subaddress, a tabular bit, and an increment.  If the tabular bit position of the augmented index register contents has the value of one, then the contents of the special register (designated by the augmented index register contents) are used to locate the operand in main memory.  This type of addressing is called indexed indirect memory location addressing.  The generation of an indexed indirect memory location address is identical to that shown in Figure IV-6.  However, the tabular bit position in the augmented contents of the index register has the value of one for an indexed indirect memory location address whereas it has the value of zero for indexed special register addressing.
+
+Indexed indirect memory location addressing makes it possible to use any of the 256 special registers in the system to address any available memory location indirectly.  The retained contents of the special register are always modified _after_ use by the amount of the increment, under control of the special register sign bit.
+
+ARGUS notation for an indexed indirect memory location address resembles that for an indexed special register address, taking the form
+```         Index Register Designator, N, Special Register Designator, Increment```
+
+The comments made with respect to ARGUS notation for an indexed special register address are also applicable to an ARGUS indexed indirect memory location address.
+
+#### Summary of Address Forms
+
+The binary forms of six different address types are described in the preceding pages and illustrated in Figures IV-3 through IV-7.  Figure IV-8 suggests a method with which the reader may determine by inspection the address type of any binary address configuration.  This figure is _not_ illustrative of the steps taken by the machine in interpreting instructions.
+
+#### Significant Main Memory Addresses
+
+Regardless of the amount of main memory available, the first memory bank of every Honeywell 1800 system includes certain locations whose use by the programmer is restricted.  These locations are automatically involved in certain central processor functions described below.  Although reserved for these functions, they are nevertheless directly addressable by the programmer and may be used with caution by a person familiar with the situations in which the central processor uses them automatically.  (It is recommended that they not be used when processing is done in parallel.)  The complete addresses, in octal notation, for these "reserved" locations are as follows:
+```
+        00000-00017:    Used for automatic access in the multiply instructions
+        00021:          Main console typewriter buffer 
+                                    and
+                        Console slave typewriter buffer
+```
+In addition to its use with the multiply instructions, location 00000 is also used during the execution of any instruction which employs a mask and stores a result in a special register.  (Note that location 00020 is not reserved.)  Since the console typewriter is used at least to a limited degree in every system, its buffer location should not be used by the programmer for storage.
+
+The multiply instructions (see Section VI) in the Honeywell 1800 generate a set of multiples of the multiplicand which are stored in locations 00000-00017, destroying any information previously stored in these locations by the programmer.  Since 16 multiples of the multiplicand are generated during execution of a binary multiply, this instruction involves all 16 locations.  The decimal multiply instruction, however, requires only 10 partial products, so that only locations 00000-00011 inclusive are affected by this instruction.  It must be remembered that every program running in parallel uses these same locations whenever a multiply instruction is executed.  Thus, a programmer who hopes to use these locations with impunity must consider the requirements of other programs which may be run at the same time as his own.  It should also be noted that the multiples stored in these locations include modulo-3 check bits stored in the parity bit positions, with the result that these locations will generally contain words which the parity checking circuits will find invalid.
+
+![Figure IV-8](images/figure_IV-8.png?raw=true)
+
+#### Stopper Address
+
+When the contents of a special register, interpreted as a main memory address, are modified by incrementing or augmenting, a carry may occur from the 11-bit subaddress into the bank indicator bits.  Thus, a sequencing counter can be stepped through successive memory banks, and a single peripheral or transfer instruction can handle a record which is not stored entirely within one memory bank.  There is one address, however, which by definition is neither incremented nor decremented when it appears in a special register.  This address, called a stopper address, represents the highest-numbered location in the memory of a given Honeywell 1800 system, regardless of the number of banks in the system.  Its 11-bit subaddress, therefore, represents location 2047 in some memory bank.  Its bank indicator is the highest such indicator in the particular system and varies from installation to installation.  The largest possible value, in octal, for a complete stopper address is 77777.  This occurs only in a system having 32,768 words of main memory.
+
+The stopper location can only be addressed directly by a program under control of a sequencing counter which contains the highest bank indicator in the system.  Other programs must address the stopper either by indexing or indirectly through a special register containing the highest bank indicator and a subaddress of 11 binary ones.  By addressing the stopper in the A address group of a read instruction, it is possible to move tape without disturbing any memory locations except the stopper.  Similarly, it is possible to read only part of a record into memory and discard the balance by causing the first unwanted word to be stored in the stopper location.
+
+Although the stopper address cannot be incremented, it is possible for an address in a special register to receive an increment or augmenter greater than the difference between its initial value and the stopper or to be decremented or negatively augmented by an amount greater than its initial value.  The effects of such operations, however, should be carefully noted.  These are summarized below:
+
+1. If a word in the control memory receives an increment greater than the difference between its initial value and 77777 or a decrement greater than its initial value, the result restored to the special register contains invalid parity bits.  The next attempt to use the contents of this special register as an address (e.g., indirect addressing) will result in a control error (see Appendix D).  However, it is possible to use these contents as an operand or to write into this special register without error.
+
+2. Whenever the stopper address for a given installation is less than 77777 and a word in the control memory receives an increment greater than the difference between its initial value and the stopper (but not greater than the difference between its initial value and 77777), a legal special register word is created and direct addressing of this special register may take place without error.  The resulting special register word, however, represents the address of a non-existent main memory location for this installation.  Thus, if this special register is referenced as the source of a main memory address (indirect memory location addressing), a control error will result.
+
+3. If a legal special register word representing a memory location with an address greater than the stopper and having a negative sign bit appears in an index register, this index register may be used for indexed addressing without error, provided that the result of indexing is the address of an existing memory location.
+
+#### Inactive Addresses
+
+The Honeywell 1800 central processor contains three arithmetic registers which have no addresses: the accumulator, the mask register, and the low-order product register.  Programmer access to these registers is provided by the technique of inactive addressing with certain specified instructions.  When an address group in an instruction has the octal value 7777 (12 binary ones), that address is said to be inactive.  The memory designator bit, if any, must be zero; otherwise, the behavior of the system is unspecified.  Instructions in which the designator bits are used for other purposes and do not have to be zero are: masked general instructions, peripheral instructions, and simulator instructions.  In addition, the designator bit for an A address group of the control program instruction (see Section XII) can be either "1" or "0," because the A address group is ignored in this instruction.
+
+Access to the accumulator is provided by the proper use of inactive addressing in conjunction with the add instructions.  Inactive addressing with the extract instruction provides access to the mask register.  Access to the low-order product register is made possible by inactive addressing with the transfer and sequence change instruction (TS in ARGUS language).
+
+Th behavior of the accumulator when inactive addressing is used in the binary add, decimal add, or word add instruction is specified as follows:
+
+1. If address A is inactive, the previous contents of the accumulator are used as if they were the contents of A.  However, if the contents of the accumulator have already been delivered to a memory location by a previous instruction, a control error will result (see Appendix D).
+
+2. If address B is inactive, the accumulator (which contains the contents of A if A is active or the previous contents of the accumulator if A is inactive) is left undisturbed.
+
+3. If address C is inactive, the normal process of hunting for the next sequence counter in demand is inhibited, and the result remains in the accumulator at the conclusion of the instruction.
+
+Thus, if the B and C addresses are inactive, the effect of the instruction is to transfer the contents of address A to the accumulator.  If the A and B addresses are inactive, on the other hand, the effect is to transfer the contents of the accumulator to the location specified in the C address.  Certain restrictions should be noted with respect to the sequencing of these instructions when they contain inactive instructions.  If a decimal or binary add instruction is used to place a word in the accumulator, the same type of instruction should be used to transfer the contents of the accumulator, with proper sign, to memory.  Similarly, if a word has been placed in the accumulator by a word add instruction, the word add instruction must be used to deliver the contents of the accumulator to memory.  The explanation for this restriction is reserved for the section discussing the arithmetic instructions in detail (Section VI).
+
+The mask register, not to be confused with the mask index register in the control memory, is a full-word register in the central processor which stores the mask during the execution of a masked instruction.  In the extract instruction, the location of the mask is specified in the B address.  At the conclusion of the execution of an extract instruction with all addresses active, the original contents of the B address are left in the mask register.  Thus, a word may be loaded into the mask register, without disturbing memory, by using an extract instruction with an inactive C address.  If address B is inactive, the previous contents of the mask register will be used as the mask.  The contents of the mask register are transferred to the location specified in address C of an extract instruction if address B is inactive and the contents of address A consist of all (48) binary ones.
+
+The low-order product register is of interest to the programmer primarily because it stores the low-order portion of the result of a multiply instruction.  In order to obtain this result, the programmer may use the transfer and sequence change instruction (TS) with an inactive A address, which transfers the contents of the low-order product register to the location specified by the B address.  If address A of this instruction is active and address B is inactive, the contents of A are transferred to the low-order product register and to the accumulator.  Although these contents can then be retrieved from the low-order product register, as described above, any attempt to obtain them from the accumulator by inactive addressing with a word add instruction will probably result in a control error.
+
+If any instructions intervene between the instruction which stores information in an arithmetic register and that which attempts to retrieve the information, the behavior of the system is unspecified.  Moreover, if a masked instruction is used to attempt to retrieve information from the accumulator or low-order product register, the behavior of the system is unspecified unless the same mask was used when the information was stored there.  Since masking is not permitted with the multiply instructions, a masked transfer and sequence change (TS) instruction should never by used to retrieve the low-order product.
+
+In addition to its use in providing access to the accumulator, the mask register, and the low-order product register, the technique of inactive addressing has special significance in the read, write, and rewind instructions.  These features are discussed in Section XI.
+
+The 1801-B Floating-Point Option includes two additional arithmetic registers known as the floating-point accumulator (FLAC) and floating-point low-order product register (FLOP).  In general, access to these two registers is obtained by the use of inactive addressing in the scientific instructions, as described in Section XIII.
+
+Two other general situations in which the effect of inactive addressing has been specified should be mentioned:
+
+1. If the C address group is inactive in an instruction that normally changes the sequencing counter to select the next instruction from the location given in the C address group, the counter remains unchanged, unless its contents have been altered under the direction of the A or B address group.
+
+2. When an inactive C address occurs in any instruction for which such an address is allowed, the normal process of hunting for the next sequencing counter in demand is omitted.
+
+In all cases of inactive addressing not specifically mentioned in this section, the behavior of the Honeywell 1800 is currently unspecified.
+
+In ARGUS language, an inactive address is indicated by a hyphen (`-`) in the address field.
 
