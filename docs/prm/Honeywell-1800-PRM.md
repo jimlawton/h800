@@ -1085,5 +1085,214 @@ When an instruction operand with bad parity is transferred in memory without alt
 
 ## SECTION VI: ARITHMETIC INSTRUCTIONS
 
+Arithmetic instructions in the Honeywell 1800 involve the use of two arithmetic registers called the accumulator (`AC`) and the low-order product register (`LOP`).  As discussed in Section IV, these registers are accessible to the programmer through the technique of inactive addressing with certain specified instructions.  The accumulator is used in all the instructions described below.  The low-order product register is used in the multiply instructions and in the masked arithmetic instructions.
 
+### The Accumulator
+
+The accumulator consists of 48 flip-flops, each capable of storing a single binary digit.  Used in conjunction with the accumulator is a single flip-flop called the sign flip-flop.  Since the operands handled in most arithmetic operations are treated as 44-bit numbers with 4-bit signs, most arithmetic instructions use the sign flip-flop together with the low-order 44 bits of the accumulator.  The exceptional instructions which handle unsigned 48-bit numbers are so noted as they are described.
+
+For all arithmetic operations on signed numbers, the sign flip-flop, originally set to the value of zero, is changed to the value of one if any of the four sign bits in the `A` operand is a one.  (This is the logical OR function.)  The setting of the sign flip-flop, the sign of the `B` operand, and the operation code determine the sign of the result.  When the result is read out of the accumulator, a sign consisting of four bits identical in value (zero or one) to the final setting of the sign flip-flop is attached to the low-order 44 bits of the accumulator.  Thus only two sign configurations may be obtained as a result of an arithmetic operation: four binary zeros indicating a negative result or four binary ones indicating a positive result.  If the result of an add or subtract instruction is zero, the result takes a sign based on the sign of the `A` operand.
+
+When addition is performed on signed numbers, bits 1 through 4 of the accumulator are automatically filled with binary ones so that if overflow occurs it may be sensed in bit 1, the same position in which it is sensed during the addition of unsigned 48-bit operands.  Similarly, bits 1 through 4 are filled with binary zeros when subtracting signed numbers in order that borrows may be sensed at the same position for both singed and unsigned numbers.  If overflow occurs, the instruction is completed and the low-order 44 bits of the accumulator, plus a 4-bit sign based on the value of the sign flip-flop, are stored in the location specified by the `C` address.  An unprogrammed transfer is then made to `U + 8` or `U + 9`, where the programmer should have stored the entry to a subroutine to handle this condition.  The instruction which resulted in the overflow is stored in `U` or `U + 1` (see Figure V-5, page 62).
+
+The arithmetic operations are not actually performed in the accumulator but in an adder consisting of 12 gate buffer amplifiers.  Both binary and decimal arithmetic are performed in the same adder, which handles three 4-bit groups at a time.  For binary instructions, these 4-bit groups are considered as hexadecimal digits, with carry occurring after a group reaches the value 15.  This results in a pure binary operation.  For decimal instructions, the adder is made to carry when a 4-bit group reaches the value of none, so that decimal arithmetic is performed.  If a decimal addition instruction involves an operand which contains hexadecimal digits, however, a variant on normal addition occurs in accordance with the following rules:
+
+1. If the hexadecimal digit appears in the `A` operand, the corresponding digit in the `B` operand is added in hexadecimal fashion.  In other words, `14 + 1` becomes `15`, `14 + 3` becomes `1` with a carry of `1`.
+2. If the `A` operand contains decimal information and a hexadecimal digit occurs in the `B` operand, then the result is decimalized as follows: `3 + 14` becomes `7` with a carry of `1`.  If the result of decimalization is `19` or `20`, a control error occurs (see Appendix D); if the result exceeds `20`, the performance of the system is unspecified.
+
+The contents of the operands are inspected digit by digit.  Therefore, the result obtained by adding two words having both hexadecimal and decimal digits must be ascertained on a digit-by-digit basis.  Since this condition is not considered an error by the central processor, except in the circumstance noted above, the programmer will receive no indication of the existence of a hexadecimal digit in an operand handled by a decimal instruction.
+
+Addition and subtraction of signed numbers conforms to normal algebraic rules.  Thus, an add instruction causes operands with like signs to be added and operands with unlike signs to be subtracted.  A subtract instruction causes operands with unlike signs to be added and operands with like signs to be subtracted.  A more detailed discussion of fixed-point addition in the Honeywell 1800 will be found in Appendix A.
+
+Several precautions must be observed in working with the accumulator.  In the discussion of inactive addressing (Section IV), it is pointed out that the result of an addition may be left in the accumulator by using an add instruction with an inactive `C` address and that the contents of the accumulator may be stored in memory by using an add instruction with inactive `A` and `B` addresses.  It should also be noted that if the contents of the accumulator were formed by an instruction which treated the operands as signed 44-bit numbers, such an instruction must be used to store the contents of the accumulator in order to guarantee them the proper sign. Otherwise, the entire 48-bit contents will be stored rather than the low-order 44 bits with a 4-bit sign determined from the value of the sign flip-flop.  Similarly, if the contents of the accumulator were created by an instruction which treated the operands as unsigned 48-bit words, such an instruction must be used to transfer the entire contents of the accumulator to memory without reference to the sign flip-flop.
+
+Another precaution involves the condition of the accumulator after its contents have been delivered to memory.  After a result formed in the accumulator has been transferred to memory, the contents of the accumulator are invalid.  A second attempt to transfer the result, therefore, will cause a control error and the machine will stop.  Since a hunt for the next program demand will have occurred immediately after the first transfer, this behavior imposes no real restriction on the use of the accumulator.
+
+### The Low-Order Product Register
+
+The low-order product register is a 48-bit register similar to the accumulator.  As its name implies, the register is used to store the low-order portion of the result of a multiply instruction.  The contents of the register are interpreted as a sign and a 44-bit number.
+
+### Binary Add, BA
+
+### Decimal Add, DA
+
+### Binary Subtract, BS
+
+### Decimal Subtract, DS
+
+### Word Add, WA
+
+### Word Difference, WD
+
+### Binary Accumulate, BT
+
+### Decimal Accumulate, DT
+
+### Binary Multiply, BM
+
+### Decimal Multiply, DM
+
+## SECTION VII: LOGICAL INSTRUCTIONS
+
+### Extract, EX
+
+### Substitute, SS
+
+### Half Add, HA
+
+### Superimpose, SM
+
+## Section VIII: TRANSFER INSTRUCTIONS
+
+### Transfer A to C, TX
+
+### Transfer and Sequence Change, TS
+
+### N-Word Transfer, TN
+
+### Multiple Transfer, MT
+
+### Record Transfer, RT
+
+### Item Transfer, IT
+
+## SECTION IX: DECISION INSTRUCTIONS
+
+### Inequality Comparison, Alphabetic, NA
+
+### Less Than or Equal Comparison, Alphabetic, LA
+
+### Inequality Comparison, Numeric, NN
+
+### Less Than or Equal Comparison, Numeric, LN
+
+## SECTION X: SHIFT INSTRUCTIONS
+
+### Shift Preserving Sign and Substitute, SPS
+
+### Shift Preserving Sign and Extract, SPE
+
+### Shift Word and Substitute, SWS
+
+### Shift Word and Extract, SWE
+
+### Shift Word and Select, SSL
+
+## SECTION XI: PERIPHERAL INSTRUCTIONS
+
+### Read Forward, RF
+
+### Read Backward, RB
+
+### Write Forward, WF
+
+### Rewind, RW
+
+## SECTION XII: MISCELLANEOUS INSTRUCTIONS
+
+### Print, PRA, PRD, PRO
+
+### Control Program, MPC
+
+### Proceed, PR
+
+### Simulator, S
+
+### Compute Orthocount, CC
+
+### Check Parity, CP
+
+## SECTION XIII: SCIENTIFIC INSTRUCTIONS
+
+### Floating-Point Numbers
+
+### Floating-Point Arithmetic Registers
+
+### Instruction Configurations
+
+### Inactive Addresses
+
+### Exponential Overflow and Underflow
+
+### Checking
+
+### Floating Binary Add, FBA
+
+### Floating Binary Subtract, FBS
+
+### Floating Decimal Add, FDA
+
+### Floating Decimal Subtract, FDS
+
+### Floating Binary Add, Extended Precision, FBAE
+
+### Floating Binary Subtract, Extended Precision, FBSE
+
+### Normalized Floating-Point Addition and Subtraction
+
+### Unnormalized Floating-Point Addition and Subtraction
+
+### Floating Point Binary Add, Unnormalized, FBAU
+
+### Floating Point Binary Subtract, Unnormalized, FBSU
+
+### Floating Point Decimal Add, Unnormalized, FDAU
+
+### Floating Point Decimal Subtract, Unnormalized, FDSU
+
+### Timing Notes on Floating-Point Addition and Subtraction
+
+### Floating Binary Multiply, FBM
+
+### Floating Decimal Multiply, FDM
+
+### Timing Notes on Floating-Point Multiplication
+
+### Floating Binary Divide, FBD
+
+### Floating Decimal Divide, FDD
+
+### Fixed Binary Divide, BD
+
+### Fixed Decimal Divide, DD
+
+### Timing Notes on Division
+
+### Normalized Less Than Comparison, FLN
+
+### Normalized Inequality Comparison, FNN
+
+### Fixed-to-Floating Normalize, FFN
+
+### Multiple Unload, ULD
+
+### Conversion, FCON
+
+## SECTION XIV: SUMMARY OF INSTRUCTIONS
+
+### General Instructions, Unmasked or Masked
+
+### General Instructions, Unmasked
+
+### Inherent Mask Instructions
+
+### Peripheral and Print Instructions
+
+### Simulator Instructions
+
+### Scientific Instructions
+
+## APPENDIX A: FIXED-POINT ADDITION IN THE HONEYWELL 1800
+
+## APPENDIX B: ORTHOTRONIC CONTROL
+
+## APPENDIX C: TIMING SUMMARY
+
+## APPENDIX D: CONTROL ERRORS
+
+## APPENDIX E: TABLES
+
+## APPENDIX F: MEMORY EXTENSIONS BEYOND 32,768 WORDS
+
+## APPENDIX G: MEMORY BARRICADE
 
