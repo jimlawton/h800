@@ -1215,13 +1215,71 @@ Since only 10 multiples of the multiplicand are stored in a decimal multiply, co
 
 ## SECTION VII: LOGICAL INSTRUCTIONS
 
+The four instructions which make up the logical group manipulate words on an individual-bit basis, combining bits from two words to form a third.  The rules by which the bits are combined are similar to the rules under which the logical elements of a computer operate; hence the name logical instructions.  All operands are regarded as 48-bit words in which each bit is an individual unit of information unrelated to any other bit.
+
+The four logical instructions are extract, substitute, half add, and superimpose.  Extract and substitute have command codes of the "inherent mask" format (see [Section III](#section-iii-the-honeywell-1800-word)) and utilize the entire `B` address group to specify the location of a mask.  Half add and superimpose have command codes of the "general, masked or unmasked" format.  The time required to execute an extract or substitute instruction with direct memory location addresses is five memory cycles; for an unmasked half add or superimpose instruction with direct memory location addresses, it is four memory cycles.
+
+The logical instructions may address special registers in one or more address groups. The result of such an operation may be determined by applying the rules governing the transfer of a special register word to a 48-bit register and the transfer of a 48-bit word to a special register.
+
 ### Extract, EX
+
+The extract instruction places the `A` operand in the location specified by the `C` address group, using the `B` operand as a mask and _not_ protecting the unmasked portions of `C`.  (The mask index register is not used in locating the mask.)  This is equivalent to combining the corresponding bits of the `A` and `B` operands in accordance with the following rule:
+
+    If corresponding bit positions in the word at `A` and the word at `B` both contain ones, the result shall contain a one in this position.  In all other cases, the result shall contain a zero.  This is the "logical AND" function.
+
+The execution of an extract (or logical AND) instruction utilizes the accumulator, the mask register, and the low-order product register, and takes place in the following steps:
+
+1. The 48-bit `A` operand is placed in the accumulator and the 48-bit `B` operand is placed in the mask register.
+2. The corresponding bits of these two registers are examined.  Where the bits of both registers contain a one, a one is stored in the low-order product register.  Where the bits are not both ones, a zero is stored in the low-order product register.
+3. The 48-bit result generated in the low-order product register is then placed in the location specified by the `C` address group.
+
+Whenever a masking operation is performed, whether in a logical, a general, or a shift instruction, a logical computer element called a "gate" is set by the value of each bit from the mask register to open one transmission path and close another.  In unprotected masking, one of the paths transmits the word to be masked while the other transmits generated zero bits.  In protected masking, the generated zeros are replaced by the contents of the location specified by the `C` address group.
+
+For example, the following locations contain the words shown:
+```
+            OPERAND         110100101101------------
+            EXMASK          000011110000------------
+            RESULT          101001110110------------
+```
+when the instruction
+```            EX      OPERAND     EXMASK      RESULT```
+is executed.  As a result of the instruction, the contents of location `RESULT` will be:
+```            RESULT          000000100000------------```
+
+As discussed in [Section IV](#section-iv-addressing) (see page 47), the use of inactive addressing with the extract instruction provides access to the 48-bit arithmetic register called the mask register.  When a mask is specified in an instruction, either in the command code or in the `B` address group, the contents of the specified location are placed in the mask register, where they remain until a subsequent instruction calls for a mask (or until they are destroyed by the execution of a multiply instruction).  Therefore, the contents of the mask register are unrelated to the instruction being performed if this instruction does not specify a mask.  Since the mask register has no address, the programmer cannot transfer its contents directly to memory.  However, by executing an extract instruction which specifies the address of a word of 48 binary ones in the `A` address group and an inactive address in `B`, the programmer can store in the location specified by `C` a word guaranteed to be identical to the contents of the mask register.  This guarantee can be verified by an inspection of the above rule of operation.  If the programmer wishes to insert a full word into the mask register without disturbing any memory location, he may perform an extract instruction with an inactive `C` address.
 
 ### Substitute, SS
 
+The substitute instruction performs the same general function as extract except that the contents of the location specified by the `C` address group are protected.  When this instruction is executed, therefore, the computer places the 48-bit contents of `A` in the accumulator and the 48-bit content of `B` in the mask register and then forms a new word in the low-order product register according to the following rule:
+    Wherever the `B` operand contains a one bit, the corresponding bit of the `A` operand is stored in the corresponding position of the low-order product register.  Wherever the `B` operand contains a zero bit, the corresponding bit of the word at `C` is stored in the corresponding position of the low-order product register.
+Finally, the word formed in the low-order product register is stored in the location specified vy the `C` address group.  The result of the operation may differ from the result of an extract having the same operands only in those bit positions for which the `B` operand has a value of zero.  The behavior of this instruction with one or more inactive addresses is unspecified.
+
+For example, if the instruction
+```            SS      OPERAND     EXMASK      RESULT```
+is executed where the contents of the three locations specified are as shown under the discussion of extract, the contents of location `RESULT` will be:
+```            RESULT          101000100110------------```
+
 ### Half Add, HA
 
+The half add instruction performs a binary addition of the 48-bit `A` and `B` operands in the accumulator, discarding all carries, and stores the result in the location specified by the `C` address group.  This is equivalent to combining the corresponding bits of the `A` and `B` operands in accordance with the following rule:
+    If the corresponding bit positions in the `A` and `B` operands have the same value, the result shall contain a zero in this position.  In all other cases, the result shall contain a one.  This is the "logical exclusive OR" function.
+The behavior of this instruction with one or more inactive addresses is unspecified.
+
+The half add instruction is illustrated in terms of the same example used to explain extract.  If the instruction
+```            HA      OPERAND     EXMASK      RESULT```
+is executed and the operands are the same as in the preceding examples, the contents of location `RESULT` will be
+```            RESULT          110111010010------------```
+
 ### Superimpose, SM
+
+The superimpose instruction performs a superimpose of the 48-bit `A` and `B` operands in such a way that the result contains a one in every position in which a one existed in either `A` or `B` or both, and stores the result in the location specified by the `C` address group.  This is equivalent to combining the corresponding bits of the `A` and `B` operands in accordance with the following rule:
+    If corresponding bit positions of the `A` and `B` operands are both zero, the result shall contain a zero in this position.  In all other cases, the result shall contain a one.  This is the "logical inclusive OR" function.
+The behavior of this instruction with one or more inactive addresses is unspecified.
+
+For example, if the above operands are manipulated by the instruction
+```            SM      OPERAND     EXMASK      RESULT```
+the contents of location `RESULT` will be
+```            RESULT          110111110010------------```
 
 ## Section VIII: TRANSFER INSTRUCTIONS
 
