@@ -1114,23 +1114,104 @@ The low-order product register is a 48-bit register similar to the accumulator. 
 
 ### Binary Add, BA
 
+The binary add instruction causes the contents of the location specified by `A` to be added algebraically to the contents of the location specified by `B` and the result of the operation to be stored in the location specified by `C`.  The contents of both `A` and `B` are regarded as 44-bit numbers with 4-bit signs. If any sign bit for the `A` or `B` operand is a one, then the corresponding operand is considered positive.  After the addition is complete, the low-order 44 bits of the accumulator, plus a 4-bit sign (`1111` or `0000`) corresponding to the value (`1` or `0`) of the sign flip-flop, are stored in the location specified by `C`.  If overflow occurs, the instruction is stored in `U` if the sequence counter selected it or `U + 1` if the cosequence counter selected it, and the next instruction is taken from `U + 8` or `U + 9`.
+
+As an illustration, assume that the following information bits are stored in memory locations tagged `MONTHDAY` and `CONSTNT1`:
+```
+            MONTHDAY        00110...........01110000
+            CONSTNT1        10000...........00011001
+```
+When the instruction
+```            BA      MONTHDAY    CONSTNT1     TESTAREA```
+is executed, the following result will be stored in `TESTAREA`:
+```            TESTAREA        11110...........010001001```
+In the unmasked version of the binary add, all three addresses may be direct, indexed, or indirect and may refer to main memory locations or special registers.  When the instruction is masked to permit operations on partial words, however, the `A`, `B`, and `C` addresses may refer only to the main memory in the direct or the indexed mode.
+
+If the `A` address of the instruction is active and `B` and `C` are inactive, the contents of `A` are placed in the accumulator.  If the `B` address is active and `A` and `C` are inactive, then the contents of `B` are added to the contents of the accumulator.  If the `C` address is active and `A` and `B` are inactive, the low-order 44 bits of the accumulator are stored in `C` with the sign bits `1111` or `0000`, depending upon the value of the sign flip-flop.
+
+The time required to execute an unmasked binary add instruction whose `A`, `B`, and `C` addresses directly specify main memory locations is generally four memory cycles.  Occasionally, one or two extra memory cycles may be required, as explained in Appendix A.  The effect on timing when the instruction is masked or when it uses indexed operands or special registers is summarized in [Appendix C](#appendix-c-timing-summary).
+
 ### Decimal Add, DA
+
+The decimal add instruction causes the contents of `A` to be added algebraically to the contents of `B` and the result of the operation to be stored in `C`.  The instruction differs from binary add only in the fact that the contents of each operand are handled as eleven 4-bit groups with a 4-bit sign.  The sign conventions are identical, and the result stored in memory consists of the low-order 44 bits of the accumulator and a 4-bit sign corresponding to the value of the sign flip-flop.
+
+If memory locations tagged `REGPAY` and `OVERTIME` contain the following information
+```
+            REGPAY          +00000012500
+            OVERTIME        +00000001750
+```
+and the instruction 
+```            DA      REGPAY      OVERTIME     WEEKPAY```
+is executed, then the following result will be stored in `WEEKPAY`:
+```            WEEKPAY         +00000014250```
+The comments on the binary add instruction with respect to overflow, addressing, masking, and timing are equally applicable to the decimal add instruction, with one exception: the behavior of the system is unspecified when the `C` address group of a decimal add instruction contains a direct special register or indexed special register address.
 
 ### Binary Subtract, BS
 
+This instruction causes the contents of `B` to be subtracted algebraically from the contents of `A` and the result to be stored in `C`.  The contents of both `A` and `B` are regarded as 44-bit numbers with 4-bit signs.  The sign and overflow conventions followed are the same as those described for the binary add instruction.
+
+The remarks about addressing and masking with reference to the binary add instruction also apply to binary subtract.  The time required to execute an unmasked binary subtract instruction whose `A`, `B`, and `C` addresses directly specify main memory locations is ordinarily four memory cycles.  Under certain unusual conditions described in [Appendix A](#appendix-a-fixed-point-addition-in-the-honeywell-1800), however, one or two additional memory cycles may be required.  The timing effect of masking, indexing, and the use of special registers is summarized in [Appendix C](#appendix-c-timing-summary).
+
 ### Decimal Subtract, DS
+
+The decimal subtract instruction differs from binary subtract only in the fact that both operands are regarded as eleven 4-bit groups with 4-bit signs.  The description of binary subtract is applicable to decimal subtract in every other respect but the following: the behavior of the system is unspecified when the `C` address group of a decimal subtract instruction contains a direct special register or indexed special register address.
 
 ### Word Add, WA
 
+Word add is one of the two arithmetic instructions which regards operands as unsigned 48-bit numbers.  The instructions adds the absolute values of the entire 48-bit contents of `A` and `B` in binary and stores the entire 48 bits of the accumulator in `C`, making no reference to the sign flip-flop.  In contrast to the example cited under the discussion of binary add, when the instruction
+```            WA      MONTHDAY    CONSTNT1     TESTAREA```
+is executed with the same operands:
+```
+            MONTHDAY        00110...........01110000
+            CONSTNT1        10000.............011001
+```
+then the following result will be stored in location `TESTAREA`:
+```            TESTAREA        10110...........010001001```
+Although the low-order 44 bits of the result stored in `TESTAREA` are identical for the two instructions, the high-order four bits are different since binary add inserts in these four positions a sign based on the value of the sign flip-flop whereas word add stores the entire contents of the accumulator, without regard for the sign flip-flop.
+
+Overflow is sensed in bit 1.  If overflow occurs, the instruction is completed, and the overflow conventions set forth under the description of binary add are followed.  With respect to addressing, masking, and timing, the word add instruction is identical to binary add.
+
 ### Word Difference, WD
+
+The second arithmetic instructions which treats its operands as unsigned 48-bit numbers, word difference, causes the entire 48-bit contents of `B` to be subtracted in binary from the entire 48-bit contents of `A`.  The entire 48 bits of the accumulator are stored in `C`.  If the absolute value of the contents of `B` is greater than the absolute value of the contents of `A`, then overflow occurs, and the result stored in `C` is the difference of the absolute values of the words.  In all other respects, the word difference instruction is identical to word add.
 
 ### Binary Accumulate, BT
 
+The binary accumulate instruction totals the absolute value of the contents of `A` the number of times specified by the high-order six bits of the `B` address group, a number which ranges from 0 through 63.  Although the words added are treated as signed 44-bit numbers, only their absolute values are added.  The accumulator is not cleared between successive additions except for the high-order four bits.  At the conclusion of the series of additions, the 44 low-order bits of the accumulator are stored in `C`, together with a sign (four binary ones or four binary zeros) based on the value of the sign flip-flop.  This value represents the sign of the first word added (the contents of the location originally specified by the `A` address group).
+
+Step by step, the instruction functions as follows.  The low-order 44 bits of the `A` operand are transferred to the accumulator and the high-order four bits of the accumulator are set to one.  If `A` contains a special register subaddress, incrementing is performed as specified.  The high-order four bits of the accumulator are again replaced with ones, and the low-order 44 bits of `A` are added in binary to the contents of the accumulator.  (Note well that the location now specified by `A` will be different from the original `A` if incrementing took place.)  The specified incrementing is again performed (if `A` contains a special register subaddress), the high-order four bits of the accumulator are replaced by ones and the lo-order 44 bits of `A` are again added to the accumulator.  This process is performed the number of times specified by the high-order six bits of the `B` address group.  If the value of these bits is zero, no information is transferred to the accumulator, the instruction is not executed, and the next instruction is selected from the sequencing counter specified by bit 1 of the command code.  The low-order six bits of the `B` address group are ignored.
+
+As an example, consider the instruction
+```            BT      N, R1, 1    1 4     TOTAL```
+in the case where `R1` contains a main memory address tagged `OPERAND`.  The high-order four bits of the accumulator are set to ones, and the low-order 44 bits of `OPERAND` are transferred to the accumulator.  `R1` is incremented by one, the high-order four bits of the accumulator are replaced by ones, and the low-order 44 bits of `OPERAND + 1` are added in binary to the contents of the accumulator.  This process is repeated until the contents of `OPERAND + 3` have been added to the total in the accumulator.  The accumulator now contains the sum of the absolute values of the low-order 44 bits of `OPERAND`, `OPERAND + 1`, `OPERAND + 2`, and `OPERAND + 3`.  This sum, with a sign based on the sign of `OPERAND`, is then stored in the location tagged `TOTAL`.  Register `R1` contains the address of location `OPERAND + 4` at the conclusion of the instruction.
+
+Overflow in the accumulator is sensed in bit 1.  If overflow is sensed, the instruction is completed, and the normal overflow procedure (described under the binary add instruction) is performed.  Since the high-order four bits of the accumulator are replaced by ones between successive additions, the contents of these four positions are not available to indicate the number of overflows.  Thus, unless the programmer knows from the logic of his problem precisely how many overflows may have occurred and at which points, he must repeat the addition process in pairs.
+
+The time required to execute a binary accumulate instruction with direct and/or indirect memory location addresses is three memory cycles plus one memory cycle for each word accumulated.  Masking is not permitted with the accumulate instructions.
+
 ### Decimal Accumulate, DT
+
+This instruction is implemented in precisely the same way as binary accumulate, with the exception that the words added are regarded as 11-digit decimal numbers and are added according to the rules of decimal arithmetic.  If hexadecimal digits appear in the operands, they are added in the same fashion described under the decimal add instruction.  The remarks on overflow, timing, and masking made with reference to binary accumulate also apply to decimal accumulate.
 
 ### Binary Multiply, BM
 
+The binary multiplication instruction in the Honeywell 1800 stores a set of 16 multiples of the multiplicand (or `A` operand) in the first 16 locations of memory bank 0 (see page 44).  Any information previously stored in these 16 locations by the programmer will be destroyed during executions of a binary multiply instruction.  Since the multiples stored in these locations use the parity bit positions for modulo-3 check digits, these locations, in general, will contain words which the parity checking circuits will find invalid.
+
+At the beginning of the instruction, the address `00000` (in octal) is placed, with a positive sign bit, AU-CU counter 1 (`AU1`).  The number zero (zero times the `A` operand) is stored in location `00000`, and `AU1` is incremented by one to specify the storage location of the next partial product.  The `A` operand is then placed in location `00001`; `AU1` is stepped and twice the `A` operand is placed in location `00002`; the counter is stepped again and three times the `A` operand is placed in location `00003`; and so forth until the 16 multiples possible in the hexadecimal system are stored.  These multiples are then selected and added in accordance with the value of the digits of the multiplier (or `B` operand).  At the conclusion of the instruction the high-order product found in the low-order 44 bits of the accumulator is stored, together with a sign corresponding to the value of the sign flip-flop. in the location specified by the `C` address group.  The low-order product remains in the low-order product register.  `AU1` contains the address `00020` (in octal).
+
+Since hunting for the next sequencing counter in demand is not allowed at the conclusion of a multiply instruction, the programmer has the opportunity to store the contents of the low-order product register before an instruction from another program destroys them.  As explained under the discussion of inactive addressing ([Section IV](#section-iv-addressing), page 47), this may be accomplished by performing a transfer and sequence change instruction with an inactive `A` address.  If both halves of the product are stored, they will have the same sign.  It should be noted that the high-order product stored in `C` is unrounded.
+
+Several properties of the multiply instructions deserve particular attention.  The contents of the mask register are destroyed, together with the contents of those locations used to store the partial products.  Furthermore, if the `C` address of a multiply instruction is a direct or indexed special register address, a control error will occur and the machine will stop.
+
+Masking is not permitted with the multiply instructions.  Except for the restriction already stated with respect to the `C` address, the `A`, `B`, and `C` addresses may be direct, indexed or indirect.  The time required to execute a binary multiply with direct memory location addresses is 33 memory cycles.
+
 ### Decimal Multiply, DM
+
+Decimal multiply is implemented exactly as the binary multiply instruction, with the exception that only 10 partial products are generated instead of 16.  After the multiples of the `A` operand are generated, the proper multiples are selected and added in accordance with a digit-by-digit inspection of the multiplier, or `B` operand.  If hexadecimal digits appear in the operands, an erroneous product will be generated, and a control error may be indicated.
+
+Like binary multiply, the decimal multiply instruction produces a 2-word result.  The high-order product, consisting of 11 decimal digits, is stored in the location specified by the `C` address group with a sign determined by the value of the sign flip-flop.  The low-order result appears in the low-order product register and may be stored by the programmer in the manner described for binary multiply.  At the conclusion of the instruction, `AU1` contains the address `00012` (in octal).
+
+Since only 10 multiples of the multiplicand are stored in a decimal multiply, compared with 16 multiples for a binary multiply, only memory locations `00000` through `00011` will be affected, and the time required to execute the decimal instruction with direct memory location addresses is six memory cycles less than for the binary instruction, or 27 memory cycles.
 
 ## SECTION VII: LOGICAL INSTRUCTIONS
 
