@@ -762,7 +762,7 @@ The end-of-item word is a word whose high-order 32 bits are identical to the hig
 
 The basic main memory of the Honeywell 1800 consists of four banks, each capable of storing 2048 words, giving a total basic capacity of 8192 words.  Up to three model 1802 memory modules of 8192 words each can be added to the basic memory to expand the memory capacity to 16,384 words, 24,576 words, or 32,768 words.<sup>1(#section-iv-note-1)</sup>  Each main memory location is directly addressable and is uniquely designated by a 15-bit configuration.  This array of bits may also be thought of as an 11-bit subaddress to specify, in binary, one of the 2048 locations in a bank and a 4-bit bank indicator to specify a memory bank.  The bit structure of a main memory address is shown in Figure IV-1.  (It is sometimes convenient to express the value of such a 15-bit array as five octal digits.  In this notation, the memory addresses of a 32,768-word system range from 00000 to 77777.)
 
-<a name="section-iv-note-1">1</a>: Up to two model 1802-1 memory modules of 16,384 words each can be added to the three model 1802 modules to expand the memory to 49,152 or 65,536 words, as explained in Appendix F.
+<a name="section-iv-note-1">1</a> Up to two model 1802-1 memory modules of 16,384 words each can be added to the three model 1802 modules to expand the memory to 49,152 or 65,536 words, as explained in Appendix F.
 
 ![Figure IV-1](images/figure_IV-1.png?raw=true)
 
@@ -782,7 +782,7 @@ Each address group in a Honeywell 1800 instruction word consists of 12 binary di
 
 If bit 1 of an address group is zero (direct) and the corresponding memory designator bit is zero (main memory), then the remaining 11 bits of the address group are interpreted as a subaddress designating one of the 2048 locations in a bank of memory.  The bank indicator stored in the sequencing counter<sup>1(#section-iv-note-2)</sup> which selected the instruction is appended to this subaddress to form a complete 15-bit address (see Figure IV-3).  Thus, every direct memory location address in an instruction always refers to the bank in which the instruction was stored.
 
-<a name="section-iv-note-2">1</a>: Although instructions are normally selected by a sequence or cosequence counter, they may be selected by an unprogrammed transfer register (see [Section V](section-v-special-registers)).  In this case, the bank indicator is taken from the unprogrammed transfer register to form a direct memory location address.
+<a name="section-iv-note-2">1</a> Although instructions are normally selected by a sequence or cosequence counter, they may be selected by an unprogrammed transfer register (see [Section V](section-v-special-registers)).  In this case, the bank indicator is taken from the unprogrammed transfer register to form a direct memory location address.
 
 ![Figure IV-3](images/figure_IV-3.png?raw=true)
 
@@ -1053,7 +1053,7 @@ The unprogrammed transfer register is initially loaded, by explicit addressing, 
 
 The conditions which result in unprogrammed transfers are listed in Figure V-5.  Each of these events causes the execution of one instruction whose address is formed by adding a constant (`n`) to the contents of the `UTR`, under control of the `UTR` sign bit.  If the `UTR` contains a positive sign, the unprogrammed transfer causes execution of an instruction whose address is `U + n`.  If the sign bit in the `UTR` is negative, the unprogrammed transfer is made to `U - n`.<sup>1(#section-v-note-1)</sup>  If the instruction causing the transfer was selected by the sequence counter, `n` is an even number from 2 to 14; if it was selected by the cosequence counter, `n` is an odd number from 3 to 15.  Thus, the value of `n` depends upon the event that caused the transfer and the counter that selected the instruction, as illustrated in Figure V-5.  (CAUTION: An unprogrammed transfer to a memory location which contains a peripheral or print instruction will cause the error condition to be ignored in the event that the device addressed is momentarily unavailable to the unprogrammed transfer routine.)
 
-<a name="section-v-note-1">1</a>: In Figure V-5, the unprogrammed transfer addresses are listed as `U ± n`.  For the sake of simplicity, they are referred to as `U + n` throughout the manual.
+<a name="section-v-note-1">1</a> In Figure V-5, the unprogrammed transfer addresses are listed as `U ± n`.  For the sake of simplicity, they are referred to as `U + n` throughout the manual.
 
 ![Figure V-5](images/figure_V-5.png?raw=true)
 
@@ -1283,17 +1283,85 @@ the contents of location `RESULT` will be
 
 ## Section VIII: TRANSFER INSTRUCTIONS
 
+The logic of the Honeywell 1800 includes six instructions designed to transfer data within the main memory, within the control memory, or from one memory to another.  Using these instructions, called transfer instructions, the programmer may move any desired quantity of information, from a single bit to an entire record.  Two of the instructions move single words only, or, when masked, fields within single words.  The other four instructions move groups of words and cannot be masked.
+
+The command codes for all six instructions provide the ability to address special registers and to designate either sequencing counter as the source of the next instruction.  In instructions which transfer groups of words, the `A` address group indicates the location of the first word to be transferred, while the `C` address designates the location to which this word is to be delivered.  Except for the multiple transfer (`MT`) instruction, transfers involving groups of words occur under control of special registers `AU1` and `AU2`, which initially contain one the following bit configurations, depending on the type of addressing used in the `A` and `C` address groups, respectively.
+
+1. Direct Memory Location Address: A positive sign bit, the bank indicator taken from the sequencing counter which selected the instruction, and the low-order 11 bits of the address group.
+2. Direct Special Register Address: A positive sign bit, the group indicator associated with the sequencing counter which selected the instruction, and the low-order 11 bits of the address group.
+3. Indexed Memory Location Address: A positive sign bit and the augmented low-order 15 bits of the index register referenced in the address group.
+4. Indexed Special Register Address: A positive sign bit and the augmented low-order 15 bits of the index register referenced in the address group.
+5. Indirect Memory Location Address: The sign bit (positive or negative) and 15-bit main memory address stored in the special register designated in the address group.
+6. Indexed Indirect Memory Location Address: The sign bit (positive or negative) and 15-bit main memory address stored in the special register whose address is obtained by augmenting the contents of the index register referenced in the address group.
+
+As successive words are transferred, the arithmetic control counters are automatically incremented (or decremented if the sign bit is negative) by one to specify a source and a result address for each word transferred.  At the completion of the instruction, the counters contain addresses equal to their initial settings plus (or minus) the number of words transferred, i.e., the address of the last word transferred plus (or minus) one.
+
 ### Transfer A to C, TX
+
+This instruction transfers one word from the location specified by the `A` address group to the location specified by the `C` address group.  The `B` address group is ignored.  Any of the six types of addressing previously discussed may be used in either the `A` or `C` address group, provided the instruction is used in its unmasked version.  When the instruction is used with a mask, partial words (or fields) may be transferred from one memory location to another, protecting the unmasked portion of the result location.  The masked version of the instruction, of course, cannot address special registers.
+
+The time required to execute an unmasked instruction with direct memory location addresses is three memory cycles.  The timing effect of masking, indexing, and the use of special registers is summarized in [Appendix C][Appendix C](#appendix-c-timing-summary).
 
 ### Transfer and Sequence Change, TS
 
+This instruction transfers one word from the location specified by the `A` address group to the location designated by the `B` address group and changes the setting of the specified sequencing counter so that the next instruction is selected from the main memory location designated by the `C` address group.  If the `C` address is active, the appropriate history register is changed after transfer of information from `A` to `B` but before the setting of the sequencing counter is changed.  The instruction is also used, with inactive addressing, to provide access to the low-order product register (see "[Inactive Addressing](#inactive-addressing)," [Section IV](#section-iv-addressing)).  The instruction is identical to the `TX` instruction with respect to masking.
+
+The `A` and `B` addresses may use any of the six types of addressing previously discussed.  If the `C` address is active, it may specify a direct memory location address, an indirect memory location address, an indexed memory location address, or an indexed indirect memory location address.  The behavior of the system for each of these cases is described below.
+
+1. Direct Memory Location Address.  The low-order 11 bits of the `C` address group are placed in the specified sequencing counter, together with the bank indicator from the counter which selected the instruction.  The sign bit is set to a plus value.
+2. Indirect Memory Location Address.  The complete contents of the addressed special register, including the sign and bank indicator, are transferred to the specified sequencing counter.  The contents of the addressed special register are incremented in the usual fashion after use, unless the special register addressed is the counter to be changed (either sequence or cosequence counter), in which case incrementing does not take place.  The tabular bit in the address group is ignored.
+3. Indexed Memory Location Address.  The contents of the referenced index register are augmented, and the complete 15-bit address thus formed is inserted, with a positive sign, into the specified sequencing counter.
+4. Indexed Indirect Memory Location Address.  A complete special register address is generated by augmenting the contents of the referenced index register in the usual fashion.  The generated address specifies a special register whose entire 16-bit contents are transferred to the specified sequencing counter.  The contents of the addressed special register are incremented in the usual fashion after use, unless this special register is the counter to be changed (either sequence or cosequence counter).  The tabular bit in the address group is ignored.
+
+If a parity error is detected in a word selected from main memory during execution of this instruction, an unprogrammed transfer occurs and the contents of the specified sequencing counter are not changed.  The contents of the appropriate history register will be changed, however, and the bisequence bit in the program control register (see page 110) will be set in response to the bisequence bit in the command code of the instruction.
+
+The time required to execute an unmasked `TS` instruction with three direct memory location addresses is four memory cycles.
+
 ### N-Word Transfer, TN
+
+This instruction transfers the number of words specified by the high-order six bits of the `B` address group from consecutive locations starting at `A` to consecutive locations starting at `C`.  The number of words to be transferred can range from 0 to 63.  If the `B` address group is zero, no information is transferred.  The low-order six bits of `B` are ignored.  The transfer of information occurs under control of special registers `AU1` and `AU2`, according to the conventions outlined at the beginning of this section.
+
+It should be noted that if a special register is directly addresses in the `A` address of an N-word transfer instruction and an increment other than zero appears in the address group, then this increment is applied after transfer to the contents of each special register thus addressed.  For example, consider the instruction
+```            TN      Z,X0, 10    5    Z,R0```
+This instruction causes the contents of index registers `X0` through `X4` to be transferred to special registers `R0` through `R4`.  At the conclusion of the instruction, the contents of index registers `X0` through `X4` will have been incremented by 10, and the low-order five bits of `AU1` and `AU2` will contain the subaddresses of `X5` and `R5`, respectively.
+
+When the instruction
+```            TN      N,X0, 10    5    N,R0```
+is executed, on the other hand, only the contents of `X0` are incremented by 10 after use, since no other special register is referenced by the `A` address group.  If `X0` initially contained the main memory address tagged `TRANS1`, and `R0` contained the main memory address tagged `LOC1`, then at the conclusion of the instruction `AU1` will contain the address `TRANS1 + 5` and `AU2` will contain the address `LOC1 + 5`.
+
+The time required to execute an N-word transfer with either direct or indirect memory location addresses is `5 + 2n` memory cycles, where `n` equals the number of words transferred.
 
 ### Multiple Transfer, MT
 
+The multiple transfer instruction transfers the contents of the location specified by the `A` address group to the location specified by the `C` address group, repeating the transfer the number of times specified by the high-order six bits of the `B` address group.  This number may range from 0 to 63.  If `B` is zero, no transfer of information takes place.  The low-order six bits of `B` are ignored.
+
+Although all types of addressing are permitted with this instruction, the instruction is most meaningful when used with indirect addressing.  For example, an area of 20 words in memory may be cleared to zeros by storing a constant of zeros in the location tagged `ALLZEROS`, setting general purpose register `R0` to the address of the first location to be cleared, and executing the instruction
+```            MT      ALLZEROS    20    N,R0,1```
+Zeros will be transferred to the 20 main memory locations starting with the address initially contained in `R0`, and the contents of `R0` at the completion of the instruction will be equal to the initial contents plus 20.  The arithmetic control counters are not involved in the execution of this instruction.
+
+As a second example, consider the instruction
+```            MT      N,X0,10     5    N,R0,1```
+If `X0` initially contains a memory address tagged `ONESTORE` and `R0` contains a main memory address tagged `WORKAREA`, execution of this instruction causes the words from locations `ONESTORE`, `ONESTORE + 10`, `ONESTORE + 20`, etc., to be transferred to `WORKAREA`, `WORKAREA + 1`, etc.  At the conclusion of the instruction, `X0` contains the address `ONESTORE + 50`, while `R0` contains the address `WROKAREA + 5`.
+
+The time required to execute a multiple transfer instruction with either direct or indirect memory locations addresses is `1 + 2n` memory cycles, where `n` equals the number of times the transfer is performed.
+
 ### Record Transfer, RT
 
+The record transfer instruction is used to move a group of related words from one location to another.  Such a group does not necessarily constitute a record.  Although the record transfer instruction is most frequently used to manipulate "records," it may also be used to advantage whenever the number of words to be transferred is greater than 63, the maximum number which can be moved with the N-word transfer.  In fact, the only restriction on the number of words which can be transferred is the practical limitation of available storage space in the memory.
+
+When a record transfer instruction is executed, an end-of-record word<sup>1(#section-viii-note-1)</sup> is stored in the location specified by the `B` address group.  Consecutive words are then transferred from the location starting with `A` to consecutive locations starting with `C`, until and end-of-record word is transferred.  The behavior of the system is unspecified when either the `A` or `C` address is a direct or indexed special register address.
+
+Note that the transfer of information is stopped whenever an end-of-record word is transferred, regardless of where this word was stored.  In other words, the word stopping the transfer is not necessarily the same word which the instruction has stored in the location specified by the `B` address.  The transfer also stops if a parity failure occurs.  At the completion of the instruction, `AU1` will contain the complete address generated from the `A` address group plus the number of words actually transferred; `AU2` will contain the complete address generated from the `C` address group plus the number of words transferred.
+
+The time required to execute a record transfer instruction with direct or indirect memory location addresses is `7 + 2n` memory cycles, where `n` is the number of words transferred.
+
+<a name="section-viii-note-1">1</a> As previously stated, and end-of-record word is a word whose 48 information bits are: `1010 1010 0000 0000 1110 1110 1110 1110 1101 1101 1101 1101`.
+
 ### Item Transfer, IT
+
+The item transfer operates exactly as the record transfer, with the exception that instead of storing an end-of-record word, and end-of-item symbol is substituted for the high-order 32 bits of the contents of `B`, clearing the low-order 16 bits to zeros.  The transfer stops with the transfer of an end-of-item or end-of-record word, or with a parity failure.
+
+As described in [Section III](#section-iii-the-honeywell-1800-word), and end-of-item word is any word whose high-order 32 bits are identical to those of an end-of-record word.  The comments made with respect to the record transfer instruction are equally applicable to item transfer.  The time required to execute the instruction is also the same.
 
 ## SECTION IX: DECISION INSTRUCTIONS
 
