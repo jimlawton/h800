@@ -839,7 +839,9 @@ Two facts illustrated by Figure IV-6 should be particularly noted.  Since the au
 The second point involves the value of the tabular bit.  Depending on the original contents of the index register and the value of the augmenter, the tabular bit in the modified index register contents may be zero or one.  If this bit is zero, the the special register is directly addressed, as defined under the discussion of direct special register addressing.  If the tab bit is one, on the other hand, the type of addressing is indirect, as described below under the discussion of indirect addressing.  Regardless of the value of the tabular bit, the contents of the special register will be permanently modified, _after_ use, by the value of the 5-bit increment, under control of the sign of the special register itself, provided that the special register is not addresses as a result location.  As always, the contents of the index register are _not_ altered by the indexing process.
 
 In ARGUS language, an indexed special register address takes the form
-```         Index Register Designator, Z, Special Register Designator, Increment```
+```
+         Index Register Designator, Z, Special Register Designator, Increment
+```
 
 The index register designator is a number from 0 to 7 which specifies one of the eight index registers related to the controlling sequencing counter.  The special register designator may be a number from 0 to 31 or it may be mnemonic (see Figure V-1, page 52).  The increment may be a number from 0 to 3 or it may be omitted.  The manner in which these numbers are used to modify the index register contents and form a special register address is discussed in detail in the ARGUS _Manual of Assembly Language_.
 
@@ -856,9 +858,13 @@ The address generated is that of a special register in the same group as the seq
 Indirect addressing is a useful tool for stepping sequentially through an array of items, processing the n<sup>th</sup> word of each item.  The location of word n of the first item is stored in a special register.  When this location is addressed indirectly, the use of the proper increment (equal to the item size) sets the contents of the special register to the location of word n of the second item, and so forth, until word n of each item has been processed.
 
 ARGUS recognizes the use of indirect memory location addressing by the notation
-```         N, Special Register Designator, Increment```
+```
+         N, Special Register Designator, Increment
+```
 where N represents a memory designator bit of one in the command code, a zero in the first bit position of the address group, and a one in the tabular bit position of the address group.  The special register designator specifies one of the registers in the related group, either numerically or mnemonically (see Figure V-1, page 52), and the increment is a number from 0 to 31.  The computer interprets the contents of the specified register as the bank indicator and subaddress of a memory location in any bank.  The increment is added to the low-order bits of the contents of the special register _after_ use, permanently altering them.  Thus, the address
-```         N, R1, 10```
+```
+         N, R1, 10
+```
 designates the contents of the related special register `R1`, which are interpreted as the location of an operand in main memory.  After use, the contents of `R1` are incremented by 10.
 
 ### Indexed Indirect Memory Location Address
@@ -868,7 +874,9 @@ As noted in the discussion of indexed special register addressing, the contents 
 Indexed indirect memory location addressing makes it possible to use any of the 256 special registers in the system to address any available memory location indirectly.  The retained contents of the special register are always modified _after_ use by the amount of the increment, under control of the special register sign bit.
 
 ARGUS notation for an indexed indirect memory location address resembles that for an indexed special register address, taking the form
-```         Index Register Designator, N, Special Register Designator, Increment```
+```
+         Index Register Designator, N, Special Register Designator, Increment
+```
 
 The comments made with respect to ARGUS notation for an indexed special register address are also applicable to an ARGUS indexed indirect memory location address.
 
@@ -964,7 +972,9 @@ Under program control, the contents of a special register may be arithmetically 
 It is important to emphasize a few basic rules which govern programmed incrementing of explicitly addressed special registers.  If a special register is addressed directly as the source of an operand, incrementing takes place. If a special register is addressed directly as a result location, on the other hand, no incrementing takes place even if programmed.  When the contents of a special register are used to locate either a source or a result location in main memory (indirect memory location address), incrementing takes place as specified by the 5-bit increment in the address group.  However, if a sequencing counter is used to address a memory location indirectly in the C address and the instruction is one which would normally change the contents of that counter to the memory location address specified by C, the contents of the sequencing counter will not be incremented even though an increment is specified in the address group.
 
 The rules of incrementing which apply under indirect memory location addressing are illustrated by the transfer and sequence change instruction shown below (in ARGUS format):
-```         TS      ITEMA       N, R1, 1        N SC, 5```
+```
+         TS      ITEMA       N, R1, 1        N SC, 5
+```
 When this instruction is executed, the word at `ITEMA` is transferred to the memory location designated by the address stored in special register `R1`.  The contents of `R1` are incremented by one after use and replaced in `R1`.  Since the increment of five is not added to the contents of the sequence counter, the result is the same as if the C address had been inactive.
 
 Any instruction which can explicitly address a special register may operate on its contents.  This means that a special register word may be shifted, may be operated upon arithmetically, may be compared, and may be moved around in either main or control memory.  When a special register word is brought into the accumulator, bits 1 through 32 are filled with zeros.  Since four zero bits in the sign position define a negative number, a control memory word is always negative when manipulated in the accumulator, regardless of the value of the special register sign bit.
@@ -984,9 +994,13 @@ An instruction that references a sequencing counter implicitly by specifying a c
 As previously noted, carries may propagate across the entire 15 bits of a sequencing counter during incrementation. Instruction sequences can therefore pass freely from one memory bank to another.  If an attempt is made to sequence the counter beyond the highest memory address included in a particular system, however, a control error will result and the machine will stop (see [Appendix D](#appendix-d-control-errors)).  The same result will occur if a sequencing counter containing a negative sign and 15 binary zeros is implicitly referenced.
 
 The initial setting of the sequence counter is normally made by transferring from main memory a word whose low-order 16 bits represent the desired sign and the memory address from which the first instruction is to be selected.  Alternatively, the starting address may be entered directly into the counter from the console typewriter.  Once the sequencing counter is set and referenced, it continues to select instructions from successive locations until an instruction is executed which specifies the alternate counter as the source of the next instruction or which changes the contents of the counter itself through explicit or implicit addressing.  When an instruction specifies a change of counter but not a change in the contents of the counter, the only change which occurs in the two sequencing counters is the normal incrementation of the counter which selected the instruction.  An instruction which explicitly addresses a sequencing counter as a result location simply causes the contents of that counter to be replaced.  For example, the instruction
-```         TX      Z, AU1      -       Z, SC```
+```
+         TX      Z, AU1      -       Z, SC
+```
 merely replaces the contents of the sequence counter with the contents of `AU1`, so that the next instruction is selected from the location whose address is stored in `AU1`.  No record of such a sequence change is retained by the machine.  An instruction which changes the contents of a counter by implicit reference, on the other hand, alters the contents of the counter specified as the source of the next instruction and stores the contents of the counter which selected this instruction in the history register (see below) associated with the counter whose contents are changed.  Thus a record of the last implicit sequence change which affected the contents of either counter is always available internally.  For example, an instruction selected under control of the sequence counter specifies the cosequence counter as the source of the next instruction and directs the program to transfer a word from `A` to `B` and select the next instruction from the location specified by `C`:
-```         TS      C           RECORD  OUTPUT  SECTIONA```
+```
+         TS      C           RECORD  OUTPUT  SECTIONA
+```
 This instruction puts the address tagged `SECTIONA` in the cosequence counter, where it is selected as the address of the next instruction, and stores the incremented contents of the sequence counter in the cosequence history register.
 
 ### History Registers
@@ -1122,9 +1136,13 @@ As an illustration, assume that the following information bits are stored in mem
             CONSTNT1        10000...........00011001
 ```
 When the instruction
-```            BA      MONTHDAY    CONSTNT1     TESTAREA```
+```
+            BA      MONTHDAY    CONSTNT1     TESTAREA
+```
 is executed, the following result will be stored in `TESTAREA`:
-```            TESTAREA        11110...........010001001```
+```
+            TESTAREA        11110...........010001001
+```
 In the unmasked version of the binary add, all three addresses may be direct, indexed, or indirect and may refer to main memory locations or special registers.  When the instruction is masked to permit operations on partial words, however, the `A`, `B`, and `C` addresses may refer only to the main memory in the direct or the indexed mode.
 
 If the `A` address of the instruction is active and `B` and `C` are inactive, the contents of `A` are placed in the accumulator.  If the `B` address is active and `A` and `C` are inactive, then the contents of `B` are added to the contents of the accumulator.  If the `C` address is active and `A` and `B` are inactive, the low-order 44 bits of the accumulator are stored in `C` with the sign bits `1111` or `0000`, depending upon the value of the sign flip-flop.
@@ -1141,9 +1159,13 @@ If memory locations tagged `REGPAY` and `OVERTIME` contain the following informa
             OVERTIME        +00000001750
 ```
 and the instruction 
-```            DA      REGPAY      OVERTIME     WEEKPAY```
+```
+            DA      REGPAY      OVERTIME     WEEKPAY
+```
 is executed, then the following result will be stored in `WEEKPAY`:
-```            WEEKPAY         +00000014250```
+```
+            WEEKPAY         +00000014250
+```
 The comments on the binary add instruction with respect to overflow, addressing, masking, and timing are equally applicable to the decimal add instruction, with one exception: the behavior of the system is unspecified when the `C` address group of a decimal add instruction contains a direct special register or indexed special register address.
 
 ### Binary Subtract, BS
@@ -1159,14 +1181,18 @@ The decimal subtract instruction differs from binary subtract only in the fact t
 ### Word Add, WA
 
 Word add is one of the two arithmetic instructions which regards operands as unsigned 48-bit numbers.  The instructions adds the absolute values of the entire 48-bit contents of `A` and `B` in binary and stores the entire 48 bits of the accumulator in `C`, making no reference to the sign flip-flop.  In contrast to the example cited under the discussion of binary add, when the instruction
-```            WA      MONTHDAY    CONSTNT1     TESTAREA```
+```
+            WA      MONTHDAY    CONSTNT1     TESTAREA
+```
 is executed with the same operands:
 ```
             MONTHDAY        00110...........01110000
             CONSTNT1        10000.............011001
 ```
 then the following result will be stored in location `TESTAREA`:
-```            TESTAREA        10110...........010001001```
+```
+            TESTAREA        10110...........010001001
+```
 Although the low-order 44 bits of the result stored in `TESTAREA` are identical for the two instructions, the high-order four bits are different since binary add inserts in these four positions a sign based on the value of the sign flip-flop whereas word add stores the entire contents of the accumulator, without regard for the sign flip-flop.
 
 Overflow is sensed in bit 1.  If overflow occurs, the instruction is completed, and the overflow conventions set forth under the description of binary add are followed.  With respect to addressing, masking, and timing, the word add instruction is identical to binary add.
@@ -1182,7 +1208,9 @@ The binary accumulate instruction totals the absolute value of the contents of `
 Step by step, the instruction functions as follows.  The low-order 44 bits of the `A` operand are transferred to the accumulator and the high-order four bits of the accumulator are set to one.  If `A` contains a special register subaddress, incrementing is performed as specified.  The high-order four bits of the accumulator are again replaced with ones, and the low-order 44 bits of `A` are added in binary to the contents of the accumulator.  (Note well that the location now specified by `A` will be different from the original `A` if incrementing took place.)  The specified incrementing is again performed (if `A` contains a special register subaddress), the high-order four bits of the accumulator are replaced by ones and the lo-order 44 bits of `A` are again added to the accumulator.  This process is performed the number of times specified by the high-order six bits of the `B` address group.  If the value of these bits is zero, no information is transferred to the accumulator, the instruction is not executed, and the next instruction is selected from the sequencing counter specified by bit 1 of the command code.  The low-order six bits of the `B` address group are ignored.
 
 As an example, consider the instruction
-```            BT      N, R1, 1    1 4     TOTAL```
+```
+            BT      N, R1, 1    1 4     TOTAL
+```
 in the case where `R1` contains a main memory address tagged `OPERAND`.  The high-order four bits of the accumulator are set to ones, and the low-order 44 bits of `OPERAND` are transferred to the accumulator.  `R1` is incremented by one, the high-order four bits of the accumulator are replaced by ones, and the low-order 44 bits of `OPERAND + 1` are added in binary to the contents of the accumulator.  This process is repeated until the contents of `OPERAND + 3` have been added to the total in the accumulator.  The accumulator now contains the sum of the absolute values of the low-order 44 bits of `OPERAND`, `OPERAND + 1`, `OPERAND + 2`, and `OPERAND + 3`.  This sum, with a sign based on the sign of `OPERAND`, is then stored in the location tagged `TOTAL`.  Register `R1` contains the address of location `OPERAND + 4` at the conclusion of the instruction.
 
 Overflow in the accumulator is sensed in bit 1.  If overflow is sensed, the instruction is completed, and the normal overflow procedure (described under the binary add instruction) is performed.  Since the high-order four bits of the accumulator are replaced by ones between successive additions, the contents of these four positions are not available to indicate the number of overflows.  Thus, unless the programmer knows from the logic of his problem precisely how many overflows may have occurred and at which points, he must repeat the addition process in pairs.
@@ -1242,9 +1270,13 @@ For example, the following locations contain the words shown:
             RESULT          101001110110------------
 ```
 when the instruction
-```            EX      OPERAND     EXMASK      RESULT```
+```
+            EX      OPERAND     EXMASK      RESULT
+```
 is executed.  As a result of the instruction, the contents of location `RESULT` will be:
-```            RESULT          000000100000------------```
+```
+            RESULT          000000100000------------
+```
 
 As discussed in [Section IV](#section-iv-addressing) (see page 47), the use of inactive addressing with the extract instruction provides access to the 48-bit arithmetic register called the mask register.  When a mask is specified in an instruction, either in the command code or in the `B` address group, the contents of the specified location are placed in the mask register, where they remain until a subsequent instruction calls for a mask (or until they are destroyed by the execution of a multiply instruction).  Therefore, the contents of the mask register are unrelated to the instruction being performed if this instruction does not specify a mask.  Since the mask register has no address, the programmer cannot transfer its contents directly to memory.  However, by executing an extract instruction which specifies the address of a word of 48 binary ones in the `A` address group and an inactive address in `B`, the programmer can store in the location specified by `C` a word guaranteed to be identical to the contents of the mask register.  This guarantee can be verified by an inspection of the above rule of operation.  If the programmer wishes to insert a full word into the mask register without disturbing any memory location, he may perform an extract instruction with an inactive `C` address.
 
@@ -1255,20 +1287,30 @@ The substitute instruction performs the same general function as extract except 
 Finally, the word formed in the low-order product register is stored in the location specified vy the `C` address group.  The result of the operation may differ from the result of an extract having the same operands only in those bit positions for which the `B` operand has a value of zero.  The behavior of this instruction with one or more inactive addresses is unspecified.
 
 For example, if the instruction
-```            SS      OPERAND     EXMASK      RESULT```
+```
+            SS      OPERAND     EXMASK      RESULT
+```
 is executed where the contents of the three locations specified are as shown under the discussion of extract, the contents of location `RESULT` will be:
-```            RESULT          101000100110------------```
+```
+            RESULT          101000100110------------
+```
 
 ### Half Add, HA
 
 The half add instruction performs a binary addition of the 48-bit `A` and `B` operands in the accumulator, discarding all carries, and stores the result in the location specified by the `C` address group.  This is equivalent to combining the corresponding bits of the `A` and `B` operands in accordance with the following rule:
-    If the corresponding bit positions in the `A` and `B` operands have the same value, the result shall contain a zero in this position.  In all other cases, the result shall contain a one.  This is the "logical exclusive OR" function.
+
+*  If the corresponding bit positions in the `A` and `B` operands have the same value, the result shall contain a zero in this position.  In all other cases, the result shall contain a one.  This is the "logical exclusive OR" function.
+
 The behavior of this instruction with one or more inactive addresses is unspecified.
 
 The half add instruction is illustrated in terms of the same example used to explain extract.  If the instruction
-```            HA      OPERAND     EXMASK      RESULT```
+```
+            HA      OPERAND     EXMASK      RESULT
+```
 is executed and the operands are the same as in the preceding examples, the contents of location `RESULT` will be
-```            RESULT          110111010010------------```
+```
+            RESULT          110111010010------------
+```
 
 ### Superimpose, SM
 
@@ -1277,9 +1319,13 @@ The superimpose instruction performs a superimpose of the 48-bit `A` and `B` ope
 The behavior of this instruction with one or more inactive addresses is unspecified.
 
 For example, if the above operands are manipulated by the instruction
-```            SM      OPERAND     EXMASK      RESULT```
+```
+            SM      OPERAND     EXMASK      RESULT
+```
 the contents of location `RESULT` will be
-```            RESULT          110111110010------------```
+```
+            RESULT          110111110010------------
+```
 
 ## Section VIII: TRANSFER INSTRUCTIONS
 
@@ -1304,7 +1350,7 @@ The time required to execute an unmasked instruction with direct memory location
 
 ### Transfer and Sequence Change, TS
 
-This instruction transfers one word from the location specified by the `A` address group to the location designated by the `B` address group and changes the setting of the specified sequencing counter so that the next instruction is selected from the main memory location designated by the `C` address group.  If the `C` address is active, the appropriate history register is changed after transfer of information from `A` to `B` but before the setting of the sequencing counter is changed.  The instruction is also used, with inactive addressing, to provide access to the low-order product register (see "[Inactive Addressing](#inactive-addressing)," [Section IV](#section-iv-addressing)).  The instruction is identical to the `TX` instruction with respect to masking.
+This instruction transfers one word from the location specified by the `A` address group to the location designated by the `B` address group and changes the setting of the specified sequencing counter so that the next instruction is selected from the main memory location designated by the `C` address group.  If the `C` address is active, the appropriate history register is changed after transfer of information from `A` to `B` but before the setting of the sequencing counter is changed.  The instruction is also used, with inactive addressing, to provide access to the low-order product register (see "[Inactive Addressing](#inactive-addresses)," [Section IV](#section-iv-addressing)).  The instruction is identical to the `TX` instruction with respect to masking.
 
 The `A` and `B` addresses may use any of the six types of addressing previously discussed.  If the `C` address is active, it may specify a direct memory location address, an indirect memory location address, an indexed memory location address, or an indexed indirect memory location address.  The behavior of the system for each of these cases is described below.
 
@@ -1322,11 +1368,15 @@ The time required to execute an unmasked `TS` instruction with three direct memo
 This instruction transfers the number of words specified by the high-order six bits of the `B` address group from consecutive locations starting at `A` to consecutive locations starting at `C`.  The number of words to be transferred can range from 0 to 63.  If the `B` address group is zero, no information is transferred.  The low-order six bits of `B` are ignored.  The transfer of information occurs under control of special registers `AU1` and `AU2`, according to the conventions outlined at the beginning of this section.
 
 It should be noted that if a special register is directly addresses in the `A` address of an N-word transfer instruction and an increment other than zero appears in the address group, then this increment is applied after transfer to the contents of each special register thus addressed.  For example, consider the instruction
-```            TN      Z,X0, 10    5    Z,R0```
+```
+            TN      Z,X0, 10    5    Z,R0
+```
 This instruction causes the contents of index registers `X0` through `X4` to be transferred to special registers `R0` through `R4`.  At the conclusion of the instruction, the contents of index registers `X0` through `X4` will have been incremented by 10, and the low-order five bits of `AU1` and `AU2` will contain the subaddresses of `X5` and `R5`, respectively.
 
 When the instruction
-```            TN      N,X0, 10    5    N,R0```
+```
+            TN      N,X0, 10    5    N,R0
+```
 is executed, on the other hand, only the contents of `X0` are incremented by 10 after use, since no other special register is referenced by the `A` address group.  If `X0` initially contained the main memory address tagged `TRANS1`, and `R0` contained the main memory address tagged `LOC1`, then at the conclusion of the instruction `AU1` will contain the address `TRANS1 + 5` and `AU2` will contain the address `LOC1 + 5`.
 
 The time required to execute an N-word transfer with either direct or indirect memory location addresses is `5 + 2n` memory cycles, where `n` equals the number of words transferred.
@@ -1336,11 +1386,15 @@ The time required to execute an N-word transfer with either direct or indirect m
 The multiple transfer instruction transfers the contents of the location specified by the `A` address group to the location specified by the `C` address group, repeating the transfer the number of times specified by the high-order six bits of the `B` address group.  This number may range from 0 to 63.  If `B` is zero, no transfer of information takes place.  The low-order six bits of `B` are ignored.
 
 Although all types of addressing are permitted with this instruction, the instruction is most meaningful when used with indirect addressing.  For example, an area of 20 words in memory may be cleared to zeros by storing a constant of zeros in the location tagged `ALLZEROS`, setting general purpose register `R0` to the address of the first location to be cleared, and executing the instruction
-```            MT      ALLZEROS    20    N,R0,1```
+```
+            MT      ALLZEROS    20    N,R0,1
+```
 Zeros will be transferred to the 20 main memory locations starting with the address initially contained in `R0`, and the contents of `R0` at the completion of the instruction will be equal to the initial contents plus 20.  The arithmetic control counters are not involved in the execution of this instruction.
 
 As a second example, consider the instruction
-```            MT      N,X0,10     5    N,R0,1```
+```
+            MT      N,X0,10     5    N,R0,1
+```
 If `X0` initially contains a memory address tagged `ONESTORE` and `R0` contains a main memory address tagged `WORKAREA`, execution of this instruction causes the words from locations `ONESTORE`, `ONESTORE + 10`, `ONESTORE + 20`, etc., to be transferred to `WORKAREA`, `WORKAREA + 1`, etc.  At the conclusion of the instruction, `X0` contains the address `ONESTORE + 50`, while `R0` contains the address `WROKAREA + 5`.
 
 The time required to execute a multiple transfer instruction with either direct or indirect memory locations addresses is `1 + 2n` memory cycles, where `n` equals the number of times the transfer is performed.
