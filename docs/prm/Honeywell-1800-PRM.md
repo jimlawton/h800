@@ -1639,9 +1639,9 @@ If a parity error is detected in a word being printed on the typewriter, the wor
 
 Although there is but one machine instruction for the print function, ARGUS recognizes three separate print instructions with the following mnemonic operation codes:
 
-    `PRA`   alphanumeric print
-    `PRD`   hexadecimal print
-    `PRO`   octal print
+- `PRA`   alphanumeric print
+- `PRD`   hexadecimal print
+- `PRO`   octal print
 
 The operation code may be followed in the command code field by a comma and the letter `M` (denoting more information to follow before carriage return) or the letters `MR` (denoting more information to follow after carriage return).  If neither appears, the carriage is returned after printing, and the typewriter is released to print from another program.
 
