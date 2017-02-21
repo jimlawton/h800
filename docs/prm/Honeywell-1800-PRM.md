@@ -2115,6 +2115,48 @@ The above discussion is applicable to both binary and decimal fixed-point arithm
 
 ## APPENDIX B: ORTHOTRONIC CONTROL
 
+Orthotronic control is the technique incorporated in the Honeywell 1800 for the automatic detection and correction of errors that may occur with the use of magnetic tape.  This file protection feature accomplishes error correction without the manual intervention and lost computer time so frequently associated with ordinary restart or rerun procedures.  In other systems, the problem of restart and rerun becomes most serious when the record in error was properly recorded during a previous run but is now incapable of being read.  It is to this type of error, the most costly in time and effort, that orthotronic control is applied most advantageously in the Honeywell 1800 system.
+
+The basic principle of orthotronics may be compared to the accountant's practice of crossfooting. In crossfooting, a zero balance of rows and columns is obtained to insure accuracy.  If a zero balance is not obtained, the crossfooting technique has accomplished its singular function of error detection.  Orthotronic control not only performs this function of error detection but also provides a unique means of error correction.
+
+The orthotronic technique involves three interdependent elements: frame parity, orthotronic control words, and channel parity.  Frame parity is recorded in the ninth channel on tape.  An "odd" parity system is used in the generation of the parity bit.  The parity bit is the complement of the binary half adds of the bits in each frame.  Thus, the parity bit is a one if there is an even number of ones in a frame (0, 2, 4, 6, 8 ones), and the parity bit is zero if there is an odd number of ones in a frame (1, 3, 5, 7 ones).
+
+Before a new or altered record is written on tape, the machine instruction compute orthocount is used to compute two orthowords: one associated with the odd-numbered data words in the record, the other associated with the even-numbered words.  These orthowords become part of the record written on tape.  Orthoword 1 may be the orthocount of either the odd words or the even words of a record.  This is determined by the number of words to be orthocounted in the record (see Figure B-1).  If the record contains an even number of data words, then orthoword 1 represents the orthocount of the odd words.  If an odd number of data words is orthocounted, then orthoword 1 represents the orthocount of the even words.  However, it should be noted that by working back from the orthoword, the relationship is invariant, regardless of the number of words.  Each orthobit is an "odd" parity bit checking the corresponding bit positions of all associated words.
+
+![Figure B-1](images/figure_B-1.png?raw=true)
+
+Consider a record in memory (for the sake of simplicity, 16-bit words are shown).  Figure B-2 shows the method used to compute the orthowords.  Each orthoword is the complement of the binary half add of the words associated with it.
+
+![Figure B-2](images/figure_B-2.png?raw=true)
+
+Channel parity checking is automatically performed in the buffer to provide a longitudinal check of information being read or written.  The generated orthotronic words guarantee an even channel priority up to the next end-of-record word.  The end-of-record word is such that its inclusion guarantees an odd channel parity.  Thus, double errors in a frame, which will escape detection by frame parity, will be picked up by the channel parity check.
+
+Using the example shown in Figure B-2, assume that a bit was altered in the high-order decimal digit of word 7 to make it `1010` instead of `0010`.  Figure B-3 shows the words in memory and a simplified, hypothetical representation of the same words on tape, with frame parity bits.
+
+![Figure B-3](images/figure_B-3.png?raw=true)
+
+When this record is read, the error is automatically detected by the frame parity check.  The automatic channel parity check also shows up the error, since a binary half add of the bits in the left-most channel produces a one bit instead of a zero bit.  If, in addition, a bit in the second high-order digit of word 7 were altered so that it became `0111` instead of `0110`, this frame would now appear as follows on tape:
+
+!(images/ortho_errors.png?raw=true)
+
+This combination of errors would escape the frame parity check only to be caught by the channel parity computation.
+
+Regardless of the means of error detection, the result is the same: an unprogrammed transfer of control is initiated when the next read or write instruction to the same device is executed.<sup>1(#appendix-b-note-1)</sup>  The procedure to be followed when the error occurs on writing is to read backward over the erroneous record and then rewrite it.  The procedure to be followed when the error occurs on reading is to orthocount the entire record again (including the bad word and the orthowords), using the compute orthocount instruction.  The result of this procedure is illustrated in Figure B-4, using the example in which a bit was altered in the high-order digit of word 7.
+
+![Figure B-4](images/figure_B-4.png?raw=true)
+
+<a name="appendix-b-note-1">1</a> As noted in [Section XI](#section-xi-peripheral-instructions), a read instruction checks the previous read while a write instruction checks the previous write.
+
+This computation shows that the error lies in one of the odd words (1, 3, 5, or 7).  The check parity instruction is then used to isolate the bad word (and/or the bad frame within the word, by masking the instruction).  The check parity instruction also assigns correct parity to the word.  If correction is to be made on a word basis, a binary half add is used to add the new orthoword and the bad word (with adjusted parity) to restore the correct word.  If correction is to be made on a frame basis, a properly masked half add is used to restore the frame.  If correction is made on a word basis, the binary half add produces the result shown in Figure B-5.
+
+![Figure B-5](images/figure_B-5.png?raw=true)
+
+A different procedure for reconstructing the bad word would be first to locate it by the check parity instruction and then to cancel it by substituting a word of all binary zeros.  Next, orthocount the entire record including the cancelled word and the orthowords, as shown in Figure B-6.
+
+![Figure B-6](images/figure_B-6.png?raw=true)
+
+The new orthoword equals the reconstructed word (cf. Figure B-2) and may now be substituted for the word of binary zeros.  This second technique can be used only when errors are detected in a single word associated with each orthoword.  For example, this method can be used to correct an error in one even word and one odd word in the record, but not to reconstruct two odd or even words.  The technique illustrated by Figure B-5, on the other hand, may be used to reconstruct errors in several words or frames, as long as there is not more than one frame parity or ortho error associated with each of the twelve frames comprising the two orthowords.
+
 ## APPENDIX C: TIMING SUMMARY
 
 ## APPENDIX D: CONTROL ERRORS
