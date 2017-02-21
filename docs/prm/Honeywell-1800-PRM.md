@@ -2159,6 +2159,24 @@ The new orthoword equals the reconstructed word (cf. Figure B-2) and may now be 
 
 ## APPENDIX C: TIMING SUMMARY
 
+!(images/appc_table-part-1.png?raw=true)
+!(images/appc_table-part-2.png?raw=true)
+!(images/appc_table-part-3.png?raw=true)
+!(images/appc_table-part-4.png?raw=true)
+!(images/appc_table-part-5.png?raw=true)
+!(images/appc_table-part-6.png?raw=true)
+!(images/appc_table-part-7.png?raw=true)
+!(images/appc_table-part-8.png?raw=true)
+
+NOTES:*
+<a name="appendix-c-note-1">1.</a> One memory cycle (mc) equals 2 microseconds.  All addresses assumed active except as otherwise specified.  Address configurations for which the behavior of the system is unspecified have not been considered.
+<a name="appendix-c-note-2">2.</a> `n` = number of words accumulated, transferred, or orthocounted.
+<a name="appendix-c-note-3">3.</a> If the instruction is delayed by an interlock, 4 memory cycles are required for the first attempt to perform it, and an additional 4 cycles are required each time that _any_ buffer completes a read or write instruction before this instruction proceeds.
+<a name="appendix-c-note-4">4.</a> `j` = number of items in record. `n`<sub>1</sub>,`n`<sub>2</sub>,...`n`<sub>j</sub> = number of words in item 1, number of words in item 2, etc., up to `n`<sub>j</sub>, number of words in last item.
+<a name="appendix-c-note-5">5.</a> Under certain conditions, as explained in [Appendix A](#appendix-a-fixed-point-addition-in-the-honeywell-1800), one or two additional memory cycles will be needed in excess of those computed from this summary.
+<a name="appendix-c-note-6">6.</a> See comments in [Section XIII](#section-xiii-scientific-instructions).
+<a name="appendix-c-note-asterisk">* </a> Conditions so marked are mutually exclusive.
+
 ## APPENDIX D: CONTROL ERRORS
 
 ## APPENDIX E: TABLES
