@@ -1629,7 +1629,7 @@ The `B` address group of the print instruction contains special information desi
         00 this combination is not defined.
 - Bits 7-12: These bits designate the typewriter on which the information is to be printed.  Address `00` designates the console typewriter, address `01` represents the slave typewriter (in octal).  Associated with the two automatic typewriters is a typewriter buffer location (location `00021`) in main memory bank `0` (see [Section IV](#section-iv-addressing). page 44).
 
-If the `A` address of a print instruction is inactive, the contents of the accumulator are printed as specified by the `B` address.  In this one case, a control error does _not_ occur if the contents of the accumulator have already been delivered to a result location.  If the `B` address is inactive, no typewriter is activated.  If the `C` address is inactive, the specified sequence counter is set in the same manner as described for a transfre sequence change instruction having an active `C` address (see [Section VIII](#section-viii-transfer-instructions), pages 80 and 81).  Hunting for the next program in demand is always inhibited.
+If the `A` address of a print instruction is inactive, the contents of the accumulator are printed as specified by the `B` address.  In this one case, a control error does _not_ occur if the contents of the accumulator have already been delivered to a result location.  If the `B` address is inactive, no typewriter is activated.  If the `C` address is inactive, the specified sequence counter is set in the same manner as described for a transfer sequence change instruction having an active `C` address (see [Section VIII](#section-viii-transfer-instructions), pages 80 and 81).  Hunting for the next program in demand is always inhibited.
 
 When printing under program control, the typewriter prints each word specified in the indicated mode.  In the alphanumeric mode, if the code for carriage return or tabulate is encountered, the corresponding symbol is printed but the function is not performed.  When printing hexadecimal words, a space is inserted after every three characters, while a space appears after every four characters in an octal printout.  Spaces appear in the alphanumeric print mode only where they occur as part of the data.  Under program control, the carriage return function is activated only by reaching the physical end of the carriage or by specifying "carriage return" or "no more to follow" in the `B` address group of the print instruction.
 
@@ -1679,84 +1679,312 @@ Multiprogram control operates in such a way that the next active control group i
 
 ![Figure XII-2](images/figure_XII-2.png?raw=true)
 
-
 Six of the nine operations that can be performed by the control program instruction are represented in ARGUS notation by a group of program control instructions, each designated by a unique mnemonic operation code.  These six instructions, which perform most of the control operations required in normal usage, are explained in detail in the ARGUS _Manual of Assembly Language_.  To perform the other three functions, ARGUS also recognizes a control program instruction written in machine language with the mnemonic operation code `MPC`.  In this case, the 12 bits of the `B` address group are written as three hexadecimal digits.
 
 Without exception, the time required to execute the control program instruction is always four memory cycles.
 
 ### Proceed, PR
 
+This instruction, whose 8-bit operation code consists entirely of zeros, results in no operation other than the normal incrementing of the sequence counter that selected it.  Bits 1, 5, and 6 of the command code are irrelevant, while bit 4 must be a zero; therefore, proceed cannot specify the source of the next instruction and is always followed by an instruction selected by the same sequencing counter.
+
+Because the `A`, `B`, and `C` address groups are irrelevant, they can be used to store information.  However, if the information stored in the `C` address group consists of 12 binary ones (inactive address), hunting for the next program in demand is inhibited.
+
+The time required to execute the proceed instruction is two memory cycles.
+
 ### Simulator, S
+
+Simulator instructions permit the programmer to represent a subroutine with a single instruction in his program.  For each simulator instruction used, he codes a subroutine which is stored elsewhere in memory, beginning with the next memory location higher than the address specified by the command code.  The simulator instruction sets the _cosequence_ counter to the starting address of the subroutine and then gives control to this counter.
+
+A simulator instruction is specified by a machine command code in which the low-order three bits are ones.  If the high-order bit of the command code is a zero, the low-order 11 bits are interpreted as a main memory subaddress ending in octal seven.  If the high-order bit is a one, the low-order 11 bits are interpreted as a 3-bit index register number and an 8-bit augmenter ending in octal seven. Since the high-order bit of the command code is used to indicate the type of addressing, the programmer does not have the option of specifying the source of the next instruction.  In fact, the next instruction is automatically taken from the cosequence counter.  This is the only instance in which the machine makes a functional distinction between the sequence counter and the cosequence counter.
+
+When a simulator instruction is executed, the instruction itself is stored in the location specified by the command code.  If this address refers directly to a memory location, then the instruction is stored in the same bank of memory from which it was executed; if the address is indexed, the instruction may be stored in any bank, according to the value of the bank indicator bits in the referenced index register.  The cosequence counter is set to the next higher address and the next instruction is taken from the cosequence counter.  The contents of the source counter, after normal incrementing, are stored in the cosequence history register to provide a return to the main program.
+
+Since the address portions of a simulator instruction have no assigned functions, they may be used to store subroutine parameters such as the sources of operands, the location in which the result is to be stored, the number of words to be manipulated, and so forth.  Since the machine automatically stored in special register `AU1` an address generated from the `A` address group and in `AU2` an address generated from the `C` address group, it is advantageous to use these address groups for operand or result locations.  The `A` and `C` address groups may contain direct memory location addresses (bit 1 = zero) or indexed memory location addresses (bit 1 = one).  If bit 1 is zero, the low-order 11 bits of the address group and the 4-bit bank indicator from the sequencing counter which selected the instruction are placed in the arithmetic control counter with a positive sign to form a complete address.  If bit 1 is one, the augmented contents of the referenced index register are placed in the counter with a positive sign.  The contents of the locations whose addresses are stored in the two counters may then be referenced easily through the technique of indirect memory location addressing.
+
+The command code for an ARGUS simulator instruction is `S`, followed by a comma and an address designated by a symbolic tag or by an index register number with an augmenter equal to seven.  The `A` and `C` address fields may contain symbolic tags, with or without address modifiers, or index register numbers with augmenters.
+
+The time required to execute the simulator instruction is seven to nine memory cycles, as indicated in [Appendix C](#appendix-c-timing-summary).
 
 ### Compute Orthocount, CC
 
+The technique of orthotronic control incorporated in the Honeywell 1800 assumes that every record written on tape will include two orthowords, one associated with the odd-numbered data words in the record, the other associated with even-numbered words.  If the record contains an even number of data words, then orthoword 1 represents the orthocount of the odd words (words 1, 3, 5 etc.,) and orthoword 2 represents the orthocount of the even words.  If an odd number of words is orthocounted, then orthoword 1 contains the orthocount of the even words (words 2, 4, 6 etc.,) and orthoword 2 contains the count of the odd words.  Each orthoword is the complement of the binary half add of the words associated with it.
+
+The machine instruction which performs the orthocount of a record and generates the two orthowords is called compute orthocount.  When this instruction is executed, the machine first generates an end-of-record word which is placed in the location specified by the `C` address group.  It then orthocounts the record, starting with the location specified by the `A` address group and ending when an end-of-record word is reached.  The first end-of-record word sensed will terminate the operation, regardless of whether the location specified in `C` has been reached.  Orthoword 1 is stored in the location specified by `C`; orthoword 2 is stored in `C + 1`; and an end-of-record word is placed in `C + 2`.  If address `B` is inactive, control is not changed for distributed item handing.  If the `B` address is active, distributed item control is exercised, using a memory location table stored in consecutive words beginning with the location specified by `B`.
+
+The behavior of the system is unspecified if either the `A` or `C` address group if the compute orthocount instruction contains a direct or indexed special register address.  If `C` is an indirect memory location address with a non-zero increment, the behavior of the system is also unspecified.
+
+At the beginning of the instruction, special register `AU1` is set to the location designated by the `A` address group.  As each word is orthocounted, the counter is automatically incremented by one to specify the location of the next word to be orthocounted.  At the conclusion of the instruction, `AU1` contains the address of the end-of-record word which terminated the instruction, plus one.  If the `B` address of the instruction is active, special register `AU2` is initially set to the location specified by the `B` address group.  This counter performs the same function for the distributed orthocount as the distributed read address and distributed write address counters perform for the distributed read and write instructions (see [Section XI](#section-xi-peripheral-instructions)).  As each item is handled, the counter is automatically incremented by one to reference the entry in the address table where the starting address of the next item is found.  At the conclusion of the instruction, special register `AU2` always contains the address of the location specified in the `C` address of the instruction plus two, regardless of whether the instruction was normal or distributed.  (NOTE: The sign bits of `AU1` and `AU2` conform to the conventions stated in [Section V](#section-v-special-registers), page 60.)
+
+The provision for generating an end-of-record word and storing it in the location designated by the `C` address guarantees the programmer that the record being orthocounted has a valid end-of-record word.  This is a necessary precaution, since the compute orthocount instruction is terminated only when an end-of-record word is sensed.  During execution of the instruction, every other word is half-added, in binary, to form orthoword 1, and the alternate words are similarly added to form orthoword 2.  The accumulator is set to all binary ones before performing the first half-add for each orthoword.  The inclusion of a word of binary ones in the half add assures that each orthobit is an "odd" parity check on the identical bit positions of all the associated words.  The accumulator and mask register are used to store partial results as the successive alternate words are half-added.  When the orthocount is terminated by an end-of-record word, which is not included in the orthocount, the contents of the accumulator are transferred as orthoword 1 to the location specified by the `C` address, and the contents of the mask register are transferred as orthoword 2 to `C + 1`.  If distributed item control is exercised, the end-of-item words are included in the orthocount.
+
+The compute orthocount instruction is used in conjunction with the check parity instruction (see below) to reconstruct data in which an error has been detected.  The channel in which the parity failure occurred may be identified by computing new orthowords for the record in error and comparing them with the orthowords accompanying the record.  The check parity instruction may then serve to identify the erroneous word or frame.  The formation and use of orthowords is described in greater detail in [Appendix B](#appendix-b-orthotronic-control).
+
+The time required to execute a compute orthocount instruction with inactive `B` address and direct memory location `A` and `C` addresses is `11 + n` memory cycles, where `n` equals the number of words orthocounted.  Variations in timing for distributed item handling are shown in [Appendix C](#appendix-c-timing-summary).
+
 ### Check Parity, CP
+
+When an error is detected during a read from tape, the check parity instruction is used to pinpoint the incorrect word(s) or frame(s).  The instruction may be performed without a mask to check the parity of the entire word, or it may be used with a frame mask to test parity on one or more frames.  The checking is accomplished by transferring the word to be checked (stored in the location specified by the `A` address group) to the location specified by the `B` address group.  During this transfer, parity is automatically checked by the parity-check circuits, and an indicator is set if parity is incorrect.  The correct parity bits from the parity-check circuits are delivered to `B`, together with the information bits contained in `A`, thus guaranteeing that the word stored in `B` has proper parity so that it can be manipulated in the machine without causing a control error.  The parity-error indicator is then sampled, and if the parity of the word at address `A` was incorrect, the sequencing counter specified as the source of the next instruction is changed to select the next instruction from the memory address designated by `C`.  The `C` address group may contain a direct memory location address, an indexed memory location address, an indirect memory location address, or an indexed indirect memory location address, as described under the transfer and sequence change (`TS`) instruction (see [Section VIII](#section-viii-transfer-instructions), pages 80 and 81).
+
+When the check parity instruction is used with a mask, only those information bits corresponding to binary ones in the mask are checked for parity.  If the mask defines one or more complete frames, the sequencing counter will be changed if any frame in the masked operand has incorrect parity.  The instruction is undefined for any other type of mask.
+
+In order to test parity on an individual frame basis, the programmer must be aware of the relationship between the information bits of a word on tape and their positions in memory.  This relationship is shown in Figure XII-3.
+
+From this figure it will be seen that the mask used to check the parity of frame 1 must have the following bit configuration:
+
+        1100 1100 1100 1100 0000 0000 0000 0000 0000 0000 0000 0000,
+
+while the mask required to check the parity of frame 2 would have the configuration:
+
+        0011 0011 0011 0011 0000 0000 0000 0000 0000 0000 0000 0000.
+
+The time required to execute an unmasked check parity instruction with direct memory location addresses is four memory cycles.
+
+![Figure XII-3](images/figure_XII-3.png?raw=true)
 
 ## SECTION XIII: SCIENTIFIC INSTRUCTIONS
 
+The 21 scientific instructions include 18 instructions that manipulate data in floating-point form, two that perform fixed-point decimal and binary division, and one that converts data between fixed-point decimal and floating-point binary form.  In a system that includes the 1801-B floating-point option, these 21 instructions are executed as machine instructions.  In a system not equipped with an 1801-B, they are interpreted as pseudo instructions that call in library routines to perform the desired operations.
+
 ### Floating-Point Numbers
+
+As explained in [Section I](#section-i-introduction), a number can be represented in floating-point form by a mantissa (signed proper fraction) and an exponent (integral power of the radix), allowing the computer to keep track of the radix points and greatly reducing the problem of overflow.  A floating-point number can be converted to fixed-point form by obtaining the product of the mantissa and the radix raised to the power of the exponent.
+
+In [Section III](#section-iii-the-honeywell-1800-word), the structure of a Honeywell 1800 floating-point word is shown ad a 1-bit sign, a 7-bit exponent, and a 40-bit mantissa.  In a floating-point decimal word, the mantissa is interpreted as 10 decimal digits; in a floating-point binary word it is interpreted as 40 binary (or 10 hexadecimal) digits.  A binary one in the sign position indicates that the number is positive, a binary zero that it is negative.  The seven bits of the exponent can represent 128 different exponent values.  In order to store floating-point words having negative as well as positive exponents, the actual exponent is defined as a number 64 less than the effective (or working) exponent stored in these seven bits.  Thus, the range of the actual exponent is a floating point word from `-64` to `+63` as shown in the following table.  In a floating-point decimal word, the actual exponent is interpreted as a power of 10; in a floating-point binary word, it is interpreted as a power of 16.
+
+            Effective Exponent                  Actual Exponent
+            ------------------                  ---------------
+            (binary) (decimal)                     (decimal)
+            0000000        0                           -64
+            0111111       63                           -1
+            1000000       64                            0
+            1111111      127                           +63
+
+In floating-point form, there is no single number that uniquely represents a given fixed-point number.  For example, the fixed point decimal number `.000563` can be represented in floating-point decimal form as
+   .000563 X 10<sup>0</sup>;
+   or .0563 X 10<sup>-2</sup>;
+   or .563 X 10<sup>-3</sup>; etc.
+The normalized (or normal) form for expressing floating-point numbers is with the implied indicator point immediately to the left of the first significant digit.  Therefore, the third example above shows the number `.000563` in normalized floating-point form.  The Honeywell 1800 would store this normalized number as follows:
+```
+1 0111101 0101 0110 0011 0000 0000 0000 0000 0000 0000 0000
+```
+which represents a positive sign, an effective exponent of `61` (actual exponent `-3`), and a mantissa of `5630000000`.  (Note that in floating-point binary, the same configuration represents the value `+.01010110001100-------00` X 16<sup>-3</sup>.)
+
+Since a normalized decimal mantissa may range from `.1000000000` up to `.9999999999`, the range of a normalized floating-point decimal word is from `.1` X 10<sup>-64</sup> (or 10<sup>-65</sup>) up to `.9999999999` X 10<sup>63</sup> (or virtually 10<sup>63</sup>).  In the same manner, the range of a normalized floating-point binary word is from `.0001` X 16<sup>-64</sup> (or 16<sup>-65</sup>) up to `.1111----11` X 16<sup>63</sup> (or virtually 16<sup>63</sup>).
+
+The number zero can be represented by an floating point number in which the mantissa is zero.  A normalized zero, however, is defined in the Honeywell 1800 by the configuration `1000 0000 .... .... 0000`, which represents a positive sign, a working exponent of zero (or actual exponent of `-64`), and a mantissa of zero.  Any instruction which produces normalized results will deliver a high-order result of zero in this form.
+
+The operands of floating-point instructions do not have to be normalized (except for floating-point divisors and comparison operands).  The results are normalized, with the exception of:
+1. Quotients of division operations involving non-normalized dividends;
+2. Sums and differences of unnormalized addition and subtraction; and
+3. The low-order portions of double-precision results.
+If non-normalized operands are used in an operation which produces a normalized result, a significant digit may be lost in the result for every high-order zero in the operands.
+
+A number that can e stored in one machine word is called a single-precision number; one that requires two machine words is known as a double-precision number.  A double-precision floating-point number is defined as two single-precision numbers in which the signs are identical and the exponent of the low-order portion is ten less than the exponent of the high-order portion.  A double-precision number is considered normalized if the high-order portion is in normalized form.
+
+Certain floating-point instructions in the Honeywell 1800 always produce double-precision results.  If the high-order portion of such a result is zero, it is produced in normalized form and the low-order portion is also a normalized zero.  If, however, the high-order portion is not zero and the low-order portion is zero, the latter will not be normalized; i.e., the low-order portion will have an exponent ten less than that of the high-order portion.  This non-normalized zero will, however, be treated as normalized if it is used in any instruction which produces a normalized result.  Care must be exercised if this non-normalized zero is used in a comparison instruction ion which the other operand is a normalized zero.
+
+Floating-point data words are identified in ARGUS language by the constant codes `FLDEC`, floating-point decimal number; `FLBIN`, floating-point binary number; and `EBC`, extended binary number.  A floating-point number may be specified with an indicator point, an explicit exponent, or both.  An explicit exponent is expressed as an "`E`" and a signed or unsigned exponent immediately following the number.  A floating-point decimal number may consist of up to ten signed or unsigned decimal digits and may have any value within the acceptable range.  A floating-point binary number may consist of up to 13 signed or unsigned decimal digits and may have any value within the acceptable range.  ARGUS converts these numbers to normalized floating-point decimal and binary words, respectively.  An extended binary number may consist of up to 25 signed or unsigned decimal digits and may have any value within the acceptable range for floating-point binary words.  ARGUS converts this number to normalized double-precision floating-point binary form, retaining 80 bits of the mantissa.  The high-order 40 bits are stored with proper exponent and sign as one machine word; the low-order 40 bits are stored, with the same sign and an exponent 10 less than that of the high-order word, as the following word.
 
 ### Floating-Point Arithmetic Registers
 
+The 1801-B contain two arithmetic registers whose contents are of interest to the programmer: the floating accumulator, known as `FLAC` and composed of 48 flip-flops; and the 48-bit floating low-order product register, known as `FLOP`.  In general, `FLAC` contains the principal result at the end of a floating-point operation and `FLOP` contains either the low-order or secondary portion of a double-precision (2-word) result or else a second result.
+
+Three floating-point checks are performed on the operations in `FLAC`, and in `FLOP` if pertinent.  If an error is detected during the transfer of information between the 1801-B floating-point unit and the 1801 central processor or if the `A` operand of a conversion instruction does no possess the proper mod-3 configuration, a transfer check is signalled and bits 4-8 of the program control register are set to `10111`.  If an error is detected during mantissa operations in `FLAC` (and in `FLOP`, if pertinent), a mantissa check is signalled and bits 4-8 of the program control register are set to `10100`.  If an error is detected during exponent operations in `FLAC` (and in `FLOP`, if pertinent), an exponent check is signalled and bits 4-8 of the program control register are set to `10110`.
+
 ### Instruction Configurations
+
+The operation codes for the 21 scientific instructions (see [Appendix E](#appendix-e-tables))are uniquely designated by command code bits 2, 3, and 7 through 12.  Bit 1 is the bisequence bit, and bits 4 through 6 are the `A`, `B`, and `C` memory designator bits, respectively.  All six types of addressing described in [Section IV](#section-iv-addressing) can be used with the scientific instructions.  In most cases, however, only the four types that reference main memory are meaningful, due to the nature of the floating-point word.  The scientific instructions comprise the following groups: floating addition, floating subtraction, floating multiplication, floating division, fixed division, floating comparison, normalization, conversion, and multiple unload.
 
 ### Inactive Addresses
 
+Except where otherwise specifically stated below, any address or combination of addresses may be inactive in a scientific instruction.  In general, if the `C` address is active, the contents of `FLAC` are delivered to the location specified by `C` and the system hunts for the next sequencing counter in demand.  Exceptions are the multiple unload and the comparison instructions.  If the `C` address is inactive, hunting is inhibited to permit retrieval of the contents of `FLAC` and, if desired, of `FLOP`.  In either case, the result is retained in `FLAC` and in `FLOP` if pertinent. although its retrieval cannot be guaranteed when hunting occurs.
+
+The general rule for an inactive `A` or `B` address or both is as follows: the operand represented by the inactive address is replaced by the contents of `FLAC` (including the sign and exponent).  For example, if `A` is inactive, then `FLAC` is treated as the `A` operand.  Note that an addition instruction with inactive `A` and `B` addresses may be used to multiply the contents of `FLAC` by two, while a multiply with inactive `A` and `B` addresses may be used to square the contents of `FLAC`.  Here the exceptions are the multiple unload and fixed-to-floating normalize instructions.
+
+The presence of an inactive `A` or `C` address has no effect on the timing of a scientific instruction,  The presence of an inactive `B` address, on the other hand, reduces the execution time by one memory cycle.
+
 ### Exponential Overflow and Underflow
+
+Although the use of floating-point numbers greatly reduces the problem of overflow, it does not entirely resolve this problem.  Right shifts occur automatically to counter any mantissa overflow in a result, but exponential overflow occurs if the exponent of a result exceeds `+63`, i.e. if the working exponent is greater than `+127`.  Exponential underflow, on the other hand, occurs if the result exponent drops below `-64`, i.e., if the working exponent is less than zero.  Either condition results in an unprogrammed transfer of control.  If exponential overflow occurs, the instruction is stored in `U` or `U + 1`, depending on which sequencing counter selected it, and the next instruction is taken from `U = 14` or `U + 15` (see Figure V-5, page 62).  The exponent of the result is reduced by `128`, bringing it within the acceptable range.  In other words, if one is added to a working exponent of `127` (actually `+63`), the result will have a working exponent of zero (actually `-64`).  If exponential underflow occurs, the instruction is stored in `U` or `U + 1`, the next instruction is taken from `U + 12` or `U + 13`, and the result exponent is increased by `128`.
+
+Exponential overflow or underflow in a result which is deliverable to the location specified by `C` normally causes an immediate unprogrammed transfer, whether the `C` address is active or inactive.  An exception occurs in the case of an instruction which uses the previous contents of `FLAC` as an operand and which does not deliver a result to main memory (inactive `C` address).  If exponential overflow or underflow occurs in such a case, an overflow or underflow indicator is set.  The unprogrammed transfer is delayed until the first occurrence of one of the following:
+1. A scientific instruction does not use the previous contents of `FLAC` as an operand;
+2. An instruction delivers a result to main memory; or
+3. The actual exponent of the result becomes greater than `+127` or less than `-128`.
+
+Upon the occurrence of an overflow unprogrammed transfer, the programmer can determine whether the unprogrammed transfer was caused by a "normal" overflow (i.e., exponent greater than `+63`) or by a "double" overflow (i.e., exponent greater than `+127`) by examining the high-order bit of the result exponent.  Figure XIII-1 shows the ranges of exponents for both valid floating-point numbers and stored overflow and underflow conditions.  Note that following an unprogrammed transfer for normal overflow the high-order bit of the exponent is a zero, whereas following an unprogrammed transfer for double overflow this bit is a one.  The high-order bit of the exponent can be used in the same manner following an underflow unprogrammed transfer.
+
+The floating-point division instructions do not conform to the above discussion of stored overflow and underflow.  In the event of overflow or underflow in the quotient of such an instruction, the unprogrammed transfer immediately follows the completion of the instruction.  Neither condition is ever stored.
+
+![Figure XIII-1](images/figure_XIII-1.png?raw=true)
+
+Exponential overflow<sup>1(#section-xiii-note-1)</sup>  or underflow in the contents of `FLOP` does not cause an unprogrammed transfer but merely sets an indicator which is reset by the start of any instruction except multiple unload.  Note that whenever a multiple unload follows an instruction which used the previous contents of `FLAC` as an operand and which did not deliver a result to main memory, an exponential underflow unprogrammed transfer may result from exponential underflow in either `FLAC` or `FLOP`.
+
+<a name="section-xiii-note-1">1</a>Since the result in `FLOP` usually has a smaller exponent that the result in `FLAC`, exponential overflow in the contents of `FLOP` is normally impossible.  An exception is the case of a floating-point division instruction which uses the previous contents of `FLAC` as an operand, in which case it is possible to have exponential overflow in the remainder.
 
 ### Checking
 
+Each operand delivered to the floating-point unit and each result delivered to the central processor is accompanied by modulo-3 check bits which are used to verify the accuracy of the information delivered.  Modulo-3 checks are also performed to verify the contents of `FLAC` and, where pertinent, of `FLOP`.  The floating-point unit uses a module-3 check on the `A` operand of the conversion instruction (`FCON`) to verify the operation code of the instruction, as described on page 134.
+
+Failure of any modulo-3 check in the floating-point unit results in a control error (see [Appendix D](#appendix-d-control-errors)).  In the event that the current instruction does not deliver a result to main memory, the control error indication may be delayed.  In every case, however, this indication will occur no later than the conclusion of either the first succeeding instruction which delivers a floating-point result to main memory or the first succeeding instruction which does not use the contents of `FLAC` as an operand.
+
 ### Floating Binary Add, FBA
+
+This instruction performs an algebraic binary addition of the contents of the location specified by the `A` address group and the contents of the location specified by the `B` address group, producing as a result a normalized, single-precision, floating-point binary number in `FLAC`.  If the `C` address group is active, the result is also delivered to the specified location and the system hunts for the next sequencing counter in demand.  If `C` is inactive, the result is not delivered to main memory and hunting is inhibited.  Provision is made for automatic handling of exponential overflow and underflow.
 
 ### Floating Binary Subtract, FBS
 
+Prior to the delivery of the operands to the addition circuitry, this instruction changes the sign of the `B` operand; a floating binary add is then executed.
+
 ### Floating Decimal Add, FDA
+
+This instruction operates in the same manner as floating binary add, except that the addition is decimal rather than binary.
 
 ### Floating Decimal Subtract, FDS
 
+This instruction operates in the same manner as floating binary subtract, except that after the sign change, the addition is decimal rather than binary.
+
 ### Floating Binary Add, Extended Precision, FBAE
+
+This instruction performs an algebraic binary addition of the contents of the location specified by the `A` address group and the contents of the location specified by the `B` address group, producing as a result a normalized, double-precision, floating-point binary number in `FLAC` and `FLOP`.  If the `C` address group is active, the high-order result is delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  Provision is made for automatic handling of exponential overflow and underflow on the result in `FLAC`.  If exponential underflow occurs on the result in `FLOP`, the low-order underflow indicator is set; the nature of the double-precision result precludes the occurrence of low-order overflow.
 
 ### Floating Binary Subtract, Extended Precision, FBSE
 
+This instruction first changes the sign of the `B` operand and then executes a floating binary add, extended precision.
+
 ### Normalized Floating-Point Addition and Subtraction
+
+In the execution of the preceding six floating-point addition and subtraction instructions, the following stages occur:
+1. Prenormalization.  During this stage, all zero operands are normalized and the non-zero operand with the larger exponent is normalized, if necessary.  If the exponents of the operands become equal during this process, the prenormalization halts.
+2. Right Justification.  The mantissa of the operand with the smaller exponent is shifted right until its exponent is equal to that of the other operand; this exponent is retained as the tentative exponent of the result.  In single-precision instructions the bits that are shifted off are discarded immediately, but in extended-precision instructions they are discarded only after they have been shifted more than 40 bit positions.
+3. Mantissa Arithmetic.  Depending upon the operation code and upon whether the operand sign bits are like or unlike, the arithmetic circuits are set to perform an effective addition or subtraction of the mantissas.  In the extended-precision instructions, the operation involves an 80-bit mantissa; a 40-bit mantissa is involved in the other floating add and subtract instructions.  If mantissa overflow occurs, the mantissa of the result is shifted right four positions and the tentative result exponent is increased by one.
+4. Result Normalization.  The result is normalized (if necessary) upon completion of the mantissa arithmetic.  Exponential overflow and underflow are checked after the result exponent has been decreased by one for each 4-bit left-shift.  If a zero result is obtained from the execution of an extended-precision instruction, normalized zeros are provided for both the high-order and low-order results.
+5. Result Transmission.  The high-order result is retained in `FLAC` and the low-order result, if any, in `FLOP`.  If `C` is active, the high-order result is also transmitted to the location specified by `C`.  Arithmetic and control checks are completed at this time whether C` is active or inactive.
 
 ### Unnormalized Floating-Point Addition and Subtraction
 
+The operation of the following four floating-point addition and subtraction instructions is identical to that of the normalized instructions described above, except that stages 1 (prenormalization) and 4 (result normalization) are omitted and exponential overflow and underflow are checked at the completion of stage 3 (mantissa arithmetic).
+
+Unnormalized zero results may be either positive or negative.  If the operand of larger exponent is zero, but the operational result is not zero, the result exponent is that of the zero operand while the sign is normally that of the non-zero operand.  An exception occurs, however, if the non-zero operand in a subtraction operation appears in the location specified by the `B` address.  In this case, the sign of the result is the opposite of the sign of the non-zero operand.
+
 ### Floating Point Binary Add, Unnormalized, FBAU
+
+This instruction is the same as floating binary add, except that the sum is not normalized.  A 4-bit shift to the right occurs if necessary to compensate for mantissa overflow, but no compensating left shifts occur to renormalize a result with zero in the most significant mantissa digit.
 
 ### Floating Point Binary Subtract, Unnormalized, FBSU
 
+This instruction first changes the sign of the `B` operand and then executes a floating binary add, unnormalized.
+
 ### Floating Point Decimal Add, Unnormalized, FDAU
+
+This instruction operates in the same manner as floating binary add, unnormalized, except that the arithmetic is decimal rather than binary.
 
 ### Floating Point Decimal Subtract, Unnormalized, FDSU
 
+This instruction operates in the same manner as floating binary subtract, unnormalized, except that the arithmetic is decimal rather than binary.
+
 ### Timing Notes on Floating-Point Addition and Subtraction
+
+The timing of the above 10 floating-point addition and subtraction instructions is summarizes in Figure XIII-2.  The times given are based on the use of both normalized and unnormalized operands.  All addresses are assumed to be active and direct.  In general, the minimum times are achieved by instructions in which no prenormalization, justification, or result normalization is required.  As stated earlier, instruction times are not affected by the presence of an inactive `A` or `C` address but are reduced by one cycle when the `B` address is inactive.  The effects of indexed and indirect addressing are presented in [Appendix C](#appendix-c-timing-summary).
+
+![Figure XIII-2](images/figure_XIII-2.png?raw=true)
 
 ### Floating Binary Multiply, FBM
 
+This instruction multiplies the contents of the location specified in `A` by the contents of the location specified in `B`.  The result is a normalized, double-precision, floating-point binary number in `FLAC` and `FLOP`.  If the `C` address is active, the high-order result is delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  Provision is made for automatic handling of exponential overflow and underflow in the high-order result; if underflow occurs in the low-order result, the low-order underflow indicator is set.
+
+A zero result in floating-point multiplication is a normalized zero (i.e., positive sign, zero mantissa, and `-64` actual exponent) in both the high-order and low-order portions.  Exponential overflow or underflow cannot occur with a zero result.
+
 ### Floating Decimal Multiply, FDM
+
+This instruction operates in the same manner as floating binary multiply, except that the arithmetic is decimal rather than binary.
 
 ### Timing Notes on Floating-Point Multiplication
 
+The timing of the floating-point multiplication instructions is summarized in Figure XIII-3.  Again these times are based on the use of both normalized and unnormalized operands with all addresses active and direct.  The minimum time for a floating decimal multiply is achieved when none of the multiplier digits is 4, 5, or 6. the most significant multiplier digit is not 7, 8, or 9, and the result does not require normalization.
+
+![Figure XIII-3](images/figure_XIII-3.png?raw=true)
+
 ### Floating Binary Divide, FBD
+
+This instruction performs a floating binary division of the contents of `B` (dividend) by the contents of `A` (divisor), retaining the quotient in `FLAC` and the remainder in `FLOP`.  If the `C` address is active, the quotient is also delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  Provision is made for exponential overflow and underflow in the quotient.  If exponential overflow or underflow occurs in the remainder (see footnote on page 126), the appropriate indicator is set.
+
+The quotient will be normalized only if the dividend is in normalized form.  The remainder will not be normalized unless the dividend is zero, in which case both the quotient and the remainder will be normalized zeros and exponential overflow and underflow cannot occur.  The exponent of the remainder is nine less than that of the dividend if the absolute value of the dividend mantissa equals or exceeds the absolute value of the divisor mantissa; if the absolute values of the mantissas are equal, the remainder is an unnormalized zero with an exponent nine less than that of the dividend.  The exponent of the remainder is ten less than that of the dividend if the absolute value of the dividend mantissa is less than the absolute value of the divisor mantissa.  The sign of the remainder is the same as that of the dividend.
+
+If the divisor is unnormalized or zero, the instruction is not performed.  Instead, it is stored in `U` or `U + 1`, depending upon which sequencing counter selected it, and a division overcapacity unprogrammed transfer occurs to `U + 10` or `U + 11`.  (Note: The behavior of the system is unspecified if the program attempts to retrieve a result following division overcapacity by means of a multiple unload instruction, see below.)
 
 ### Floating Decimal Divide, FDD
 
+This instruction operates in the same manner as floating binary divide, except that the arithmetic is decimal rather than binary.
+
 ### Fixed Binary Divide, BD
+
+The fixed-point binary and decimal divide instructions are included in the complement of scientific instructions.  The binary instruction performs a fixed-point binary division of the contents of `B` (dividend) by the contents of `A` (divisor), retaining the quotient in `FLAC` and the remainder in `FLOP`.  If the `C` address is active, the quotient is also delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.
+
+If the absolute value of the contents of `B` is equal to or greater than the absolute value of the contents of `A`, the instruction is not performed but is stored in `U` or `U + 1`.  An immediate division overcapacity unprogrammed transfer is executed to `U + 10` or `U + 11`.  As noted above, the behavior of the system is unspecified if the program attempts to retrieve a result following division overcapacity by means of a multiple unload instruction (see below).
 
 ### Fixed Decimal Divide, DD
 
+This instruction operates in the same manner as fixed binary divide, except that the arithmetic is decimal rather than binary.
+
 ### Timing Notes on Division
+
+The timing of the fixed- and floating-point division instructions is summarized in Figure XIII-4.  These times are based on the use of both normalized and unnormalized dividends with all addresses active and direct.
+
+![Figure XIII-4](images/figure_XIII-4.png?raw=true)
 
 ### Normalized Less Than Comparison, FLN
 
+This instruction performs a direct algebraic comparison of the contents of the locations specified by the `A` and `B` address groups, according to the following rules:
+1. If the contents of `A` and `B` have different signs, the operand with the positive sign exceeds the operand with the negative sign.
+2. If the contents of `A` and `B` are both positive, the operand with the larger exponent exceeds the other operand.  If the exponents are identical, the operand with the larger mantissa exceeds the other operand.
+3. If the contents of `A` and `B` are both negative, the operand with the smaller exponent exceeds the other operand.  If the exponents are identical, the operand with the smaller mantissa exceeds the other operand.
+Note that this comparison is based upon the assumption of normalized operands.  If either operand (or both) is unnormalized, the operand of larger magnitude may be interpreted as the smaller.
+
+If the contents of `A` are less than or equal to the contents of `B`, the sequencing counter specified as the source of the next instruction is changed to the memory location address specified by `C` and hunting for the next sequencing counter in demand is inhibited.  If the contents of `A` are greater than the contents of `B`, no change is made to the contents of the specified sequencing counter and hunting occurs.  If `C` is inactive, no change is made to the contents of the specified sequencing counter and hunting is inhibited.  The `C` address group may contain any of the four types of addresses permitted in the `C` address group of the transfer and sequence change (`TS`) instruction.  The behavior of the system for each of these four types of addresses is the same as that described in [Section VIII](#section-viii-transfer-instructions), pages 80 and 81.  The basic execution time for the normalized less than comparison instruction is four memory cycles, regardless of the outcome of the comparison.
+
+This instruction is actually built into the 1801 central processor and uses the accumulator in its execution.  Following the completion of a normalized less than comparison, the word in the accumulator is invalid; any attempt to deliver this word to memory will therefore cause a control error.
+
 ### Normalized Inequality Comparison, FNN
+
+This instruction, which is actually built into the 1801 central processor, is identical to the inequality comparison, alphabetic (`NA`) instruction (see [Section IX](#section-ix-decision-intructions)).  In other words, it compares the contents of the locations specified by the `A` and `B` address groups for inequality.  If the two operands are not identical, the specified sequencing counter is changed to the memory location address specified by `C`.  If the two operands are equal, the specified sequencing counter is not changed.  All properties of the inequality comparison, alphabetic instruction are retained.  Note that a positive zero is not equal to a negative zero.  This comparison is also based on the assumption of normalized operands.  If either operand (or both) is unnormalized, identical operands may be interpreted as unequal or vice versa.  The basic execution time for a normalized inequality comparison is four memory cycles, regardless of the outcome of the comparison.
 
 ### Fixed-to-Floating Normalize, FFN
 
+This instruction produces a normalized floating-point result based on the contents of the location specified by `B` and a portion of the contents of the location specified by `A`.  The low-order 44 bits of the `B` operand are normalized to form the result mantissa.  The sign of the result is the same as the sign of the `B` operand; i.e., the result is positive if the `B` operand contains one or more ones in the sign bit positions.  The value of bits 2 through 8 (the exponent bits) of the `A` operand is taken as a tentative exponent of the result.  The final exponent is determined during the normalization of the mantissa according to the following rules:
+1. If the low-order 44 bits of `B` are shifted four bits to the right to form the mantissa, the tentative exponent becomes the final exponent.
+2. If the low-order 44 bits of `B` are not shifted at all, the tentative exponent is decreased by one to form the final exponent.
+3. If the low-order 44 bits of `B` are shifted to the left, the tentative exponent is decreased by `n` to form the final exponent, where `n` is one greater than the number of 4-bit shifts performed.
+
+The result is retained in `FLAC` and `FLOP`, the low-order 36 bits of `FLOP` being set to zero.  If the `B` operand is plus or minus zero, both `FLAC` and `FLOP` will contain normalized zeros.  If the `C` address is active, the high-order result is also delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  Exponential underflow in the high-order result produces a normal unprogrammed transfer.  If exponential underflow occurs in the low-order result, the low-order underflow indicator is set.
+
+If the `A` address is inactive, the exponent of the previous contents of `FLAC` is used as the `A` operand.  Note that of the previous contents of `FLAC` are in fixed-point form (e.g., the result of a fixed-point divide or a binary-to-decimal conversion), the operation will not produce a meaningful result.  If the `B` address is inactive and the previous contents of `FLAC` are in fixed-point form, these contents are used as the `B` operand.  If the previous contents of `FLAC` are in floating-point form, the sign bit in `FLAC` is retained as the sign of the result, the exponent in `FLAC` is ignored, and the mantissa in `FLAC` is prefixed by four binary zeros to form the 44-bit `B` operand mantissa.  When this mantissa is normalized, the exponent from the `A` operand is reduced by one to form the result exponent.  The behavior of the system is unspecified if both `A` and `B` addresses are inactive.  The minimum and average execution time for this instruction is four memory cycles; the maximum is five memory cycles.
+
 ### Multiple Unload, ULD
 
+This instruction does _not_ reset the exponential overflow and underflow indicators.  It transfers the contents of `FLAC` to the location specified by `A` and the contents of `FLOP` to the location specified by `C`.  The `B` address must be inactive; otherwise the behavior of the system is unspecified.  If the `A` address is inactive, the contents of `FLOP` are transferred to the location specified by `C` and the contents of `FLAC` are undefined.  If the `C` address is inactive, the contents of `FLAC` are transferred to the location specified by `A` and the contents of `FLOP` are placed in `FLAC`.  Hunting for the next sequencing counter in demand occurs only if the `C` address is active.  NOTE: In order to print the contents of `FLAC` and `FLOP` at the console, it is necessary to perform a multiple unload instruction and then print the contents of the corresponding memory locations.
+
+If the exponential underflow indicator is set when the multiple unload instruction is initiated, this instruction is followed by an unprogrammed transfer to `U + 12` or `U + 13`.  If the exponential overflow indicator is set, the unprogrammed transfer to `U + 14` or `U + 15`.  The execution time for a multiple unload instruction is four memory cycles.
+
 ### Conversion, FCON
+
+This instruction converts the contents of the location specified by `B` according to the contents of the location specified by `A`.  If the `B` address is inactive, the previous contents of `FLAC` are used as the `B` operand.  If the `A` address is inactive, the behavior of the system is unspecified.  Two different kinds of conversion can be specified by the value of the `A` operand: fixed decimal to floating binary conversion, and floating binary to fixed decimal conversion.
+
+1. Fixed Decimal to Floating Binary Conversion.  This operation is specified by a conversion instruction in which the `A` operand has the octal value
+```
+        XXXXXXXX00000001
+```
+The high-order 24 bits may have any values provided that the modulo-3 sum of the entire operand is one.  This sum is checked in the floating-point unit to verify the operation code.
+
+The `B` operand is interpreted as a signed decimal number with decimal point to the left of the high-order digit and is converted to a floating-point binary mantissa in `FLAC` (unnormalized).  The exponent in `FLAC` is zero, while the sign is positive if the `B` operand contains one or more ones in the sign bit positions.  The decimal remainder is retained in `FLOP` where it has the significance of a decimal fraction multiplied by 16<sup>-10</sup>.  If the `C` address is active, the result in `FLAC` is delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  NOTE: If the following instruction reverses the value of the high-order exponent bit, an effective fixed decimal to fixed binary conversion is obtained.  The execution time for fixed decimal to floating binary conversion is 20 memory cycles.
+
+2. Floating Binary to Fixed Decimal Conversion.  This operation is specified by a conversion instruction in which the `A` operand has the octal value
+```
+        XXXXXXXX00000004
+```
+The high-order 24 bits may have any values provided that the modulo-3 sum of the entire operand is one.  This sum is checked in the floating-point unit to verify the operation code.
+
+The `B` operand is interpreted as a floating-point binary and its mantissa is converted to a 44-bit fixed-point decimal fraction in `FLAC`.  The exponent of the `B` operand is ignored, while the sign of the `B` operand is placed in the high-order four bits of `FLAC`.  If the `B` operand mantissa is zero, however, the sign in `FLAC` is a one followed by three zeros.  The hexadecimal remainder is retained in `FLOP` where it has the significance of a hexadecimal fraction multiplied by 10<sup>-11</sup>.  If the `C` address is active, the result in `FLAC` is delivered to the location specified and the system hunts for the next sequencing counter in demand.  If `C` is inactive, no result is delivered to main memory and hunting is inhibited.  NOTE: This instruction can also be used to convert the low-order 40 bits of a fixed-point binary word to a 44-bit decimal equivalent.  The execution time for floating binary to fixed decimal conversion is nine memory cycles.
 
 ## SECTION XIV: SUMMARY OF INSTRUCTIONS
 
