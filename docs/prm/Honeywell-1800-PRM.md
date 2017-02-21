@@ -1990,33 +1990,100 @@ The `B` operand is interpreted as a floating-point binary and its mantissa is co
 
 ### General Instructions, Unmasked or Masked
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
 -----------------------|-----------|---------------------
-`BA` | Binary Add algebraically `(A)` to `(B)`.  Store sum in `C`.  If overflow occurs, take next instruction from `U + 8` if the sequence counter selected this instruction, or `U + 9` if the cosequence counter selected this instruction.  The sign of either operand is positive if any of its four sign bits is one.  The sign of the sum is `0000` if negative, `1111` if positive. | 4 (See note 4)
-`DA` | Decimal Add algebraically (`A`) to (`B`).  Store sum in `C`.  Otherwise same as Binary Add. | 4 (See note 4)
-`WA` | Word Add.  Binary add `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  If overflow occurs, observe same conventions as Binary Add. | 4
-`BS` | Binary Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | 4 (See note 4)
-`DS` | Decimal Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | 4 (See note 4)
-`WD` | Word Difference.  Binary Subtract `(B)` from `(A)`.  Otherwise identical to Word Add. | 4
-`NA` | Inequality Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≠ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is not equal to minus zero. | 4
-`NN` | Inequality Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≠ `(B)`, follow procedure for `NA`.  Plus zero equals minus zero. | 4
-`LA` | Less Than Or Equal Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≤ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is greater than minus zero. | 4
-`LN` | Less Than Or Equal Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≤ `(B)`, follow procedure for `LA`.  Plus zero equals minus zero. | 4
-`TX` | Transfer `(A)` to `C`.  Ignore `B`. | 3
-`TS` | Transfer `(A)` to `B`.  If `C` is active, change sequencing counter to select next instruction from location specified by `C`. | 4
-`HA` | Half Add.  Binary add without carry `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  Result is zero wherever corresponding bits of `(A)` and `(B)` are identical, one wherever corresponding bits of `(A)` and `(B)` are different.  This is "logical exclusive OR." | 4
-`SM` | Superimpose `(A)` and `(B)`.  Store result in `C`.  Result is zero wherever bits of `(A)` and `(B)` are both zero, one everywhere else.  This is "logical inclusive OR." | 4
-`CP` | Check Parity.  Test `(A)` for correct parity.  Place `(A)` with correct check bits in `B`.  If `(B)` differs `(A)`, change sequencing counter to select next instruction from location specified by `C`. | 4
+`BA` | Binary Add algebraically `(A)` to `(B)`.  Store sum in `C`.  If overflow occurs, take next instruction from `U + 8` if the sequence counter selected this instruction, or `U + 9` if the cosequence counter selected this instruction.  The sign of either operand is positive if any of its four sign bits is one.  The sign of the sum is `0000` if negative, `1111` if positive. | `4` (See [note 4](#section-xiv-note-4))
+`DA` | Decimal Add algebraically (`A`) to (`B`).  Store sum in `C`.  Otherwise same as Binary Add. | `4` (See note 4)
+`WA` | Word Add.  Binary add `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  If overflow occurs, observe same conventions as Binary Add. | `4`
+`BS` | Binary Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | `4` (See [note 4](#section-xiv-note-4))
+`DS` | Decimal Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | `4` (See [note 4](#section-xiv-note-4))
+`WD` | Word Difference.  Binary Subtract `(B)` from `(A)`.  Otherwise identical to Word Add. | `4`
+`NA` | Inequality Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≠ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is not equal to minus zero. | `4`
+`NN` | Inequality Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≠ `(B)`, follow procedure for `NA`.  Plus zero equals minus zero. | `4`
+`LA` | Less Than Or Equal Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≤ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is greater than minus zero. | `4`
+`LN` | Less Than Or Equal Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≤ `(B)`, follow procedure for `LA`.  Plus zero equals minus zero. | `4`
+`TX` | Transfer `(A)` to `C`.  Ignore `B`. | `3`
+`TS` | Transfer `(A)` to `B`.  If `C` is active, change sequencing counter to select next instruction from location specified by `C`. | `4`
+`HA` | Half Add.  Binary add without carry `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  Result is zero wherever corresponding bits of `(A)` and `(B)` are identical, one wherever corresponding bits of `(A)` and `(B)` are different.  This is "logical exclusive OR." | `4`
+`SM` | Superimpose `(A)` and `(B)`.  Store result in `C`.  Result is zero wherever bits of `(A)` and `(B)` are both zero, one everywhere else.  This is "logical inclusive OR." | `4`
+`CP` | Check Parity.  Test `(A)` for correct parity.  Place `(A)` with correct check bits in `B`.  If `(B)` differs `(A)`, change sequencing counter to select next instruction from location specified by `C`. | `4`
 
 ### General Instructions, Unmasked
 
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+-----------------------|-----------|---------------------
+`BM` | Binary Multiply `(A)` by `(B)`.  Store high-order product with proper sign in `C` and accumulator, low-order product with proper sign in low-order product register.  Product signs are `0000` if negative or `1111` if positive. | `33`
+`DM` | Decimal Multiply `(A)` by `(B)`.  Store high-order and low-order products as in Binary Multiply with same sign conventions. | `27`
+`BT` | Binary Accumulate.  Place low-order 44 bits of `(A)` in accumulator.  Perform this transfer `B'` times, adding in binary (with positive sign implied) the successive 44-bit words transferred.  `B'` (high-order 6 bits of `B`) = `0` to `63`.  Store 44-bit result, with sign of first word transferred, in `C`.  Observe same overflow conventions as in Binary Add.  Note that if `A` is an indirect address with non-zero increment, `B` different numbers are accumulated. | `3 + n` (see [note 2](#section-xiv-note-2))
+`DT` | Decimal Accumulate.  Same as Binary Accumulate except that transferred words are added as 11-digit decimal numbers. | `3 + n` (see [note 2](#section-xiv-note-2))
+`MT` | Multiple Transfer.  Transfer `(A)` to `C`.  Perform this instruction `B'` times.  `B'` (high-order 6 bits of `B`) = `0` to `63`.  Note that if `A` and `C` are indirect addresses with non-zero increments, `B'` different transfers are performed. | `1 + 2n` (see [note 2](#section-xiv-note-2))
+`TN` | N-Word Transfer.  Transfer `B'` words from consecutive locations starting at `A` to consecutive locations starting at `C`.  `B'` = 0 to 63. | `5 + 2n` (see [note 2](#section-xiv-note-2))
+`CC` | Compute Orthocount.  Write a generated end-of-record word in the location specified by `C`.  Orthocount the record starting at `A` to the end-of-record word.  Store orthoword 1 in `C` and orthoword 2 in `C + 1`.  Place end-of-record word in `C + 2`.  If `B` is inactive, control is not changed for distributed item handling.  If `B` is active, end-of-item words are sensed and control is changed for distributed item handling.| `11 + n` (see [note 2](#section-xiv-note-2))
+`IT` | Item Transfer.  Substitute an end-of-item symbol for the high-order 32 bits of `(B)`, clearing the low-order 16 bits of `(B)` to zeros.  Transfer words from consecutive memory locations starting with `A` to consecutive memory locations starting with `C` until an end-of-item or end-of-record word is transferred. | `7 + 2n` (see [note 2](#section-xiv-note-2))
+`RT` | Record Transfer.  Store an end-of-record word in `B`.  Transfer words from consecutive memory locations starting with `A` to consecutive memory locations starting with `C` until an end-of-record word is transferred. | `7 + 2n` (see [note 2](#section-xiv-note-2))
+`MPC` | Control Program.  Ignore `A`.  Place `(PCR)` in the location specified by `C`.  The alter the bits of `PCR` specified by bits 5-12 of `B`, using bits 1-4 of `B` to define how the bits are altered.  If `B` address memory designator bit is `1` or if the program executing this instruction stalls, hunt for the next program in demand.  Otherwise, do not hunt. | `4`
+`PR` | Proceed.  If `C` is inactive, do not hunt for next program in demand. | `2`
+
 ### Inherent Mask Instructions
+
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+-----------------------|-----------|---------------------
+`SWS` | Shift Word and Substitute.  Shift right end around including sign `(A)` as directed by `B'`.  Mask result and store in `C` (protected).  `B'` (high-order 6 bits of `B`) specifies the number of 1-bit shifts. | `5 + k` (see [note 3](#section-xiv-note-3))
+`SPS` | Shift Preserving Sign and Substitute.  Shift right end around excluding sign `(A)` as directed by `B'`.  Otherwise same as `SWS`. | `5 + k` (see [note 3](#section-xiv-note-3))
+`SWE` | Shift Word and Extract.  Same as `SWS` except that the unmasked portions of `(C)` are unprotected. | `5 + k` (see [note 3](#section-xiv-note-3))
+`SPE` | Shift Preserving Sign and Extract.  Same as `SPS` except that the unmasked portions of `(C)` are unprotected. | `5 + k` (see [note 3](#section-xiv-note-3))
+`SSL` | Shift and Select.  Shift right end around including sign `(A)` as directed by `B'`.  Binary add to `C` under mask control no more than 11 low-order bits of the shifted word, with positive sign implied.  Change the sequencing counter to select the next instruction from the location specified by the modified `C` address.  `B'` is interpreted as in the `SWS` instruction. | `6 + k` (see [note 3](#section-xiv-note-3))
+`SS` | Substitute.  Using `(B)` as a mask, transfer `(A)` to `C` and protect unmasked portions of `(C)`. | `5`
+`EX` | Extract or Logical AND.  Using `(B)` as a mask, transfer `(A)` to `C` without protecting unmasked portions of `(C)`.  Result is one wherever bits of `(A)` and `(B)` are both one, zero everywhere else.| `5`
 
 ### Peripheral and Print Instructions
 
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+-----------------------|-----------|---------------------
+`RF` | Read Forward from peripheral device `XX` into consecutive memory locations starting with `A`.  `XX` represents command code bits 1-6.  Set the `RAC` to `+A`.  If `B` is inactive, do not change control for distributed item handling.  If `B` is active, set the `DRAC` to `+B` and sense for end-of-item words.  Change sequencing counter to select next instruction from location specified by `C`.  If end of tape is sensed, take next instruction from `U + 4` if the sequence counter selected this instruction or from `U + 5` if the cosequence counter selected this instruction.  If a parity error was detected during the last previous read from this device, reset the parity error flip-flop, do not perform the read.  Instead, take next instruction from `U + 6` or `U + 7`.  This instruction is interlocked against device `XX` and the associated buffer. | `7`
+`RB` | Read Backward from magnetic tape unit `XX` into consecutive memory locations starting with `A`.  This instruction is otherwise identical with `RF` except that the `RAC` is set to `-A` and if `B` is active the `DRAC` is set to `-B`. | `7`
+`WF` | Write Forward on peripheral device `XX` the contents of consecutive memory locations from `A` therough the end-of-record word.  Set the `WAC` to `+A`.  If `B` is inactive, do not change control for distributed item handling.  If `B` is active, set the `DWAC` to `+B` and sense for end-of-item words.  Change sequencing counter to select next instruction from location specified by `C`.  If an error was detected during the last previous write to peripheral device `XX`, reset the parity error flip-flop, do not perform the write.  Instead, take next instruction from `U + 6` or `U + 7`.  This instruction is interlocked against device `XX` and the associated buffer.  End-of-tape convention is identical with Read Forward. | `7`
+`RW` | Rewind tape on magnetic tape unit or paper tape reader `XX`.  If `A` is active in magnetic tape rewind, set manually removable interlock after tape is rewound.  `B` and `C` are ignored.  If an error was detected during the last previous read or write for this magnetic tape unit, reset the parity error flip-flop and perform the rewind.  In the case of a paper tape reader, do not perform the rewind but take next instruction from `U + 6` or `U + 7`. | `3`
+`PRA`, `PRD`, `PRO` | Print `(A)` on the typewriter and in the format specified by `B`.  If `C` is active, change the sequencing counter to select the next instruction from the location specified by `C`.  In an alphabetic print, eight 6-bit characters are printed.  In a decimal print, 12 hexadecimal digits are printed.  In an octal print, 16 octal numbers are printed. | `5`
+
 ### Simulator Instructions
 
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+-----------------------|-----------|---------------------
+`S` | Simulator.  Form a memory location address (direct or indexed) from the low-order 11 bits of the command code and store this instruction in the location thus specified.  Change the cosequence counter to select the next instruction from the next higher address. | `7`
+
 ### Scientific Instructions
+
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+-----------------------|-----------|---------------------
+`FBA` | Floating Binary Add.  Binary add algebraically `(A)` to `(B)`.  Deliver result as a normalized floating-point number to `C` if `C` is active; retain result in `FLAC` if `C` is inactive.  If exponential underflow occurs, take next instruction from `U + 12` or `U + 13`.  If exponential overflow occurs, take next instruction from `U + 14` or `U + 15`. | `4.95`
+`FDA` | Floating Decimal Add.  Same as floating binary add, except that arithmetic is decimal rather than binary. | `6.5`
+`FBS` | Floating Binary Subtract.  Change the sign of the `B` operand and perform a floating binary add. | `4.95`
+`FDS` | Floating Decimal Subtract.  Same as floating binary subtract, except that arithmetic is decimal rather than binary. | `6.5`
+`FBAU` | Floating Binary Add, Unnormalized.  Same as floating binary add, except that result is not normalized.  A 4-bit right shift is provided if necessary to compensate for mantissa overflow, but no compensating left shift occurs to renormalize a result with zero in the most significant mantissa digit. | `5`
+`FDAU` | Floating Decimal Add, Unnormalized.  Same as floating binary add, unnormalized, except that arithmetic is decimal rather than binary. | `6`
+`FBSU` | Floating Binary Subtract, Unnormalized.  Change the sign of the `B` operand and perform a floating binary add, unnormalized. | `5`
+`FDSU` | Floating Decimal Subtract, Unnormalized.  Same as floating binary subtract, unnormalized, except that arithmetic is decimal rather than binary. | `6`
+`FBAE` | Floating Binary Add, Extended Precision.  Form the normalized double-precision sum of `(A)` and `(B)`.  If `C` is inactive, retain the high-order and low-order parts in `FLAC` and `FLOP`.  If `C` is active, store the high-order part in `C`; the contents of `FLOP` are unspecified.  Sense for exponential overflow or underflow on the high-order result.  If exponential underflow occurs on the low-order result, set the low-order underflow indicator. | `6`
+`FBSE` | Floating Binary Subtract, Extended Precision.  Change the sign of the `B` operand and perform a floating binary add, extended precision. | `6`
+`FBM` | Floating Binary Multiply.  Multiply `(A)` by `(B)` to form a normalized, double-precision, floating-point product.  If `C` is inactive, retain the high-order and low-order products in `FLAC` and `FLOP`.  If `C` is active, store the high-order product in `C`; the contents of `FLOP` are unspecified.  Sense for exponential overflow or underflow on the high-order product.  If exponential underflow occurs on the low-order product, set the low-order underflow indicator. | `5`
+`FDM` | Floating Decimal Multiply.  Same as floating binary multiply, except that arithmetic is decimal rather than binary. | `10`
+`FBD` | Floating Binary Divide.  Divide `(B)` by `(A)`.  If `C` is inactive, retain the quotient and reminder in `FLAC` and `FLOP`.  If `C` is active, store the quotient in `C` in floating-point form; the contents of `FLOP` are unspecified.  The quotient will be normalized if the dividend is normalized.  The remainder is not normalized.  Sense for exponential overflow or underflow in the quotient.  Set the low-order underflow or overflow indicator if there is underflow or overflow in the remainder.  If the divisor is unnormalized or zero, do not perform the instruction but take the next instruction from `U + 10` or `U + 11`. | `14`
+`FDD` | Floating Decimal Divide.  Same as floating binary divide, except that arithmetic is decimal rather than binary. | `20`
+`BD` | Fixed Binary Divide.  Divide `(B)` by `(A)`, handling both operands as fixed-point binary numbers.  If `C` is inactive, retain the quotient and reminder in `FLAC` and `FLOP`.  If `C` is active, store the quotient in `C` in fixed-point form; the contents of `FLOP` are unspecified.  If the absolute value of `(B)` equals or exceeds the absolute value of `(A)`, do not perform the instruction but take the next instruction from `U + 10` or `U + 11`. | `15`
+`DD` | Fixed Decimal Divide.  Same as fixed binary divide, except that arithmetic is decimal rather than binary. | `22`
+`FLN` | Normalized Less Than Comparison.  Compare `(A)` with `(B)` algebraically.  If `(A)` ≤ `(B)`, change the specified sequencing counter to `C`. | `4`
+`FNN` | Normalized Inequality Comparison.  Compare `(A)` with `(B)` including sign positions.  If `(A)` ≠ `(B)`, change the specified counter to `C`. | `4`
+`FFN` | Fixed-to-Floating Normalize.  Form the normalized result mantissa from low-order 44 bits of `(B)`.  Result exponent is the exponent of `(A)` minus one for each 4-bit left shift plus one for each 4-bit right shift minus one.  Result is positive if high-order 4 bits of `(B)` include any ones.  If `C` is active, store result in `C`.  If `C` is inactive, retain normalized double-precision result in `FLAC` and `FLOP`, where low-order 36 bits in `FLOP` are zeros.  Sense for exponential underflow in high-order result.  Set low-order underflow indicator if exponential underflow occurs in low-order result. | `4`
+`ULD` | Multiple Unload.  Do not reset the low-order underflow or overflow indicator.  Store `(FLAC)` in `A` and `(FLOP)` in `C`.  `B` must be inactive.  If the low-order underflow indicator is set when the instruction is initiated, take the next instruction from `U + 12` or `U + 13`.  If the overflow indicator is set, take the next instruction from `U + 14` or `U + 15`. | `4`
+`FCON` | Conversion.  Convert `(B)` as specified by `(A)`.  If `C` is active, store result in `C`.  If `C` is inactive, retain result in `FLAC` and remainder in `FLOP`.  The modulo-3 sum of `(A)` must be one. <ol><li>Fixed Decimal to Floating Binary Conversion.  If `(A)` is `XXXXXXXX00000001` (octal), convert the low-order 44 bits of `(B)` to the unnormalized result mantissa.  The result exponent is zero.  The result is positive if the high-order 4 bits of `(B)` include any ones.</li><li>Floating Binary to Fixed Decimal Conversion.  If `(A)` is `XXXXXXXX00000004` (octal), convert the mantissa of `(B)` to a 44-bit fixed decimal result.  Ignore the exponent of `(B)`.  The result takes the sign of `(B)`.</li></ol>| <ol><li>`20`</li><li>`9`</li></ol>
+
+*NOTES:*
+<a name="section-xiv-note-1">1.</a> One memory cycle equals two microseconds.  All addresses considered active, except `B` addresses of `CC` and `ULD` instructions.  For variations in time, see [Appendix C](#appendix-c-timing-summary).
+<a name="section-xiv-note-2">2.</a> `n` = number of words accumulated, transferred, or orthocounted.
+<a name="section-xiv-note-3">3.</a> Values of `k` are based on number of 16, 4, and 1-bit shifts required. See [Appendix C](#appendix-c-timing-summary) for table of values.
+<a name="section-xiv-note-4">4.</a> Under certain conditions, as explained in [Appendix A](#appendix-a-fixed-point-addition-in-the-honeytwell-1800), and additional one or two memory cycles may be required.
+<a name="section-xiv-note-5">5.</a> Where "`(A)`" is read "the contents of the location designated by the `A` address group."
 
 ## APPENDIX A: FIXED-POINT ADDITION IN THE HONEYWELL 1800
 
