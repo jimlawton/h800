@@ -1990,6 +1990,24 @@ The `B` operand is interpreted as a floating-point binary and its mantissa is co
 
 ### General Instructions, Unmasked or Masked
 
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
+-----------------------|-----------|---------------------
+`BA` | Binary Add algebraically `(A)` to `(B)`.  Store sum in `C`.  If overflow occurs, take next instruction from `U + 8` if the sequence counter selected this instruction, or `U + 9` if the cosequence counter selected this instruction.  The sign of either operand is positive if any of its four sign bits is one.  The sign of the sum is `0000` if negative, `1111` if positive. | 4 (See note 4)
+`DA` | Decimal Add algebraically (`A`) to (`B`).  Store sum in `C`.  Otherwise same as Binary Add. | 4 (See note 4)
+`WA` | Word Add.  Binary add `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  If overflow occurs, observe same conventions as Binary Add. | 4
+`BS` | Binary Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | 4 (See note 4)
+`DS` | Decimal Subtract algebraically `(B)` from `(A)`.  Store result in `C`.  Observe same overflow and sign conventions as Binary Add. | 4 (See note 4)
+`WD` | Word Difference.  Binary Subtract `(B)` from `(A)`.  Otherwise identical to Word Add. | 4
+`NA` | Inequality Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≠ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is not equal to minus zero. | 4
+`NN` | Inequality Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≠ `(B)`, follow procedure for `NA`.  Plus zero equals minus zero. | 4
+`LA` | Less Than Or Equal Comparison, Alphabetic.  Compare `(A)` and `(B)` including sign positions.  If `(A)` ≤ `(B)`, change sequencing counter to select next instruction from location specified by `C`.  Plus zero is greater than minus zero. | 4
+`LN` | Less Than Or Equal Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≤ `(B)`, follow procedure for `LA`.  Plus zero equals minus zero. | 4
+`TX` | Transfer `(A)` to `C`.  Ignore `B`. | 3
+`TS` | Transfer `(A)` to `B`.  If `C` is active, change sequencing counter to select next instruction from location specified by `C`. | 4
+`HA` | Half Add.  Binary add without carry `(A)` to `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  Result is zero wherever corresponding bits of `(A)` and `(B)` are identical, one wherever corresponding bits of `(A)` and `(B)` are different.  This is "logical exclusive OR." | 4
+`SM` | Superimpose `(A)` and `(B)`.  Store result in `C`.  Result is zero wherever bits of `(A)` and `(B)` are both zero, one everywhere else.  This is "logical inclusive OR." | 4
+`CP` | Check Parity.  Test `(A)` for correct parity.  Place `(A)` with correct check bits in `B`.  If `(B)` differs `(A)`, change sequencing counter to select next instruction from location specified by `C`. | 4
+
 ### General Instructions, Unmasked
 
 ### Inherent Mask Instructions
