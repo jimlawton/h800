@@ -2179,7 +2179,18 @@ NOTES:*
 
 ## APPENDIX D: CONTROL ERRORS
 
+When the Honeywell 1800 stops because of a control error, the exact error is indicated by a significant pattern of binary digits in positions 4 through 8 of the program control register (`PCR`).  A configuration of lights at the console reflects this bit pattern in a one-to-one correspondence.  Figure D-1 lists the control errors, displays the particular bit configuration that identifies each, and explains what caused the error to occur.
+
+When a control error occurs, all main memory and control memory cycles stop, including any buffer cycles.  Peripheral devices proceed to the end of the record if they are reading; output devices other than tapes are unable to complete the current instruction because of lack of buffer cycles.  An end-of-record word is automatically generated for each tape that was being written on.  Address selectors and local registers of main memory and control memory are frozen, including the cycle counters.
+
+![Figure D-1](images/figure_D-1_1.png?raw=true)
+!(images/figure_D-1_2.png?raw=true)
+
 ## APPENDIX E: TABLES
+
+![Table I](images/table_i.png?raw=true)
+
+![Table II](images/table_ii.png?raw=true)
 
 ## APPENDIX F: MEMORY EXTENSIONS BEYOND 32,768 WORDS
 
