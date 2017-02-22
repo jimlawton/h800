@@ -1990,7 +1990,7 @@ The `B` operand is interpreted as a floating-point binary and its mantissa is co
 
 ### General Instructions, Unmasked or Masked
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `BA` | Binary Add algebraically `(A)` to `(B)`.  Store sum in `C`.  If overflow occurs, take next instruction from `U + 8` if the sequence counter selected this instruction, or `U + 9` if the cosequence counter selected this instruction.  The sign of either operand is positive if any of its four sign bits is one.  The sign of the sum is `0000` if negative, `1111` if positive. | `4` (See [note 4](#section-xiv-note-4))
 `DA` | Decimal Add algebraically (`A`) to (`B`).  Store sum in `C`.  Otherwise same as Binary Add. | `4` (See note 4)
@@ -2010,7 +2010,7 @@ MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEM
 
 ### General Instructions, Unmasked
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `BM` | Binary Multiply `(A)` by `(B)`.  Store high-order product with proper sign in `C` and accumulator, low-order product with proper sign in low-order product register.  Product signs are `0000` if negative or `1111` if positive. | `33`
 `DM` | Decimal Multiply `(A)` by `(B)`.  Store high-order and low-order products as in Binary Multiply with same sign conventions. | `27`
@@ -2026,7 +2026,7 @@ MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEM
 
 ### Inherent Mask Instructions
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `SWS` | Shift Word and Substitute.  Shift right end around including sign `(A)` as directed by `B'`.  Mask result and store in `C` (protected).  `B'` (high-order 6 bits of `B`) specifies the number of 1-bit shifts. | `5 + k` (see [note 3](#section-xiv-note-3))
 `SPS` | Shift Preserving Sign and Substitute.  Shift right end around excluding sign `(A)` as directed by `B'`.  Otherwise same as `SWS`. | `5 + k` (see [note 3](#section-xiv-note-3))
@@ -2038,7 +2038,7 @@ MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEM
 
 ### Peripheral and Print Instructions
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `RF` | Read Forward from peripheral device `XX` into consecutive memory locations starting with `A`.  `XX` represents command code bits 1-6.  Set the `RAC` to `+A`.  If `B` is inactive, do not change control for distributed item handling.  If `B` is active, set the `DRAC` to `+B` and sense for end-of-item words.  Change sequencing counter to select next instruction from location specified by `C`.  If end of tape is sensed, take next instruction from `U + 4` if the sequence counter selected this instruction or from `U + 5` if the cosequence counter selected this instruction.  If a parity error was detected during the last previous read from this device, reset the parity error flip-flop, do not perform the read.  Instead, take next instruction from `U + 6` or `U + 7`.  This instruction is interlocked against device `XX` and the associated buffer. | `7`
 `RB` | Read Backward from magnetic tape unit `XX` into consecutive memory locations starting with `A`.  This instruction is otherwise identical with `RF` except that the `RAC` is set to `-A` and if `B` is active the `DRAC` is set to `-B`. | `7`
@@ -2048,13 +2048,13 @@ MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEM
 
 ### Simulator Instructions
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `S` | Simulator.  Form a memory location address (direct or indexed) from the low-order 11 bits of the command code and store this instruction in the location thus specified.  Change the cosequence counter to select the next instruction from the next higher address. | `7`
 
 ### Scientific Instructions
 
-MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEMORY CYCLES<sup>1(#section-xiv-note-1)</sup>
+MNEMONIC OPERATION CODE|DESCRIPTION<sup>5</sup>|TIME IN MEMORY CYCLES<sup>1</sup>
 -----------------------|-----------|---------------------
 `FBA` | Floating Binary Add.  Binary add algebraically `(A)` to `(B)`.  Deliver result as a normalized floating-point number to `C` if `C` is active; retain result in `FLAC` if `C` is inactive.  If exponential underflow occurs, take next instruction from `U + 12` or `U + 13`.  If exponential overflow occurs, take next instruction from `U + 14` or `U + 15`. | `4.95`
 `FDA` | Floating Decimal Add.  Same as floating binary add, except that arithmetic is decimal rather than binary. | `6.5`
