@@ -2267,6 +2267,7 @@ This instruction is identical to the unmasked binary subtract instruction, excep
 The octal formal of a word typed out of or into a special register is as follows:
 
 _Special Register Word_ | _Sign_ | _Memory Range_
+---------------------- | ---- | ------------
 `0000 0000 001X XXXX` | + | 0 to 32K
 `0000 0000 000X XXXX` | - | 0 to 32K
 `0000 0000 003X XXXX` | + | 32K to 65K
