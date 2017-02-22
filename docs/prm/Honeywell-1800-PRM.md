@@ -2194,5 +2194,91 @@ When a control error occurs, all main memory and control memory cycles stop, inc
 
 ## APPENDIX F: MEMORY EXTENSIONS BEYOND 32,768 WORDS
 
+The memory capacity of the H-1800 can be extended to 49,152 or 65,536 words by the addition of either one or two model 1802-1 additional memory modules.  In such a system, the first 16 memory banks (locations 0 through 32,767) are called the first array of memory; all banks above location 32,767 are called the second array.
+
+### Address Compatibility
+
+The addressing associated with extended memory provides for upward compatibility with smaller H-800/H-1800 systems.  Programs can run in either of the two memory arrays but cannot cross the boundary between the two arrays.  The highest address in each array (32,767 and either 49,151 or 65,535) is a stopper address.  However, a program can reference locations in either array by means of an extended control memory word.  Two new instructions (described below) are provided to manipulate the added special register bits.
+
+Note that the "reserved" memory locations (the submultiple locations and the console typewriter buffer, see page 44) exist only in the first memory array.  Therefore, when an existing program is run in the second array, it can reference these locations only implicitly.
+
+### Control Memory
+
+In a system with extended memory, each special register has the capacity to store 24 data bits plus two checking bits.  The functions of the 24 data bits and their relationships to the bits of a main memory word are as follows:
+
+!(images/appf_register.png?raw=true)
+
+- Bits 25-31: These bits are always zero.
+- Bit 32: Array bit - `0` indicates an address in the first array, `1` indicates an address in the second array.
+- Bit 33: Sign bit.
+- Bits 34-48: These bits store the bank indicator and subaddress of an address in the range 0 to 32,767.  Together with the array bit, they can represent any address up to 65,535.  Incrementing and augmenting do not propagate to the left of bit 34.  Note that the combination of ones in bits 32 and 34 represent a non-existent address in a 49,152-word system.
+
+### Explicit Addressing
+
+The rules of explicit addressing in extended H-1800 memories are as follows:
+1. Direct Memory Location Address.  The 11-bit subaddress from the address group is combined with the array bit, sign, and bank indicator from the controlling counter to form a complete main memory location address.
+2. Indexed Memory Location Address.  The 8-bit augmenter from the address group is combined with the entire address stored in the referenced index register to form the effective address.  Augmentation is not permitted to propagate to the left of bit 34.  Note that in a 49,152-word system, a non-existent address is created if a carry is propagated into bit position 34 and bit 32 is a one.
+3. Indirect Memory Location Address.  The referenced special register is selected and incremented in the normal manner.  The entire address stored in this register is incremented to form a complete main memory address, except that incrementation is not permitted to propagate to the left of bit 34.  Note that in a 49,152-word system, a non-existent address is created if a carry is propagated into bit position 34 and bit 32 is a one.
+4. Indexed Indirect Memory Location Address.  The 8-bit augmenter from the address group is combined with the low-order 14 bits of the referenced index register in the normal manner to form a special register address.  The contents of this special register are used as described under indirect memory location addressing.
+5. Direct Special Register Address.  When a special register is addresses directly as the source of an operand, the low-order 16 bits of the special register are extracted to form the operand and are incremented in the normal manner.  Bit 32 is not altered in the special register and is not part of the operand.
+6. Indexed Special Register Address.  The 8-bit augmenter from the address group is combined with the low-order 14 bits of the referenced index register in the normal manner to form a special register address.  The contents of this special register are used as described under direct special register addressing.
+
+Exceptions to the rules for direct and indexed special register addressing are stated below under "Extended Binary Add."  Note that the address stored in the command code field of a simulator instruction must be either a direct or an indexed memory location address.  The same is true of the addresses generated from the `A` and `C` address groups and stored in `AU1` and `AU2`.  Therefore, in an extended H-1800 memory, these addresses are formed as described above under direct and indexed memory location addressing.
+
+### Implicit Addressing
+
+The rules of implicit addressing in extended H-1800 memories are as follows:
+1. Sequencing Counters.  All of the bits in the controlling counter are used to select an instruction.  Incrementing does not propagate to the left of bit 34 (in a 49,152-word system, it does not propagate into bit 34).
+2. Sequence Changes.  The effective address for a sequence change is formed as described above under direct, indexed, indirect, or indexed indirect memory location addressing.  All bits of the effective address are stored in the designated sequencing counter.  The pertinent history register also receives all bits from the corresponding counter.
+When the `C` address group of a shift and select (`SSL`) instruction is a direct memory location address, the new subaddress is placed in the specified sequencing counter, together with the array bit, sign, and bank indicator from the counter that selected the instruction.  Any other address type in this position is interpreted according to the existing rules; when a special register is used to form the effective address, all bits of that register are used.
+3. Masking.  All pertinent bits of the mask index register are used to form the mask address.
+4. Unprogrammed Transfers.  All bit of the unprogrammed transfer register are used to form the subsequence address.
+5. Use of AU-CU Counters.  When an instruction loads a memory cation address into an AU-CU counter, the effective address is formed as described above under direct, indexed, indirect, or indexed indirect memory location addressing, and all bits of the effective address are stored in `AU1` or `AU2`.  Incrementation of the counter during instruction execution does not propagate to the left of bit 34.  Note that in a 49,152-word system, a non-existent address is created if a carry is propagated into bit position 34 and bit 32 is a one.
+When an instruction loads a special register address into an AU-CU counter, the counter is loaded and incremented as described on page 60.
+6. Read-Write Counters.  Since the `A` address group of a peripheral read or write instruction can only refer to a direct or an indexed memory location, the effective address loaded into the read or write address counter is formed as described above under direct or indexed memory location addressing.  Incrementing of the counter during instruction execution does not propagate to the left of bit 34.  Note that in a 49,152-word system, a non-existent address is created if a carry is propagated into bit position 34 and bit 32 is a one.
+When a read-write counter is loaded from the word referenced by a distributed read-write counter, the low-order 16 bits of the referenced memory word are substituted into the read-write counter, and the value of the array bit is preserved.
+
+### Extended Binary Add (EBA) Instruction
+
+The extended binary add instruction is an unmasked general instruction which is used in an H-1800 system with extended memory, along with the extended binary subtract instruction (see below), to manipulate the array bit (32) in a special register word.  The rules for direct and indexed special register addressing with this instruction represent exceptions to the rules stated above for these address types.
+
+This instruction is identical to the unmasked binary add instruction, except when a direct or indexed special register address appears in the `A`, `B`, or `C` address group.  If the special register is addressed as the source of an operand, the entire contents of the register are used, preceded by 24 high-order zeros.  In addition, the special register sign bit (33) is placed in bit position 25, bits 26 through 32 are all set to zero, and the array bit (32) is placed in bit position 33.  The bank indicator and subaddress remain in bit positions 34 through 48.  If the special register is addressed as a result location, the low-order 24 bits of the accumulator contents are transferred to the special register.  In addition, bits 25 through 31 are all set to zeros, bit 33 of the accumulator word is placed in bit position 32 (the array bit), and bit 25 of the accumulator word is placed in bit position 33 (the sign bit).  Bits 34 through 48 of the accumulator word are stored as the bank indicator and subaddress in the special register.  These relationships are shown in the following diagram:
+
+[ ]!(images/appf_eba.png?raw=true)
+
+### Extended Binary Subtract (EBS) Instruction
+
+This instruction is identical to the unmasked binary subtract instruction, except that when a direct or indexed special register address appears in the `A`, `B`, or `C` address group, the bits of the special register operand are altered exactly as described above under "Extended Binary Add."
+
+### Console Typeout of Control Memory
+
+The octal formal of a word typed out of or into a special register is as follows:
+
+_Special Register Word_ | _Sign_ | _Memory Range_
+`0000 0000 001X XXXX` | + | 0 to 32K
+`0000 0000 000X XXXX` | - | 0 to 32K
+`0000 0000 003X XXXX` | + | 32K to 65K
+`0000 0000 002X XXXX` | - | 32K to 65K
+
 ## APPENDIX G: MEMORY BARRICADE
+
+### Program Interference Protection
+
+### Barricade Register
+
+[ ]!(images/appg_barricade.png?raw=true)
+
+### Program Compatibility
+
+### Memory Barricade Operation
+
+[ ]![Figure G-1](images/figure_G-1.png?raw=true)
+
+### Control Errors 
+
+[ ]!(images/appg_control_errors.png?raw=true)
+
+### System Response to Limited Control Errors
+
+[ ]![Figure G-2](images/figure_G-2.png?raw=true)
 
