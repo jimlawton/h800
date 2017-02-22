@@ -2275,23 +2275,84 @@ _Special Register Word_ | _Sign_ | _Memory Range_
 
 ## APPENDIX G: MEMORY BARRICADE
 
+The memory barricade (feature `019`) is an optional feature with the model 1801 central processor.  It provides specific monitoring of all central processor operations to detect and protect against unwanted memory references and/or interference between programs, as defined by the contents of a barricade register.  The execution times of instructions are not affected by the barricade.
+
 ### Program Interference Protection
+
+A variable area of memory can be protected against being altered by one or more programs designated as restricted, either directly or through peripheral operations which they initiate.  Control memory registers are also protected against alteration in the same manner.  Manual console operations are permitted in any area of main or control memory.  The boundary location defined by the barricade register also functions as a stopper location, in addition to the system stopper location(s).
 
 ### Barricade Register
 
+The barricade register is a non-addressable storage register.  Its relationship to main memory words and special register words is shown below.
+
 ![Barricade Register](images/appg_barricade.png?raw=true)
+
+Bit positions which are labelled with an `X` in the above diagram are disregarded and forced to zero.  As shown in the diagram, 16 bits are used in the barricade register.  The functions of these bits are as follows:
+
+- Bits 25-27: Violation Group Indicator.  These bits indicate, in octal, the group number of the program which was most recently turned off due to a barricade violation or a limited control error (see below).  These bits are printed as part of the barricade register contents during a manual or programmed typeout of this register.  However, they are not altered when the register is loaded.
+- Bits 33-37: Boundary Indicator.  These bits specify the high-order (array and bank indicator) bits of the memory location address at which the barricade is located.  The low-order 11 bits of the address are assumed to be ones.  The boundary may thus be assigned to location `2047` of any memory bank and is, in fact, the highest location included in the bounded area of memory.  All locations above the boundary constitute the protected area of memory.
+- Bits 41-48: Group Designators.  These bits correspond to control groups 0-7, respectively.  A one in any of these bit positions indicates that the program running in the corresponding group is restricted to the bounded area of memory.  A zero indicates that the corresponding program is permitted access to the protected area of memory.
+
+Programmed access to the barricade register is by means of print instructions with specific configurations of the `B` address group.  Within the `B` address group, the high-order bit must be zero; the values of the carriage-return, more-to-follow, and print-mode bits are irrelevant.  If the low-order six bits of `B` have the octal value `04`, the low-order 16 bits of the contents of the location specified by the `A` address group are transferred to the barricade register.  Bits 38-40 of this word must be zero; otherwise a barricade failure control error will occur (see below).  Bits 25-32 of the barricade register are not altered.  If the low-order six bits of `B` have the octal value `10`, the entire 24 bits of the barricade register are transferred to the low-order portion of the location specified by the `A` address group.  The high-order 24 bits of the location specified by `A` are set to zero, as are bits 28-32 and 38-40.
+
+With the above exceptions, print instructions used to reference the barricade register retain all of the properties of normal print instructions, including timing.  In ARGUS notation, any type of print instruction (`PRA`, `PRD`, or `PRO`) may be written.
 
 ### Program Compatibility
 
+In a system which contains the memory barricade, reference to the barricade register is automatic.  However, the barricade can be effectively "disabled" by setting the boundary indicator bits to all ones if it is desired to run existing programs without the barricade in effect.  Alternatively, the boundary location can be disabled as a barricade but retained as a stopper location by setting all of the group designator bits to zero, so that any program can operate in any part of memory.
+
 ### Memory Barricade Operation
+
+The partitioning of memory by the barricade is illustrated schematically in Figure G-1.  The protected area of memory consists of all locations above the boundary address.  The bounded area consists of all locations below this address.
+
+Any program running in a group whose designator bit in the barricade register is a one is not permitted to alter the contents of any protected memory location.  It is, however, permitted to reference operands and instructions in any part of memory, including the protected area.  Such a program is also permitted to reference any control memory register but is not permitted to alter the contents of any special register in a protected group.  If a restricted program references a special register in a protected group, this register is not incremented; i.e., any increment stated in the address group is ignored.
 
 ![Figure G-1](images/figure_G-1.png?raw=true)
 
+The peripheral read-write counters `RAC`, `DRAC`, `WAC`, and `DWAC` are not subject to the above rules.  Any of these registers can be referenced without restriction by any program, regardless of the contents of the barricade register.  Moreover, there is no restriction on the use of the `MPC` instruction.
+
+Any program running in a group whose designator bit in the barricade register is a zero is a protected program.  Such a program is permitted to perform any normally legal operation, although it is subject to the stopper action of the boundary location.
+
+Since, during peripheral buffer cycles, the responsible control group is not known, the protected area of memory is guarded against indirect alteration by a peripheral operation in the following manner:
+1. During the execution of a peripheral read or write instruction, the starting address for the peripheral transfer is checked to see that it is in an area of memory which is legal for the program issuing the instruction.
+2. The stopper action of the boundary location is in effect during all peripheral buffer cycles.
+
+The contents of the barricade register (except bits 25-27) are continually checked against a parity bit which is generated as the register is loaded.  If this check fails, a critical control error (`11000`, see below) immediately stops the system.  Violation of the barricade by a restricted program results in a limited control error (`10000`, see below).  Such an error turns off the responsible program but does not stop the entire system.
+
 ### Control Errors 
+
+In a system equipped with the memory barricade, the handling of control errors is modified.  Such errors are divided into two classes, limited and critical, according to the probable cause and effect of each error.
+
+Limited control errors are those in which the probable cause and effect are or can be limited to the responsible program.  In the event of a limited error, the responsible program is turned off as described below, and the appropriate indication is given.  If the error occurs during a buffer cycle (e.g., from a non-existent memory address), a bus parity check is forced at the referenced peripheral control; the responsible program is not turned off, but memory protection remains in effect.
+
+The following types of programming errors are detected, and their effects are limited to the responsible program:
+1. Control check pulse (addressing a non-existent peripheral control).
+2. Instruction word parity (data used as instructions).
+3. Illegal operation code (data used as instructions).
+4. Main memory addressing error (addressing a non-existent memory location).
+
+The following additions to [Appendix D](#appendix-d:-control-errors), "Control Errors," pertain to memory barricade operation:
 
 ![Control Errors](images/appg_control_errors.png?raw=true)
 
+Figure G-2 is a list of all control error indications (in octal notation), indicating which are limited and which are critical errors.
+
 ### System Response to Limited Control Errors
+
+In general, when a limited control error occurs, the current instruction is completed normally, except that illegal alteration of main or control memory and escalation of errors are not allowed to happen.  The responsible program is turned off, its group indicator is stored in bits 25-27 of the barricade register, and the appropriate control error indication is set up.  In the following paragraphs, whenever an instruction is said to be "converted" to a proceed instruction, the proceed instruction exists only in the control register; the original instruction is not altered in memory.
 
 ![Figure G-2](images/figure_G-2.png?raw=true)
 
+When a control error occurs during instruction extraction (types `01`<sub>8</sub> and `12`<sub>8</sub>), the instruction is converted to and executed as a proceed instruction (with hunt).  The group in control is then turned off with the appropriate check indication.  Thus, if an error instruction is stored at location `E`, the sequencing counter stops on `E + 1`, and the instruction at `E` is not performed.
+
+The `A`, `B`, and `C` address groups are checked independently for barricade violations (error type `20`<sub>8</sub>).  (Note that a reference in a restricted program to a protected location or register does not constitute a violation, provided that the contents of the location or register are not altered.  If a protected special register is referenced in a restricted program, any increment specified in the instruction address group is ignored.)  Hunting is inhibited on an instruction causing a barricade violation: the same group selects the next instruction, which is converted to and executed as a proceed instruction (with hunt).  This group is then turned off with the appropriate check indication.  Assuming that an error instruction is stored at location `E`, one of the following situations will result:
+1. If the error instruction does not cause a sequence change or unprogrammed transfer, the sequencing counter stops on `E + 2`.  `E + 1` is not performed, but `E` is performed (without permitting illegal alteration of protected locations or registers).
+2. If the error instruction causes a sequence change to location `S`, the sequencing counter stops on `S + 1`.  `S` is not performed, but `E` is performed (without permitting illegal alteration of protected locations or registers).
+3. If the error instruction causes an unprogrammed transfer to `U ± n`, the sequencing counter stops on `E + 1`.  `U ± n` is not performed, but `E` is performed (without permitting illegal alteration of protected locations or registers).
+Limited control error types `10`, `11`, `14`, `21`, `22`, and `32` (octal) are handled in the same manner.  If a barricade violation occurs during a peripheral instruction, the control check pulse signal normally sent to the peripheral device to initiate motion is inhibited.  When the program is turned off as described above, the peripheral read-write counters will have been set up, but the peripheral buffer cycles will not have occurred.  A control check pulse error produced the same result, except that the check indication is `05`<sub>8</sub>.
+
+Control errors occurring in the accumulator result or in the floating-point unit (octal types `04`, `16`, `24`, `26`, and `27`) are not detected until another instruction has been selected, possibly by a different control group.  The system determines whether or not the error instruction was followed by a hunt for another active control group and proceeds accordingly.
+
+If the error instruction was not followed by a hunt, then the group presently in control is responsible.  The system proceeds as though a barricade violation (see above) had occurred on the current instruction (i.e., the one following the error instruction).  For example, if the error instruction is stored at location `E` and results in no sequence change or unprogrammed transfer, `E` is executed but its result is in error, `E + 1` is executed, `E + 2` is converted to and executed a proceed instruction (with hunt), and the sequencing counter stops on `E + 3`.
+
+If the error instruction was followed by a hunt, then the group previously in control is responsible and is turned off immediately.  For example, if the error instruction is stored at location `E` and more than one group is active, `E` is executed but its result is in error, and the sequencing counter is stopped on `E + 1`.
