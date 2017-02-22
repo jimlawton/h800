@@ -2137,7 +2137,7 @@ Using the example shown in Figure B-2, assume that a bit was altered in the high
 
 When this record is read, the error is automatically detected by the frame parity check.  The automatic channel parity check also shows up the error, since a binary half add of the bits in the left-most channel produces a one bit instead of a zero bit.  If, in addition, a bit in the second high-order digit of word 7 were altered so that it became `0111` instead of `0110`, this frame would now appear as follows on tape:
 
-!(images/ortho_errors.png?raw=true)
+![Orthotronic Errors](images/ortho_errors.png?raw=true)
 
 This combination of errors would escape the frame parity check only to be caught by the channel parity computation.
 
@@ -2159,14 +2159,14 @@ The new orthoword equals the reconstructed word (cf. Figure B-2) and may now be 
 
 ## APPENDIX C: TIMING SUMMARY
 
-!(images/appc_table-part-1.png?raw=true)
-!(images/appc_table-part-2.png?raw=true)
-!(images/appc_table-part-3.png?raw=true)
-!(images/appc_table-part-4.png?raw=true)
-!(images/appc_table-part-5.png?raw=true)
-!(images/appc_table-part-6.png?raw=true)
-!(images/appc_table-part-7.png?raw=true)
-!(images/appc_table-part-8.png?raw=true)
+![Timing](images/appc_table-part-1.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-2.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-3.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-4.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-5.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-6.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-7.png?raw=true)
+![Timing (cont'd)](images/appc_table-part-8.png?raw=true)
 
 NOTES:*
 <a name="appendix-c-note-1">1.</a> One memory cycle (mc) equals 2 microseconds.  All addresses assumed active except as otherwise specified.  Address configurations for which the behavior of the system is unspecified have not been considered.
@@ -2184,13 +2184,13 @@ When the Honeywell 1800 stops because of a control error, the exact error is ind
 When a control error occurs, all main memory and control memory cycles stop, including any buffer cycles.  Peripheral devices proceed to the end of the record if they are reading; output devices other than tapes are unable to complete the current instruction because of lack of buffer cycles.  An end-of-record word is automatically generated for each tape that was being written on.  Address selectors and local registers of main memory and control memory are frozen, including the cycle counters.
 
 ![Figure D-1](images/figure_D-1_1.png?raw=true)
-!(images/figure_D-1_2.png?raw=true)
+![Figure D-1 (contd)](images/figure_D-1_2.png?raw=true)
 
 ## APPENDIX E: TABLES
 
-![Table I](images/table_i.png?raw=true)
+![Table I](images/table_I.png?raw=true)
 
-![Table II](images/table_ii.png?raw=true)
+![Table II](images/table_II.png?raw=true)
 
 ## APPENDIX F: MEMORY EXTENSIONS BEYOND 32,768 WORDS
 
@@ -2206,7 +2206,7 @@ Note that the "reserved" memory locations (the submultiple locations and the con
 
 In a system with extended memory, each special register has the capacity to store 24 data bits plus two checking bits.  The functions of the 24 data bits and their relationships to the bits of a main memory word are as follows:
 
-!(images/appf_register.png?raw=true)
+![Extended Memory](images/appf_register.png?raw=true)
 
 - Bits 25-31: These bits are always zero.
 - Bit 32: Array bit - `0` indicates an address in the first array, `1` indicates an address in the second array.
@@ -2244,7 +2244,7 @@ The extended binary add instruction is an unmasked general instruction which is 
 
 This instruction is identical to the unmasked binary add instruction, except when a direct or indexed special register address appears in the `A`, `B`, or `C` address group.  If the special register is addressed as the source of an operand, the entire contents of the register are used, preceded by 24 high-order zeros.  In addition, the special register sign bit (33) is placed in bit position 25, bits 26 through 32 are all set to zero, and the array bit (32) is placed in bit position 33.  The bank indicator and subaddress remain in bit positions 34 through 48.  If the special register is addressed as a result location, the low-order 24 bits of the accumulator contents are transferred to the special register.  In addition, bits 25 through 31 are all set to zeros, bit 33 of the accumulator word is placed in bit position 32 (the array bit), and bit 25 of the accumulator word is placed in bit position 33 (the sign bit).  Bits 34 through 48 of the accumulator word are stored as the bank indicator and subaddress in the special register.  These relationships are shown in the following diagram:
 
-[ ]!(images/appf_eba.png?raw=true)
+![EBA](images/appf_eba.png?raw=true)
 
 ### Extended Binary Subtract (EBS) Instruction
 
@@ -2266,19 +2266,19 @@ _Special Register Word_ | _Sign_ | _Memory Range_
 
 ### Barricade Register
 
-[ ]!(images/appg_barricade.png?raw=true)
+![Barricade Register](images/appg_barricade.png?raw=true)
 
 ### Program Compatibility
 
 ### Memory Barricade Operation
 
-[ ]![Figure G-1](images/figure_G-1.png?raw=true)
+![Figure G-1](images/figure_G-1.png?raw=true)
 
 ### Control Errors 
 
-[ ]!(images/appg_control_errors.png?raw=true)
+![Control Errors](images/appg_control_errors.png?raw=true)
 
 ### System Response to Limited Control Errors
 
-[ ]![Figure G-2](images/figure_G-2.png?raw=true)
+![Figure G-2](images/figure_G-2.png?raw=true)
 
