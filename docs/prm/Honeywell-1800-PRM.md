@@ -2079,10 +2079,15 @@ MNEMONIC OPERATION CODE|DESCRIPTION<sup>5(#section-xiv-note-5)</sup>|TIME IN MEM
 `FCON` | Conversion.  Convert `(B)` as specified by `(A)`.  If `C` is active, store result in `C`.  If `C` is inactive, retain result in `FLAC` and remainder in `FLOP`.  The modulo-3 sum of `(A)` must be one. <ol><li>Fixed Decimal to Floating Binary Conversion.  If `(A)` is `XXXXXXXX00000001` (octal), convert the low-order 44 bits of `(B)` to the unnormalized result mantissa.  The result exponent is zero.  The result is positive if the high-order 4 bits of `(B)` include any ones.</li><li>Floating Binary to Fixed Decimal Conversion.  If `(A)` is `XXXXXXXX00000004` (octal), convert the mantissa of `(B)` to a 44-bit fixed decimal result.  Ignore the exponent of `(B)`.  The result takes the sign of `(B)`.</li></ol>| <ol><li>`20`</li><li>`9`</li></ol>
 
 *NOTES:*
+
 <a name="section-xiv-note-1">1.</a> One memory cycle equals two microseconds.  All addresses considered active, except `B` addresses of `CC` and `ULD` instructions.  For variations in time, see [Appendix C](#appendix-c-timing-summary).
+
 <a name="section-xiv-note-2">2.</a> `n` = number of words accumulated, transferred, or orthocounted.
+
 <a name="section-xiv-note-3">3.</a> Values of `k` are based on number of 16, 4, and 1-bit shifts required. See [Appendix C](#appendix-c-timing-summary) for table of values.
+
 <a name="section-xiv-note-4">4.</a> Under certain conditions, as explained in [Appendix A](#appendix-a-fixed-point-addition-in-the-honeytwell-1800), and additional one or two memory cycles may be required.
+
 <a name="section-xiv-note-5">5.</a> Where "`(A)`" is read "the contents of the location designated by the `A` address group."
 
 ## APPENDIX A: FIXED-POINT ADDITION IN THE HONEYWELL 1800
@@ -2169,12 +2174,19 @@ The new orthoword equals the reconstructed word (cf. Figure B-2) and may now be 
 ![Timing (cont'd)](images/appc_table-part-8.png?raw=true)
 
 NOTES:*
+
 <a name="appendix-c-note-1">1.</a> One memory cycle (mc) equals 2 microseconds.  All addresses assumed active except as otherwise specified.  Address configurations for which the behavior of the system is unspecified have not been considered.
+
 <a name="appendix-c-note-2">2.</a> `n` = number of words accumulated, transferred, or orthocounted.
+
 <a name="appendix-c-note-3">3.</a> If the instruction is delayed by an interlock, 4 memory cycles are required for the first attempt to perform it, and an additional 4 cycles are required each time that _any_ buffer completes a read or write instruction before this instruction proceeds.
+
 <a name="appendix-c-note-4">4.</a> `j` = number of items in record. `n`<sub>1</sub>,`n`<sub>2</sub>,...`n`<sub>j</sub> = number of words in item 1, number of words in item 2, etc., up to `n`<sub>j</sub>, number of words in last item.
+
 <a name="appendix-c-note-5">5.</a> Under certain conditions, as explained in [Appendix A](#appendix-a-fixed-point-addition-in-the-honeywell-1800), one or two additional memory cycles will be needed in excess of those computed from this summary.
+
 <a name="appendix-c-note-6">6.</a> See comments in [Section XIII](#section-xiii-scientific-instructions).
+
 <a name="appendix-c-note-asterisk">* </a> Conditions so marked are mutually exclusive.
 
 ## APPENDIX D: CONTROL ERRORS
