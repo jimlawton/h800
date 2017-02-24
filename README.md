@@ -7,5 +7,8 @@ The reason for my interest in the H-x800 family is that these were the machines 
 
 The H-x800s were 48-bit word-size machines (with an addiitonal 8 parity bits per word), and had a 3-address instruction format, and banked memory (2048 words per bank). 
 
-The H-1800 Programmers' Reference Manual is being transcribed to Markdown here:
+The _H-1800 Programmers' Reference Manual_ has been transcribed to Markdown here:
 https://github.com/jimlawton/h800/blob/master/docs/prm/Honeywell-1800-PRM.md
+
+The _ARGUS Manual of Assembly Language_ is being transcribed to Markdown here:
+https://github.com/jimlawton/h800/blob/master/docs/argus/ARGUS_Manual_of_Assembly_Language.md
