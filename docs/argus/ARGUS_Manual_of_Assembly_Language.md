@@ -239,7 +239,7 @@ Figure    A-7.  Special Calling Sequence DBLSUM ........................... 125
 Figure    B-1.  Over-all Layout of the Symbolic Program Tape .............. 133
 ```
 
-# NOTE
+## NOTE
 
 This is the fifth printing of _The ARGUS Manual of Assembly Language_, edition `DSI-23C`.  The following differences are noted between this and the previous printing.
 
