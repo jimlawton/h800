@@ -352,17 +352,53 @@ The programmer has the option of specifying the address of the desired mask in m
 
 ## Section III: The ARGUS Coding Form
 
+Programs to be assembled by ARGUS are written using the coding form shown in Figure 3.  The coding on these forms is then punched on standard 80-column cards according to the fixed-field format shown in Figure 4.  An instruction word occupies an entire line on the coding sheet and an entire punched card.  Constants may be combined, however, to allow punching of more than one on a single card.  When an entire program deck, complete with all necessary control instructions, is assembled by ARGUS, the program is produced in operating form on magnetic tape.  In addition, ARGUS produces a listing of the program in printed form.  Assembly outputs are described in [Section XII](#section-xii-output-from-argus-assembly-operation).
+
+Figure 4 shows that the ARGUS input card contains seven fixed fields.  The function of each of these fields is described briefly in the following paragraphs.  The format of each input word type is illustrated in detail in the following sections.
+
 ### Location Field (Columns 1-10)
+
+The location field may contain tags symbolizing memory locations, special registers, or masks.  Any word which is to be referred to symbolically in an address field of some other word, or which is to be loaded into a special register, or which is to be used as a mask, must include a tag in this field.  Tags may be punched anywhere in the location field; spaces are ignored.  The types and formats of tags are discussed in [Section IV](#section-iv-tags).
 
 ### Command Code (Columns 11-23)
 
+The command code field is divided into two subfields.  Columns 11 through 22 contain the command code group itself, while column 23 designates the source of the next instruction.  If column 23 contains an "`S`" or if this column is blank, the next instruction will be taken from the sequence counter in the assigned special register group.  If column 23 contains a "`C`", the next instruction will be taken from the cosequence counter in this group.  This column is not used in a peripheral or a simulator instruction or in the instruction proceed (`PR`).
+
+Columns 11 through 22 may contain the mnemonic operation code of a machine instruction, followed by any other information required by that instruction, as described in [Section VII](#section-vii-machine-instructions).  In the case of a constant, or set of constants, the command code field contains the constant code and any other required information, as described in [Section IX](#section-ix-constants).  This field may also be used to specify an ARGUS control instruction or the pseudo instruction of a library routine.  The formats of these words are described in Sections [VIII](#section-viii-assembly-control-instructions) and [XIII](#section-xiii-library-routines), respectively.
+
+![Figure 3](images/figure_3.png?raw=true)
+
+![Figure 4](images/figure_4.png?raw=true)
+
 ### Address Fields (Columns 24-37, Columns 38-51, Columns 52-65)
+
+These three address fields correspond to the `A`, `B`, and `C` address groups of a Honeywell 800 machine instruction.  In a machine instruction, they may designate an operand location or a result location, using any of the six types of addresses permitted by the instruction.  These six address types are described in [Section V](#section-v-addresses).  In certain instructions, the address fields may contain instruction parameters or other information.  The three address fields are regarded as a single 42-column field for the purpose of punching constant words.  Their format in a library routine pseudo instruction is determined by the programmer who designs the library routine.
 
 ### Line Number (Columns 66-73)
 
+Line numbers specify the sequence of words within a program.  When a new program is assembled, the cards may or may not contain line numbers.  If the cards do not contain line numbers, they must be read in correct sequence, as ARGUS assigns a line number to each card based on this sequence.  If the cards contain line numbers, ARGUS sorts the cards into proper sequence.
+
+Line numbers are printed as part of the complete program listing produced by ARGUS.  They are used by the programmer in preparing additions, deletions, and corrections to assembled programs.  Five-digit line numbers are originally assigned the cards of a new program.  If assigned by the programmer, they are punched in columns 66 through 70.  To correct or replace one of the original cards of a program, the assigned five-digit number is punched in columns 66 through 70 of the modification card.  Columns 71 through 73 are used to insert additional cards in the correct sequence.  For example, if three cards are to be inserted in a program following card `01357` (according to the program listing), line numbers may be punched on the inserted cards as follows:
+
+Column|66|67|68|69|70|71|72|73
+------|--|--|--|--|--|--|--|--
+Original Card|0|1|3|5|7|0|0|0
+1st Insert|0|1|3|5|7|1|0|0
+2nd Insert|0|1|3|5|7|2|0|0
+3rd Insert|0|1|3|5|7|3|0|0
+Original Card|0|1|3|5|8|0|0|0
+
+Again at some later time, the programmer may insert additional cards following card `01357200` by numbering them `01357210`, `01357220`, etc.
+
 ### Identification (Columns 74-80)
 
+These columns may contain a punch combination used to identify the cards of a related set of coding, such as a program segment.  If such codes are used as segment markers, for example, ARGUS can identify the segment to which each program card pertains.
+
 ### Remarks (Columns 66-80)
+
+If either the line number or identification field (or both) is not used by the programmer, it may contain remarks.  Such information is not assembled but is reproduced for the programmer's convenience as part of the program listing.
+
+A card containing only remarks may be included at any point in a program.  Such a card is indicated by and "`R`" or a "`P`" followed by a comma in columns 1 and 2 of the location field.  (`R` causes the remarks to be printed on the next line; `P` causes the remarks to be printed at the top of the next page.)  Remarks may be punched in all of the other columns (3-80) of a remarks card.
 
 ## Section IV: Tags
 
