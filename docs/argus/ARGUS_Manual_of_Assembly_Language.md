@@ -402,17 +402,80 @@ A card containing only remarks may be included at any point in a program.  Such 
 
 ## Section IV: Tags
 
+A tag punched in the location field of a program word allows the programmer to that word elsewhere in his program without being aware of its absolute location in memory.  A word may also be tagged to denote its use as a mask or to direct its storage in a special register.  Three groups of words must include a tag punched in the location field:
+1. Certain of the words which are directly referenced in the address fields of other program words;
+2. All words which are to be placed in special registers at loading time; and
+3. All masks.
+Tags may be punched anywhere in the location field; spaces are ignored.
+
 ### Symbolic Tags
+
+A symbolic tag is a group of up to eight alphanumeric characters, of which at least one must be non-numeric.  However, there are certain characters which have significance to ARGUS and must not be included in symbolic tags.
+Key Punch | Symbol | Machine Code
+--------- | ------ | ------------
+12 | `+` (plus) | `010000`
+11 | `-` (minus) | `100000`
+0, 8, 3 | `,` (comma) | `111011`
+12, 8, 3 | `.` (period) | `011011`
+11, 8, 4 | `*` (asterisk) | `101100`
+0, 1 | `/` (slash) | `110001`
+In addition, the following characters are not permitted within symbols even though they have no special significance.
+Key Punch | Symbol | Machine Code
+--------- | ------ | ------------
+8, 4 | `-` (hyphen) | `001100`
+11, 8, 5 | `"` (quotes) | `101101`
+12, 8, 2 | `;` (semicolon) | `011010`
+8,5 | ◊ (not assigned) | `110000`
+0, 8, 7 | ⨂ (not assigned) | `111111`
+Space codes (`001101`) within symbolic tags are ignored by assembly.
+
+Tags are frequently chosen as mnemonic representations of the content or function of the tagged words, e.g., `GROSSPAY`, `INPUT1`, or `DIVIDEND`.  Such a tag may directly represent any location in the high-speed memory.  Every symbolic tag which appears in an address field within a program must appear in the location field within that program.
+
+it is not necessary to tag every word of a program which is referenced by some other word.  Address arithmetic (described in [Section V](#section-v-addresses)) allows direct reference to an untagged word by specifying its location relative to a tagged word, e.g., `GROSSPAY + 2`.  The programmer decides which words of his program to tag and which to reference by address arithmetic.  Note that for purposes of assembly, address arithmetic is permitted only in an address field and never in the location field.<sup>1(#section-iv-note-1)
+
+Normally every symbolic tag appearing in the location field is assigned an absolute value by ARGUS.  The program listing includes the assignment of each tag.  These assignments are used if the program is loaded independently, as is usually the case during program testing.  However, in production the program is generally loaded under the direction of Executive and the tag assignments are thereby modified to make the program compatible with any other programs being processed in parallel.
+
+In addition to their use in referencing program words directly, symbolic tags may be used to represent other values, such as complete addresses in indexed or indirect form, or program parameters.  The programmer assigns the values of such tags using special ARGUS control instructions provided for this purpose.  These instructions, called `EQUALS`, `ASSIGN`, and `TAS` (temporary assign), are described in [Section VIII](#section-viii-assembly-control-instructions).
+
+<a name="section-iv-note-1">1</a> PTS derail instructions are an exception to this rule, as described in the _ARGUS Program Test System Manual_, DSI-38.
 
 ### Special Register Tags
 
+Each of the 32 special registers in a group has both an absolute address and a mnemonic designation.  The names and the absolute and mnemonic addresses of all special registers in a group are listed in Figure 5.  For example, this figure shows that the mask index register in any group may be designated absolutely as `07` or mnemonically as `MXR`.
+
+A special register tag is required in the location field of every word to be loaded directly into a special register.  Such a tag consists of a "`Z`" followed by a comma and the absolute or mnemonic address of the desired register.  For example, either of the following special register tags
+```
+    Z,11
+    Z,X3
+```
+might be used to load the tagged word into index register 3.  For a discussion of special register tags used in address fields, see [Section V](#sectioin-v-addresses).
+
+![Figure 5](images/figure_5.png?raw=true)
+
 ### Mask Tags
+
+Every mask specified by the programmer must be designated in the location field by a unique symbolic tag.  These tags, like all symbolic tags used with ARGUS, can have up to eight alphanumeric characters, of which at least one must be non-numeric.  In addition, each such tag is preceded by a character which indicates that the corresponding mask is used with field instructions (`F`), shift instructions (`S`), or both (`B`).  Thus, a complete mask tag consists of a mask indicator followed by a comma and a symbolic tag.
+```
+    F,M3
+    S,RIGHT2
+    B,SIGN
+```
 
 ### Link Tags
 
+Any word which is to be the starting location of a segment (except the starting location of the first segment) should be so marked by tagging the word with a symbolic tag preceded by the letter "`L`" and a comma.
+
 ### Out-of-Sequence Words
 
+It is sometimes convenient, particularly when writing macro routines, to have certain words places out of the main sequence of coding.  ARGUS recognizes any word marked by the letter "`X`" and a comma in the location field as an out-of-sequence word.  Such words are placed at the end of the subsegment in which they appear.  The "X," may or may not be followed by a symbolic tag.
+
+ARGUS assigns out-of-sequence words by maintaining two location counters called `CLC` (current location counter) and `XLC` (out-of-sequence location counter).  Each counter is incremented after a word of the corresponding type is processed.  A word without "`X,`" in the location field is assigned to the location contained in the `CLC`.  A word with "`X,`" in the location field is assigned to the location contained in the `XLC`.
+
 ### Definition of Tags
+
+When a tag appears in the location field of a line of coding, it becomes defined.  This results in the assignment of the tag to a memory location, an integer, or a complex address (i.e., an indexed address or a special register address).  A tag may have one absolute assignment (memory location or integer) or one complex assignment or one of each.  However, when a tag has conflicting assignments (e.g., two memory location assignments), it becomes doubly defined and is noted by ARGHUS as an error.  In general, such a conflict of assignment can arise only within a single segment.  In other words, a tag may have completely different assignments in the various segments of a program.  The only tags which must maintain their assignments throughout the entire program are link tags and tags which appear within the common portion of any segment (see [Section VI](#section-vi-program-structure)).
+
+When a tag which has both an absolute assignment and a complex assignment appears in an address field, the complex assignment is normally used.  However, there are several exceptions to this rule, which are noted in connection with machine instructions, control instructions, and control constants.
 
 ## Section V: Addresses
 
