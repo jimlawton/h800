@@ -479,11 +479,50 @@ When a tag which has both an absolute assignment and a complex assignment appear
 
 ## Section V: Addresses
 
+In [Section II](#section-ii-the-honeywell-800-system), it was stated that every Honeywell 800 main memory location has a unique numerical designation, or address, consisting of a hexadecimal bank number from `0` to `G` and a subaddress from `0000` to `2047`.  It was stated further that each control memory location, or special register, is uniquely designated by a group number from `0` to `7` and a subaddress from `00` to `31`.
+
+Most instructions can refer to any memory location or special register to obtain an operand or to store a result.  Three methods of addressing main and control memory are provided.  A direct address is a specific reference to the desired location or register.  An indexed address designates a special register called an index register, plus a quantity which augments the contents of the index register to form the desired address.  This process leaves the original contents of the index register unaltered.  An indirect address designates a special register in which the desired address is stored, plus an increment which permanently modifies the stored address after use.  The internal configurations of the various types of addresses are presented in the _Honeywell 800 Programmers' Reference Manual_ (DSI-31).  This section deals with their representation in ARGUS language, as summarized in Figure 6.
+
 ### Direct Memory Location Address
+
+The programmer may directly reference a memory location by writing the symbolic tag assigned to that location in an address field.  ARGUS replaces this tag with the absolute address assigned.  Alternatively, the programmer may specify a direct memory location address by means of address arithmetic (see below).  Address arithmetic permits addressing relative to a tagged location or relative to one of the location counters (`CLC` and `XLC`) mentioned in [Section IV](#section-iv-tags).
+
+Direct addressing may be used in an instruction to reference any location in the memory bank in which the instruction is stored.  An attempt to address any location outside of this bank results in an ARGUS error indication during assembly.  Therefore, the use of direct addressing is limited by the rules which govern relocation (see [Section VI](#section-vi-program-structure)).
+
+![Figure 6](images/figure_6.png?raw=true)
 
 #### Address Arithmetic
 
+An address modifier, consisting of a sign and a number from 0 to 4095, may be appended to a symbolic tag to designate a direct memory location address relative to the location specified by the tag.  Such an address modifier may be appended to a "`C`" and a comma (`C,`) to designate a direct memory location address relative to the contents of the current location counter, or to an "`X`" and a comma to designate a direct memory location address relative to the contents of the out-of-sequence location counter.  Thus, the address
+```
+    ASSETS +37
+```
+is a direct reference to the memory location 37 beyond that represented by the symbolic tag `ASSETS`.  The address
+```
+    C,-3
+```
+refers to the memory location three before the location whose address is stored in the current location counter.  Likewise, the address
+```
+    X,+109
+```
+refers to the memory location 109 beyond the location whose address is stored in the out-of-sequence location counter.  The address modifier may be a series of numbers separated by the signs `+` and `-`, provided that the absolute value of the entire modifier does not exceed 4095.  Caution is required in the use of address arithmetic, since the address modifiers are not corrected if coding is inserted or deleted later.
+
+Three types of direct memory location addresses are illustrated in the instruction
+![Direct Address Example](images/address_example_p23.png?raw=true)
+The function of this instruction is to add decimally the contents of the memory location two after the location of the instruction itself to the contents of the memory location designated by the tag `INTEREST`, and to store the result in the location 10 before that tagged `AMTPAID`.  (since this instruction is not marked by an "`X,`" in the location field, the CLC contains the address of this instruction while the instruction is being processed.)
+
+
+The number of symbolic tags required to write a program can be greatly reduce by the use of address arithmetic.  The programmer decides how many and which words in a program to tag and which to reference by address arithmetic.
+
 ### Direct Special Register Address
+
+The direct address of a special register is indicated by a "`Z`", a special register designation, and an unsigned increment from 0 to 31, all separated by commas.  The special register designation may be either the absolute subaddress (from 0 to 31) or the mnemonic address (e.g., `X3` or `MXR`) of the desired register, as shown in Figure 5, page 19.  If a special register is addresses as an operand location, the numeric increment is added, under control of the special register sign, to the special register contents, after those contents have been used.  If a special register is addressed as a result location, the increment is ignored.  To address a special register as an operand location without changing its contents, the programmer may omit the increment or may write an increment of `0`.
+
+Any directly addressed special register is defined as being in the 32-register group controlling the program.  For example, 
+```
+    Z,X2,5
+```
+is the direct address of the second index register in the controlling special register group.  If it is used to specify an operand location, this address directs that the contents of `X2` are to be incremented by 5 after use.
 
 ### Indexed Memory Location Address
 
