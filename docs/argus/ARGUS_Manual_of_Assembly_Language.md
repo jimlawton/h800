@@ -448,7 +448,7 @@ A special register tag is required in the location field of every word to be loa
     Z,11
     Z,X3
 ```
-might be used to load the tagged word into index register 3.  For a discussion of special register tags used in address fields, see [Section V](#sectioin-v-addresses).
+might be used to load the tagged word into index register 3.  For a discussion of special register tags used in address fields, see [Section V](#section-v-addresses).
 
 ![Figure 5](images/figure_5.png?raw=true)
 
