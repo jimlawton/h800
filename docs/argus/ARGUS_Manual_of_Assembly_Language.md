@@ -526,17 +526,73 @@ is the direct address of the second index register in the controlling special re
 
 ### Indexed Memory Location Address
 
+A special register group includes eight index registers, each capable of storing a sign, a bank indicator, and a memory location subaddress.  An indexed memory location address designates and index register and a quantity which augments its contents to form a complete memory location address.  The index register designator and the augmenter are separated by a comma.  The index register designator is a number from 0 to 7 which specifies one of the eight index registers in the controlling special register group.  Use of the letter "`X`" before the designator is optional.  The augmenter may be a number from 0 to 255 (254 for index register 7) or it may be a symbolic tag, with or without a modifier.  If symbolic, it must be assigned by an `EQUALS` instruction (see [Section VIII](#section-viii-assembly-control-instructions)) to a number which is a valid augmenter.  The computer forms a memory location address by adding the augmenter to the address stored in the index register, under control of the stored sign.  The unaugmented address is retained in the index register.
+
+For example, the address `3,15` (or `X3,15`) specifies that the contents of index register 3 in the controlling group are augmented by 15 to form an absolute memory location address.  The address `7,DIVIDEND +2` specifies that the contents of index register 7 are augmented by 2 plus the quantity equated by the tag `DIVIDEND` to form the desired address.  If the sum of the augmenter plus the stored subaddress exceeds 2047, a carry occurs into the bank indicator and the resulting address will be in a different bank from the stored address.
+
+Indexed addressing permits the programmer to address locations in any main memory bank, depending upon the value of the bank indicator stored in the index register.  This type of addressing may be used in processing multi-word items or in referring to a stored table.  The address of the first word in the item or table is stored in an index register and all references to the item or table are made using the index register designator with the appropriate augmenter.  To assure positive augmentation, the programmer must take care that the index register contains a positive sign.
+
 ### Indexed Special Register Address
+
+An indexed special register address may be used to refer to a special register in any of the eight control memory groups.  Such an address takes the form:
+```
+    Index Register Designator, Z, Special Register Designator, Increment
+```
+The index register designator is a number from 0 to 7 (or `X0` to `X7`) which specifies one of the eight index registers in the controlling group.  The special register designator may be an absolute subaddress (`0`-`31`) or it may be mnemonic (see Figure 5).  The increment may be a number from `0` to `3` or it may be omitted.  The manner in which these numbers are used to augment the index register contents and form a special register address is illustrated in terms of bit structure.  ARGUS converts the address as written by the programmer to the following 12-bit configuration:
+![Indexed Special Register Address Configuration](images/address_configuration_p25.png?raw=true)
+Of this configuration, the low-order eight bits (increment, tabular bit, and special register designator) are added to the low-order eight bits of the index register contents, under control of the index register sign, permitting carry into the high-order bits.  As usual, the indexing process does not alter the contents of the index register.  The augmented index register contents are interpreted by the machine as a special register address, as follows:
+![Special Register Address](images/special_register_p26.png?raw=true)
+Within the augmented configuration, the group indicator and subaddress uniquely define a special register in any of the eight groups.  The increment is now a number from 0 to 31.  The tabular bit indicates whether the type of addressing is direct or indirect (see below).  In either case, the increment, under control of the special register sign, is added to the contents of the special register after use, provided the special register is not addressed as a result location.
+
+If the index register used contains all zeros (except for the sign and the group indicator), the result of indexed special register addressing is quite simple.  In this case, the index register designates the group and the programmer designates the subaddress of a special register which is addressed directly and incremented after use by the amount which the programmer writes.  For example, assuming that the programmer writes
+```
+    3,Z,5,2
+```
+and that index register 3 contains
+```
+    +4,0,0,0
+```
+(group indicator of 4, increment, tabular bit, and special register subaddress of all zeros), the machine addresses special register 5 in group 4 directly and then increments its contents by `+2`.  However, if the index register contains more than a sign and a group indicator, the result of indexed special register addressing can only be understood by combining bit configurations as above.
 
 ### Indirect Memory Location Address
 
+This address takes the form
+```
+    N, Special Register Designator, Increment
+```
+where the special register designator specifies a register in the controlling group absolutely or mnemonically, and the increment is a number from 0 to 31.  The machine interprets the contents of the specified register as the bank indicator and subaddress of a memory location which may be in any bank.  Whether the memory location is an operand or a result location, the increment is added to the contents of the special register, under control of the special register sign, after they have been used.  For example, the address
+```
+    N,R3,9
+```
+specifies the contents of special register `R3` in the controlling group, interpreted as an absolute memory location address.  After use, the contents of register `R3` are permanently modified by 9.
+
+Indirect addressing is convenient for processing multi-item records when an operation is to be performed on word `M` of each item.  The location of word `M` of the first item is stored in a special register.  This location is then addressed indirectly, using an increment chosen to reset the special register to the location of word `M` of the second item.  Since the bank indicator of the memory location is derived from the special register, any memory bank may be addressed in this fashion.
+
 ### Indexed Indirect Memory Location Address
+
+As noted in the discussion of indexed special register addressing, the augmented contents of an index register may be interpreted as a special register group indicator and subaddress, a tabular bit, and an increment.  If the tabular bit specifies indirect addressing, then the special register so designated is used to address a main memory location in any bank indirectly.  In this manner, any of the 256 special registers may be used to address any memory location indirectly.  This type of address, called an indexed indirect memory location address takes the form
+```
+    Index Register Designator, N, Special Register Designator, Increment
+```
+As with any other indexed address, the index register is one of the controlling group and is designated by a number from 0 to 7.  The special register designator may be absolute (from 0 to 31) or mnemonic, while the increment may be a number from 0 to 3 or may be omitted.  An address of this type is interpreted by the machine in the same manner as an indexed special register address, except that the 12-bit configuration formed by ARGUS contains a tabular bit of `1` to indicate indirect addressing.  The low-order eight bits of this configuration modify the low-order eight bits of the index register contents with carry, and the tabular bit in the result indicates whether the special register is addressed directly or used to address a memory location indirectly.  As with indexed special register addresses, it is simplest to use an index register containing only a sign and a group indicator and otherwise all zeros.  In this case, the special register and increment written by the programmer will be used and indirect addressing is assured.  If other information is stored in the index register, the eight-bit addition process may alter the tabular bit.  If this occurs, an `IR,N` address will produce the effect of an `IR,Z` address and vice versa.
+
+Assume that the programmer writes the address
+```
+    3,N,AU1
+```
+and that index register 3 contains only a sign and a group indicator.  This group indicator and the mnemonic designator `AU1` define one of the 256 special registers, which is used to address a memory location indirectly.  Since no increment was written, the contents of the special register are left unchanged.
 
 ### Inactive Address
 
+An inactive address is denoted in ARGUS language by a hyphen (`-`).  This type of address may be used to gain access to three non-addressable registers called the accumulator, the mask register, and the low-order product register.  In an addition instruction, for example, inactive addressing may be used to gain access to the accumulator.  If the `A` and `B` address groups are inactive, the contents of the accumulator are transferred to `C`; if the `B` and `C` address groups are inactive, the contents of `A` are transferred to the accumulator.  In similar fashion, inactive addressing may be used with the extract instruction to gain access to the mask register and with the transfer and sequence change (`TS`) instruction to gain access to the low-order product register.  Inactive addressing is discussed more fully in the _Programmers' Reference Manual_.
+
 ### Stopper Address
 
+When a main memory address, stored in a special register, is modified by incrementing or augmenting, a carry may occur from the subaddress into the bank indicator.  Thus a sequencing counter can be stepped through successive memory banks, and a single instruction can handle a record which is not stored entirely within one memory bank.  There is one address, however, which by definition is neither incremented nor augmented when it appears in a special register.  This address, called the stopper address, represents the highest-numbered location in the memory of a given Honeywell 800 system, regardless of the number of banks in the system (i.e., subaddress `2047` in the highest-numbered bank of the system).  The stopper location can be utilized, for example, in a read instruction to move tape without disturbing the contents of memory or to read a portion of a tape record, discarding the balance.  Due to relocation considerations, the stopper location can only be addressed through a special register in ARGUS language.  This is accomplished by writing the symbolic tag `STOPPER` in a special address constant (see [Section IX](#section-ix-constants)) and storing it in a special register.  ARGUS replaces this tag with the address of the stopper location of the machine on which the program is to be run.
+
 ### Numbers in Address Fields
+
+ARGUS will convert into binary any number or any series of numbers separated by the signs `+` and `-`, provided that the resultant value is positive and does not exceed `4095`.  This ability should be used with caution, especially if the program is to be relocated for parallel processing.
 
 ## Section VI: Program Structure
 
