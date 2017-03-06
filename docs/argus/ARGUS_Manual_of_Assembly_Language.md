@@ -596,15 +596,85 @@ ARGUS will convert into binary any number or any series of numbers separated by 
 
 ## Section VI: Program Structure
 
+An assembled program may be divided into segments to conform to subdivisions of program logic.  This makes it possible to have the coding for one function in memory while the coding for other functions remains on tape until it is needed.  Segmentation makes efficient use of available memory storage and increases the number of programs that may be processed in parallel.  Segments may be further broken down into subsegments to increase the flexibility of relocation by the Executive System, to provide communication among segments, and to exercise control over the allocation of memory as performed by the Assembly Program.
+
 ### Segmentation
+
+A segment is any part of a program which is loaded into memory and executed as a unit.  Segmented programs fall into two general categories.  One segment may operate upon the output of a previous segment with no internal communication, as in the case of a card-to-tape conversion which is followed by a sort and then by an updating run.  Such segments resemble a series of separate programs run one after another.  On the other hand, there may be communications among segments.  The communication link may be either a control program which decides what segment to load next, or an area of memory containing data which varies from segment to segment, or both.  Thus, unlike the first category, the order and frequency of executing the segments may not be predictable, but may depend upon the input data.
+
+Programs in the first category are easily divided into mutually independent segments.  If these segments have different equipment requirements, they can be scheduled for production more efficiently if they are written as separate programs.  Programs in the second category, on the other hand, must be separated into interdependent and independent portions, according to the amount of memory available and the relative frequency of executing the various portions of coding.  The programmer uses the control instructions `PROGRAM` and `SEGMENT` (see [Section XI](#section-xi-argus-updating-function)) to segment a program.
+
+Any part of any segment may be specified as "common" (as described below under "Subsegmentation").  When part of a segment is common, the area of memory which it uses is reserved in all segments.  It may be overlaid by common portions of other segments only under the programmer's control.  The portions of segments not specified as common, on the other hand, are overlaid by other segments under control of Executive.  In other words, the only parts of the program guaranteed to be in memory during the execution of one segment are those words belonging specifically to that segment and any common portions of other segments which occupy the communication area at the time.  For this reason, the symbolic tags defined in the common portions of a program may be referenced from any segment, while those not in a common area are available only to the segment in which they are defined.
 
 ### Segment Loading
 
+The name of the first segment which is to be executed is specified on the `END` card (see [Section VIII](#section-viii-assembly-control-instructions)).  Executive automatically loads this segment when the program is initiated.  The starting address of this segment must be loaded into the sequence counter by means of a `SPEC` constant with "`Z,SC`" in the location field.
+
+The programmer uses a macro instruction called read segment to direct the automatic loading of all segments following the first.  This instruction is logically equivalent to a transfer of control to that segment.  The Executive System loads the requested segment and transfers control to a location specified in the macro instruction, under control of the sequence counter.  Thus, no segment except the first one to be executed need load the sequence counter.  If a segment does load the counter, the address specified in the read segment instruction will override the one loaded.
+
+The format of the read segment instruction is:
+![Read Segment](images/read_segmentp30.png?raw=true)
+"Name" is the segment name specified in the `PROGRAM` or `SEGMENT` card, and "start" is the symbolic tag of the location in that segment where control is to be transferred,  As in all macro instructions, the symbolic tag in the location field is optional.
+
+The symbolic tag in the `B` address field must be a link tag, since it is referenced in one segment, while it actually belongs to another; this is an exception to the rule that all references within a segment must be to words within that segment or within the common area.  [Section IV](#section-iv-tags) states that a link tag is preceded by an "`L`" and a comma when it is defined.  Such a tag may be referenced from any segment, by means of the read segment macro instruction.  It should be noted that a reference to this tag from another segment must not include address arithmetic.  However, within the segment to which it belongs, this tag may be treated just as any other.
+
+If desired, a segment may contain more than one starting location.  Each starting location must be designated by means of a link tag.  Different read segment macro instructions may be used to effect transfer of control to the different starting locations under various conditions.
+
 ### Subsegmentation
+
+A subsegment is a group of words within a segment which must retain the same relationship to each other in memory; the relationship of one subsegment to other subsegments within the segment is immaterial.  Each segment may contain a maximum of seven subsegments.  The division of a segment into subsegments is indicated by means of the control instruction `SETLOC` (see page 53).  If no division is specified, the entire segment is considered to consist of one subsegment,
+
+All subsegments of a segment occupy memory at the same time.  However, during relocation each subsegment may be moved in memory independently of the other subsegments with the following exceptions:
+1. If any subsegment crosses a bank boundary, all subsegments of every segment within the entire program will retain their original relationships to each other and to the bank boundaries.  That is, the program is moved only by bank.
+2. Two subsegments written to occupy the same memory bank will continue to share one memory bank unless one of the subsegments is in the communication area.  In this case, the subsegments may be moved into two different banks.
+The programmer may reference any word in a subsegment from any other portion of the same segment, according to the following rules:
+1. Any reference to a word in another bank must be made via a special register.
+2. Unless some subsegment crosses a bank boundary (so that the program is relocated by bank), all references to the communication area from outside this area must be made via special registers.
+3. Address arithmetic must not be applied to a tagged word in one subsegment in order to reference a word in another subsegment unless the program is relocated by bank.
+
+One of the primary reasons for designating a portion of coding or data as a subsegment is to specify that it should be made common to all segments.  Subsegments not specified as common are called normal subsegments.  The normal subsegments of different segments are completely independent of each other; i.e., a subsegment numbered "`1`" in one segment bears no relation to a subsegment numbered "`1`" in another segment unless it is designated as common.  If a subsegment is designated as common, however, its number will refer to the same subsegment in all segments.
+
+If a subsegment has been designated as common in one segment, words can be added to it or overlaid on portions of it by other segments.  The new words are preceded by a `SETLOC` instruction which states whether they are to be overlaid at a specified location or added at the end of the subsegment.
+
+Another reason fir dividing a segment into subsegments is to increase the flexibility of relocation.  If two portions of a program (e.g., coding and data) need not occupy the same memory bank, it is desirable to code them as two subsegments, one in each of two banks.  Executive may then relocate them into any space which is available.
 
 ### Allocation
 
+The Assembly Program assumes responsibility for the allocation of memory to a program; however, in some cases the programmer needs to have control over this allocation.  For example, in a multi-bank program he may wish to place his masks in a particular bank so that hey may refer to them directly from coding in that bank.
+
+Each subsegment may contain any or all of these elements:
+1. In-Line Coding - This consists of all program words except those which are designated as masks, loaded directly into special registers, or marked as out-of-sequence words.  As each in-line word is processed by the Assembly Program, it is assigned to the next available location in the subsegment.  Breaks in this sequence and/or initial values of this sequence may be specified by `SETLOC` instructions.
+2. Out-of-Sequence Coding - This consists of all words in the subsegment which have "`X,`" in the location field (see page 20).  These words are assigned locations starting immediately after the in-line words of that subsegment.  Any subsegment which contains out-of-sequence coding should be stored entirely within one memory bank for ease of referencing such coding.
+3. Masks - Masks are assigned in groups by means of the control instruction `MASKGRP` (see page 59).  This instruction may designate a subsegment in which the groups named are to be placed; otherwise, they are placed in the subsegment in control at the end of the segment.  If the `SETLOC` instruction for the subsegment containing the mask groups is immediately followed by a `SETLOC` for another subsegment, the mask groups will be allocated in a subsegment by themselves.
+4. Subroutines - If a subroutine is called for within a common subsegment, it is stored within that subsegment; otherwise, it is stored in the subsegment in control at the end of the segment.  The programmer may use a `SETLOC` instruction immediately following the last line of a segment to specify the subsegment in which non-common subroutines are to be stored.  All subroutines stored in a subsegment are allocated immediately following the last location used in the subsegment.  The order in which subroutines are stored at the end of a subsegment is determined by the Assembly program on the basis of their size, and not on the order in which they are called or the order in which they appear in the library.
+
+If a segment consists of more than 2048 words, so that it must occupy more than one bank of memory, it can be subsegmented in such a way that the out-of-sequence words and masks which are referenced by one section of coding will be stored in a bank with that coding.
+
 ### Relocation
+
+Because a program is prepared without specific knowledge of the actual memory and equipment which will be assigned to it, certain precautions must be observed during program preparation to facilitate successful relocation and operation of the program.  Since the program will undoubtedly be run in parallel with others at some time, observance of the facts of relocation outlined below is also necessary in order that the program may not interfere with others.
+1. The relocatable quantities - group and bank indicators and peripheral codes - should not be treated as numerical values.  In other words, no arithmetic operations should be performed on these quantities.
+2. Although a one-to-one correspondence exists between group indicators of a program before and after relocation, this is not so with bank indicators.  Different bank indicators may be assigned the same value during relocation, since subsegments written for different banks may be loaded into the same bank at run time.  However, subsegments written for the same bank will always be assigned to the same bank, with the exception of common subsegments.
+3. There is no relationship between bank indicators of different segments, except for common subsegments which remain in the same absolute areas throughout execution of the program.  Therefore, references between common and normal subsegments must be made via special registers.
+4. Statements (2) and (3) above are limited to programs relocatable modulo 64, not to those relocatable by bank only.
+5. Bank, group, and control unit indicators can be identified properly only if constants to be loaded into special registers are special address (`SPEC`) or complete address )`CAC`) constants (see [Section IX](#section-ix-constants)).
+6. Fixed, non-relocatable locations (e.g., date location and inquiry stations) must be addressed via special registers.  The stopper location, which is represented by the tag `STOPPER` in a `SPEC` constant (see page 28), must also be addressed via a special register.
+7. Because group indicators and tape control unit identifications are relocatable, care must be used in writing a program control constant to examine the program control register.  A program should examine only group and buffer bits used by that program.
+8. The `MPC` instruction (see page 50) must be used with great care.  In particular, only those groups used by the program should be altered in any way.
+9. The special registers `RAC`, `DRAC`, `WAC`, and `DWAC` are associated with control unit indicators and not with group indicators.  They must be addressed via special registers.  When they are addressed, control unit assignments must be uniquely defined.  It must be remembered that these counters may contain information from other programs using the same control unit.
+
+In those control groups which contain the read-write counters `RAC`, `DRAC`, `WAC`, and `DWAC`, special registers `S4` through `S7` are not available.  Relocation is facilitated by always specifying a group in which these registers are unavailable, unless they are actually required by the program.  However, if a program does use any of the special registers `S4` through `S7`, it is the programmer's responsibility to specify a group in which these registers are available.  Further information on relocation can be found in the _ARGUS Executive System Manual_ (DSI-45).
+
+#### EXANPLE
+
+Two segments of a program have been assembled and allocated in memory as shown in the left-hand two columns of Figure 7 (Before Relocation).  Segment `A` consists of a common subsegment (numbered `1`) and four other subsegments.  Segment `B` consists of a common subsegment (which is also numbered `1`) and three other subsegments.  This program has been executed and checked out, using memory banks `0` through `3`, as shown.  Note that part of the common subsegment is loaded with segment `A` and part with segment `B` and that these parts are assigned overlapping memory areas.
+
+The same program is to be loaded for processing in parallel with a number of other programs which are using memory banks `0`, `1`, and `4` through `G`.  When this program is scheduled for a production run, Executive examines its relocation information and relocates it as shown in the right-hand two columns of Figure 7 (After Relocation), so that it can be processed entirely within the available memory banks `2` and `3`.  A comparison of the two halves of Figure 7 reveals that the following rules govern the relocation process.
+1. All subsegments are relocated in integral multiples of 64 locations to preserve all mask group relationships;
+2. The two portions of common subsegment `1` retain the original overlapped relationship; and
+3. Normal subsegments `2` and 4` of segment `A`, originally sharing the same memory bank, continue to share a bank after relocation.  These subsegments may communicate by means of direct addressing.  All other communication between subsegments must be by means of indirect addressing.
+
+![Figure 7](images/figure_7.png?raw=true)
 
 ## Section VII: Machine Instructions
 
