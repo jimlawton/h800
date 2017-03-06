@@ -509,6 +509,9 @@ refers to the memory location 109 beyond the location whose address is stored in
 
 Three types of direct memory location addresses are illustrated in the instruction
 ![Direct Address Example](images/address_example_p23.png?raw=true)
+```
+            DA      C,+2    INTEREST    AMTPAID - 10
+```
 The function of this instruction is to add decimally the contents of the memory location two after the location of the instruction itself to the contents of the memory location designated by the tag `INTEREST`, and to store the result in the location 10 before that tagged `AMTPAID`.  (since this instruction is not marked by an "`X,`" in the location field, the CLC contains the address of this instruction while the instruction is being processed.)
 
 
@@ -614,6 +617,9 @@ The programmer uses a macro instruction called read segment to direct the automa
 
 The format of the read segment instruction is:
 ![Read Segment](images/read_segmentp30.png?raw=true)
+```
+    (TAG)   L,READSEG       NAME    START
+```
 "Name" is the segment name specified in the `PROGRAM` or `SEGMENT` card, and "start" is the symbolic tag of the location in that segment where control is to be transferred,  As in all macro instructions, the symbolic tag in the location field is optional.
 
 The symbolic tag in the `B` address field must be a link tag, since it is referenced in one segment, while it actually belongs to another; this is an exception to the rule that all references within a segment must be to words within that segment or within the common area.  [Section IV](#section-iv-tags) states that a link tag is preceded by an "`L`" and a comma when it is defined.  Such a tag may be referenced from any segment, by means of the read segment macro instruction.  It should be noted that a reference to this tag from another segment must not include address arithmetic.  However, within the segment to which it belongs, this tag may be treated just as any other.
