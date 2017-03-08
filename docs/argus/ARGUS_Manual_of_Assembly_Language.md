@@ -508,7 +508,9 @@ refers to the memory location three before the location whose address is stored 
 refers to the memory location 109 beyond the location whose address is stored in the out-of-sequence location counter.  The address modifier may be a series of numbers separated by the signs `+` and `-`, provided that the absolute value of the entire modifier does not exceed 4095.  Caution is required in the use of address arithmetic, since the address modifiers are not corrected if coding is inserted or deleted later.
 
 Three types of direct memory location addresses are illustrated in the instruction
+
 ![Direct Address Example](images/address_example_p23.png?raw=true)
+
 ```
             DA      C,+2    INTEREST    AMTPAID - 10
 ```
@@ -542,9 +544,13 @@ An indexed special register address may be used to refer to a special register i
     Index Register Designator, Z, Special Register Designator, Increment
 ```
 The index register designator is a number from 0 to 7 (or `X0` to `X7`) which specifies one of the eight index registers in the controlling group.  The special register designator may be an absolute subaddress (`0`-`31`) or it may be mnemonic (see Figure 5).  The increment may be a number from `0` to `3` or it may be omitted.  The manner in which these numbers are used to augment the index register contents and form a special register address is illustrated in terms of bit structure.  ARGUS converts the address as written by the programmer to the following 12-bit configuration:
+
 ![Indexed Special Register Address Configuration](images/address_configuration_p25.png?raw=true)
+
 Of this configuration, the low-order eight bits (increment, tabular bit, and special register designator) are added to the low-order eight bits of the index register contents, under control of the index register sign, permitting carry into the high-order bits.  As usual, the indexing process does not alter the contents of the index register.  The augmented index register contents are interpreted by the machine as a special register address, as follows:
+
 ![Special Register Address](images/special_register_p26.png?raw=true)
+
 Within the augmented configuration, the group indicator and subaddress uniquely define a special register in any of the eight groups.  The increment is now a number from 0 to 31.  The tabular bit indicates whether the type of addressing is direct or indirect (see below).  In either case, the increment, under control of the special register sign, is added to the contents of the special register after use, provided the special register is not addressed as a result location.
 
 If the index register used contains all zeros (except for the sign and the group indicator), the result of indexed special register addressing is quite simple.  In this case, the index register designates the group and the programmer designates the subaddress of a special register which is addressed directly and incremented after use by the amount which the programmer writes.  For example, assuming that the programmer writes
@@ -616,7 +622,9 @@ The name of the first segment which is to be executed is specified on the `END` 
 The programmer uses a macro instruction called read segment to direct the automatic loading of all segments following the first.  This instruction is logically equivalent to a transfer of control to that segment.  The Executive System loads the requested segment and transfers control to a location specified in the macro instruction, under control of the sequence counter.  Thus, no segment except the first one to be executed need load the sequence counter.  If a segment does load the counter, the address specified in the read segment instruction will override the one loaded.
 
 The format of the read segment instruction is:
-![Read Segment](images/read_segmentp30.png?raw=true)
+
+![Read Segment](images/read_segment_p30.png?raw=true)
+
 ```
     (TAG)   L,READSEG       NAME    START
 ```
