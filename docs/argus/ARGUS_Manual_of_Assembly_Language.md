@@ -679,7 +679,7 @@ Because a program is prepared without specific knowledge of the actual memory an
 
 In those control groups which contain the read-write counters `RAC`, `DRAC`, `WAC`, and `DWAC`, special registers `S4` through `S7` are not available.  Relocation is facilitated by always specifying a group in which these registers are unavailable, unless they are actually required by the program.  However, if a program does use any of the special registers `S4` through `S7`, it is the programmer's responsibility to specify a group in which these registers are available.  Further information on relocation can be found in the _ARGUS Executive System Manual_ (DSI-45).
 
-#### EXANPLE
+#### Example
 
 Two segments of a program have been assembled and allocated in memory as shown in the left-hand two columns of Figure 7 (Before Relocation).  Segment `A` consists of a common subsegment (numbered `1`) and four other subsegments.  Segment `B` consists of a common subsegment (which is also numbered `1`) and three other subsegments.  This program has been executed and checked out, using memory banks `0` through `3`, as shown.  Note that part of the common subsegment is loaded with segment `A` and part with segment `B` and that these parts are assigned overlapping memory areas.
 
@@ -692,19 +692,146 @@ The same program is to be loaded for processing in parallel with a number of oth
 
 ## Section VII: Machine Instructions
 
+Honeywell 800 machine instructions are specified in ARGUS language using the mnemonic operation codes shown in Figure 8.  Note that ARGUS recognizes the five classes of machine instructions, namely, general, peripheral, shift, scientific, and simulator instructions, plus a group of extended instructions.  The functions of Honeywell 800 machine instructions re summarized in [Appendix E](#appendix-e-honeywell-800-machine-instructions).  The reader will find it convenient to refer to [Appendix E](#appendix-e-honeywell-800-machine-instructions) for the details of the machine instructions illustrated on the following pages.
+
+A machine instruction consists of a command code group and three address groups.  The command code group may include such information as a mask tag or a peripheral code in addition to the mnemonic operation code, depending upon the instruction type.  An address group may refer to a memory location or a special register, using one of the address forms given in Figure 6, or it may contain a parameter dictated by the format of the instruction.  Information written either in the command code field, or in any address field may be punched anywhere in the indicated card field; spaces in these fields are ignored when assembling machine instructions.
+
 ### General Instructions
+
+The instructions in this class perform such operations as arithmetic, information transfers, comparisons, program control, and information checking.  All of these instructions, with the exception of proceed, have the ability to designate the source of the following instruction.  If column 23 contains an "`S`" or is blank, the address of the next instruction is obtained from the sequence counter; if this column contains "`C`", the address of the next instruction is obtained from the cosequence counter.  Column 23 of a proceed instruction is not used, and the following instruction is always selected by the sequencing counter which selected the proceed instruction.
+
+Three examples of general instructions are shown on the following page.  The first instruction adds the contents of location `PRICE` to the contents of the location three after `PRICE` and stores the result in location `AMTDUE`.  Both operands and the result are regarded as signed 11-digit decimal numbers.  The second instruction transfers 10 words from consecutive memory locations starting at `INPUT` to consecutive locations starting at `WORK1`.  The third compares numerically the contents of a memory location reached by indexed addressing with the contents of `COUNTER`.  If `(3,7)` is less than or equal to `(COUNTER)`, the cosequence counter is reset to the memory location 14 beyond the location of this instruction.  (Parentheses are used around an address to specify the contents of the indicated location.)  Each of the first two instructions is followed by an instruction selected by the sequence counter; the third instruction designates the cosequence counter as the source of the next instruction, whether or not the comparison is satisfied.  The functions of these three instructions can be verified by referring to [Appendix E](#appendix-e-honeywell-800-machine-instructions).
+
+![General Examples](images/code_example_p38.png?raw=true)
+```
+            DA          PRICE       PRICE + 3       AMTDUE
+            TN      S   INPUT       10              WORK1
+            LN      C   3,7         COUNTER         C,+14
+```
 
 #### Sequence Change Instructions
 
+Several instructions have the ability to execute a programmed change of sequence by placing the `C` address in the sequencing counter specified as the source of the next instruction.  An example is the transfer and sequence change instruction (`TS`).  In such instructions, the `C` address may take any valid address format.  However, if a special register is addressed, the value of the tabular bit is ignored and the result is always a memory location address.  Thus, a direct or indexed special register address, if used as a change of sequence, will be interpreted respectively as an indirect or an indexed indirect memory location address.
+
 #### Field Instructions
+
+Many of the instructions in the general class can be performed under the control of masks, which allow them to designate partial words as operands and as results.  These instructions, which are indicated by a superscript<sup>2</sup> in Figure 8 and in [Appendix E](#appendix-e-honeywell-800-machine-instructions), are called field instructions.  When a field instruction is masked, the same mask is applied to operands and results.  Only those bit positions in the operands which correspond to binary ones in the mask, called the masked portions are used.  All field instructions are masked protectively; i.e., the unmasked portions of the result locations are not altered by the operation.
+
+The mask to be used in a field instruction may be designated by writing its symbolic tag in the command code field, following the operation code and separated from it by a comma.  A mask whose mask indicator is `F` (for field instructions) or `B` (for both field and shift instructions) may be designated in a field instruction.  If the tag which follows the operation code has both a mask assignment and a complex assignment, the mask assignment is used.  The method of assigning masks in groups of consecutive memory locations is described in [Section X](#section-x-masking).
+
+![Figure 8](images/figure_8.png?raw=true)
+
+Alternatively, the programmer may direct ARGUS to generate the desired mask.  The following three items of information in the command code field, separated from the operation code and from each other by commas, direct the generation of the desired mask by ARGUS:
+- (M<sub>1</sub>) The position of the high-order character in the masked field.  This may be a number from `1` to `8` for alphanumeric characters, from `1` to `12` for unsigned hexadecimal digits, or from `2` to `12` for signed hexadecimal digits (see Figure 2).
+- (M<sub>2</sub>) The number of characters in the masked field.  This may be a number from `1` to `8` for alphanumeric characters, from `0` to `11` for signed hexadecimal digits, or from `1` to `12` for unsigned hexadecimal digits.
+- (M<sub>3</sub>) A character to specify the bit position(s) containing the sign of the masked field.  This character may be a number from `1` to `4`, corresponding to the four sign bits from left to right, or it may be an "`S`" to specify the use of all four as the sign of the masked field.  If the masked field is unsigned, as in alphanumeric information, this character is a `0` or is omitted.
+
+The use of generated masks is limited to alphanumeric and hexadecimal fields of consecutive characters.  Tags must be used to designate masks for binary fields or for fields of non-consecutive characters.  The type of field, alphanumeric or hexadecimal, is implied by the operation code in most cases.  Arithmetic operations always involve numeric words and the comparison instructions specify numeric or alphabetic comparison.<sup>1(#section-vii-note-1)</sup>  In certain instructions, however, the type of field is ambiguous.  If one of these instructions (viz., `WA`, `WD`, `HA`, `TS`, `TX`, `SM` and `CP`) is to be performed with a generated mask, a three-character operation code must be formed by appending an "`A`" for alphanumeric or a "`D`" for hexadecimal to the two-character code shown in Figure 8.  Both designated and generated masks are illustrated in the following examples.
+
+![Field Examples](images/code_example_p40.png?raw=true)
+```
+            DS,PAYROLL3     C   GROSSPAY    GROSSPAY - 3    NETPAY
+            TXA,1,7             NAME                        PRINTOUT
+            LN,2,B,S        S   TOTAL       DATA 1          COMPUTE
+```
+
+<a name="section-vii-note-1">1</a>In generating a mask for an alphabetic comparison, ARGUS assumes alphabetic operands.  If operands of such an instruction are numeric, any mask used must be designated by a symbolic tag.
+
+The first instruction above subtracts decimally the contents of the location three before location `GROSSPAY` from the contents of location `GROSSPAY` and stores the result in location `NETPAY`.  Assume that the mask designated as `PAYROLL3` has the configuration
+```
+        G00 000 GGG GGG
+```
+in hexadecimal form.  This mask is applied to the subtraction operation, with the result that only the sign and the low-order six digits of each operand are considered and only those digit positions are affected in location `NETPAY`.
+
+The second instruction transfers `(NAME)` to location `PRINTOUT`.  The contents of the command code field direct ARGUS to generate an alphanumeric mask of seven characters, starting with character one (the left-most character).  Thus only the first seven characters of `NAME` are transferred and the eight character position in location `PRINTOUT` is not altered.
+
+The third instruction above compares `(TOTAL)` with `(DATA1)` numerically.  ARGUS generates a hexadecimal mask (because a numeric comparison is specified) which masks eight digits starting with digit `2`, the digit immediately following the sign.  All four bits of digit `1` are designated as sign bits.  If the masked portion of `TOTAL` is less than or equal to the masked portion of `DATA1`, the sequence counter (specified in the `S/C` column) is reset to `COMPUTE`.
+
+Field instructions are subject to the restriction that when they are masked, they can neither address special registers nor use them to address main memory indirectly.  Consequently, they must obtain their operands and store their results by means of either direct or indexed addressing of memory locations.  This restriction does not apply to the remainder of the general instructions or to field instructions performed without masks.
 
 #### N-word Instructions
 
+Four general instructions which use the `B` address field to specify a number of words to be transferred (from 0-63) are the binary and decimal accumulate, n-word transfer, and multiple transfer instructions.  In any of these instructions, the `B` address field may contain a symbolic tag (with or without address modifier) which is equated elsewhere to a number, b=y means of an `EQUALS` instruction (see [Section VIII](#section-viii-assembly-control-instructions)).  The value of the tag (or the value of the modified tag) must be in the range `0` through `63`.  For example, if a block of data 20 words long is to be manipulated by several different n-word instructions, the tag `BLOCK` might be equated to the value `20`.  Then the following instruction could be used to transfer the data from locations starting with `INPUT` to locations starting with `OUTPUT`.
+![N-Word Example](images/code_example_p42.png?raw=true)
+```
+            TN                  INPUT       BLOCK           OUTPUT
+```
+
+It is only necessary to modify the instruction which defines the tag `BLOCK`, rather than modifying all of the n-word instructions involved, if the length of the data block changes.
+
 ### Peripheral Instructions
+
+Every instruction in this class performs some operation involving a ,magnetic tape unit or a terminal device.  Peripheral instructions are subject to the same addressing restrictions as masked field instructions.  They cannot specify a special register address or an indirect memory location address in any address field.  Furthermore, instructions in this class lack the provision for specifying the source of the following instruction.  Therefore, the `S/C` subfield (column 23) is not used in a peripheral instruction, and the address of the following instruction is always taken from the same sequencing counter that selected the peripheral instruction.
+
+The command code field in a peripheral instruction contains a two-character operation code followed by a comma and an alphabetic peripheral code from `AA` to `HH`.  The assignment of peripheral codes to magnetic tape units and terminal devices is established individually at each Honeywell 800 installation.  In the case of a terminal device, the second letter of the peripheral code designates the device type, according to the following convention:
+- `A` = card reader
+- `B` = printer
+- `C` = card punch
+- `D` = paper tape reader
+- `E` = paper tape punch
+In the case of a magnetic tape unit, the second character may be any letter from `A` to `H`.  The Assembly Program uses this convention to analyze the peripheral requirements of a program and to diagnose and report any attempt to address a peripheral device which is not capable of performing the requested operation (e.g., a rewind addressed to a card reader).  Every Honeywell 800 installation is provided with a table of peripheral code assignments.
+
+The `A` address field in a peripheral read or write instruction specifies the location into which the first word is top be read or from which the first word is to be written.  The read address counter (`RAC`) or the write address counter (`WAC`) directs the reading of subsequent word into or writing of subsequent words from consecutive higher-numbered locations until an end-of-record word is encountered (see [Appendix E](#appendix-e-honeywell-800-machine-instructions)).  (In a read backward instruction, the `RAC` directs the reading of subsequent words into consecutive lower-numbered locations.)
+
+If the `B` address field in a read or write instruction to magnetic tape is active, the operation is a distributed read or write, and the record read or written is sensed for end-of-item symbols (see[Appendix E](#appendix-e-honeywell-800-machine-instructions)).  In this case, the `B` address field specifies the starting location of a stored table, which in turn contains the starting addresses of memory areas into which the items of a record are to be distributed or from which items are to be assembled to form a record.  The first item is read or written, starting at `A`; subsequent items are read or written starting at the addresses stored in the table.  The distributed read address counter (`DRAC`) or the distributed write address counter (`DWAC`) directs the selection of addresses from the stored table to distribute or assemble the items of a record.  (If a read backward is distributed, the `B` address field specifies the final location of a stored table of final addresses of items.)  If the `B` address field is inactive, the operation is a normal read or write, end-of-item symbols are not sensed, and the `DRAC` and `DWAC` are not used.
+
+The `C` address field in any read or write instruction may be used to specify a change in the contents of the sequencing counter which selected the instruction; if the `C` address field is inactive, no change of sequence takes place.  If the `C` address is active, it is interpreted as in any other sequence change instruction (see above).
+
+If the `A` address field in a rewind instruction is active, the rewound tape is interlocked against further peripheral operations.  The `B` and `C` address fields in a rewind instruction are not used.
+
+![Read-Write Examples](images/code_example_p43.png?raw=true)
+```
+            WF,FB               UPDATE      -               READIN + 2
+            RF,AB               TRANSACT    WORK 3          -
+```
+
+The function of the first instruction above is to write one record or print one line on device `FB`, depending upon whether this device is a magnetic tape unit or a printer.  The record to be written is stored in memory starting at location `UPDATE`.  Since the `B` address field is inactive, end-of-item symbols are not sensed; i.e., the records is assumed to be stored in consecutive memory locations.  The `C` address field designates that the counter which selected this instruction is to be set to address `READIN +2`.
+
+The second sample instruction reads one record from device `AB`.  The record is to be stored in memory, the first item starting at location `TRANSACT`.  `WORK3` is the first location of a stored table of starting addresses of items.  As the record is read, end-of-item symbols are sensed, and the `RAC` and `DRAC` control distribution of the remaining items to non-consecutive memory areas.  As terminal devices cannot perform distributed reading, `AB` must be a magnetic tape unit.  Since the `C` address field is inactive, the sequencing counter which selected this instruction is incremented normally to form the address of the next instruction.
 
 ### Shift Instructions
 
+Four of the five shift instructions are used to alter the positions of data fields within words.  Two of these substitute the shifted field into a word which is otherwise unaltered; the other two extract the shifted field into a word which is otherwise cleared to all zeros.  The fifth instruction, shift and select, is used to select one of a possible 2048 locations as the source of the following instruction, based upon the value of a data field.
+
+Every shift instruction is performed under the control of a mask.  The location of the word to be shifted is written in the `A` address field.  The type, extent, and direction of the shift are specified in the `B` address field.  All five instructions perform end-around shifting; i.e., every character shifted out of a word at one end reappears at the opposite end.  The shifted word is masked and then delivered to the location specified by `C` (or used to modify the `C` address in the shift and select instruction).  The two shift and substitute instructions protect the unmasked portions of the result location.  The two shift and extract instructions clear the unmasked portions of the result location to all binary zeros.  As in the case of field instructions, the desired mask may be either designated symbolically or generated by ARGUS.  The tag of a designated mask is written in the command code field of the shift instruction, following the operation code and separated from it by a comma.  A mask with a mask indicator of `S` (for shift instruction) or `B` (for both) may be designated in a shift instruction.  If the tag written has both a mask assignment and a complex assignment, the mask assignment is used.  To generate a mask, ARGUS uses the same three items of information (M<sub>1</sub>, M<sub>2</sub>, and M<sub>3</sub>) as outlined under field instructions.  M<sub>1</sub>, M<sub>2</sub>, and M<sub>3</sub> follow the operation code and are separated by commas.  Since shifting takes place before masking, M<sub>1</sub> must specify the position of the high-order character in the masked field _after_ shifting.  The shift word and the shift and select instructions do not normally include a value of M<sub>3</sub>.
+
+Any valid address format, as shown in Figure 6, may be used in the `A` and `C` address field of a shift instruction.  However, the `C` address field of a shift and select instruction is interpreted as in any other sequence change instruction (see page 38).  The `B` address field of a shift instruction normally contains three items of information, separated by commas, which specify the nature and extent of the shift:
+- (`B`<sub>1</sub>) A character to designate the type of characters to be shifted.
+    - `A` = six-bit alphanumeric
+    - `D` = four-bit decimal
+    - `B` or blank = binary
+- <sup>*(#section-vii-note-2)</sup>(`B`<sub>2</sub>) The number of positions that the word is to be shifted, from `0` to `8` for alphanumeric characters, from `0` to `12` for decimal digits, or from `0` to `48` for bits.
+- (`B`<sub>3</sub>) A character to designate the direction of shift.
+    - `L` = left
+    - `R` or blank = right
+Alternatively, the `B` address field may contain a symbolic tag (with or without address modifier) which is equated elsewhere to a number, by means of an `EQUALS` instruction (see [Section VIII](#section-viii-assembly-control-instructions)).  The value of the tag (or of the modified tag) must be in the range `0` through `48`.  ARGUS interprets such a tag as the number of bit positions to be shifted to the right.
+
+<a name="section-vii-note-2">*</a>If `B`<sub>1</sub> and `B`<sub>3</sub> are both blank, `B`<sub>2</sub> may be as large as `63`.
+
+As in the case of field instructions, the use of generated masks is limited to alphanumeric and decimal fields of consecutive characters.  Masks for binary fields or for fields of non-consecutive characters must be designated symbolically.  If no mask information is written in the command code field and the shifted field is alphanumeric or decimal (`B`<sub>1</sub> = `A` or `D`), ARGUS generates a mask to suppress that portion of the word moved either right or left end around during the shifting process.  However, if `B`<sub>1</sub> specifies a binary shift or the `B` address field is symbolic, ARGUS generates a mask of all ones in the absence of a mask tag in the command code field.  The shift and select instruction requires a mask which allows no more than 11 low-order bits to be used in modifying the `C` address.
+
+![Shift Examples](images/code_example_p45.png?raw=true)
+```
+            SPS,PARTNUMB    S   3,9         B,10,R          PART LIST +5
+            SWE,6,3             EMPLOYEE+4  D,3             N,R3,1
+            SSL,11,2        C   SELECTOR    D,4             C,-5
+```
+
+The first sample instruction above shifts the contents of the location specified by indexed address `3,9` ten binary places to the right, preserving the sign, and stores the result in location `PARTLIST +5`, under control of a mask tagged `PARTNUMB`.  The unmasked portion of the result location is protected.  The sequence counter is consulted for the source of the next instruction.
+
+The second instruction shifts the contents of location `EMPLOYEE +4`, including the sign, three decimal places to the right (`B`<sub>3</sub> is blank) and stores the result in the location specified by indirect address `N, R3, 1`.  The generated mask produces an unsigned field of three decimal digits beginning with digit 6 and replaces the remainder of the result location with all `0` bits.  Again the sequence counter is consulted for the source of the next instruction.
+
+The third instruction shifts the contents of location `SELECTOR`, including the sign, four decimal places to the right under control of a generated mask which produces a field of two low-order decimal digits.  These eight bits are added in binary form to the address of a memory location five before the location of this instruction (since this is not marked as an out-of-sequence word).  The modified address is then stored in the cosequence counter which is designated as the source of the next instruction.
+
 ### Scientific Instructions
+
+This class includes the instructions which perform arithmetic operations and comparisons on floating-point numbers.  Figure 2, page 8, shows that a Honeywell 800 floating-point word consists of a 40-bit mantissa, a seven-bit exponent, and a sign bit.  This configuration may represent either a decimal number or a binary number in floating-point form.  Arithmetic instructions are provided to handle floating-point words either as decimal or as binary numbers.  Data which is to be manipulated in floating-point form is normally assembled in this form, using the floating-point binary and floating-point decimal constants described in [Section IX](#section-ix-constants).  However, fixed-point binary and decimal constants can be converted to floating-point form.  In normalized floating-point decimal, the exponent represents a power of 10 from the -64<sup>th</sup> to the +63<sup>rd</sup> and the mantissa a 10-digit number from `.1000` to `.9999----`.  In normalized floating-point binary form, the exponent represents a power of 16 from the -64<sup>th</sup> to the +63<sup>rd</sup> and the mantissa a 40-bit number from `.00010000----` to `.11111111----`.  n exception is the value `0`.  Although any floating-point number whose mantissa is `0` has the value of `0`, a normalized floating-point `0` in the Honeywell 800 is defined as a number having a positive sign and all binary zeros in the exponent and the mantissa.
+
+The operands used in a floating-point instruction must be in floating-point form but not necessarily normalized (with the exception of divisors and operands for the comparison instructions).  The results are in correct floating-point form, and are normalized except where otherwise specified.  Exponential overflow occurs if the exponent of the result exceeds `+63`; exponential underflow occurs if the result exponent is less than `-64`.  When exponential overflow is sensed, an unprogrammed transfer of control to `U + 14` or `U + 15` is executed, where `U` represents the location whose address is stored in the unprogrammed transfer register (see Figure 5, page 19).  When exponential underflow is sensed, the unprogrammed transfer is to `U + 12` or `U + 13`.
+
+A floating-point divide instruction cannot be executed if the possibility exists that the divisor is 0.  A fixed-point divide instruction cannot be executed if the absolute value of the quotient equals or exceeds unity.  In either case, an unprogrammed transfer of control to `U + 10` or `U + 11` is executed.
+
+The machine logic to implement the scientific instructions is an optional feature of the Honeywell 800.  Included in this option are the two fixed-point divide instructions.  Though none of these can be performed as machine instructions on systems which do not include the floating-point option, they are all represented by library routines which can be performed by such systems.  One of the items of input required by ARGUS is an indication of whether or not programs are to be assembled for a system which includes the floating-point option (see [Section XI](#section-xi-arhus-updating-function)).  In assembling programs for such a system, scientific instructions are assembled as machine instructions; otherwise, they are handled as library routine pseudo instructions (as described in [Section XIII](#section-xiii-library-routines)).
 
 ### Simulator Instructions
 
