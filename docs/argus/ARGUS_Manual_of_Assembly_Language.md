@@ -835,13 +835,86 @@ The machine logic to implement the scientific instructions is an optional featur
 
 ### Simulator Instructions
 
+The Honeywell 800 complement of machine instructions is designed to perform the logical operations normally required for business data processing and scientific computation.  In addition, the provision of simulator instructions permits the programmer to represent with a single instruction any function not built into the equipment logic, such as a machine instruction for some other data processing system.
+
+For each simulator instruction, the programmer codes a simulator routine which is stored elsewhere in memory.  The control instruction `SIMULATE` (see [Section VIII](#section-viii-assembly-control-instructions)) must precede the simulator routine and must be tagged in its location field.  The simulator instruction sets up a transfer of control to this routine as well as a means of returning control to the main program.
+
+The command code field of a simulator instruction contains an "`S`" followed by a comma and the address of the `SIMULATE` instruction which precedes the desired routine.  The S/C column is not used.  The address fields may contain parameters required by the routine.  In particular, the contents of the `A` and `C` address fields are stored as complete addresses in special registers `AU1` and `AU2`.  If either or both of these parameters is to be indirectly addressed via the appropriate special register, it must be either a direct or an indexed memory location address.  Otherwise, each address field may contain any parameter which can be expressed as a decimal number less than 2048.  Decimal parameters are converted to binary by ARGUS.
+
+The desired routine may be specified by either direct or indexed addressing.  Direct addressing can only be used to execute a routine stored in the same memory bank as the simulator instruction.  In this case, the programmer writes the tag of the `SIMULATE` instruction in the command code field of the simulator instruction.  Indexed addressing must be used in the more general case to execute a simulator routine from any bank of memory.  The index register to be used is loaded with the tag of the `SIMULATE` instruction and an address modifier of `-7`, using the special address constant (`SPEC`) described in [Section IX](#section-ix-constants).  The same index register is then referenced with an augmenter of `7` in the command code field of the simulator instruction.  (The Honeywell 800 recognizes a simulator instruction by the presence of three low-order binary ones in the command code; hence the necessity of modifying the tag of the `SIMULATE` instruction by `-7` and then augmenting the result by `+7` in the simulator instruction command code.)
+
+When a simulator instruction is executed, the instruction itself is transferred to the location specified in its own command code field.  This is the location which immediately precedes the desired routine.  ARGUS assures that it is a location whose subaddress contains three low-order binary ones, as required by the above definition of a simulator instruction.  The cosequence counter is loaded with the starting address of the routine, and the contents of the source counter, after normal incrementing, are stored in the cosequence history register to provide a return to the main program.
+
+For example, the control instruction
+
+![Simulate Example 1](images/code_example_p48.png?raw=true)
+```
+    CUBEROOT    SIMULATE
+```
+
+is followed by a simulator routine which performs a cube root computation.  The tag `CUBEROOT` is assigned to the location immediately preceding the start of the routine.  The operand location and the result location of the cube root computation, which are written in the `A` and `C` address fields of the simulator instruction, may be indirectly addressed by referencing `AU1` and `AU2`, respectively.  The cube root routine may be executed from the memory bank in which it is stored by writing an instruction in the program of the first sample form shown below.  To execute this routine from any memory bank, the programmer must load a special address constant of `CUBEROOT -7` into an index register and write an instruction of the second sample form shown below.
+
+![Simulate Example 2](images/code_example_p49.png?raw=true)
+```
+                S CUBEROOT      7,15                COMPUTE +11
+
+                S,3,7           7,15                COMPUTE +11
+```
+
+When either of these instructions is executed, it is transferred to location `CUBEROOT`, the cosequence counter is set to `CUBEROOT +1`, and the contents of the source counter are stored in the cosequence history register for use as an exit to the main program.  The indexed address of the operand is `7, 15` and the cube root is stored in location `COMPUTE +11`.
+
 ### Multiprogram Control
+
+The automatic parallel processing of up to eight programs is directed by a central processor element called multiprogram control which examines the group of eight program demand bits in a non-addressable register called the program control register.  These bits represent the eight special register groups and specify the active or inactive status of each group.  Normally, when a machine instruction is completed, these bits are examined and an instruction is initiated under control of the next active special register group in sequence.  In the following discussion, this process is called hunting for another program demand.
+
+All machine instructions cause multiprogram control to hunt for another demand with the following exceptions:
+1. Any instruction, including a simulator instruction, which results in a programmed change of sequence;
+2. Any instruction, such as multiply, which generates a two-word result;
+3. An instruction which contains an inactive `C` address or an inactive result address, except rewind, which always causes multiprogram control to hunt for another demand;
+4. An instruction which results in an unprogrammed transfer;
+5. All program control instructions (see below) direct multiprogram control whether or not to hunt for another demand, except `STOP` which always causes hunting.
+
+An instruction which inhibits hunting for another demand is always followed by another instruction from the same program.  This feature is normally used to store the contents of a non-addressable register which might be destroyed by another program.
 
 ### Extended Instructions
 
+There are two cases in which a group of ARGUS machine instructions is represented by a single machine language operation code.  These so-called extended instructions are the print and program control instructions.  Each ARGUS extended instruction has its own mnemonic operation code.  The corresponding function is uniquely designated in machine language by an operation code plus a specified portion of an address field.  Thus, an ARGUS extended instruction represents the corresponding machine operation code plus the additional information required to designate the desired operation.
+
 #### Program Control Instructions
 
+One of the non-addressable registers in the Honeywell 800 is called the program control register.  Its contents represent the status of input and output buffer interlocks, the demand conditions of the various special register groups, and the sequencing counter designated to select the next instruction in each special register group.  Access to the program control register is normally limited to the Executive System, in order to insure fully automatic parallel processing.  However, the programmer can gain access to it by means of a machine instruction called control program.  The `B` address of this instruction specifies one of eight different operations to be performed on the contents of the program control register, as well as the portion of these contents to be altered.  The machine format of the control program instruction is described in the _Honeywell 800 Programmers' Reference Manual_.
+
+Six of the eight operations which can be performed by the control program instruction are represented in ARGUS notation by a group of extended instructions called program control instructions.  These six instructions perform all program control operations normally required by the programmer.  In addition, in order to make all eight control functions available, ARGUS can accept the machine instruction `MPC`.  The `B` address field of this instruction contains three hexadecimal digits which specify the desired control operation and the programs to be affected, as described in the Reference Manual.
+
+The present discussion deals with the ARGUS extended instructions.  Any of these extended operation codes may be followed by a command an an "`H`" in the command code field if the system is to hunt for a demand from another program.  Otherwise, with the exception of `STOP`, the current instruction is followed by another instruction from the same program.  After a `STOP` instruction, the system always hunts for another demand.  The S/C subfield is used in the normal manner.  The contents of the `A` address field, which may be any valid address format, are not used in executing a program control instruction.  The `B` address field contains the numbers of up to seven programs, separated by commas, to be controlled by the instruction.  An exception is the `SPCR` instruction which performs no control function and in which the `B` address field is left blank.  The number of a program is the group indicator of the special register group controlling that program.  Before a program control instruction is executed, the contents of the program control register are transferred to the location specified in the `C` address field.  This field may contain any valid memory location address form, but it is interpreted as in a sequence change instruction (see page 38).  If it is inactive, the contents of the program control register are not retained.
+
+![PCR Examples](images/code_example_p51.png?raw=true)
+```
+                DOFF        S               2,3,4,6     C,+3
+
+                SCON,H                      1,4         N,R3,3
+
+                SPCR,H      C                           CONTROL
+```
+
+The first of these sample instructions transfers the contents of the program control register to the memory location three after the location of the instruction.  Then the programs using special register groups 2, 3, 4, and 6 are turned off.  The system is not directed to hunt for another demand but to execute another instruction in the same program, under control of the sequence counter.  The second instruction stores `(PCR)` in an indirectly addressed location and turns over control of programs 1 and 4 to their respective sequence counters.  The sequence counter is specified as the source of the next instruction in the same program and the system is directed to hunt for another program demand.  The third instruction stores `(PCR)` in location `CONTROL`, transfers control of its own program to the cosequence counter, and directs the system to hunt for another program demand.
+
 #### Print Instructions
+
+From 1 to 47 automatic typewriters can be included in a Honeywell 800 system.  The standard unit is located at the console and is referred to as the console typewriter.  A second optional unit, known as the slave, is normally located somewhere near the control area.  The provision of a slave typewriter allows program printouts to be physically separated from console input information.  In addition, two programs operating in parallel can produce printout information on separate typewriters.  Up to 45 optional remote typewriters can also be included in the system.
+
+The machine instruction print is represented in ARGUS notation by three extended instructions: print alphanumeric, print hexadecimal, and print octal.  Any of these operation codes may be followed in the command code field by a comma and an "`M`" (denoting more information to follow before carriage return) or an "`MR`" (denoting more information to follow after carriage return).  If either of these carriage controls appears, the typewriter is interlocked against all other programs until another word is printed from the same program.  If neither appears, the carriage is returned after printing and the typewriter is released to print from any program.
+
+The `A` address field specifies the location of the word to be printed and may contain any valid address format.  The `B` address field contains a "`C`", an "`S`", or a two-digit number specifying the typewriter which is to print.  Either "`C`" or `00` indicates the console typewriter; "`S`" or `01` indicates the slave.  A remote station may be specified by a number from `02` to `46`, depending upon the number of such stations in the system.  If the `B` address field is left blank, the console typewriter will print.  The `C` address field may contain a programmed sequence change or it may be inactive.  The contents of this field (if active) are interpreted as in any sequence change instruction (see page 38) and stored in the counter specified by the S/C subfield.
+
+![Print Examples](images/code_example_p52.png?raw=true)
+```
+                PRA,MR      S       C,+5        C           -
+
+                PRD         C       RESULT      05          1,14
+```
+
+The first sample instruction causes the console typewriter to print in alphanumeric form the contents of the location five after that of the instruction itself.  The typewriter is interlocked to receive another print instruction from this program (after carriage return) and the next instruction is selected by the sequence counter.  Since the `C` address is inactive, there is no programmed sequence change.  The second instruction causes remote typewriter `05` to print in hexadecimal form the contents of location `RESULT`.  The carriage is returned and the interlock released.  The cosequence counter is changed to the contents of `X1` augmented by `14`, and control is transferred to this location.
 
 ## Section VIII: Assembly Control Instructions
 
