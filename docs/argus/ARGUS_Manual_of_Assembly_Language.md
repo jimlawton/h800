@@ -437,7 +437,7 @@ Normally every symbolic tag appearing in the location field is assigned an absol
 
 In addition to their use in referencing program words directly, symbolic tags may be used to represent other values, such as complete addresses in indexed or indirect form, or program parameters.  The programmer assigns the values of such tags using special ARGUS control instructions provided for this purpose.  These instructions, called `EQUALS`, `ASSIGN`, and `TAS` (temporary assign), are described in [Section VIII](#section-viii-assembly-control-instructions).
 
-<a name="section-iv-note-1">1</a> PTS derail instructions are an exception to this rule, as described in the _ARGUS Program Test System Manual_, DSI-38.
+<a name="section-iv-note-1">1</a>PTS derail instructions are an exception to this rule, as described in the _ARGUS Program Test System Manual_, DSI-38.
 
 ### Special Register Tags
 
