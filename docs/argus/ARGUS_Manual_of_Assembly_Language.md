@@ -918,27 +918,136 @@ The first sample instruction causes the console typewriter to print in alphanume
 
 ## Section VIII: Assembly Control Instructions
 
+The ARGUS assembly language includes a group of instructions which the programmer uses to control the assembly of his program.  These are punched one per card like machine instructions, although they are not assembled and do not result in the inclusion of any machine words in the program.  Each of these instructions may be used as many times as required within a program.
+
 ### SETLOC
+
+The primary function of the `SETLOC` instruction is to direct the subsegmentation of a program segment.  This function can only be accomplished by the use of `SETLOC`.  The programmer may also use the `SETLOC` instruction to direct the allocation process by specifying a memory location address, a bank indicator, a group indicator, or any combination of these elements.  To the extent that the programmer does not control allocation, this process is handled automatically by the Assembly Program.
+
+The first `SETLOC` instruction which specifies a given subsegment number is called the defining `SETLOC` for that subsegment.  ARGUS assigns the following coding to the subsegment indicated until a `SETLOC` is processed which specifies a different subsegment.  A segment in which no subsegments are specified is assumed to consist of a single subsegment.  In the case of a common subsegment, the subsegment number must be followed by the letter "`C`" on the defining `SETLOC` (the first `SETLOC` in any segment of the program which specifies that subsegment number).  In every segment in which the common subsegment appears, it must be represented by a `SETLOC` which specifies the same subsegment number.  (The "`C`" following this number is optional on all but the defining `SETLOC`; however, if the subsegment is not specified as common on the defining `SETLOC`, it must not so be specified on any `SETLOC`.)
+
+The programmer may either tag a `SETLOC` instruction or leave the location field blank.  If the instruction is tagged, the tag may be preceded by an "`L`" (link tag), but it may not be preceded by "`F`", "`S`", "`B`" (mask tag), "`Z`" (special register tag), or "`X`" (out-of-sequence tag).  If the `SETLOC` specifies a subsegment, the command code is followed by a comma and a subsegment number from `1` to `7` (and a "`C`" if this is the defining `SETLOC` for a common subsegment).
+
+The programmer may designate a main memory address ion the `A` address field of a `SETLOC` instruction, a bank indicator in the `B` address field, a group indicator in the `C` address field, or any combination of these elements, subject to the rules stated below.  If these options are not exercised, the Assembly Program assumes complete responsibility for the allocation of subsegments, guarding against overlap among subsegments and, wherever possible, against crossing a bank boundary within a subsegment.  If the programmer uses the `SETLOC` instruction to control allocation, he must assume these responsibilities.  For example, if the defining `SETLOC` is used to specify the initial location of a subsegment, enough room must be allowed for any mask groups, subroutines, and/or out-of-sequence words to be placed in the previous subsegment.  If the programmer assumes control of allocation, he should assign an initial location which is divisible by 64 to the first subsegment in each memory bank.<sup>1(#section-viii-note-1)</sup>  If no `SETLOC` precedes the first line of main coding in a segment, the Assembly Program assumes the existence of a defining `SETLOC` for subsegment 1, and the first line of main coding is allocated to bank `0`, location `0512`.
+
+<a name="section-viii-note-1">1</a>See the _Executive System Manual_.
+
+In a defining `SETLOC`, the `A` address field may be blank or it may contain a number up to `2047` or a symbolic tag which is equated to a number.  The tag may be followed by an address modifier in the range ±16,383, provided that the resulting subaddress is nit greater than `2047`.  Unless the `A` address field is blank, ARGUS converts its contents into an 11-bit subaddress which is placed in the subaddress bit positions of the current location counter (`CLC`).  The `B` address field of a defining `SETLOC` may be blank or it may contain a "`B`" followed by a hex number from `0` to `G` to be placed in the bank indicator bit positions of the `CLC`.  The contents of the `CLC`, either modified or unmodified, specify the location of the first in-line coding word following the `SETLOC`.
+
+If the defining `SETLOC` for a subsegment does not alter the contents of the `CLC` in any way (i.e., the `A` and `B` address fields are both blank), no `SETLOC` in that subsegment may specify a bank indicator.  However, any other (non-defining) `SETLOC` in that subsegment may specify a main memory address in that subsegment, using a tag which is assigned to such an address or using `C`, ± a number.  The tag may be followed by an address modifier in the range ±16,383.  If the tag has both a memory assignment and a complex assignment, the memory assignment is used.  `C`, ±0 is equivalent to a blank or inactive `A` address and refers to the next available location in the subsegment.  If the defining `SETLOC` for a subsegment does alter the contents of the `CLC` in any way, any other `SETLOC` in that subsegment may specify a main memory subaddress, a bank indicator, or both, or it may specify a tag which is assigned to a main memory address, using any of the above formats.
+
+The `C` address field in any `SETLOC` may be blank or it may contain a "`G`" followed by a number from `0` to `7` which designates the special register group to be used.<sup>1(#section-viii-note-2)</sup>  If a group indicator is specified, the program is assembled to use the specified group and all following coding words which are marked by special register tags are loaded into that group.  If the `C` address field is blank, the previous group specification remains in effect.  If no group has been previously specified within the same segment, the Assembly Program uses group `1`.  As noted in [Section VI](#section-vi-program-structure), it is the programmer's responsibility to specify a group in which registers `S4` through `S7` are available if his program uses those registers.  (Note that these registers are normally unavailable in group `1`.)  The programmer may use as many special register groups as he requires and may change groups as often as necessary.
+
+<a name="section-viii-note-2">1</a>Note that a program assembled to use group 0 may not run properly under control of the Program Test System.
 
 ### EVEN
 
+Each special register group includes an unprogrammed transfer register (`UTR`), which should be set up with the initial address of a group of instructions to handle the various unprogrammed transfer conditions described in [Appendix E](#appendix-e-honeywell-800-machine-instructions).  This initial address must be an even number for proper execution of the unprogrammed transfers.  The Assembly Program assigns the next even-numbered address in sequence to the word following the `EVEN` instruction.  The programmer should write a symbolic tag in the location field of of either the `EVEN` instruction or the following word.  This tag may be a link tag, but it may not be a mask tag, a special register tag, or an out-of-sequence tag.  The special address constant (see [Section IX](#section-ix-comstamts)) may be used to load the address assigned to this tag into the `UTR`.  The three address fields are not used in the `EVEN` instruction.
+
+It is the programmer's responsibility to set up the `UTR` and to provide enough instructions following `EVEN` to provide for any unprogrammed transfer situations which may arise in his program.  he may use `SETLOC`, `MODLOC` (below), or any other valid method in place of `EVEN` to assure the assignment of an even address for loading the `UTR`.
+
 ### SIMULATE
+
+Every simulator routine is preceded by the instruction `SIMULATE`, which is punched with a symbolic tag in the location field to identify the routine.  The three address fields are not used in the `SIMULATE` instruction.  The tag of a `SIMULATE` instruction may be a link tag, but not a mask tag, special register tag, or out-of-sequence tag.  The Assembly Program assigns this tag to the next location in sequence which has three binary ones (octal `7`) in its low-order subaddress bits.  The first word of the simulator routine is then assigned to the following location.  To set up and perform the routine, the tag of the `SIMULATE` instruction is referenced in the command code field of a simulator instruction, as described in [Section VII](#section-vii-machine-instructions).
 
 ### MODLOC
 
+This instruction directs the Assembly program to allocate the following word to the next location whose address is a multiple of 2, 4, 8, 16, 32, or 64, as specified by the number punched in the `A` address field.  The `B` and `C` address fields are not used.  Any tag written in the location field of the `MODLOC` instruction, or of the following word, is assigned to the address of the location to which the following word is allocated.  This tag may be a link tag, but not a mask tag, special register tag, or out-of-sequence tag.  Note that the address to which the following word is assigned always ends in from one to six binary zeros, depending upon the number specified in the `A` address field.
+
+![MODLOC Examples](images/code_example_p56_1.png?raw=true)
+```
+    SELTYPE     MODLOC              8
+```
+
+This instruction causes the Assembly Program to allocate the following word to the next location in sequence whose address is a multiple of 8 and to assign the tag `SELTYPE` to the address of this location.
+
 ### ASSIGN
+
+This instruction assigns a tag to a complex address, such as an indexed or indirect address.  The programmer writes the tag to be assigned in the location field and the complex address in the `A` address field.  The `B` and `C` address fields are not used.  The tag in the location field may not be a link tag, a special register tag, a mask tag, or an out-of-sequence tag; however, it may be assigned elsewhere in the program to a memory location address (as described on page 20).  The use of the `ASSIGN` instruction allows the programmer to change item formats and to reassign special registers during reassembly, changing only the `ASSIGN` instructions rather than changing every reference to the corresponding addresses.  For example, to assign the tag `GROSSPAY` to indexed address `3,5`, and the tag `PRODUCT` to indirect address `N,R3,12`, the programmer writes the following two instructions.
+
+![ASSIGN Examples](images/code_example_p56_2.png?raw=true)
+```
+    GROSSPAY    ASSIGN              3,5
+
+    PRODUCT     ASSIGN              N,R3,12
+```
 
 ### TAS (Temporary Assignment)
 
+This instruction also assigns a tag to a complex address.  However, a tag which has been assigned by means of a `TAS` instruction may be freely reassigned to another complex address by means of another `TAS`.  The instruction is written in the same format as `ASSIGN` and the same rules apply to the types of tags that may be assigned.  The programmer may use the `TAS` instruction to reference the same set of data by several different complex addresses, using only a single tag.  In the following example, the tag `DATA` is first assigned to the indexed address `3,0`, then later reassigned to the indirect address `N,R1,1`.
+
+![TAS Examples](images/code_example_p57.png?raw=true)
+```
+    DATA        TAS                 3,0
+
+    DATA        TAS                 N,R1,1
+```
+
 ### EQUALS
+
+The `EQUALS` instruction assigns a value to a symbolic tag.  The assigned value may be an integer up to `16,383`, another symbolic tag, or an expression which is an algebraic combination of up to six integers and tags.  Addition (`+`), subtraction (`-`), multiplication (`*`), and division (`/`) may be used to combine integers and symbols.  These operations are performed in the following order:
+1. Multiplication and division;
+2. Addition and subtraction.
+Parentheses are not permitted in the combination of integers and symbols.  This instruction is useful in combining programs which use different symbols and in altering such parameters as data block lengths.
+
+The tag to be equated is written in the location field and must not be a link tag, mask tag, special register tag, or out-of-sequence tag.  The equated value is written starting in the `A` address field and continuing through as many consecutive columns as necessary.  Any symbol used in an equated expression must have been previously assigned either to a memory location address or an integer.  If the only term in the equated expression is a tag which has both an absolute and a complex assignment, then the same two values are assigned to the tag in the location field.  However, if such a tag is used in an algebraic combination of terms, its absolute value is used to compute the expression and its complex value is ignored.
+
+Care must be taken in combining symbols which are assigned to memory addresses, since some combinations are meaningless (e.g., the product of two memory addresses).  The programmer may determine whether or not a given combination of symbols is meaningful by examining it in terms of "dimension", which is defined as follows: the dimension of an integer or of a symbol assigned to an integer is defined to be `0`, while the dimension of a symbol assigned to a memory location is defined to be `1`.  The dimension of an equated expression must be `0` or `1`, where:
+1. The dimension of the sum (difference) of two terms equals the sum (difference) of their dimensions; and
+2. The dimensions of the two factors in a product or a quotient must both be `0`.
+In addition to these dimensional requirements, symbols which are combined must have been assigned in the same subsegment and by the same location counter (`CLC` or `XLC`).  A mask tag is not permitted in an equated expression unless it is the only term in the expression.
+
+[EQUALS Examples](images/code_example_p58.png?raw=true)
+```
+    ENDMATRX    EQUALS          MATRIX + M * N - 1
+
+    PAYROLL     EQUALS          PROLL
+    ALENGTH     EQUALS          APRODUCT - BPRODUCT
+```
+
+The first instruction above assigns the tag `ENDMATRX` to the final location of an `M` by `N` matrix whose initial location is tagged `MATRIX`.  Since `M` and `N` are integers, the dimension of the entire expression is `1`.  The second instruction equates the tag `PAYROLL` to the tag `PROLL`, which might be used to represent the same quantity in another program.  The third instruction equates the tag `ALENGTH` to the difference of two memory locations, which is the length of a table and has a dimension of `0`.  As stated above, the tags `APRODUCT` and `BPRODUCT` must have been assigned in the same subsegment and by the same location counter.
 
 ### RESERVE
 
+This instruction is used to reserve a block of memory locations for data or working storage.  the number of locations to be reserved is specified by means of an integer, a tag, or a combination of integers and tags which starts in the `A` address field and continues through as many consecutive columns as necessary.  The same rules apply for combining integers and tags as in the `EQUALS` instruction (above), except that the dimension of the combination must be `0`.  Any tag which appears in the combination must have been previously assigned to an absolute value (memory location address or integer).  If such a tag has an additional complex assignment, this assignment is ignored and the absolute assignment is used in computing the value of the combination.  If the programmer writes a tag in the location field, it is assigned to the first reserved location.  This may be a link tag or an out-of-sequence tag, but not a mask tag or a special register tag.  For example, the first instruction below reserves `100` locations starting at the location tagged `INPUT`.  The second instruction reserves `M` times `N` locations starting at the location tagged `MATRIX` (where `M` and `N` have been previously assigned integer values).
+
+[RESERVE Examples](images/code_example_p59.png?raw=true)
+```
+    INPUT       RESERVE         100
+
+    MATRIX      RESERVE         M * N
+```
+
 ### MASKGRP
+
+Before any masks can be designated, generated, or referenced in a segment, the control instruction `MASKGRP` must be written to assign a shift group number, a field group number, or both.  The only exception is at the beginning of a segment, where any designated or generated masks are automatically assigned to field and shift groups `0` if they are not preceded by a `MASKGRP` instruction.
+
+The location field is not used in a `MASKGRP` instruction.  The `A` address field of this instruction may specify the group number of a shift mask group (an "`S`" followed by a comma and a number from `0` to `15`), and the `B` address field may designate the group number of a field mask group (an "`F`" followed by a comma and a number from `0` to `15`).  The operation code may be followed by a comma and the identification number of the subsegment in which the specified mask groups are to be stored.  If the subsegment number is omitted, the specified mask groups are stored in the subsegment which is in control at the end of the segment.  A shift group and a field group having the same group number (e.g., `S,2` and `F,2`) must be stored in the same subsegment.  Up to `16` field mask groups and `16` shift mask groups may be set up within any segment.  However, any groups which are stored in a common subsegment are included in the total number of groups for every segment of the program and are assumed by the Assembly Program to be of maximum size.  Mask groups can be stored in a subsegment previously defined as common but not in a subsegment which is later defined as common.
+
+A `MASKGRP` instruction directs that all of the following designated or generated masks belong to the groups specified until another `MAKSGRP` specifies different groups.  The Assembly Program assigns a mask base address to each specified group.  The base of a group of field masks must be a multiple of 32; that of a group of shift masks must be a multiple of 64.  Each designated or generated field or shift mask is assigned the next sequential location within the proper group until either the group is full or a new group of the same type is specified.  Any mask assigned with a mask indicator of "`B`" (for use with both shift and field instructions) must be preceded by a `MASKGRP` instruction in which the group numbers are equal.  When a "`B`" mask is assembled, an overlapping pair of mask groups is set up which can include up to 32 field, shift, or "`B`" mask and up to 32 additional shift masks.
+
+The `MASKGRP` instruction also directs that all following mask references are to masks in the specified groups until different groups are specified.  Proper execution of a shift instruction or a masked field instruction requires that the mask index register be set up with the base address of the desired mask group.  This is done by loading or transferring a `MASKBASE` constant (see [Section IX](#section-ix-constants)) into the mask index register.  Since machine instructions can only reference masks in the current groups, any reference to a mask in another group must be preceded by both a new `MASKGRP` instruction and the necessary coding to change the mask index register setting.
+
+[MASKGRP Examples](images/code_example_p60.png?raw=true)
+```
+                MASKGRP,2       S,1         F,1
+
+                MASKGRP,2                   F,2
+
+                MASKGRP         S,4         F,3
+```
+
+The first `MASKGRP` instruction above designates that all following shift masks are in shift group `1` and all field masks in field group `1` until the next `MASKGRP` is processed.  Furthermore, these mask groups are to be stored in subsegment `2`.  If any "`B`" masks appear in these groups, the groups will be overlapping; otherwise, storage will be provided for the full 96 masks if required.  Should the entire field mask group be assigned while space remains for additional shift masks, for example, the second `MASKGRP` instruction can be written to set up field mask group `2` in subsegment `2`.  Any reference to a field group in group `1` after this second group is designated must be preceded by a `MASKGRP` instruction redesignating field group `1`.  The third instruction above may be written at a later point in the program to designate shift group `4` and field group `3`,  Since no subsegment number is written, these groups will be stored in the subsegment which is in control at the end of the segment.  The latter groups may not include any "`B`" masks as their group numbers are not identical.
 
 ### END
 
+Every program being assembled should include an `END` card, though the position of this card in the program deck is irrelevant.  The information punched on the `END` card is provided for use by the executive System.  The command code is followed by a comma and the number of the special register group to be given control at the start of the program.<sup>1(#section-viii-note-3)</sup>  If no group is specified, control is given to group `1`.  The program name is punched in the `A` address field and the name of the first segment to be loaded is punched in the `B` address field.  The location and `C` address fields are not used.  An existing program does not require a new `END` card for reassembly unless any of the information on the original `END` card is to be changed.  When a program is loaded by Executive, the segment named is loaded first.  This segment must contain coding to load the sequence counter of the group specified as first in control.
+
+<a name="section-viii-note-3">1</a>Note that a program which gives initial control to group 0 may not operate properly under control of the Program Test System.
+
 ### The RES Table
+
+During assembly, every symbol that appears in the `A`, `B`, or `C` address field of a `SETLOC`, `ASSIGN`, `TAS`, `EQUALS`, or `RESERVE` instruction becomes an entry in an internal table called the `RES` table.  Regardless of its number of appearances in these instructions, no symbol becomes more than one entry in the `RES` table.  This table which is written out with each assembled program on the symbolic program tape (see [Appendix B](#appendix-b-symbolic-program-tape-layout)), may contain up to `200` entries per program when assembling in two banks of main memory, up to `2039` entries when assembling in four banks.
 
 ## Section IX: Constants
 
