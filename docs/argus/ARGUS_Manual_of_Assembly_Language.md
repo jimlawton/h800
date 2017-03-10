@@ -1002,6 +1002,7 @@ In addition to these dimensional requirements, symbols which are combined must h
     ENDMATRX    EQUALS          MATRIX + M * N - 1
 
     PAYROLL     EQUALS          PROLL
+
     ALENGTH     EQUALS          APRODUCT - BPRODUCT
 ```
 
