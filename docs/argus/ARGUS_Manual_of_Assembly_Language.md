@@ -997,7 +997,7 @@ Care must be taken in combining symbols which are assigned to memory addresses, 
 2. The dimensions of the two factors in a product or a quotient must both be `0`.
 In addition to these dimensional requirements, symbols which are combined must have been assigned in the same subsegment and by the same location counter (`CLC` or `XLC`).  A mask tag is not permitted in an equated expression unless it is the only term in the expression.
 
-[EQUALS Examples](images/code_example_p58.png?raw=true)
+![EQUALS Examples](images/code_example_p58.png?raw=true)
 ```
     ENDMATRX    EQUALS          MATRIX + M * N - 1
 
@@ -1011,7 +1011,7 @@ The first instruction above assigns the tag `ENDMATRX` to the final location of 
 
 This instruction is used to reserve a block of memory locations for data or working storage.  the number of locations to be reserved is specified by means of an integer, a tag, or a combination of integers and tags which starts in the `A` address field and continues through as many consecutive columns as necessary.  The same rules apply for combining integers and tags as in the `EQUALS` instruction (above), except that the dimension of the combination must be `0`.  Any tag which appears in the combination must have been previously assigned to an absolute value (memory location address or integer).  If such a tag has an additional complex assignment, this assignment is ignored and the absolute assignment is used in computing the value of the combination.  If the programmer writes a tag in the location field, it is assigned to the first reserved location.  This may be a link tag or an out-of-sequence tag, but not a mask tag or a special register tag.  For example, the first instruction below reserves `100` locations starting at the location tagged `INPUT`.  The second instruction reserves `M` times `N` locations starting at the location tagged `MATRIX` (where `M` and `N` have been previously assigned integer values).
 
-[RESERVE Examples](images/code_example_p59.png?raw=true)
+![RESERVE Examples](images/code_example_p59.png?raw=true)
 ```
     INPUT       RESERVE         100
 
@@ -1028,7 +1028,7 @@ A `MASKGRP` instruction directs that all of the following designated or generate
 
 The `MASKGRP` instruction also directs that all following mask references are to masks in the specified groups until different groups are specified.  Proper execution of a shift instruction or a masked field instruction requires that the mask index register be set up with the base address of the desired mask group.  This is done by loading or transferring a `MASKBASE` constant (see [Section IX](#section-ix-constants)) into the mask index register.  Since machine instructions can only reference masks in the current groups, any reference to a mask in another group must be preceded by both a new `MASKGRP` instruction and the necessary coding to change the mask index register setting.
 
-[MASKGRP Examples](images/code_example_p60.png?raw=true)
+![MASKGRP Examples](images/code_example_p60.png?raw=true)
 ```
                 MASKGRP,2       S,1         F,1
 
