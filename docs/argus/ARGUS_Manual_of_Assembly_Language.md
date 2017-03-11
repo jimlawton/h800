@@ -1052,29 +1052,162 @@ During assembly, every symbol that appears in the `A`, `B`, or `C` address field
 
 ## Section IX: Constants
 
+Data constants in a number of different formats can be assembled.  In addition, Assembly recognizes several control constants which are used for special functions.  Each type of constant is identified by a constant code punched in the command code field.
+
 ### Data Constants
+
+The seven types of data constants recognized by Assembly are:
+```
+    ALF     alphanumeric            FXBIN   fixed-point binary
+    OCT     octal                   FLBIN   floating-point binary
+    DEC     fixed-point decimal     FLDEC   floating-point decimal
+                                    EBC     extended binary
+```
+Several constants of the same type may be combined on a single card, the maximum number depending on the type of constant.  Alphanumeric, octal, and fixed decimal constants are specified in the desired notation.  All of the other constants are specified in fixed decimal notation and translated by Assembly.  The constants are punched starting in the `A` address field and continuing through as many consecutive columns as necessary (up to column 65).  All data constants except alphanumeric are separated by commas and may include spaces to aid in visual checking; these spaces are ignored by Assembly.
+
+The location field of a card which contains a single data constant may be blank or it may contain any standard tag configuration (see [Section IV](#section-iv-tags)).  The location field of a card which contains more than one constant may be blank or it may contain `X`, or a symbolic tag, or `X`, followed by a symbolic tag.  Any tag written in this field references the first constant on the card.  All constants punched on the same card are allocated to consecutive memory locations, under control of the designated location counter, so that they may be referenced by address arithmetic.
 
 #### ALF (Alphanumeric Constant)
 
+If the constant code (`ALF`) is followed by a comma and a number from `1` through `5`, ARGUS assembles the indicated number of eight-character constants from the contents of columns 24 through 31, 32 through 39, 40 through 47, etc.  Spaces are valid characters and are assembled by ARGUS.  Sentences or related words may be punched consecutively across a card through column 63.  If no information follows `ALF` in the command code field, `n` is assumed to be `1` and a single constant is assembled from the contents of columns 24 through 31.
+
+Alternatively, `ALF` may be followed by a comma and any character other than `0` through `5`, which is ten interpreted as a terminating character but is not assembled.  This character is repeated following the last word punched and should not appear in any of the punched constants (see second example below).
+
+![ALF Examples](images/code_example_p64_1.png?raw=true)
+```
+    ALPHA 1     ALF,4           NEVER BEFORE IN HISTORY HAVE SO
+
+                ALF,%           MANY OWED SO MUCH TO SO FEW %
+
+    ALPHA 2     ALF,5           A      B      C     D     E
+```
+
 #### OCT (Octal Constant)
+
+Up to 16 unsigned or 15 signed octal digits per word may be punched starting in column 24 and continuing through column 65.  If 15 signed digits are specified, the most significant digit must be less than 4 (as shown in Figure 2, page 8).  Words are separated by commas and stored in consecutive memory locations.  Signed words are justified to the right, i.e., the least significant digit is placed in digit position 16, the sign is placed in position 1 (`0000` if negative, `1111` if positive), and the positions between the sign and the most significant digit are filled with zeros.  Unsigned words are justified to the left; i.e., the most significant digit is placed in digit position 1 and positions following the least significant digit are filled with zeros.
+
+![OCT Examples](images/code_example_p64_2.png?raw=true)
+```
+    OCTCON 1    OCT             0123456776543210,7654321001234567
+
+    OCTCON 2    OCT             +175,-2,324,+324150416723454
+```
 
 #### DEC (Fixed Decimal Constant)
 
+Decimal constants are punched from column 24 up to column 65 and are separated by commas.  Each word may contain up to 11 signed or 12 unsigned decimal digits.  Any hexadecimal digit (`0`-`9` and `B`-`G`) may be specified.  Unsigned decimal constants are justified left and signed decimal constants are justified right.  If the programmer wishes to position a constant other than by the above rules, he may follow the constant with "`P`" and a number from `1` to `12` specifying he storage position of the units digit.  A decimal point may be written to indicate the units digit; otherwise, the low-order digit is assumed to be the units digit.  If a decimal point is written, the programmer must specify the position of the units digit.
+
+![DEC Examples](images/code_example_p65_1.png?raw=true)
+```
+    DECCON 1    DEC             123456789,+12,-34,123.516P7,789BCDE,GGGG
+
+                DEC             2
+```
+
 #### FXBIN (Decimal to Fixed Binary Translation)
+
+Fixed-point binary constants to be converted by Assembly are specified by their decimal equivalent.  The constants, separated by commas, are punched starting in column 24 and are stored in consecutive locations in memory.  Each constant may contain up to 14 decimal digits, a decimal point, and a sign.  If no sign is specified, a plus sign is assumed.  If a decimal point is specified, the bit position of the units bit must be designated by a "`B`" and a number from `4` to `48` immediately following the constant.  If there is no decimal point, the constant may have any absolute value up to 2<sup>44</sup> - 1 (or 17,592,186,044,415).  If the decimal point is at the far left, the constant is accurate up to ±2<sup>-44</sup>; i.e., it may contain up to 14 significant digits.  If the decimal point is anywhere else, its position determines the maximum value of the constant.
+
+![FXBIN Example](images/code_example_p65_2.png?raw=true)
+```
+    FXBCON 1    FXBIN           +3,+24,256.125B13,-32.832832B18
+```
 
 #### FLDEC (Floating-Point Decimal Constant)
 
+Floating-point decimal constants are punched starting in column 24 and separated by commas.  They may be specified with a decimal point, an explicit exponent, or both.  An explicit exponent consists of an "`E`" and a signed or unsigned exponent immediately following the constant.  However such constants are specified, they are converted to floating-point form and normalized by Assembly.  Each constant may contain up to 10 signed decimal digits and may range in value from 10<sup>-65</sup> virtually to 10<sup>63</sup>.  Unsigned constants and exponents are considered positive.  The structure of a floating-point constant is shown in Figure 2, page 8.
+
+![FLDEC Example](images/code_example_p66_1.png?raw=true)
+```
+    FLOCON 1    FLDEC           +123.456E+15,-12489E-20,14856.12389
+```
+
+When the three sample constants above are converted and normalized, they will assume the following forms:
+- `+123.456E+15` becomes `+.123456` times 10<sup>18</sup>
+- `-12489E-20`   becomes `-.12489` times 10<sup>-15</sup>
+- `14856.12389`  becomes `+.1485612389` times 10<sup>5</sup>
+
 #### FLBIN (Floating-Point Binary Constant)
+
+These constants are punched in the same manner as floating-point decimal constants.  They are converted to floating-point binary form and normalized by Assembly.  Each constant may contain up to 13 signed decimal digits and may range in value approximately from 10<sup>-78</sup> to 10<sup>76</sup> (16<sup>-65</sup> to 16<sup>63</sup>).  This is equivalent to the range of 2<sup>-260</sup> to 2<sup>252</sup>.  In floating-point binary form, the exponent represents a power of 16.  Unsigned constants are considered positive.
+
+![FLBIN Example](images/code_example_p66_2.png?raw=true)
+```
+    FLBCON      FLBIN           +123.456E+15,-12489E-20,14856.12389
+```
 
 #### EBC (Extended Binary Constant)
 
+Extended binary constants are punched in the same format hand have the same range of values as floating-point binary constants.  Each constant may contain up to 25 signed decimal digits.  These constants are converted into normalized, double-precision, floating-point binary numbers, retaining 80 binary digits of the mantissa.  Assembly stores the high-order 40 bits, with proper exponent and sign, as one machine word.  It stores the low-order 40 bits, with the same sign and an exponent 10 less than that of the high-order word, as the following word.
+
+![EBC Example](images/code_example_p66_3.png?raw=true)
+```
+    EBCON       EBC             +123.456E+15,-12489E-20,14856.12389
+```
+
 ### Control Constants
+
+The Assembly Program recognizes the following control constants:
+```
+    SPEC        special address         M           mixed
+    CAC         complete address        TAC         tape address
+    MASKBASE    mask base               LINK        linkage
+    CONTROL     program control         SEGNAME     segment name
+                                        SUBCALL     subroutine call
+```
+These constants are punched one to a card.
 
 #### SPEC (Special Address Constant)
 
+A special address constant specifies an address to be stored in special register format.  If the location field contains a special register tag (see page 18), this constant is loaded directly into the designated register.  Otherwise, it is allocated normally in memory in the proper form for transfer to a special register (or for comparison with the contents of a special register).  As already noted, a special register has the capacity to store a sign, a bank or group indicator, and a subaddress.
+
+The `A` and `B` address fields are not used in a special address constant.  The sign of the specific address may be written in the S/C column.  If no sign is included, a positive sign is assumed.  If no information follows the constant code, the contents of the `C` address field are interpreted as a complete address which may be specified in several different ways:
+1. An integer up to 16,383;
+2. A symbolic tag which has an absolute assignment, with or without an address modifier in the range ±16,383.  If the tag has both an absolute and a complex assignment, the absolute assignment is used;
+3. `C`, with or without an address modifier in the range ±16,383.  `C`, is replaced by the current contents of the `CLC`;
+4. `X`, with or without an address modifier in the range ±16,383.  `X`, is replaced by the current contents of the `XLC`; or
+5. Blank which is replaced by a bank indicator and subaddress of all zeros.
+
+If the constant code is followed by a comma, a "`G`", and a group indicator (`0`-`7`), the `C` address field is interpreted as a special register address which may be specified in several different ways:
+1. An integer up to 2047;
+2. A symbolic tag which is equated to an integer, with or without an address modifier in the range ±16,383, provided that the result does not exceed 2047;
+3. A direct (absolute or mnemonic) special register address or an indirect address;
+4. A tag which has a special register assignment or a complex assignment; or
+5. Blank which is replaced by a special register address of all zeros.
+
+Any reference to the read-write address counters associated with a tape or peripheral control unit must be relocated independently of other references to special register groups.  These counters are addressed using special address constants with indexed special register addresses (see page 25).  The constant code (`SPEC`) is followed by a comma and the control unit indicator (`A`-`H`) corresponding to the desired counter.  The `C` address field may contain any of the above formats, but should result in a configuration that can be used successfully as the index register contents in an indexed special register address.  Assembly combines the subaddress portion of this information with the group indicator which corresponds to the specified control unit indicator to form a complete address.  Normally, if a `SPEC` constant designates a control unit indicator, the `C` address field contains either the direct address of the desired counter, an indirect address which references the desired counter, or 0.  When a `SPEC` constant of this type is stored in an index register, it can be used with an indexed special register address of the proper type to address the desired read-write counter.
+
+The special address constant is also used to set up the stopper address in special register format, as mentioned in Sections [V](#section-v-addresses) and [VI](#section-vi-program-structure).  In this case, the constant is written with the symbolic tag `STOPPER` in the `C` address field and no information following the constant code.
+
+![SPEC Examples](images/code_example_p68.png?raw=true)
+```
+    Z,R2        SPEC                                        PAYROLL
+                SPEC,G5                                     Z,CSC
+    Z,X1        SPEC                                        STOPPER
+                SPEC,A                                      0
+```
+
+The first special address constant above loads special register `R2` of the controlling group with the memory location address assigned to the tag `PAYROLL`.  This tag must appear in the location field of another card.  The second constant stores the address of the cosequence counter of group `5` in special register form.  The third stores the complete address of the stopper location in index register `1` of the controlling group.  The last constant stores a complete address consisting of a plus sign, the group indicator which corresponds to control unit indicator `A`, and a subaddress of all zeros.
+
 #### CAC (Complete Address Constant)
 
+A complete address constant specifies up to three complete addresses to be stored in one memory location.  The constant consists of three 16-bit groups, each containing a sign, bank indicator, and subaddress in special register format.  It is used to store addresses which are to be transferred to special registers, but it may not be compared directly with the contents of a special register, unless the left-most two addresses are all zeros.
+
+The three addresses which are to be stored in the left-most, middle, and right-most groups are punched in the `A`, `B`, and `C` address fields, respectively.  Each address may be specified as an integer (up to 16,383) or as a symbolic tag, with or without an address modifier in the range ±16,383.  If a tag is written, it must have an absolute assignment.  If it has an additional complex assignment, the absolute assignment is used.  If any field is left blank, the corresponding group will contain all zeros.  The S/C column may contain a sign to be included in all of the three addresses which are not blank.  If no sign is written, a plus sign is assumed.
+
+Note that the address written in the `A` address field can be stored in a special register by means of a 32-bit shift to the right, the address in the `B` address field by means of a 16-bit shift to the right, and that in the `C` address field by means of a transfer instruction.
+
+![CAC Examples](images/code_example_p69.png?raw=true)
+```
+                CAC                 PAYROLL     4678        HOURS - 653
+                CAC         -                   INVENTRY    TOOLS
+```
+
+The first constant results in a word containing, from left to right, the complete address assigned to the tag `PAYROLL`, the absolute address `4678` and the address `653` before that assigned to the tag `HOURS`.  All three addresses have positive signs.  The second constant results in a word containing, from left to right, an address of all zeros and the addresses assigned to the tags `INVENTRY` and `TOOLS`.  The addresses in the `B` and `C` address fields are combined with negative signs.
+
 #### MASKBASE (Mask Base Address Constant)
+
+A single setting of the mask index register (`MXR`) stores two mask base addresses: the base of a group of up to 32 field masks and the base of a group of up to 64 shift masks.  These two addresses must be in the same bank, as the mask index register contains only one bank indicator which is used with both bases.
 
 #### CONTROL (Program Control Constant)
 
