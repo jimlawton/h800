@@ -1209,17 +1209,80 @@ The first constant results in a word containing, from left to right, the complet
 
 A single setting of the mask index register (`MXR`) stores two mask base addresses: the base of a group of up to 32 field masks and the base of a group of up to 64 shift masks.  These two addresses must be in the same bank, as the mask index register contains only one bank indicator which is used with both bases.
 
+The `MASKBASE` constant contains shift group number in the `A` address field and a field group number in the `B` address field.  The `C` address field and the S/C column are not used.  This constant results in a special register word containing the base addresses of the two groups specified, in the format required by the mask index register.  The safest way to insure that both base addresses are in the same memory bank is to write the numbers of two groups which are specified by the same `MASKGRP` instruction, or which are at least in the same subsegment.
+
+If the `MASKBASE` constant is tagged `Z, MXR` in its location field, the mask index register will be loaded directly.  Otherwise, the `MXR` must be loaded by means of a programmed transfer.  Any reference to a mask in a given group must be preceded by the coding which sets up the `MXR` with the base address of that group.  If the programmer desires to change only the shift mask base in the `MXR`, for example, he may load a `MASKBASE` constant containing the new shift group number and repeating the previously loaded field group number.
+
+In order to give the programmer more control over the allocation of masks, it is possible under certain conditions to set up a mask group without using the `MASKGRP` instruction and without designating the masks by mask tags.  It is the programmer's responsibility to insure that the masks in such groups are stored in consecutive locations and that the rules governing mask base addresses are met.  (The `SETLOC` or `MODLOC` instruction can be used to comply with these modular restrictions.)  Mask groups which are set up in this manner can be referenced by loading the `MXR` with a `MASKBASE` constant which contains the tag of the shift mask base in the `A` address field and the tag of the field mask base in the `B` address field.  The masks themselves may be tagged (without mask indicators) and referenced symbolically in shift and field instructions in the normal manner.  These tags must have absolute assignments; if they also have complex assignments, the absolute assignments will be used.  Address arithmetic may be used in referencing masks of this type, as well as in the `A` and `B` address fields of the `MASKBASE` constant.  More over, this constant may specify one mask group symbolically and the other by group number, provided that both are in the same memory bank.  This method of setting up mask groups may not be used in any segment which includes subroutines, macro routines, or generated masks.  Under any of these conditions, the `MASKGRP` instruction must be used.
+
+![MASKBASE Examples](images/code_example_p71.png?raw=true)
+```
+    Z,MXR       MASKBASE            S,1         F,1
+                MASKBASE            S,1         F,2
+                TX                  C,-1                    Z,MXR
+    Z,MXR       MASKBASE            SBASE       FBASE
+```
+
+The first constant above results in a special register word containing the base addresses of shift group `1` and field group `1` in `MXR` format, which is loaded directly into the mask index register.  Later, if it is desired to set up the `MXR` so that the program can reference masks in field group `2`, continuing to reference shift group `1`, the second constant may be transferred into the `MXR` by means of a `TX` instruction, as shown.  The last constant illustrates the special use of the `MASKBASE` constant when the programmer assigns the mask group bases and no `MASKGRP` instruction is used.
+
 #### CONTROL (Program Control Constant)
+
+A program control constant may be used as a mask for examining the contents of the program control register (`PCR`).  If the constant is to be used for examining the program demand bits, the bisequence bits, or both, no information follows the constant code.  The group indicators of up to seven control groups whose program demand bits are to be examined are written in the `A` address field, separated by commas.  The group indicators of up to seven control groups whose bisequence bits are to be examined are written in the `B` address field, also separated by commas.  The resulting constant will contain binary ones in the bit positions corresponding to the specified positions of the `PCR`.
+
+If the program control constant is to be used for examining the buffer interlock bits, the constant code is followed a comma and a "`B`" (for buffer).  The indicators (`A`-`H`) of up to seven control units whose input buffer interlock bits are to be examined are written in the `A` address field; those of up to seven control units whose output buffer interlock bits are to be examined are written in the `B` address field, all separated by commas.  The resulting constant will contain binary ones in the bit positions corresponding to the specified positions of the `PCR`.
+
+![CONTROL Examples](images/code_example_p72.png?raw=true)
+```
+                CONTROL             1,2         2,7
+
+                CONTROL,B           A,C,D       E,G
+```
+
+The first program control constant above generates a mask to examine program demand bits `1` and `2` and bisequence bits `2` and `7`.  The second generates a mask to examine the input buffer interlock bits for control units `A`, `C`, and `D`, and the output buffer interlock bits for control units `E` and `G`.  The contents of the `PCR` must be transferred to a memory location by means of a program control instruction (see page 50) before they can be examined.
 
 #### M (Mixed Constant)
 
+A mixed constant contains four fields.  The constant may include octal, decimal, or alphanumeric characters or any valid address format, but each field may contain only one type of character or one address.  "`M`" is written in the command code field followed by a comma.  The remainder of the command code field and the three address fields correspond, respectively, to the four 12-bit groups in a Honeywell 800 word (see Figure 2, page 8).  Each of these fields may contain one of the following:
+1. An "`A`", a comma, and two alphanumeric characters;
+2. A "`B`", a comma, and four octal characters;
+3. A "`D`", a comma, and three hexadecimal characters.
+Any of the three address fields may contain any valid address format described in [Section V](#section-v-addresses).  If an address appears in the command code field, it must be either:
+1. A symbolic tag with or without an address modifier;
+2. An indexed memory location address in which the index register designator is a number from `0` to `7`;
+3. A number as described in [Section V](#section-v-addresses).
+An "`S`" or a "`C`" in the S/C column results in a `0` or a `1` bit, respectively, in bit position one, overriding whatever the constant puts in this bit position.  A blank S/C column is ignored.  Note that if one or more address fields contain special register addresses, the left-most 12-bit group may not contain the configuration indicated in the command code field.
+
+A mixed constant can be used to store one or more addresses for use in setting up a program in memory.  If a mixed constant contains no symbolic tags, it is actually a data constant and can be used to specify a data word in compressed alphanumeric form.
+
+The first mixed constant in the following example is stored in memory as decimal `009`, followed by the subaddress assigned to the tag `AB+5`, followed by 24 binary ones.
+
+![M Examples](images/code_example_p73_1.png?raw=true)
+```
+                M,D,009             AB+5        B,7777      B,7777
+                M,INPUT 1           INPUT 2     D,586       OUTPUT 1
+                M,A,JK              A,LM        GROSSPAY    0,37
+```
+
 #### TAC (Tape Address Constant)
+
+This constant is used to specify up to eight tape or peripheral codes to be stored in one memory location.  The codes (`AA`-`HH`) are written starting in the `A` address field, separated by commas, and continuing through as many consecutive columns as necessary.  The resulting machine word contains the corresponding six-bit peripheral addresses justified to the left.  Any unspecified codes to the right of the last code written are filled with binary ones.  Any unspecified codes to the left of the last code written should be specified as `GG`.
+
+[TAC Example](images/code_example_p73_2.png?raw=true)
+```
+                TAC                 AA,AD,BA,GG,GG,HA,GC
+```
 
 #### LINK (Linkage Constant)
 
+The linkage constant is used in the Executive macro routine read segment (see page 30).  The `C` address field contains the link tag which the programmer writes in the `B` address field of the read segment instruction.  Address arithmetic is not permitted.  The `A` and `B` address fields are not used.  The link tag must have a memory location assignment; if it has an additional complex assignment, the memory location assignment is used.  The linkage constant is interpreted by Executive, and only by Executive, as the starting location of the next segment to be loaded.  It is loaded by Executive in special register format, with the assigned value of the tag in the bank indicator and subaddress positions.  The programmer is not required to write linkage constants unless he is writing additional Executive Macro routines.
+
 #### SEGNAME (Segment Name Constant)
 
+The segment name constant is used in the sort routine calling sequence.  It is an alphabetic constant containing the name of the segment in which it appears.  The programmer is not required to write segment name constants unless he is writing a macro routine for use as a sort routine calling sequence.
+
 #### SUBCALL (Subroutine Call Constant)
+
+The subroutine call constant is used in all macro routines which serve as calling sequences for library subroutines (see [Section XIII](#section-xiii-library-routines)).  ARGUS replaces this constant with a special address constant containing the address of the subroutine entry.  The programmer is not required to write subroutine call constants unless he is writing a macro routine for use as a subroutine calling sequence.
 
 ## Section X: Masking
 
