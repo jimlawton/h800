@@ -1286,17 +1286,84 @@ The subroutine call constant is used in all macro routines which serve as callin
 
 ## Section X: Masking
 
+Many of the preceding sections have discussed masking since this subject relates to most aspects of the assembly language.  As a result, the references required for a firm understanding of masking are found in widely scattered points throughout the manual.  The present section summarizes and illustrates the specification and use of masks in assembly notation.
+
+If an instruction in a program is top operate on part of a word while ignoring the rest, that instruction must use a word called a mask.  This is a 48-bit word containing binary ones in the bit positions which the instruction is to examine or use and zeros elsewhere.  Instructions which use masks have, in effect, a fourth address for the purpose of referencing the mask.
+
+Many of the machine instructions in the general group can be performed under the control of masks.  Such instructions are called field instructions.  In addition, all of the shift instructions require the use of masks in their execution.  Masks may be specified by the programmer, stored in memory with the proper mask tag, and referenced in the command code field of either a field or a shift instruction.
+
 ### Designated Masks
+
+If the word `+58393857320` is stored in memory and the programmer wishes to work only with the low-order four digits, he may write a mask which contains binary ones in the low-order 16 bit positions.  Such a mask could be written as a decimal constant and tagged, for example, `MASK1`.  The tag should be preceded by `S`, `F`, or `B`, to designate whether it is to be used with shift instructions, field instructions, or both.
+
+[Mask Example](images/code_example_p75.png?raw=true)
+```
+    B,MASK 1    DEC                 00000000GGGG
+```
+
+This is a mask containing 16 low-order `1` bits to be used with both shift and field instructions.  Reference to this mask could be made in the command code field, where the tag `MASK1` would be separated from the operation code by a comma, or in any of the address fields.  When the mask is referenced in the command code field, it is used as a mask, and when it is referenced in an address field, it is used as an operand.<sup>1(#section-x-note-1)</sup>
+
+<a name="section-x-note-1">1</a>Exceptions are the general instructions substitute (`SS`) and extract (`EX`), which always reference a mask in the `B` address field.  However, since the mask is not referenced boa the mask index register, it need not have a mask tag nor be stored as part of a mask group.
 
 ### Generated Masks
 
+Alternatively, in any field or shift instruction, the programmer may specify information from which ARGUS can generate masks during assembly.  This information includes the number and type of characters in the masked field, the position of the left-most character in the field, and the position(s) of any sign bit(s) which is attached to the field.  The use of generated masks is limited to alphanumeric or hexadecimal fields of consecutive characters.
+
+To generate a decimal mask for the low-order four digits and the sign of the word `+58393857320` the programmer would write the command code in this manner:
+```
+        TSD,9,4,S
+```
+This tells Assembly to generate a mask containing ones ion the bit positions to be examined and to put the relative address of this mask in the operation code.  When this instruction is executed under control of the generated mask, hexadecimal digits `9` through `12` and the sign will be transferred from the location specified in the `A` address field to the location specified in the `B` address field.  A generated mask may be used with a field instruction only if the type of characters in the masked field is inherent in the operation code.  (See page 40 for further discussion of generated masks.)
+
 ### Mask Groups
+
+Masks are stored in memory in groups.  MAchine instructions reference masks relative to an address called the base address of a mask group.  A field mask group may contain up to 32 masks and must have a base address which is a multiple of 32.  A shift mask group may contain up to 64 masks and must have a base address which is a multiple of 64.  The programmer may group his masks in consecutive locations and assign valid base addresses (using `SETLOC` or `MODLOC`) under certain circumstances.  When masks are allocated by the programmer they need not be marked by mask tags.  Alternatively, the programmer may direct Assembly to allocate mask groups by using the control instruction `MASKGRP`.  In any segment which contains subroutines, macro routines, or generated masks, Assembly must control the allocation of mask groups.
+
+If the `MASKGRP` instruction is used, it must appear before any masks are generated, designated, or referenced within a segment.  The only exception is at the beginning of a segment, where any designated or generated masks are automatically assigned to field and shift groups `0` if they are not preceded by a `AMSKGRP` instruction.  This instruction may include a shift group number, a field group number, or both.  It directs Assembly:
+1. To assign a valid base address to each specified group;
+2. To allocate all subsequent designated or generated masks to the proper specified group until another `MASKGRP` instruction specifies a group of the same type; and 
+3. To obtain all masks referenced from the proper specified group until another `MASKGRP` instruction specifies a group of the same type.
+The base address of a mask group is not necessarily the starting address of that group.  When the first mask in a group is processed, Assembly attempts to assign the last previous address of the proper modular value (`32` or `64`) as the base address of that group.  This involves counting the masks in the group to determine whether they can all be allocated before another address of the same modular value is reached.  If this can be done, the base address is assigned as above.  If not, the next address of the proper modular value is assigned as the base address of the group.
+
+The `MASKGRP` instruction may also specify the subsegment in which the mask group(s) is to be stored.  If no subsegment is specified, the masks are stored in the subsegment which is in control at the end of the segment.  A pair of groups having the same group number must be stored in the same subsegment.  When masks are allocated by Assembly, each designated mask must be so marked by preceding it with a mask tag.
+
+If any type `B` masks are designated, Assembly sets up overlapping shift and field mask groups.  A pair of overlapping groups can store 32 field, shift, or both masks, plus an additional 32 shift masks.  If mask groups are allocated by Assembly, the first `B` mask must be preceded by a `MASKGRP` instruction which specifies identical shift and field group numbers.  If they are allocated by the programmer, the first `B` mask must be preceded by the necessary control instructions to set up overlapping groups.
 
 ### Referencing Masks
 
+Both shift and field instructions reference masks by means of a special register called the mask index register (`MXR`).  This register stores the base subaddress of a shift group, the base subaddress if a field group, and a bank indicator to be used with both subaddresses, all according to a special format.  Before any mask in a given group can be referenced, the base address of that group must be stored in the `MXR` by means of a control constant called `MASKBASE`.  If mask groups are allocated by Assembly, the `MASKBASE` constant is written with the group numbers of the desired shift and field groups.  If mask groups are allocated by the programmer, this constant is written with the tags which represent the base addresses of the desired groups.  In either case, the `MASKBASE` constant must specify both a shift group and a field group.  If only one subaddress is to be changed in the `MXR`, the current group of the opposite type is respecified.  The `MASKBASE` constant may be loaded directly into the `MXR` or moved there by a programmed transfer.  Since the `MXR` contains only one bank indicator, shift and field mask groups which are referenced concurrently must be stored in the same memory bank.
+
+Note that before a mask in a given group can be referenced, it is necessary to set up the `MXR` with the base of that group.  If `MASKGRP` instructions are used, it is also necessary to specify the desired group in a `MASKGRP` instruction.  The control instruction `MASKGRP` should not be confused with the `MASKBASE` constant.  The `MASKGRP` instruction directs Assembly in allocating mask groups and assigning their base addresses.  The `MASKBASE` constant, on the other hand, stores two mask base addresses in the special `MXR` format.
+
+[Figure 9](images/figure_9.png?raw=true)
+```
+                SETLOC,2
+                MASKGRP             S,1         F,1
+                TX                  AB                      Z,MXR
+                DA,M1               A           B           C
+                SWE,M3              D           12          D
+
+    F,M1        DEC                 000000GGGGGG
+    S,M3        DEC                 00GG00GG0000
+    AB          MASKBASE            S,1         F,1
+```
+
+#### Example
+
+The coding shown in Figure 9 illustrates the designation of masks and their use in both shift and field instructions.  This coding represents only a portion of a segment.  The first instruction directs Assembly to begin allocation of subsegment `2`.  The `MASKGRP` instruction assigns the following designated masks to field group `1` or shift group `1` and tells Assembly that the following instructions may reference masks from these groups.  A one-word transfer is performed to load the `MXR`.  This is followed by two program instructions which utilize field mask `M1` and shift mask `M3`, respectively.  Masks `M1` and `M3` are designated at another point in the coding, together with the `MASKBASE` constant which is used to set up the `MXR` with the base addresses of field group `1` and shift group `1`.
+
 ### Subroutine and Macrocoding Masks
 
+The use of masks in subroutines and in macro routines (see [Section XIII](#section-xiii-library-routines)) varies with the type of routine.  The following cases may be distinguished:
+1. Macro routines in the library may contain their own masks.  If a macro routine is called in a segment, any masks which it contains are automatically stored in the current groups of main program masks and must be considered in figuring the storage total of these groups.  Their positions within the mask groups depend upon the position of the macro instruction relative to the main program masks.
+2. Dependent subroutines are similar to library macro routines in that they may contain masks which are included in the current groups of main program masks.
+3. Independent subroutines contain all the necessary coding to designate their own masks, set up the mask index register, and restore this register before returning control to the main program.
+
 ### Mask Pools
+
+To save memory space by eliminating duplicate masks, certain of the masks belonging to a group may be collected into a mask pool during assembly.  All generated masks, macro routine masks, and masks appearing in dependent subroutines, which are assigned to a specific field or shift mask group, are automatically included in the pool for that group, and duplicates among these masks are eliminated.  A designated mask is included in the pool of the group to which it is assigned if a "`C`" is written in the S/C column and if the mask is specified as a data constant with an `S`, `F`, or `B` in the location field (a `B` designated mask is placed in the field mask pool).  As a result, it will not be duplicated within the same group if a library macro or a dependent subroutine uses the same mask or if a mask having the same binary configuration is generated.
+
+All masks which remain constant should be placed in the pool, in case they are used by library routines.  However, any mask which is modified during the execution of a program should be withheld from the pool.
 
 ## Section XI: ARGUS Updating Function
 
