@@ -1267,7 +1267,7 @@ The first mixed constant in the following example is stored in memory as decimal
 
 This constant is used to specify up to eight tape or peripheral codes to be stored in one memory location.  The codes (`AA`-`HH`) are written starting in the `A` address field, separated by commas, and continuing through as many consecutive columns as necessary.  The resulting machine word contains the corresponding six-bit peripheral addresses justified to the left.  Any unspecified codes to the right of the last code written are filled with binary ones.  Any unspecified codes to the left of the last code written should be specified as `GG`.
 
-[TAC Example](images/code_example_p73_2.png?raw=true)
+![TAC Example](images/code_example_p73_2.png?raw=true)
 ```
                 TAC                 AA,AD,BA,GG,GG,HA,GC
 ```
@@ -1296,7 +1296,7 @@ Many of the machine instructions in the general group can be performed under the
 
 If the word `+58393857320` is stored in memory and the programmer wishes to work only with the low-order four digits, he may write a mask which contains binary ones in the low-order 16 bit positions.  Such a mask could be written as a decimal constant and tagged, for example, `MASK1`.  The tag should be preceded by `S`, `F`, or `B`, to designate whether it is to be used with shift instructions, field instructions, or both.
 
-[Mask Example](images/code_example_p75.png?raw=true)
+![Mask Example](images/code_example_p75.png?raw=true)
 ```
     B,MASK 1    DEC                 00000000GGGG
 ```
@@ -1335,7 +1335,7 @@ Both shift and field instructions reference masks by means of a special register
 
 Note that before a mask in a given group can be referenced, it is necessary to set up the `MXR` with the base of that group.  If `MASKGRP` instructions are used, it is also necessary to specify the desired group in a `MASKGRP` instruction.  The control instruction `MASKGRP` should not be confused with the `MASKBASE` constant.  The `MASKGRP` instruction directs Assembly in allocating mask groups and assigning their base addresses.  The `MASKBASE` constant, on the other hand, stores two mask base addresses in the special `MXR` format.
 
-[Figure 9](images/figure_9.png?raw=true)
+![Figure 9](images/figure_9.png?raw=true)
 ```
                 SETLOC,2
                 MASKGRP             S,1         F,1
