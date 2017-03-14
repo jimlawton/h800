@@ -1367,51 +1367,152 @@ All masks which remain constant should be placed in the pool, in case they are u
 
 ## Section XI: ARGUS Updating Function
 
+As stated in [Section I](#section-i-introduction), the ARGUS Assembly Program maintains a symbolic program tape (SPT) which contains a file of programs undergoing checkout.  Every program on the SPT is in the original assembly language, thus allowing modifications or corrections to be made to the program in this language.  The SPT also contains the test data and debugging pseudo instructions (derails) for each program, which may also be modified or corrected during an assembly run.  The structure of the SPT is described in [Appendix B](#appendix-b-symbolic-program-tape-layout).
+
+In order to maintain this file, the Assembly program accepts as input the existing SPT, a deck of cards, and/or one or more reels of tape containing card images.  The card or tape input represents new ARGUS programs to be assembled, corrections to existing programs on the SPT, and output (new programs) from the compilers.  The outputs from the updating run are a new SPT, requested printed listings and analyses of programs, requested punched cards in ARGUS format, and a list of the programs and segments on the new SPT.  These outputs are described in [Section XII](#section-xii-output-from-argus-assembly-operation).
+
+A group of control instructions is used to direct the ARGUS updating process.  These control instructions are punched one per card, like machine instructions, but they are not assembled by ARGUS to produce machine words in a program.  Each instruction is identified by an operation code of up to eight alphabetic characters which is punched in the command code field.
+
 ### ARGUS
+
+This instruction must be the first card of every ARGUS input deck.  The location field and the `A` and `B` address fields may contain the date and the old and new SPT object serial numbers (see [Appendix B](#appendix-b-symbolic-program-tape-layout)), respectively.  The `C` address field may contain a code describing a standard assembly equipment configuration to be used for all programs which do not specify a particular configuration code (see `PROGRAM` instruction, page 86).  A detailed description of this configuration code is contained in [Appendix C](#appendix-c-assembly-equipment-configuration-code).  If the `C` address field is blank, ARGUS assumes the standard configuration to be that of the machine on which the updating run is being made.
 
 ### Program Directors
 
-#### U,ELIMPROG
+A program director card marks the beginning of input for the program whose name is specified in the `A` address field.  The director cards are distinguished by the prefix "`U,`" punched in the first two command code columns (columns 11 and 12).  The five types of director cards described below are distinguished by the command code following this prefix.  The location field, the `B` and `C` address fields, and the remarks field are unused except as otherwise noted.
 
-#### U,REASSEMB
+The program name may consist of from one to eight characters.  Leading or imbedded spaces are eliminated during input processing.  This processing includes checks to prevent duplication of program names on the same tape.
 
-#### U,CORRECT
+Any input between the ARGUS card and the first program director card is discarded during input processing.  All input for each program must follow its program director card, and all cards following a particular program director card are included as part of that program until the next program director card is encountered.
 
-#### U,NEWVERS
+#### `U,ELIMPROG`
 
-#### U,NEWPROG
+This card directs ARGUS updating to eliminate the program named in the `A` address field from the new symbolic program tape.  The S/C and line number fields are not used.
+
+#### `U,REASSEMB`
+
+This card directs ARGUS to reassemble the program named in the `A` address field, using the old program on the symbolic tape as a major input to assembly.  Any changes which follow this director card are merged with the existing program during updating.  The resulting program is reassembled and written on the end of the new symbolic tape and the old version of the program is eliminated.
+
+If the S/C column is blank, any scientific instruction in the program is replaced by a call for a library routine.  Otherwise, scientific operation codes are translated normally.
+
+If the line number field is blank, the line numbers resulting from merging the inputs are preserved in the reassembled output.  If any legal characters other than blanks appear in the line number field, ARGUS reassigns line numbers in the reassembled program.
+
+#### `U,CORRECT`
+
+This card directs ARGUS to correct _without reassembly_ the program specified in the `A` address field.  S/C and line number field options are the same as on `REASSEMB` cards.
+
+Correction is a process by which certain classes of simple changes can be made to the old program without requiring the more extensive reassembly process.  Correction is restricted to changes in test data, derails, and certain kinds of one-for-one program word replacements which do not require reallocation of addresses.  Wherever possible, the programmer should elect to correct rather than to reassemble his program in order to save computer time.  However, if the Assembly Program detects a situation which violates the correction rules, the "`CORRECT`" instruction is revised and the program is reassembled instead.  The situations in which revision will occur are as follows:
+1. Occurrence of one or more symbols in the address fields of `EQUALS` or `RESERVE` instructions in the program;
+2. Reference to more than 100 different symbolic tags in corrections to any segment of the program;
+3. Any reference to a tag which was not defined when the program was last assembled;
+4. Any reference to a tag which was defined by a `TAS` instruction in the last previous assembly;
+5. Insertion of a new line between existing lines, before the first line or after the last line of any segment;<sup>*(#section-xi-note-1)</sup>
+6. Deletion (as opposed to one-for-one replacement) of any line;<sup>*(#section-xi-note-1)</sup>
+7. Addition or elimination of any segment;
+8. Replacement of a line by a new line, where the location fields are not identical;<sup>*(#section-xi-note-1)</sup>
+9. Use of the instructions `EQUALS`, `RESERVE`, `EVEN`, `SIMULATE`, `MODLOC`, or `MASKGRP`, except to replace an identical line;
+10. Use of the instructions `SETLOC`, `ASSIGN`, `TAS`, or the `LINK` constant;
+11. Call for a subroutine which was not called in the last previous assembly;
+12. Use of mask generation parameters in a field or shift instruction unless the instruction being replaced generated an identical mask;
+13. Use of a mask within macrocoding, unless the instruction being replaced used an identical mask;
+14. Replacement of any line by another line where the numbers of machine words produced by each line are not identical (e.g., replacement of a macro routine by another macro routine not of the same length, replacement of a `FLBIN` constant by an `EBC`, or replacement of a line containing constants by one containing an unequal number of constants);
+15. Use of a `MASKBASE` constant with `S,n` or `F,n` in the address fields.  Tags must be used even if the constant being corrected used `S,n` or `F,n`.  Note that a group may be specified by any tag assigned within that group; and
+16. Since a printed listing is not provided for programs undergoing correction, the occurrence of any error on an input card will cause the program to be reassembled and listed.
+
+<a name="section-xi-note-1">*</a>Exception: Remark cards and words to be loaded into special registers (`Z,` in location field) may be inserted, deleted or replaced by other remarks or special register cards even when the location fields are not identical.
+
+S/C and line number field options on `CORRECT` cards are the same as on `REASSEMB` cards.
+
+#### `U,NEWVERS`
+
+This card directs ARGUS to make a new version of the program whose name is specified in the `A` address field, giving it the new name specified in the `B` address field.  The new name obviously must not duplicate the name of any other program on the symbolic tape.  Except in name, the new program may exactly duplicate the old one, or it may be modified to any desired extent by the input following the `NEWVERS` card.
+
+Regardless of the degree and nature of change, all new versions are put through the reassembly process.  In this respect, `NEWVERS` has the same effect as `REASSEMB` except that the old version is not automatically eliminated unless ARGUS is specifically instructed to do so by an `ELIMPROG` card.
+
+S/C and line number field options on `NEWVERS` cards are the same as on `REASSEMB` cards.
+
+#### `U,NEWPROG`
+
+This card directs ARGUS to assemble the following input as a new program.  The name of the program is specified in the `A` address field.  Aside from the name duplication checks, no reference is made to the contents of the old symbolic tape.
+
+S/C and line number field options are the same for `NEWPROG` cards as for `REASSEMB` cards.
 
 ### Programmer Macro Routine Markers
 
-#### MACRODEF
+Two instructions, `MACRODEF` and `FINIS`, are used to mark the beginning and end, respectively, of programmer-defined macro routines within programs.
 
-#### FINIS
+#### `MACRODEF`
+
+This instruction must precede each programmer macro routine.  The location, address, and line number fields are not used.  The S/C column may be used to specify one of the following card check options:
+1. If the S/C column contains an "`I`" (Identification), the contents of columns 74 through 80 of the remarks field are stored (in unjustified form and without space suppression) and used to check all succeeding cards of this programmer macro routine.  If the corresponding columns of a succeeding card in this macro routine do not match the stored value, the card is discarded during assembly.
+2. If the S/C column contains an "`S`" (Sort), the contents of the first five line number columns (66-70) of each card in the routine are converted to a binary number and used as a low-order key.  Otherwise, the cards of this macro routine are assigned keys which will preserve the order in which they occur.
+3. If both identity checking and sorting are desired, the S/C column contains a "`B`".  If neither is desired, this column is left blank.
+
+The cards following the `MACRODEF` instruction represent the master macro instruction and the actual macro routine.  They are described more fully in [Appendix A](#appendix-a-writing-library-routines-and-the-use-of-lamp) on "Writing Macro Routines".  These cards are subject to the sorting and identification check options specified in the `MACRODEF` card.  If the sorting option was specified, columns 66 through 70 must contain the serial number of each card within the macro routine.
+
+#### `FINIS`
+
+This instruction signals the end of a macro routine.  An identification check on the contents of the remarks column (74-80) of the `FINIS` card is made, provided that this option was specified in the `MACRODEF` card.
 
 ### Segment Directors
 
-#### ELIMSEG
+The three types of segment directors defined below all mark the beginning of input for a particular segment of the program.  The name of the program to which the segment belongs is written in the `A` address field and is subject to the same conventions as on the program director cards previously described.  The `B` address field must contain the segment name, which may contain a maximum of seven characters, but which is otherwise handled in the same manner as a program name.
 
-#### SEGMENT
+#### `ELIMSEG`
 
-#### PROGRAM
+This card directs ARGUS to eliminate the specified segment from the new symbolic tape.  The names of the program and segment are specified in the `A` and `B` address fields, respectively.  The S/C and line number fields are not used in this card.  No detail cards should follow this director.
+
+#### `SEGMENT`
+
+This card marks the beginning of input for the specified segment.  The program and segment names are specified in the `A` and `B` address fields, respectively.  The location and `C` address fields are not used.  ARGUS determines whether this input represents changes to an existing segment or an entire new segment by comparing the program and segment names against a directory of the old symbolic program tape.
+
+The S/C column may be used to specify one of the following handling options:
+1. If an "`I`" is written in the S/C column, the contents of columns 74 through 80 of the remarks field are used to check the identity of all following detail cards up to the next program or segment director, just as in the `MACRODEF` instruction.
+2. If an "`S`" is written in the S/C column and the input is a new segment, the contents of all eight line number columns (66-73) on the following detail cards are converted to binary numbers which are used to sort these cards within the segment.  If the input represents changes to an existing segment, line numbers must be provided to identify the words to be changed and this input is automatically sorted, regardless of the contents of the S/C column.
+3. If a "`B`" is written in the S/C column, both identify checking and sorting are provided.
+4. If the S/C column is blank and the input is a new segment, ARGUS generates line numbers to preserve the existing order of the cards, providing spaces for later insertion of changes as explained on page 16.  As stated above, if the input represents changes to an existing segment, it is automatically sorted.
+
+The line number field of the segment instruction may be used to specify certain optional outputs from the assembly process.  These outputs, which are described in [Section XII](#section-xii-output-from-argus-assembly-operation), may be produced only when a segment is assembled or reassembled, not when it is corrected.  The following codes may be written in any combination, separated by commas.  The order in which they are written is immaterial, provided that they are written in the line number field.
+
+Code|Interpretation
+----|--------------
+`S`|Produce a new symbolic card deck for this segment from the updated SPF.
+`L`|Produce a symbolic listing of coding for this segment, including all diagnostic printouts.
+`LS`|Produce a symbolic listing of coding for this segment, including diagnostic printouts for all definite errors but suppressing printouts for possible errors.
+`A`<sup>1(#section-xi-note-1)</sup>|Produce an analyzer of the coding for this segment, including all diagnostic printouts.
+`AS`<sup>1(#section-xi-note-1)</sup>|Produce an analyzer of the coding for this segment, including diagnostic printouts for all definite errors but suppressing printouts for possible errors.
+
+<a name="section-xi-note-2">1</a>Since the analyzer includes a symbolic listing, it is never necessary to specify both.
+
+#### `PROGRAM`
+
+This card is a segment director of a special kind, used to introduce the first (or only) segment of a program.  It is identical in function to the `SEGMENT` instruction (above) with the following exceptions:
+1. The `C` address field may be used to specify an assembly equipment configuration code for this program, according to the configuration statement format described in [Appendix C](#appendix-c-assembly-equipment-configuration-code).  If this field is blank, the standard configuration is used (see the ARGUS card above).
+2. If the program logic requires that tape units assigned to a common tape control remain assigned to a common tape control, or if the program contains any reference to a read-write address counter (`RAC`, `DRAC`, `WAC`, or `DWAC`), the command code (`PROGRAM`) must be followed by the suffix "`,R`".  This suffix designates the so-called R restriction, which directs the assignment of equipment codes by Executive, as described in the _Executive System Manual_.
 
 ### Test Data Directors
 
-#### TESTDATA
+Test data belonging to a segment may appear anywhere within the input for that segment.  The _Program test System Manual_ should be consulted for a detailed description of the test data cards which are summarized here.
 
-#### ELIMDATA
+#### `TESTDATA`
+
+This card introduces a set of test data or changes which are to be applied to an existing set.  The location field contains the set number, in the range `0` through `7`, the `A` and `B` address fields contain the program and segment names, respectively, and the `C` address field contains the first address of the read-in area in high-speed memory, expressed as an absolute decimal address.
+
+#### `ELIMDATA`
+
+This card directs ARGUS to eliminate the specified set of test data from the SPT.  The location field contains the set number (`0`-`7`), and the `A` and `B` address fields contain the program and segment names, respectively.
 
 ### Test Data Detail Cards
 
 ### Debugging (Derail) Pseudo Instructions
 
-#### ELIMDERL
+#### `ELIMDERL`
 
 ### Main Coding
 
-#### DELETE
+#### `DELETE`
 
-### ENDARGUS
+### `ENDARGUS`
 
 ### Ordering the ARGUS Input Deck
 
