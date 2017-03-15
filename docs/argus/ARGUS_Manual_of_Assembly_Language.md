@@ -1504,19 +1504,58 @@ This card directs ARGUS to eliminate the specified set of test data from the SPT
 
 ### Test Data Detail Cards
 
+1. Distributing Pseudo Instructions.  Each distributing instruction contains in its command code field an "`X,`" followed by the operation code of the instruction.  The location field has the format `s, r, p` where `s` is the set number (`0`-`7`), `r` is the record number (three decimal digits) and `p` is the instruction position number (`01`-`20`).  The cards are subject to the identification check of columns 74 through 80 as specified in the `TESTDATA` card.  A detailed description of the functions and formats of thee instructions is found in _Program Test System Manual_.
+2. Delete Distributing Pseudo Instructions.  This card (`X, DELETE`) directs ARGUS to delete one or more distributing instructions from a set of test data.  The location field contains `s, r, p` (set number, record number, and position number of the first instruction to be deleted).  The `A` address field contains `TO`.  The `B` address field contains `f, h`, where `f` is the record number and `h` is the position number of the last instruction to be deleted.  This card is subject to the identification check of columns 74 through 80 as specified in the `TESTDATA` card.
+3. Test Data Words.  Each test data word card contains in its command code field a `D`, and the name of an ARGUS data constant or mixed constant containing numeric data in all fields.  The card may contain several constants of the same type, as may any constant card.  The location field contains `s, r, w` (set number, record number and data word position number for the first constant on the card).  These cards are subject to the identification check of columns 74 through 80 as specified in the `TESTDATA` card.  Test data words may be altered on a one-to-one basis during an updating run.
+4. Delete Data Words.  This card (`D, DELETE`) directs ARGUS to delete one or more data words from an existing set of test data.  The location field contains `s, r, w`, designating set number, record number and data word position number of the first word to be deleted.  The `A` address field contains "`TO`", and the `B` address field contains `f, h` (record number and data word position number of the last data word to be deleted).  This card is subject to the identification check.
+
 ### Debugging (Derail) Pseudo Instructions
+
+A complete description of the formats and functions of these instructions is found in the _ARGUS Program Test System Manual_.  The sort and identification check options, specified in the segment director card, may be used with these instructions; if the sort option is desired, columns 66 through 70 must contain the serial number of the instruction within the segment.
 
 #### `ELIMDERL`
 
+This card directs ARGUS to eliminate the derail whose serial number is specified in the first five line number columns.  If these columns are blank, all derails are eliminated from the corresponding segment.  If the segment director card contains an "`I`" in the S/C field, a segment identification must be punched in columns 74 through 80 of the remarks field.  The location and address fields are not used in this card.
+
 ### Main Coding
+
+Main coding refers to all instructions and constants belonging to a segment.  The sort and identification check options, as specified on the segment directors, may be used to check all main coding cards.  If the sort option is used, columns 66 through 73 on every card must contain a line number representing the position of that card within the segment.
+
+The line number field must indicate the words to be changed within an existing segment, may indicate the order of a complete new segment.  ARGUS automatically generates line numbers to preserve the original order of new segments if the sort option is not specified.
 
 #### `DELETE`
 
+This card directs ARGUS to delete lines of main coding from an existing segment on the symbolic program tape.  The line number columns specify the first line to be deleted.  If the `A` and `B` address fields are blank, only this line is deleted.  If, however, the `A` address field contains the word "`TO`" and the `B` address field contains the line number of the last line to be deleted, ARGUS will automatically delete all intervening lines, provided that both specified lines are contained in the same segment.  Original five-digit line numbers may be punched anywhere in the `B` address field; insertion line numbers must contain a decimal point to separate the high-order five digits from the low-order three digits.
+
 ### `ENDARGUS`
+
+A card with `ENDARGUS` punched in the command code field must be used to signal the end of the ARGUS input deck.  The contents of all other fields on the card are ignored.
 
 ### Ordering the ARGUS Input Deck
 
-### Equipment Requirements for the Updating Run
+ARUS automatically sorts the entire input deck into an order which is convenient for updating, but before the sorting can begin the deck must be in order according to the following rules:
+1. All cards belonging to one program must be together, preceded by a program director card.
+2. All cards belonging to a generalized programmer macro routine must be together, bounded by `MACRODEF` and `FINIS` cards.  The master macro instruction must immediately follow the `MACRODEF`, and the entire routine must precede the first instruction referring to it.
+3. All cards (test data, information request pseudo instructions, and main coding) belonging to a segment must be together, preceded by a segment director card.  In other words, the only cards which may appear between the program and segment directors are macro routines, but macro routines may also appear after a segment director.
+4. Test data detail cards must be preceded by a `TESTDATA` card, and the first card which does not have an "`X,`" or "`D,`" in the command code field will signal the end of a group of test data cards.  That is, no card other than test data cards may appear within a group of test data cards.
+5. If the sort option is not specified (i.e., the cards do not contain line numbers) within a macro routine, the macro routine cards must be in the proper order with respect to one another.
+6. If the sort option is not specified for a new segment, the derail pseudo instructions, as well as the main coding, must be in the proper order with respect to one another.
+7. Derail pseudo instructions may not appear within programmer macro routines.  The appearance of a program director, segment director, or `MACRODEF` card within the macro routine will terminate the routine.
+
+ARGUS sorts the individual program decks so that updating for existing programs occurs in the order in which the programs are stored on the SPT, and new programs follow in the order in which they occurred in the input deck.  If there is to be a new version of a program, the updating for the new version precedes the updating (if any) for the old version.  Within a program, the segments are sorted so that updating for existing segments occurs in the order in which the segments are stored within the program on the SPT, and new segments follow in the order in which they occurred in the input deck within that program.  If there is an `ELIMPROG` or `ELIMSEG` card for the program or segment, that card will precede any other cards for that program or segment.
+
+Within each program, the program director card is followed by by all programmer macro routines belonging to that program (if any).  The routines are in the order in which they occurred in the input deck.  The order within each routine is:
+1. `MACRODEF`;
+2. Master macro instruction;
+3. Macro routine coding (If the "`S`" option is used, the coding is ordered in accordance with the contents of columns 66 through 70, otherwise, it is in its original order.); and
+4. `FINIS`.
+
+The macro routines are followed by the segments of the program.  For each segment, the segment director card is followed by any test data for the segment.  The test data sets are in order by set numbers.  Within each set, the order is:
+1. `ELIMDATA`;
+2. `TESTDATA`; and
+3. Test data detail words in order by record number.  Within each record, the distributing pseudo instructions (in order by instruction position number) are followed by the data words (in order by data word position number).  If there is an `X,DELETE` or `D,DELETE` card, it precedes any other `X` or `D` card with the same position number.
+
+The test data is followed by the derail pseudo instruction.  If the sort option was specified, the derail cards are in order according to the contents of columns 66 through 70; otherwise, they are in their original order.  If there is an `ELIMDERL` card in which columns 66 through 70 are blank (eliminate all derails), this card precedes all other derail cards.  Any other `ELIMDERL` card precedes the derail card which has the identical line number.
 
 ## Section XII: Output from ARGUS Assembly Operation
 
