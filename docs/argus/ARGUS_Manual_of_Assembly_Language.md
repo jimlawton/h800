@@ -1559,15 +1559,100 @@ The test data is followed by the derail pseudo instruction.  If the sort option 
 
 ## Section XII: Output from ARGUS Assembly Operation
 
+The primary output of the ARGUS assembly process is a file of programs on magnetic tape in both a symbolic assembly language and machine language.  Each program in this file includes relocation information and error information.  The tape containing the program file is called the symbolic program tape (SPT) and is the communication link between Assembly and the other ARGUS systems programs (as shown in Figure 1, page 2).  The SPT is used in the following three ways:
+1. It is the input to the next ARGUS updating run;
+2. It is the source of information for the program test run (as described in the _Program test System Manual_); and
+3. It is the source of information for the Executive scheduling run (as described in the _Executive System Manual_).
+
+Assembly also produces a printed directory of the SPT, listing the names of all programs and segments in the symbolic program file in the order in which they occur.  The directory may contain up to 512 program names and up to 1060 segment names.  The initial record number of each program and segment is printed in decimal.
+
+The programmer may direct ARGUS to produce any or all of the following types of secondary output.  The segment directors (see page 85) are used to specify which, if any, of these secondary outputs shall be produced for each segment assembled:
+1. A complete printed listing of the assembled segment, including the line number and the symbolic input form and machine form of each included word, along with any programming errors detected during assembly;
+2. A printed analyzer, including all of the information given in the listing, plus a list of all references to each symbolic tag by line number;
+3. A set of punched cards containing the entire segment in assembly language, complete with the numbers and in the correct sequence.
+
 ### ARGUS Listing
+
+Each page of the ARGUS listing is headed by a line of print which includes the program name, the segment name, the date, the SPT revision number, and the page number.  This is followed by a line which contains the field headers for the various fields of the listing.  These two header lines are included in the sample output page shown in Figure 14, page 99.  Each line of coding is printed in both the symbolic language of the programmer and the resulting machine language.<sup>1(#section-xii-note-1)</sup>  The line number appears at the left of each line.  In general, program words are listed in the format shown in Figure 10.  Exceptions are data constants, `EQUALS` and `RESERVE` instructions, and remarks cards which are listed in the format shown in Figures 11 and 12.  Note that if several data constants are combined on a single input card, each such constant is listed as an individual line of print and the line number is repeated as necessary.  A derail instruction is followed on the listing by a `CAC` constant which contains the addresses assigned to the symbolic tag appearing in the derail.  The `CAC` constant does not appear in the assembled program.
+
+<a name="section-xii-note-1">1</a>The machine listing is normally in decimal; however an octal listing is substituted if the `PROGRAM` card for a given program is followed by a remarks card containing `R,JSOCTL` in columns 1-8.
+
+If a programming error is detected in a line of coding, the listing for that line includes an asterisk preceding the line number.  This line is followed in the listing by an error printout line which indicates the nature of the error(s).  Each error is represented in the error printout line by a key which is printed immediately below the field of the symbolic input word in which the error is detected.  The various keys which may be printed are described below under "Programming Errors Detected".
+
+The ARGUS listing is followed by a list of the group numbers of all mask groups used by the segment and the mask base addresses assigned to these groups.  Finally, the names of all subroutines which are called by the segment are listed, together with the starting address assigned to each subroutine.
 
 ### Analyzer
 
+The analyzer is an optional index of every reference to every symbolic tag used within a segment.  If this option is requested, by means of the segment directors, the listing line for every word which is tagged in the location field is followed by one analyzer line for each program word which references the corresponding tag.  The format of an analyzer line, shown in Figure 13, includes the segment number, line number, and operation code (or constant code) of one program word which references the pertinent tag, with the tag itself appearing in the same field in which it appears in the original word.  If the reference includes address arithmetic, the address modifier also appears in the analyzer line.  Note that the sample output page shown in Figure 14 includes analyzer output.
+
+If the analyzer option is requested, each mask group listed is followed by one analyzer line for each reference to that group,  (Here a reference to a mask group is the generation of a mask in that group or the appearance of the group number in a `MASKGRP` instruction or a `MASKBASE` constant, since all symbolic mask references have already been listed.)  Next, each subroutine listing is followed by an analyzer line for each call instruction to that subroutine.  Finally, the analyzer includes an index of all references to peripheral addresses.
+
+![Figure 10](images/figure_10.png?raw=true)
+
+![Figure 11](images/figure_11.png?raw=true)
+
+![Figure 12](images/figure_12.png?raw=true)
+
+![Figure 13](images/figure_13.png?raw=true)
+
+![Figure 14](images/figure_14.png?raw=true)
+
+![Figure 15](images/figure_15_1.png?raw=true)
+![Figure 15](images/figure_15_2.png?raw=true)
+![Figure 15](images/figure_15_3.png?raw=true)
+
 ### Programming Errors Detected
+
+The types of programming errors which are detected during assembly are listed in Figure 15.  For each error detected, an error indication is recorded on the symbolic program tape and printed as part of the ARGUS listing.  The Assembly Program detects errors which fall into two broad categories: definite errors and possible errors.  The error indications for definite errors are always printed, whereas the programmer may specify on the segment directors that the error indications for possible errors are to be suppressed.
 
 ### Input Errors Detected
 
+Assembly also prints, under the heading "Input Errors", a listing of all errors detected in the punching and ordering of the input deck.  For each input card which is found to be mispunched or out of order, the card image is listed followed by a diagnostic comment.  These comments and the types of cards for which they may appear are listed below.
+
+#### `CLASS MEMBERSHIP ERROR` (unidentifiable cards)
+
+1. all cards between the ARGUS card and the first correct program director.
+2. all cards (other than macrocoding) between a program director and the first correct segment director.
+3. all cards for which an identification check on columns 74-80 is specified on the preceding `PROGRAM` or `SEGMENT` card and which did not pass this check.
+4. all cards which are required to contain program and/or segment names (e.g., `END`, `TESTDATA`) and which do not contain the correct names.
+5. all test data detail cards not preceded by a `TESTDATA` card or having a set number not equal to that of the preceding `TESTDATA` card.
+
+#### `FIELD CONTENTS ILLEGAL`
+
+1. any director card without a program or segment name.
+2. any card containing "`U,`" in the command code field which is not followed by one of the five program director command codes.
+3. any card containing a test data set number greater than `7`.
+4. any card containing an `0,8,7` punch (octal `77`).
+5. any card containing a non-numeric character in a numeric field.
+
+#### `KEYWORD FIELD OVERFLOW`
+
+1. all cards for all segments beyond the 64th segment of a program.
+2. all cards for all programs beyond the 512th program in the symbolic program file.
+3. all test data cards in which the record number, word number, or instruction number exceeds its prescribed limits.
+4. all macrocoding cards in excess of 2048 for a single macro.
+
+#### `DUPLICATE NAME`
+
+1. any `NEWPROG` or `NEWVERS` card containing a program name already assigned to a program in the symbolic program file.
+2. any master macro instruction card containing a macro routine name which has previously appeared on a master macro instruction card in the same program.
+3. any `SEGMENT` card containing a segment name which has already appeared on a `PROGRAM` or `SEGMENT` card in the same program.
+
+#### `INCONSISTENT DIRECTIVE`
+
+1. any `REASSEMB` or `CORRECT` card naming a program which is not in the symbolic program file.
+2. all detail cards following a `REASSEMB` or `CORRECT` card which names a program or segment also named on a previous `REASSEMB` or `CORRECT` card.
+3. any `ELIMPROG` or `ELIMSEG` card naming a program or segment which is not in the symbolic program file.
+
+#### `MISC. MACROCODING ERROR`
+
+1. any macro instruction which calls a programmer macro routine prior to the definition of the routine called.
+2. all cards of a programmer macro routine in which the `MACRODEF` card is not followed by a master macro instruction.
+3. all macrocoding cards for which an identification check on columns 74-80 is specified and which do not pass this check.
+
 ## Section XIII: Library Routines
+
+*NOTE: PAGE 105 IS MISSING FROM THE DOCUMENT SCAN*
 
 ### Macro Routines
 
