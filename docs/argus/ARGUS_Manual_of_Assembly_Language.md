@@ -1656,19 +1656,210 @@ Assembly also prints, under the heading "Input Errors", a listing of all errors 
 
 ### Macro Routines
 
+routine in the object program.  Any reference to this tag within the same program segment refers to the first word of the assembled routine.  The letter "`L`" in the command code field is a control character which designates that the following code is the name of a routine in the library.  The control character is followed by a comma and the name of the desired routine.  The name may contain up to eight alphanumeric characters, of which at least one must be non-numeric.  If one or more parameters are specified in the command code field, the name must be followed by a comma.
+
+The S/C column normally designates the same sequencing counter that selected the macro routine.  This causes the routine to be executed under control of the specified counter, except that any sequencing counter designation(s) within the routine will override the designation in the macro instruction.  However, if the routine includes coding to set up the sequencing counter designated in the macro instruction, which can be determined from the specification sheet, then the programmer is free to specify either counter in the macro instruction.  Note that only a macro routine which contains such coding can be entered from different sequencing counters within the same program.
+
+The codes `p`<sub>1</sub> / `p`<sub>2</sub> / through `p`<sub>`n`</sub> represent the value of the various parameters required by the macro routine.  The type and format of each parameter required by a given routine may be obtained from the specification sheet.  A macro instruction may contain up to 25 parameters, but the number of characters which can be written in one field is limited to 12 in the command code field and 14 in each address field.  Individual parameters must not cross field boundaries and must be separated from each other by slashes or by the end of a field.
+
+ARGUS specializes a macro routine when it is assembled into an object program by inserting the parameter values stated in the macro instruction.  For example, `p`<sub>1</sub> might specify the number of words in each item of a table, in which case it could be used in the macrocoding as an increment to a special register.  Another parameter might be the location of the beginning of the table.  (See [Appendix A](#appendix-a-writing-library-routines-and-the-use-of-lamp) for other examples of parameters.)  The formats of parameter values are not necessarily the same for each appearance of the macro instruction.  For example, if one of the parameters in the routine is used to reference a mask, the parameter value might be a symbolic tag in one instruction and mask generation information in another.  However, when the parameter represents a quantity such as an increment to a special register, for which there is only one acceptable format, the parameter value must have that format in every macro instruction which requests the corresponding routine.
+
 ### Programmer-Defined Macro Routines
 
+In addition to the use of library macro routines, the programmer may code a macro routine to perform some function which is required several times in his program.  Such a routine, called a programmer-defined macro routine, is included once in the card deck for the program in which it is used.  Although a programmer macro routine may be called any number of times by the program with which it is assembled, it is not available for execution by any other program (unless it is added to the library as described in [Appendix A](#appendix-a-writing-library-routines-and-the-use-of-lamp)).
+
+The coding of a programmer macro routine is identified by preceding and following it with the instructions `MACRODEF` and `FINIS`, respectively (as described on page 84).  The `MACRODEF` instruction must be followed immediately by a master macro instruction containing a control character or "`P`" (to designate that the routine is a programmer macro), followed by the name of the routine and the tags of all required parameters.  The master macro instruction defines the format of all requesting macro instructions for that routine.  The macrocoding is written in the same manner as a library macro routine (see [Appendix A](#appendix-a-writing-library-routines-and-the-use-of-lamp)).
+
+A programmer macro routine may contain up to 2048 cards.  It must be included in the program deck priori to the first macro instruction for that routine.  A macro routine is available to any segment of the program after the appearance of the routine in the input deck.  The macro instruction which calls for the routine follows the format laid down by the master macro instruction written with the routine (including a control character of "`P`"), and also supplies the values of all required parameters.  If a deck of changes to an existing program includes any reference to a programmer macro routine, this routine must precede the reference in the input deck.  This is because ARGUS derives all change information from the input deck and does not refer to the old symbolic program tape to obtain the referenced routine.
+
 ### Subroutines
+
+The ARGUS library of routines includes subroutines as well as macro routines.  A subroutine differs from a macro routine in several important respects.
+1. It is assembled into machine language before it is added to the library;
+2. It is inserted only once into each program segment in which it is executed, regardless of the number of times that it is executed within that segment;
+3. It is inserted out of sequence from the main coding and reached by means of a transfer of control.  A second transfer returns control to the main coding when the subroutine is completed; and
+4. It is specialized according to the stated parameter values when it is executed, rather than when it is inserted into the program.
+
+Since a subroutine is stored out of sequence from the main program, it requires a linkage, or calling sequence, to make the parameter values available to the subroutine, transfer control to the routine, and then transfer control back to the main coding after the subroutine is completed.  The ARGUS system makes use of macro routines as calling sequences for subroutines.  Every subroutine in the library uses one or more library macro routines as its calling sequence.  Like any other macro routine, the calling sequence is inserted into the program every time that the subroutine is requested.  It may be inserted entirely in sequence or it may consist of an in-sequence portion and an out-of-sequence portion.  The format and location of the calling sequence are decided by the programmer whoo writes the subroutine.  The flexibility of subroutines is increased by the ability to design different macro routines for calling sequences.
+
+The pseudo instruction which is written to execute a subroutine is known as a call instruction.  Since this instruction calls a macro routine which sets up the desired subroutine, it has the same format as any other macro instruction.  The control character is always an "`L`", however, since all subroutines are library routines.  A subroutine may be performed several times within the same program segment, using different parameters each time.  However, this cannot be done by a programmed modification of the call instruction.  A separate call instruction must be written for each set of parameters to be used.
+
+As described in [Appendix A](#appendix-a-writing-library-routines-and-the-use-of-lamp), a subroutine may be designed to be entered from either sequencing counter and to return control to either counter after execution.  Sequencing counter control may be changed within the subroutine, provided that the previous contents of the counters are preserved.  In addition, a subroutine may be designed to operate with variables which are stored in a bank(s) different from that in which the subroutine is stored and also different from the bank in which the call instruction is stored.  The locations of such variables are specified as parameters.  Finally, a subroutine may be designed to be either independent of or dependent upon the programmer's mask groups.  Independent subroutines set up their own mask groups and restore the programmer's mask groups after they are executed, while dependent subroutines use the programmer's mask groups.  The type of subroutine, dependent or independent, and the number of masks required are indicated on the specification sheet.  The same mask group must be in control every time a given dependent subroutine is called within a program segment.
 
 ## Appendix A: Writing Library Routines and the Use of LAMP
 
 ### Writing Macro Routines
 
+A macro routine is written in generalized form, using symbolic tags to represent all parameters of the routine which may vary from one execution to another.  The values of these parameters to be used in a given execution are included in the macro instruction which calls the routine.  Each macro routine is preceded by a master macro instruction which defines the format of all macro instructions for that routine.  Each parameter tag used in the routine must appear in the master macro instruction.  When the routine is called, the value of each tag appears in the corresponding position in the requesting pseudo instruction.  When the routine is assembled into the object program, it is automatically specialized by replacing each parameter tag within the routine by the corresponding parameter value.  As mentioned in [Section XI](#section-xi-argus-updating-function), a macro routine must be preceded by a `MACRODEF` control card and followed by a `FINIS` control card when it appears in the ARGUS input deck.  The macrocoding itself may consist of from 1 to 2048 cards.
+
+A parameter may be a constant, a field of an ARGUS language instruction, or any portion of a field down to a single character or digit.  A phrase of an ARGUS instruction is defined as any part of the instruction which is always bounded by punctuation characters (period, comma, plus, minus, asterisk, or slash) or by the beginning or end of a field.  For example, special register designators, augmenters, increments, address modifiers, and operation codes are all phrases.  Some fields (e.g., a symbolic tag without modifier) contain a single phrase, while others (e.g., a complex address) contain several phrases.  It follows, therefore, that a parameter may represent a phrase, a portion of a phrase, or a group of consecutive phrases.  The type and format of the information which the parameter represents is noted on the library routine specification sheet by the programmer who writes the routine.
+
+When a parameter represents only a portion of a phrase, it is necessary to designate the boundary between the parameter and the balance of the phrase.  The special symbol ⑤ (punched as an `8,5` combination) performs this function within the macrocoding.  For example, a macro routine contains the following decimal constant consisting of a plus sign, four zeros, and a seven-digit parameter tagged `PAR1`.
+![Parameter Example 1](images/code_example_p110_1.png?raw=true)
+```
+                DEC                 +0000⑤PAR1
+```
+The specification sheet for this routine states that `PAR1` represents an integer of seven decimal digits.  The macro instruction which executes this routine contains a parameter value in the proper format.  When the routine is specialized, this value replaces the parameter tag to form the complete constant.
+
+A parameter tag may not include any of the punctuation characters which serve as phrase boundaries (see above) or the character ⑤.  A parameter value may not contain a slash or a ⑤, but it may contain any other valid punctuation character.  When a line of macrocoding is specialized, phrase boundaries (except ⑤) are retained and parameter tags are literally replaced by their assigned values, including any phrase boundaries which those values may include.
+
+In most cases, each field of a macrocoding word is specialized separately.  This limits the number of characters in a parameter value, since the capacity of a field is fixed at 12 characters for the command code and 14 for each address field.  Note, however, that data is permitted to cross field boundaries in the control instructions `EQUALS` and `RESERVE`, in the `TAC` constant, and in all of the data constants.  Since a parameter value may not exceed one field in length, no phrase which is too long to store in one field may be represented by a single parameter.  For example, if a 16-character octal constant appears as a parameter in a macro routine, such a constant must be represented by two parameter tags, since it is too long to store in a single field.  The first word in the following example is a master macro instruction in which `TAG1` and `TAG2` represent two portions of an octal constant shown in the second word.  When the programmer writes a macro instruction of the form of the third word, this constant is specialized according to the stated values and appears as shown in the fourth word.
+
+![Parameter Example 2](images/code_example_p110_2.png?raw=true)
+```
+                L,CONVERT           TAG1            TAG2
+                OCT                 TAG1⑤TAG2
+                L,CONVERT           77777773        33333777
+                OCT                 77777773333337  77
+```
+
+Alphanumeric constants within macrocoding are limited to left-justified series of characters with no intervening space characters.  An alphanumeric constant may contain a parameter provided that neither the parameter tag nor its assigned value contain any spaces.
+
+The location field of the first macrocoding word should be left blank, as any tag written in this field is automatically replaced by the location field contents from the macro instruction, even if those contents are all blanks.  The location field should also be left blank in all succeeding lines of macrocoding.  However, if it is necessary to tag a macrocoding word, a parameter tag should be used so that it can be varied for each execution of the routine.  Otherwise, an illegal duplication of tags will result if the macro instruction is written twice within the same segment.  Macrocoding words are referenced by using address arithmetic with letters "`C`" and "`X`", as described on page 23.
+
+The S/C column in a macrocoding word may contain an "`S`", a "`C`", or a blank to specify that the next instruction is to be executed under control of the sequence counter, the cosequence counter, or the sequencing counter designated by the programmer in the macro instruction.  However, the controlling counter must be set to the proper value before any instruction can be executed from it.  A macro routine may be written so that it must always be executed under control of the same counter that selects it, thereby using the setting already in effect.  In this case, the specification sheet must inform the user always to write the macro instruction so that it designates the same counter by which it was selected.  A macro routine may be written to set the controlling counter explicitly, so that it may be entered from either counter.  In this case, if the routine is to return control to the counter specified in the macro instruction, then at least the last instruction to be executed must contain a blank in the S/C column.  A special case is a macro routine which exits under control of the counter designated in the macro instruction to the address which was stored in this counter when the routine was entered.  Such a routine must first preserve the contents of one counter, then operate out of sequence under control of the preserved counter, and finally restore the preserved counter and give control to the counter specified in the macro instruction.
+
+Any masks which are required by a macro routine may be either generated or designated within the routine.  A mask may be generated by specifying the customary three items of information `M`<sub>1</sub>, `M`<sub>2</sub>, and `M`<sub>3</sub> (see page 40).  The programmer may state the values of these three phrases in the macrocoding or he may represent any or all of them by parameters.  A mask may be designated by writing an "`F`" followed by a comma and a number from 0 to 31 (for a shift mask) in the location field.  Type "`B`" masks for use with both field and shift instructions are not permitted within macrocoding.  A designated mask is referenced in an instruction by using the mask number exactly as though it were a mask tag.  It is not necessary to assign mask numbers in the order in which the masks are designated.  Contrary to normal usage, however, the line which designates a macrocoding mask must _follow_ the last reference to the mask.  Note that all masks which are used by a macro routine are included in the mask groups which are in control when the routine is executed.  To facilitate the accommodation of macrocoding masks within these groups, ARGUS maintains a mask pool and eliminates any duplication among macrocoding masks, masks used by dependent subroutines, and all generated masks, whether generated in the main coding or in a library routine.
+
+If a macro routine is written to be added to the library of routines, the master macro instruction should contain a control character of "`L`" in the command code field, and the routine should be included in the deck of cards to be processed by LAMP (the Library Additions and Maintenance Program).  After LAMP has added the routine to the library, it can be referenced from any program being assembled.  If the routine is written for use as a programmer macro, the master macro instruction should contain a control character of "`P`", and the routine should be included in the object program deck prior to the first macro instruction by which it is called.  In this case, the routine is not available for reference from other programs.  However, a programmer macro routine may also be included in the LAMP input deck and added to the library without the necessity of altering the control character.
+
+#### Example
+
+Figure A-1 shows the coding of a macro routine called `SRCHEQU` as it is written in generalized form.  Lines 1 and 12 contain the control instructions `MACRODEF` and `FINIS`, respectively.  Line 2 is the master macro instruction containing all parameter tags used in the routine.  The type and format of each parameter are listed separately on the library routine specification sheet (shown in Figure A-2).  Figure A-3 shows a typical macro instruction which might be written to execute the routine `SRCHEQU`, followed by the routine in specialized form, as it would be inserted into the object program.  Note that each parameter tag is replaced by the corresponding value as given in the macro instruction.
+
+![Figure A-1](images/figure_a_1.png?raw=true)
+```
+                MACRODEF                                                            CONTROL CARD
+                L,SRCHEQU,M         ARG/SR          TABLE/SIZE      NOMATCH         MASTER MACRO INSTRUCTION
+                TX                  X,+0                            Z,SR            SET BEG. OF TABLE
+                TX                  X,+1                            Z,AU1           END OF TABLE -> AU1
+                TX                  ARG                             N,AU1           ARG -> END OF TABLE
+                NA                  N,SR,M          ARG             C,+0            ITEM = ARG? -> NO
+                WD                  Z,SR            X,+2            Z,SR            SET ADDR. OF ITEM
+                LA                  X,+1            Z,SR            NOMATCH         END OF TABLE -> YES
+    X,          SPEC                                                TABLE           CONTINUE IN SEQUENCE
+    X,          SPEC                                                TABLE + SIZE
+    X,          FXBIN               -M
+                FINIS                                                               CONTROL CARD
+```
+
+![Figure A-2](images/figure_a_2_1.png?raw=true)
+![Figure A-2 (cont)](images/figure_a_2_2.png?raw=true)
+
+![Figure A-3](images/figure_a_3.png?raw=true)
+```
+                L,SRCHEQU,3     C   PRODUCT/R2      PRICETBL/51     WRONGOPT        SAMPLE MACRO INSTR
+                TX              C   X,+0                            Z,R2            \
+                TX                  X,+1                            Z,AU1           |
+                TX                  PRODUCT                         N,AU1           |   MACRO CODING AS
+                NA                  N,R2,3          PRODUCT         C,+0            |   INSERTED INTO
+                WD                  Z,R2            X,+2            Z,R2            +-> PROGRAM REPLACING
+                LA                  X,+1            Z,R2            WRONGOPT        |   MACRO INSTRUCTION
+    X,          SPEC                                                PRICETBL        |
+    X,          SPEC                                                PRICETBL+51     |
+    X,          FXBIN               -3                                              /
+```
+
 ### Writing Subroutines
+
+A subroutine is written in the form of a program segment, assembled, and placed on the symbolic program tape.  After the routine is checked out, it is added to the library where it is available for inclusion in any program being assembled.  A subroutine is called dependent if it uses the mask groups currently in control in the object program when it is performed.  A subroutine is called independent it it either (1) sets up and uses its own mask groups, preserving and restoring the contents of the mask index register, or (2) does not require any masks.  Any segment or program on the SPT may be designated as a subroutine and added to the library, provided that it conforms to the following language restrictions:
+1. No special register tags appear in the location field;
+2. No link tags are used;
+3. No reference is made to a special register group indicator;
+4. All peripheral codes are expressed as parameters so that they can be varied for each individual execution; and
+5. If the subroutine is to be dependent, it does not contain any type "`B`" masks and no mask is referenced as an instruction operand.
+The assembled subroutine may or may not be a part of a program containing other segments.  Although a subroutine must be added to the library as a single program segment, it may be convenient for checkout purposes to write the subroutine as several segments, directing LAMP to combine these segments into one.  LAMP combines segments to form a subroutine by a simple overlay process; therefore, the programmer must insure that all segments of a subroutine are capable of being in memory simultaneously and without conflict.
+
+Subroutines may be nested to any desired level.  In other words, a subroutine may contain the call instruction of a second subroutine, which may in turn contain another call instruction, etc.  Any combination of dependent and independent subroutines may be nested.  A subroutine may also contain a macro instruction, although a macro routine is not permitted to include a library pseudo instruction.
+
+As mentioned in [Section XIII](#section-xiii-library-routines), every subroutine is stored out of sequence and reached from the main coding by means of a calling sequence.  ARGUS uses macro routines as calling sequences.  Therefore, to execute a subroutine the programmer writes the macro instruction of the desired calling sequence.  The calling sequence is inserted and specialized at assembly time; the subroutine itself is inserted out of sequence, in generalized form, and only once in each program segment in which it is to be executed.  When the calling sequence is executed, it specializes the subroutine according to the parameter values stated in the call instruction and then gives control to the subroutine.  When the subroutine is completed, control is returned to the main coding via the calling sequence.
+
+Every subroutine calling sequence contains a subroutine call constant, written with `SUBCALL` in the command code field, blank `A` and `B` address fields, and the name of the desired subroutine in the `C` address field.  This constant, which directs ARGUS to insert the routine named, is replaced at assembly time by a special address constant containing the entry address of the subroutine.  If the subroutine is to be entered at any point other than the beginning, the subroutine name is modified by address arithmetic in the `SUBCALL` constant.  If two or more entry points may be used for different executions of the subroutine, the desired entry must be designated by means of a parameter.
+
+For each subroutine which is added to the library, a calling sequence must be provided.  ARGUS can be directed to generate either of two standard calling sequences, known as type 1 and type 2, respectively, which fulfill the requirements of many common subroutines.  If the parameter requirements of a subroutine cannot be met by either of these standard calling sequences, the programmer must code a special calling sequence to be added to the library along with his subroutine.  When a subroutine is added to the library, LAMP either generates the requested calling sequence or processes the special sequence provided; in either case, the calling sequence is added to the macro routine area of the library.  Every subroutine consists of three sections: the entry, the body, and the exit.  The body of the subroutine is the coding which performs the function for which the routine is written.  The entry and exit form linkages from the calling sequence to the subroutine and from the subroutine back tot he calling sequence to return to the main coding.  The programmer who uses a standard (generated) calling sequence must be familiar with the generated coding in order to prepare his entry and exit.
 
 ### Type 1 Calling Sequence
 
+The type 1 calling sequence may be used with a subroutine requiring two or three parameters, each of which is a single-word variable, and none of which are literals.  The input parameters (argument locations) are specified in the `A` or `B` address field or both, the output parameter (result location) in the `C` address field.  Only one parameter may be specified in each address field and none may be specified in the command code field.
+
+The coding of the type 1 calling sequence is given in Figure A-4.  The parameter values from the call instruction are represented by the quantities in brackets.  This calling sequence performs the following functions:
+- Word 1 preserves `(CSC)` and resets `CSC` to `X,+0`, the address of the first out-of-sequence word in the calling sequence.  Word 1 is located in sequence and replaces the call instruction.
+- Word 2 stores the subroutine entry in `AU1`.
+- Word 3 stores the `B` address parameter in the mask register, by means of inactive addressing.
+- Word 4 stores the `A` address parameter in the low-order product register, by means of inactive addressing.  It then transfers the subroutine entry address from `AU1` to the `CSC` and gives control to this counter to enter the subroutine.
+- Word 5 is the re-entry to the calling sequence from the subroutine.  It transfers the result from the low-order product register, where it was stored by the subroutine, to the location specified by the `C` address parameter.
+- Word 6 restores the `CSC` to its preserved setting and returns control to the main coding.  The next instruction is selected by the sequencing counter specified in the S/C column of the call instruction.
+- Word 7, the `SUBCALL` constant, is in the form of a special address constant and makes the subroutine entry address accessible to the calling sequence.
+- Word 8 reserves the temporary storage location for `(CSC)`.
+Each subroutine which utilizes a type 1 calling sequence must include an entry which obtains the parameter values and places them in the subroutine, and an exit which makes the result available and returns control to the calling sequence.
+
+![Figure A-4](images/figure_a_4.png?raw=true)
+```
+                TS              C   Z,CSC           X,+6            X,+0
+    X,          TX              C   X,+5                            Z,AU1
+    X,          EX              C   -               [B ADDR. PARAM] -
+    X,          TS              C   [A ADDR. PARAM] -               N,AU1
+    X,          TS              C   -               [C ADDR. PARAM] -
+    X,          TX              C   X,+2                            X,CSC
+    X,          SUBCALL                                             SUBR1
+    X,          RESERVE             1
+```
+
+#### Entry
+
+The entry must include at least the following three words and a constant of all binary ones.  If the subroutine is independent and requires masks, the entry must also preserve `(MXR)` and set up the required mask groups.
+![Entry Example](images/code_example_p119.png?raw=true)
+```
+                TS              C   -               ARGA            -
+                TS              C   Z,CSH           CSHSAVE         -
+                EX              C   ALLONES         -               ARGB
+```
+- Word 1 transfers the `A` address parameter from the low-order product register, where it was stored by the calling sequence, into a temporary locations such as `ARGA`.
+- Word 2 preserves `(CSH)` for exit purposes.
+- Word 3 transfers the `B` address parameter from the mask register into a temporary location such as `ARGB`.  This word may be omitted if there is no `B` address parameter.
+
+#### Body
+
+The body of the subroutine uses the input parameters stored in `ARGA` and `ARGB` to perform the subroutine functions, and stores the result in a temporary location such as `RESULT`, where it is available to the exit.
+
+#### Exit
+
+The exit must include at least the following two words.  If the subroutine sets up its own mask group(s), the exit must also restore the previous contents of the `MXR` and set up the main program mask groups previously in control.
+![Exit Example](images/code_example_p120.png?raw=true)
+```
+                TX              C   CSHSAVE                         Z,AU1
+                TS              C   RESULT          -               N,AU1
+```
+- Word 1 transfers the previously saved contents of the `CSH` into `AU1`.
+- Word 2 transfers the result into the low-order product register, then transfers the previous contents of the `CSH` from `AU1` to the `CSC` and gives control to the `CSC` to return to the calling sequence.
+
 ### Type 2 Calling Sequence
+
+The type 2 calling sequence may be used with a subroutine requiring up to three parameters, each of which may be a single-word variable, a list (array) of variables, or a literal containing up to 16 binary digits.  One parameter may be specified in each address field in any desired sequence; none may be specified in the command code field.
+
+![Figure A-5](images/figure_a_5.png?raw=true)
+```
+                TS              C   Z,CSC           X,+5            X,+0
+    X,          TX              C   X,+3            Z,AU1           N,AU1
+    X,          PR,S            C   / A ADDRESS \   / B ADDRESS \   / C ADDRESS \
+    X,          CAC,S           C   \ PARAMETER /   \ PARAMETER /   \ PARAMETER /
+    X,          SUBCALL                                             SUBR2
+    X,          TX              S/C X,+1            -               Z,CSC
+    X,          RESERVE             1
+```
+
+The coding of the type 2 calling sequence is given in Figure A-5.  This routine performs the following functions:
+- Word 1 preserves `(CSC)` and resets `CSC` to `X,+0`, the address of the first out-of-sequence word in the calling sequence.  Word 1 is located in sequence and replaces the call instruction.
+- Word 2 transfers the subroutine entry address to `AU1`, then resets the `CSC` to that address and gives control to the `CSC` to enter the subroutine.
+- Words 3 and 4 contain the parameter values stated in the call instruction.  The "`S`" characters in the command code fields of these two words direct ARGUS to store the parameter values in these words according to a special format.  Each parameter which is expressed as a direct memory location address (with or without address modifier) or as a literal of up to 16 binary digits is translated to machine form and placed in the corresponding 16-bit group of word 4, and the address "`N,AU2`" is placed in the corresponding address field of word 3.  The use of the "`PR,S`" and "`CAC,S`" pair allows an address in any valid address format to be made available to the subroutine.  This pair also allows the use of a literal of up to 16 binary digits as a parameter.
+- Word 5, the `SUBCALL` constant, makes the subroutine entry address available to the calling sequence.
+- Word 6 restores the `CSC` to its preserved setting and returns control to the main coding.  The final instruction of the subroutine exit section must give control to this word.  The instruction following word 6 is selected by the sequencing counter specified in the S/C column of the call instruction.
+- Word 7 restores the temporary storage location for `(CSC)`.
+Each subroutine which utilizes a type 2 calling sequence requires an entry and an exit as linkage to and from the calling sequence.  The following discussion illustrates a typical entry and exit for a subroutine which uses a type 2 calling sequence.  The precise entry and exit prepared for a given subroutine depends upon the design of the call instruction and the types of parameters used.  In every case, the parameter values must be presented in the form expected by the subroutine.
+
+#### Entry
+
+
 
 ### Special Calling Sequences
 
