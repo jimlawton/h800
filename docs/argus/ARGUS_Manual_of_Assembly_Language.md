@@ -1859,6 +1859,9 @@ Each subroutine which utilizes a type 2 calling sequence requires an entry and a
 
 #### Entry
 
+#### Body
+
+#### Exit
 
 
 ### Special Calling Sequences
