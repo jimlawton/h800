@@ -1808,7 +1808,7 @@ Each subroutine which utilizes a type 1 calling sequence must include an entry w
 #### Entry
 
 The entry must include at least the following three words and a constant of all binary ones.  If the subroutine is independent and requires masks, the entry must also preserve `(MXR)` and set up the required mask groups.
-![Entry Example](images/code_example_p119.png?raw=true)
+![Type 1 Entry Example](images/code_example_p119.png?raw=true)
 ```
                 TS              C   -               ARGA            -
                 TS              C   Z,CSH           CSHSAVE         -
@@ -1825,7 +1825,7 @@ The body of the subroutine uses the input parameters stored in `ARGA` and `ARGB`
 #### Exit
 
 The exit must include at least the following two words.  If the subroutine sets up its own mask group(s), the exit must also restore the previous contents of the `MXR` and set up the main program mask groups previously in control.
-![Exit Example](images/code_example_p120.png?raw=true)
+![Type 1 Exit Example](images/code_example_p120.png?raw=true)
 ```
                 TX              C   CSHSAVE                         Z,AU1
                 TS              C   RESULT          -               N,AU1
@@ -1859,12 +1859,98 @@ Each subroutine which utilizes a type 2 calling sequence requires an entry and a
 
 #### Entry
 
+The following example illustrates an entry section based on three parameters in any valid address form, of which the `A` and `B` address fields contain one-word input parameters (arguments) and the `C` address field contains a one-word output parameter (result).  Note that this is not necessarily the case when  type 2 calling sequence is used.  The masks referenced by this entry coding are defined in the exit section (see below).
+
+![Type 2 Entry Example](images/code_example_p121.png?raw=true)
+```
+                TX              C   Z,CSH                           CSHSAVE
+                SS              C   N,CSH           AMASK           C,+4
+                SWS,AMASK       C   N,CSH           36              C,+5
+                SWS,ADES        C   N,CSH,1         1,L             C,+4
+                SWS,ALLONES     C   N,CSH           32              Z,AU2
+                TX              C   [A ADDR PARAM]                  ASTORE
+                SWS,ALLONES     C   N,CSH           16              Z,AU2
+                TX              C   [B ADDR PARAM]                  BSTORE
+```
+- Word 1 preserves the contents of the CSH in a temporary location called `CSHSAVE` for exit purposes.
+- Word 2 substitutes the `A` address field of the "`PR`" word in the calling sequence into the `A` address field of word 6.  Note that if the `A` address parameter is specified as a complex address, this parameter is transferred into word 6; whereas, if the `A` address parameter is a direct memory location address, the address "`N,AU2`" is transferred into word 6.
+- Word 3 shifts and substitutes the `B` address field of the "`PR`" word into the `A` address field of word 8.
+- Word 4 shifts and substitutes the address designator bit corresponding to the address transferred in word 3.  It also increments the CSH by 1 so that this register now contains the address of the "`CAC`" word in the calling sequence.
+- Word 5 transfers the `A` address field of the "`CAC`" word into `AU2`.
+- Word 6 transfers the contents of the location specified by the `A` address field of the "`PR`" word into a temporary storage location called `ASTORE`.  Note that if the `A` address parameter is specified as a complex address, the contents of the location represented by this address are placed in `ASTORE`; whereas if the `a` address parameter is a direct memory location address, the contents of the location whose address is stored in `AU2` are placed in `ASTORE`.
+- Words 7 and 8 position and transfer the contents of the location specified by the `B` address parameter into a temporary storage location called `BSTORE`.
+If any of the parameters are literals or array locations, they must be treated specially and removed from the "`PR`" or "`CAC`" words of the calling sequence with coding other than the above.  If the subroutine is independent and uses masks, the entry section must also preserve the contents of the MXR and set up the required mask group(s).
+
 #### Body
+
+The body of the subroutine in this example uses the input parameters stored in `ASTORE` and `BSTORE` to perform the subroutine function, and stores the result in a temporary location such as `ANSWER`, where it is available to the exit section.
 
 #### Exit
 
+The following example illustrates an exit section based on the same assumptions as the foregoing entry section, together with the masks required by both entry and exit.  Again, this coding is merely representative of an exit that might be used with a type 2 calling sequence.
+
+![Type 2 Exit Example](images/code_example_p122.png?raw=true)
+```
+                TX              C   CSHSAVE                         Z,CSH
+                SS              C   N,CSH,1         CMASK           C,+2
+                TX              C   N,CSH,2                         Z,AU2
+                TX              C   ANSWER                          [C ADDR. PARAM.]
+                TX              C   Z,CSH                           Z,CSC
+    S,ALLONES   DEC                 GGGGGGGGGGGG
+    S,AMASK     DEC                 100GGG
+    S,ADES      DEC                 1
+    CMASK       DEC                 040000000GGG
+```
+- Word 1 restores the preserved contents of the CSH (the address of the "`PR`" word in the calling sequence).
+- Word 2 substitutes the `C` address field of the "`PR`" word into the `C` address field of word 4.  The contents of the CSH are incremented by 1 so that this register now contains the address of the "`CAC`" word in the calling sequence.
+- Word 3 transfers the "`CAC`" word (the word whose address is stored in the CSH) into `AU2`.  Note that the low-order 16 bits of the "`CAC`" word are now stored in `AU2`.  The CSH is incremented by 2 to form the address of the calling sequence exit instruction.
+- Word 4 transfers the contents of location `ANSWER` to the location specified in the `C` address field of word 4 (the `C` address parameter of the call instruction).
+- Word 5 transfers the contents of the CSH into the CSC and gives control to this counter to restore control to the calling sequence exit instruction.
 
 ### Special Calling Sequences
+
+The standard calling sequence (type 1 and type 2) can be generated by ARGUS to handle many common forms of subroutines.  Any subroutine which cannot conveniently use a standard calling sequence requires a special calling sequence which is coded as a macro routine.  For example, a subroutine which requires more that three parameters must use a special calling sequence.  In addition, a subroutine which does not require the flexibility inherent in the standard calling sequence (such as a one-parameter subroutine) can use a special calling sequence to advantage.  Macro routines which are designed to serve as subroutine calling sequences have the same properties as other macro routines.
+
+A special calling sequence must perform the same functions as a generated calling sequence; i.e., it must provide linkage with the subroutine and handle the parameters specified in the call instruction.  The entry and exit sections of the subroutine must contain the coding to obtain the parameters and make the result information available to the main program.  Since this coding is entirely dependent upon the macro routine which serves as calling sequence, examples are not provided.
+
+Figures A-6 and A-7 show two macro routines designed to serve as special calling sequences.  The routine `CALLMAC` (Figure A-6) is a special calling sequence designed to handle a subroutine with many parameters.  The routine `DBLSUM` (Figure A-7) is a special calling sequence designed for efficient handling of a one-parameter subroutine.  Figure A-7 shows both the generalized coding for the macro routine and the routine after insertion of the parameter values specified in the sample macro instruction.
+
+![Figure A-6](images/figure_a_6.png?raw=true)
+```
+                MACRODEF
+                L,CALLMAC           TAG1/TAG2/TAG3  TAG4/BIN/PER    MASK/SR/SHIFT
+                TS              C   Z,CSC           X,+9            X,+0
+    X,          TS                  X,+8            Z,AU1           N,AU1
+    X,          PR,S                TAG1            TAG2            TAG3
+    X,          CAC,S               TAG1            TAG2            TAG3
+    X,          SWE,MASK            N,SR            A,SHIFT,L       N,SR,BIN
+    X,          SPEC                                                TAG4 + BIN
+    X,          FXBIN               BIN
+    X,          RF,PER
+    X,          TX                  X,+2                            Z,CSC
+    X,          SUBCALL                                             CALLMAC
+    X,          RESERVE             1
+                FINIS
+```
+
+![Figure A-7](images/figure_a_7.png?raw=true)
+```
+                MACRODEF
+                L,DBLSUM            LIST
+                TS                  C,+2            Z,AU1           N,AU1
+                SPEC                                                LIST
+                SUBCALL                                             DBLSUM
+                FINIS
+
+                AFTER INSERTING PARAMETER VALUES:
+
+                L,DBLSUM            DEBITS
+
+
+                TS                  C,+2            Z,AU1           N,AU1
+                SPEC                                                DEBITS
+                SUBCALL                                             DBLSUM
+```
 
 ### LAMP (Library Additions and Maintenance Program)
 
