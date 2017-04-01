@@ -2071,6 +2071,36 @@ Each program is followed by an end program identification record containing info
 
 ## Appendix C: Assembly Equipment Configuration Code
 
+The assembly equipment configuration code specifies the type and amount of equipment which ARGUS may assume to be available to a program being assembled.  The equipment array which is available to a specific program is described by punching this code in the `C` address field of the `PROGRAM` card (see page 86).  If this code is punched in the `C` address field of an `ARGUS` card (page 81), it describes a standard array which is available to all programs being assembled or reassembled during the current updating run for which individual arrays are not described.  If no array is described on the ARGUS card, the standard array is assumed to be the configuration of the system on which the updating run is being performed.  The equipment array actually required by the assembled program (known as the program configuration) may be either identical to or a subset of the assembly configuration.  The Assembly Program checks the equipment requirements of the object program and produces a diagnostic comment if the program requires equipment which is not available.
+
+The assembly configuration consists of 10 characters punched in the `C` address field of the `PROGRAM` card or the `ARGUS` card.  All 10 characters must be specified each time that the code is punched, since ARGUS automatically justifies the information to the left, suppressing any included spaces.  If more than 10 non-spaced characters are punched, the first (left-most) 10 such characters are used and the remainder are ignored.  The first eight characters in the configuration code correspond, respectively, to the eight input-output channel pairs in every Honeywell 800 system.  Each of these characters may be a number from `0` to `8` or a letter from `A` to `G`, and is interpreted according to the following table.  The ninth character must be a comma and the tenth a number from `1` to `8` which specifies the number of main memory modules (4096 words) in the available configuration.
+
+Character|Significance
+---------|------------
+`0` (zero) | No equipment is connected with the corresponding pair of channels.
+`1`-`8` | A tape control is connected with the corresponding channel pair and the indicated number of tape units are attached, in turn, to this control unit.  Any address up to and including the alphabetic code for this number is legal, since tape units must be plugged to consecutive hubs starting with `1`.
+`A` | A card reader is connected to the input channel; no equipment is connected to the output channel.
+`B` | No equipment is connected to the input channel; a printer is connected to the output channel.
+`C` | No equipment is connected to the input channel; a card punch is connected to the output channel.
+`D` | A card reader is connected to the input channel; a printer is connected to the output channel.
+`E` | A card reader is connected to the input channel; a card punch is connected to the output channel.
+`F` | No equipment is connected to the input channel; a printer and a card punch are connected to the output channel.
+`G` | A card reader is connected to the input channel; a printer and a card punch are connected to the output channel.
+`H` | A card reader is connected to the input channel; a printer is connected to the output channel.
+`I` | A card reader is connected to the input channel; a card punch is connected to the output channel.
+`J` | A paper tape reader is connected to the input channel; no equipment is connected to the output channel.
+`K` | No equipment is connected to the input channel; a paper tape punch is connected to the output channel.
+`L` | A card reader is connected to the input channel; a paper tape punch is connected to the output channel.
+`M` | A paper tape reader is connected to the input channel; a printer is connected to the output channel.
+`N` |A paper tape reader is connected to the input channel; a card punch is connected to the output channel.
+`O` (letter) | A paper tape reader is connected to the input channel; a paper tape punch is connected to the output channel.
+
+Note: If one of the letters `A` through `C` is punched, the indicated equipment may be connected by means of either a peripheral control or a multiple terminal unit control.
+
+Note: If one of the letters `D` through `G` is punched, the indicated equipment is connected by means of a multiple terminal unit control.
+
+Note: If one of the letters `H` through `O` is punched, all equipment on these channels is connected by means of individual peripheral controls.
+
 ## Appendix D: Tape, File, and Record Identification
 
 ### Tape Label Record
