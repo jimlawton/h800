@@ -2042,13 +2042,32 @@ LAMP uses the same equipment configuration as the updating run (see page 91).  T
 
 ## Appendix B: Symbolic Program Tape Layout
 
+The over-all layout of the symbolic program tape (SPT) is shown schematically in Figure B-1.  The symbolic program tape contains a file of object programs in both symbolic ARGUS language and machine language.  The retention of the original input language after assembly allows object program modification in ARGUS language, reassembly of existing programs during the updating run, and reproduction of assembled programs in ARGUS language.  The object programs in the symbolic file also contain test data and debugging pseudo instructions (derails) for use by the Program Test System and information generated during assembly for use by other systems programs.  In addition to the symbolic program file, the SPT also contains the file of ARGUS systems programs (Assembly, LAMP, the Program Test System, Executive, the library of routines, etc.) and a systems program loader.  All programs in the systems file are stored in machine language.
+
 ### Tape Label Record
+
+The tape label record on the SPT is used to identify the tape.  Word 4 contains two serial numbers: a 4-digit object serial number and a 2-digit systems serial number.  Each of these serial numbers changes whenever the corresponding file is updated.  The tape label record also contains a bootstrap routine and a table of contents of the symbolic program tape.  The bootstrap can be activated from the console to initiate loading of any of the systems programs.  The table of contents lists the names of all programs and segments in the symbolic file, in the order in which they appear on tape.  It is used to sort the ARGUS input deck into SPT order.
 
 ### Loader
 
+The two records following the tape label comprise the systems program loader.  To load and execute a systems program from the SPT, the operator activates the bootstrap routine and types in the name of the desired program.  The bootstrap loads the loader, which in turn loads and gives control to the program requested.
+
 ### Systems Program File
 
+The systems program file contains all of the programs comprising the ARGUS system in machine language.  Following the begin file identification record, each systems program is preceded by a begin program identification record and a record of control information for use in operating the program.  A systems program may include up to 64 segments.  Each segment is headed by a begin segment identification record and consists of machine words and control information for loading the segment.
+
 ### Symbolic Program File
+
+A second begin file identification record separates the symbolic program file from the systems file.  The elements of each object program are in the order which is established when ARGUS sorts the input card deck (see page 90).  All object program modifications (insertions, deletions, and replacements) from previous updating runs are incorporated in their proper place.  Program and segment directors are represented by begin program and begin segment identification records, respectively.  Each test data card is represented by a two-word item containing the test data word and a control word.  Each main coding word and each derail is represented by a variable-length symbolic item containing the original symbolic word, the assembled machine word, the absolute assignment of the word in memory, and the relocation information required by Executive.
+
+A symbolic object program also contains the following items of information generated during the assembly process:
+1. The `RES` table is a list of certain symbolic tags appearing in the program.  It is used only during the reassembly process and is not of concern to the programmer.
+2. The link tag table contains one item for each link tag used in the program.  It is used by Executive during the relocation process.
+3. The memory map is a list of all symbolic tags used in the program and their absolute assignments.  It is used by the Program Test System to re-create ARGUS language from machine language.
+4. The binary relocatable information consists of a two-word item for each machine word which is not represented by a symbolic item, i.e., subroutine words and generated masks.
+Each program is followed by an end program identification record containing information about the equipment complement required by the program.
+
+![Figure B-1](images/figure_b_1.png?raw=true)
 
 ## Appendix C: Assembly Equipment Configuration Code
 
