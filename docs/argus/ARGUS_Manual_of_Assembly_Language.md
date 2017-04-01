@@ -1954,25 +1954,91 @@ Figures A-6 and A-7 show two macro routines designed to serve as special calling
 
 ### LAMP (Library Additions and Maintenance Program)
 
+The library of routines, which is stored on the ARGUS symbolic program tape, is maintained by a program called LAMP.  This program may be used to add a new routine to the library or to delete or modify one already in the library.  The input to LAMP consists of the SPT (containing assembled programs and library routines) and a deck of punched cards or a tape containing punched card images.  The input deck uses the following director cards to control the action of LAMP.
+
+![LAMP Directors](images/code_example_p126.png?raw=true)
+```
+                LAMP
+                MACRODEF
+                FINIS
+                NEWSUB,8        D   PROGRAM NAME    SEGMENT NAME    SUBROUTINE NAME
+                ELIMMAC             MACRO NAME
+                ELIMSUB             SUBROUTINE NAME MACRO NAME
+                ENDLAMP
+```
+
 #### LAMP
+
+This director card precedes and identifies the LAMP input deck.  The word `LAMP` is punched in the command code field.  The `A` and `B` address fields may contain the old and new SPT object serial numbers. respectively (see [Appendix B](#appendix-b-symbolic-program-tape-layout)).
 
 #### ENDLAMP
 
+This director card signals the end of the LAMP input deck.  The only significant information is the word `ENDLAMP` punched in the command code field.
+
 ### Macro Routine Processing
+
+The `MACRODEF` and `FINIS` directors are used to add a macro routine to the library.  The card batch for a macro routine must contain the following cards, in the sequence in which they are listed:
+1. A `MACRODEF` director card;
+2. A master macro instruction card;
+3. The cards containing the macrocoding; and
+4. A `FINIS` director card.
+If a macro routine is included in the LAMP input deck in this form, it is added to the library of routines in ARGUS input language.  If a macro routine is included in the input to a program being assembled, the routine is handled as a programmer macro routine (see [Section XIII](#section-xiii-library-routines) and is not added to the library.
 
 #### MACRODEF
 
+This director card precedes and identifies each macro routine in the input deck.  The only significant information is the word `MACRODEF` punched in the command code field and the contents of the S/C column.  This column my direct LAMP to check the identity of all cards in the macro routine, to order the macrocoding cards by serial number, or both.  Permissible characters in the S/C column are "`I`", "`S`", "`B`", or blank, and the resulting action is identical to the use of the `MACRODEF` instruction with a programmer macro routine (as described on page 84).  In addition, if identity checking is requested for a given routine and any card within that routine fails the identity check, the routine is not added to the library and a diagnostic printout is produced.
+
 #### FINIS
+
+This director card signals the end of a macro routine.  The only significant information is the word `FINIS` in the command code field.  A `FINIS` card must be followed by another director card.
 
 #### ELIMMAC
 
+This card directs LAMP to delete a macro routine from the library.  The word `ELIMMAC` is punched in the command code field and the name of the routine to be deleted is punched in the `A` address field.  The remaining fields are not used.
+
+In order to modify a macro routine in the library, it is necessary to delete the existing routine and add the new version, just as if it were an entirely new routine.  The card deck for the new version must be complete with `MACRODEF` director, master macro instruction, macrocoding, and `FINIS` director.  LAMP deletes the old version and adds the new version in two separate operations, always performing the deletion first, regardless of the relative positions of the `ELIMMAC` director and the new version in the input deck.
+
 ### Subroutine Processing
+
+Before a subroutine can be added to the library, it must be assembled and appear as a segment or as a complete program on the symbolic program tape.  The directors `NEWSUB` and `ELIMSUB` are used to add subroutines to the library and to delete subroutines from the library, respectively.
 
 #### NEWSUB
 
+This card directs LAMP to add a new subroutine to the library and provides the information required to accomplish this.  If the subroutine has been assembled as a single program segment, the program and segment names are punched in the `A` and `B` address fields, respectively, of the `NEWSUB` director, just as they appear on the symbolic program tape.  If the subroutine has been segmented for assembly, the `B` address field is left blank and LAMP combines the segments to form a subroutine.  In either case, the `C` address field must contain a name of up to eight alphanumeric characters by which the subroutine is to be identified in the library.  A subroutine name must include at least one non-numeric character.
+
+If the command code `NEWSUB` is followed by a comma and a digit "`1`" or "`2`", LAMP automatically generates a standard calling sequence of the specified type (see page 116) and adds this calling sequence to the macro routine portion of the library under the same name as the subroutine.  If no information follows the command code, a macro routine should be added to the library for use as a special calling sequence.  This routine must be in standard macro routine form with `MACRODEF` and `FINIS` directors and master macro instruction.  It may or may not have the same name as the subroutine with which it is to be used.
+
+The S/C column of the `NEWSUB` director must contain either a "`D`" or an "`I`" to indicate whether the subroutine is dependent upon or independent of the object program mask groups, respectively.  A blank in this column is an error and results in a diagnostic comment.  If the subroutine has been segmented for assembly, it must be specified as an independent subroutine.
+
 #### ELIMSUB
 
+This card directs LAMP to delete the subroutine named in the `A` address field from the library.  The `B` address field may contain the name of a macro routine (usually the calling sequence for the subroutine to be deleted).  In this case, both the subroutine and the macro routine are deleted.  Otherwise LAMP deletes only the subroutine.
+
+Before a subroutine in the library can be modified, the new version must be assembled and placed on the symbolic program tape.  LAMP then requires an `ELIMSUB` director to delete the existing subroutine from the library, plus a `NEWSUB` director to add the new version.  Since deletion is always performed before addition, the sequence of these directors within the input deck is irrelevant.
+
 ### Output from LAMP
+
+LAMP uses the same equipment configuration as the updating run (see page 91).  The principal output from LAMP is the new symbolic program tape containing the updated library.  In addition, LAMP produces a printed table of contents for the updated library, listing all macro routines and all subroutines in the library under separate headings.  The printed output from LAMP also includes appropriate diagnostic comments if the following programming errors are detected in the input deck:
+1. An illegal command code;
+2. Card sequence error (i.e., violation of sequencing rules within a macro routine);
+3. Illegal character;
+4. Identity check failure;
+5. The name of a routine exceeds eight characters in length;
+6. A line number exceeds 2047;
+7. Macro routine name duplicates name already in macro routine library;
+(If any of the above errors is detected within a macro routine, the routine is not added to the library.)
+8. Subroutine name duplicates name already in subroutine library;
+9. A blank S/C column in a `NEWSUB` director (i.e., the subroutine is not designated either dependent or independent);
+10. A subroutine contains errors which are unacceptable to LAMP;
+11. A subroutine contains a reference to a special register group indicator;
+12. A dependent subroutine contains more than 32 field masks or more than 64 shift masks;
+13. A dependent subroutine contains a type "`B`" mask;
+14. A dependent subroutine contains a reference to a mask as an operand;
+(If any of the above errors 8-14 is detected, the subroutine is not added to the library.)
+15. Illegal calling sequence number in a `NEWSUB` director.  (If this error is detected, the subroutine is added to the library but no calling sequence is generated.);
+16. The subroutine named on an `ELIMSUB` director is not in the library;
+17. The macro routine named on an `ELIMMAC` director or on an `ELIMSUB` director is not in the library;
+18. A `SUBCALL` constant in either a new or an existing macro routine names a subroutine which is not in the library (information only, no action by LAMP).
 
 ## Appendix B: Symbolic Program Tape Layout
 
