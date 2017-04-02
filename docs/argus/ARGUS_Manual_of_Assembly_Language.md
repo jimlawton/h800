@@ -2111,8 +2111,8 @@ The first record on every tape is a tape label.  All programs furnished by Honey
 
 The maximum number of words in a tape label record is 2048.  In the case of a data file or a work tape, care must be exercised in processing this record since its length varies and its structure differs from that of the other records on the tape.  The tape label may be skipped by reading it into the stopper location; however, if it is to be rewritten, the contents of the first three words must be preserved for inclusion in the new tape label.
 
- | 
--|-
+Words|Significance 
+-----|------------
 Word 1 | The banner word in a tape label record has the octal configuration `6004 xxxx 0020 xxxx`.  The first four digits represent control information to bypass the tape label on a tape which is to be printed or punched.  The next four digits are irrelevant.  The contents of bits 28 through 32 identify the record as a tape label.  The record count is irrelevant, since record counting begins with the second record on tape.  (See page 140 for the binary configuration of a banner word.)
 * Word 2 | Tape Identification
 * Word 3 | Unspecified (contents preserved by ARGUS)
@@ -2128,8 +2128,8 @@ Word 12+n+m+2 | End-of-Record Word
 
 These records are used to identify the beginning and end of each file on a data tape.  On a program tape, they are used to identify the beginning and end of each program.
 
- | 
--|-
+Words|Significance 
+-----|------------
 Word 1 | Banner Word.  Bits 28 through 32 specify the type of information identified by this record (see page 140).
 Word 2 | Name of File or Program (eight alphabetic characters)
 Word 3 | Reel Number (two low-order decimal digits) if file identification record.  The reel number is used primarily for multi-reel files and appears in both the beginning and end file identification records, varying from `01` for the first reel to hex `GG` for the end identification record of the last reel.  The contents of this word are unspecified for a program identification record.
@@ -2140,8 +2140,8 @@ Word 5+n+2 | End-of-Record Word
 
 If a data file is to be sorted by an ARGUS generated sort or collate routine, words 5 to 9 of the file identification records should contain the following parameters, unless these parameters are supplied by means of "own coding".
 
- | | 
--|-|-
+Words|Significance 
+-----|------------
 Word 5 | Digits 1-3 | Number of items per record (1-250)
  | Digits 4-6 | Number of words per item (1-250)
  | Digit 7 | Fixed-length (0) or variable-length (1) records
@@ -2160,8 +2160,8 @@ Word 9 | | Mask for 3rd key
 
 These records are used to identify the beginning and end of each segment on a program tape.
 
- | 
--|-
+Words|Significance 
+-----|------------
 Word 1 | Banner Word.  Bits 28 through 32 have the configuration `01001` (see page 140).
 Word 2 | Name of Program (eight alphanumeric characters)
 Word 3 | Name of Segment (seven high-order alphanumeric characters)
@@ -2174,8 +2174,8 @@ Word 5+n+2 | End-of-Record Word
 
 The end-of-information record signals the end of useful information on tape.  The last end file identification record should be followed by an end-of-information record and a dummy record.  If an additional file is to be stored on the same tape, the end-of-information record must be written over and a new end-of-information record must be written at the end of the new file.  However, a program may use the tape area beyond the end-of-information record for work space without having to destroy the end-of-information record.
 
- | 
--|-
+Words|Significance 
+-----|------------
 Word 1 | Banner Word.  Bits 28 through 32 have the configuration `10001` (see page 140).
 Words 2-4 | Unspecified
 Words 5 to 6 | Orthowords
@@ -2184,8 +2184,8 @@ Word 7 | End-of-Record Word
 ### Banner Words
 
 The first word of every record is a banner word which should contain a record count in bit positions 33 through 48.  This record count starts with a value of `1` in the record following the tape label and continues in ascending sequence through all included files to the last record on the tape.  Programs which include restart provisions, including Executive, make use of the record count to position tapes.  Since the banner word must also serve as a control word on tapes which are to be printed or punched, bit positions 1 through 30 are reserved for control information.  The contents of bit positions 31 and 32 specify the type of record which follows the banner word, as follows:
- | 
--|-
+Bits|Significance 
+----|------------
 Bits 31-32 | `00` = printer or punch record
  | `01` = identification record
  | `10` = program coding record
@@ -2193,8 +2193,8 @@ Bits 31-32 | `00` = printer or punch record
 In a tape label record, bit position 1 should contain a `1`, which causes the peripheral control to ignore the remaining control bits (2-30) if the tape is printed or punched.  The printer, for example, prints and then skips tpo the head of form.
 
 In the case of an identification record, bit positions 28 through 30 are used to specify the type of identification record as follows:
- | 
--|-
+Bits|Significance 
+----|------------
 Bit 28 | `0` = beginning
  | `1` = end
 Bits 29-30 | `00` = information
