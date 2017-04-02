@@ -2114,8 +2114,8 @@ The maximum number of words in a tape label record is 2048.  In the case of a da
 Words|Significance 
 -----|------------
 Word 1 | The banner word in a tape label record has the octal configuration `6004 xxxx 0020 xxxx`.  The first four digits represent control information to bypass the tape label on a tape which is to be printed or punched.  The next four digits are irrelevant.  The contents of bits 28 through 32 identify the record as a tape label.  The record count is irrelevant, since record counting begins with the second record on tape.  (See page 140 for the binary configuration of a banner word.)
-* Word 2 | Tape Identification
-* Word 3 | Unspecified (contents preserved by ARGUS)
+Word 2 * | Tape Identification
+Word 3 * | Unspecified (contents preserved by ARGUS)
 Words 4 to 11 | Unspecified (may be used without restriction)
 Words 12 to 12+n-1 | Bootstrap Routine (systems program tapes only)
 Words 12+n to 12+n+m-1 | Program Directory (symbolic program tape only)
