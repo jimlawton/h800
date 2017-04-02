@@ -2140,8 +2140,8 @@ Word 5+n+2 | End-of-Record Word
 
 If a data file is to be sorted by an ARGUS generated sort or collate routine, words 5 to 9 of the file identification records should contain the following parameters, unless these parameters are supplied by means of "own coding".
 
-Words|Significance 
------|------------
+Word|Digits|Significance 
+----|------|------------
 Word 5 | Digits 1-3 | Number of items per record (1-250)
  | Digits 4-6 | Number of words per item (1-250)
  | Digit 7 | Fixed-length (0) or variable-length (1) records
