@@ -2184,15 +2184,18 @@ Words|Significance
 ### Banner Words
 
 The first word of every record is a banner word which should contain a record count in bit positions 33 through 48.  This record count starts with a value of `1` in the record following the tape label and continues in ascending sequence through all included files to the last record on the tape.  Programs which include restart provisions, including Executive, make use of the record count to position tapes.  Since the banner word must also serve as a control word on tapes which are to be printed or punched, bit positions 1 through 30 are reserved for control information.  The contents of bit positions 31 and 32 specify the type of record which follows the banner word, as follows:
+
 Bits|Significance 
 ----|------------
 31-32 | `00` = printer or punch record
 31-32 | `01` = identification record
 31-32 | `10` = program coding record
 31-32 | `11` = data record
+
 In a tape label record, bit position 1 should contain a `1`, which causes the peripheral control to ignore the remaining control bits (2-30) if the tape is printed or punched.  The printer, for example, prints and then skips tpo the head of form.
 
 In the case of an identification record, bit positions 28 through 30 are used to specify the type of identification record as follows:
+
 Bits|Significance 
 ----|------------
 28 | `0` = beginning
@@ -2201,6 +2204,7 @@ Bits|Significance
 29-30 | `01` = file or program
 29-30 | `10` = segment
 29-30 | `11` = other (used only on symbolic program tape to identify the boundaries of the two program files)
+
 Note that the record type of most records can be determined by examining the contents of banner word bits 31 and 32.  If these bits contain the configuration `01`, then the contents of bits 28 through 30 must also be examined.
 
 ### Summary
