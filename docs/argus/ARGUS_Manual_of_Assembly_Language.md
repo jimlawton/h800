@@ -2103,17 +2103,109 @@ Note: If one of the letters `H` through `O` is punched, all equipment on these c
 
 ## Appendix D: Tape, File, and Record Identification
 
+All of the ARGUS systems programs, as well as all tape-handling and other standard routines furnished by Honeywell, use certain conventions to identify information recorded on magnetic tape.  Every tape is identified by means of a tape label record.  The tape label and the end-of-information define, respectively, the beginning and end of useful information on the tape.  Each file or program on a tape is bounded by beginning and end identification records.  Segments are preceded by begin segment identification records.  Finally, each record on tape is identified by a banner word as an identification record, a record of program coding, or a data record.  The banner word also contains a record count which is used in tape positioning, plus control information if the record is to be printed or punched.
+
 ### Tape Label Record
+
+The first record on every tape is a tape label.  All programs furnished by Honeywell assume the existence of such a record and preserve the first three words of this record.  If all programs used at an installation observe this convention, these three words may be used to establish automatic tape accounting procedures based upon the identification of the physical reel.  On all ARGUS systems program tapes, the tape label record normally contains other information such as a bootstrap routine and/or a directory.
+
+The maximum number of words in a tape label record is 2048.  In the case of a data file or a work tape, care must be exercised in processing this record since its length varies and its structure differs from that of the other records on the tape.  The tape label may be skipped by reading it into the stopper location; however, if it is to be rewritten, the contents of the first three words must be preserved for inclusion in the new tape label.
+
+ | 
+-|-
+Word 1 | The banner word in a tape label record has the octal configuration `6004 xxxx 0020 xxxx`.  The first four digits represent control information to bypass the tape label on a tape which is to be printed or punched.  The next four digits are irrelevant.  The contents of bits 28 through 32 identify the record as a tape label.  The record count is irrelevant, since record counting begins with the second record on tape.  (See page 140 for the binary configuration of a banner word.)
+* Word 2 | Tape Identification
+* Word 3 | Unspecified (contents preserved by ARGUS)
+Words 4 to 11 | Unspecified (may be used without restriction)
+Words 12 to 12+n-1 | Bootstrap Routine (systems program tapes only)
+Words 12+n to 12+n+m-1 | Program Directory (symbolic program tape only)
+Words 12+n+m to 12+n+m+1 | Orthowords
+Word 12+n+m+2 | End-of-Record Word
+
+[*] If the information in these words is in standard alphanumeric code, it will appear in recognizable form is the tape is printed.
 
 ### File and Program Identification Records
 
+These records are used to identify the beginning and end of each file on a data tape.  On a program tape, they are used to identify the beginning and end of each program.
+
+ | 
+-|-
+Word 1 | Banner Word.  Bits 28 through 32 specify the type of information identified by this record (see page 140).
+Word 2 | Name of File or Program (eight alphabetic characters)
+Word 3 | Reel Number (two low-order decimal digits) if file identification record.  The reel number is used primarily for multi-reel files and appears in both the beginning and end file identification records, varying from `01` for the first reel to hex `GG` for the end identification record of the last reel.  The contents of this word are unspecified for a program identification record.
+Word 4 | Date Obsolete and Date Written (begin file or program records only).  Each date comprises six decimal digits in the form year (two digits), month (two digits), day (two digits).
+Words 5 to 5+n-1 | File Parameters: Relocation information in program identification records; Sort parameters in file identification records (see below).
+Words 5+n to 5+n+1 | Orthowords
+Word 5+n+2 | End-of-Record Word
+
+If a data file is to be sorted by an ARGUS generated sort or collate routine, words 5 to 9 of the file identification records should contain the following parameters, unless these parameters are supplied by means of "own coding".
+
+ | | 
+-|-|-
+Word 5 | Digits 1-3 | Number of items per record (1-250)
+ | Digits 4-6 | Number of words per item (1-250)
+ | Digit 7 | Fixed-length (0) or variable-length (1) records
+ | Digit 8 | Banner words present (0) or missing (1) in data records
+ | Digits 9-12 | Not used
+Word 6 | Digits 1-3 | 1st key position (word 1-250)
+ | Digits 4-6 | 2nd key position (word 1-250)
+ | Digits 7-9 | 3rd key position (word 1-250)
+ | Digit 10 | Keys not masked (0) or masked (1)
+ | Digits 11-12 | Not used
+Word 7 | | Mask for 1st key
+Word 8 | | Mask for 2nd key
+Word 9 | | Mask for 3rd key
+
 ### Segment Identification Records
+
+These records are used to identify the beginning and end of each segment on a program tape.
+
+ | 
+-|-
+Word 1 | Banner Word.  Bits 28 through 32 have the configuration `01001` (see page 140).
+Word 2 | Name of Program (eight alphanumeric characters)
+Word 3 | Name of Segment (seven high-order alphanumeric characters)
+Word 4 | Date Obsolete and Date Written (begin segment records only).  Each date comprises two decimal digits for year, two digits for month, and two digits for day.
+Words 5 to 5+n-1 | Relocation Information
+Words 5+n to 5+n+1 | Orthowords
+Word 5+n+2 | End-of-Record Word
 
 ### End-of-Information Records
 
+The end-of-information record signals the end of useful information on tape.  The last end file identification record should be followed by an end-of-information record and a dummy record.  If an additional file is to be stored on the same tape, the end-of-information record must be written over and a new end-of-information record must be written at the end of the new file.  However, a program may use the tape area beyond the end-of-information record for work space without having to destroy the end-of-information record.
+
+ | 
+-|-
+Word 1 | Banner Word.  Bits 28 through 32 have the configuration `10001` (see page 140).
+Words 2-4 | Unspecified
+Words 5 to 6 | Orthowords
+Word 7 | End-of-Record Word
+
 ### Banner Words
 
+The first word of every record is a banner word which should contain a record count in bit positions 33 through 48.  This record count starts with a value of `1` in the record following the tape label and continues in ascending sequence through all included files to the last record on the tape.  Programs which include restart provisions, including Executive, make use of the record count to position tapes.  Since the banner word must also serve as a control word on tapes which are to be printed or punched, bit positions 1 through 30 are reserved for control information.  The contents of bit positions 31 and 32 specify the type of record which follows the banner word, as follows:
+ | 
+-|-
+Bits 31-32 | `00` = printer or punch record
+ | `01` = identification record
+ | `10` = program coding record
+ | `11` = data record
+In a tape label record, bit position 1 should contain a `1`, which causes the peripheral control to ignore the remaining control bits (2-30) if the tape is printed or punched.  The printer, for example, prints and then skips tpo the head of form.
+
+In the case of an identification record, bit positions 28 through 30 are used to specify the type of identification record as follows:
+ | 
+-|-
+Bit 28 | `0` = beginning
+ | `1` = end
+Bits 29-30 | `00` = information
+ | `01` = file or program
+ | `10` = segment
+ | `11` = other (used only on symbolic program tape to identify the boundaries of the two program files)
+Note that the record type of most records can be determined by examining the contents of banner word bits 31 and 32.  If these bits contain the configuration `01`, then the contents of bits 28 through 30 must also be examined.
+
 ### Summary
+
+Some of the above conventions are required for tapes to be used with Honeywell automatic programming aids and some are optional.  As noted above, the restart provisions of the Executive System require the inclusion of banner words in all records.  Likewise, the ARGUS generated sort and collate routines assume the presence of parameters in words 5 through 9 of the begin file identification records (as noted above), unless this information is provided by means of "own coding".  These routines also require that each file contain an end file identification record which specifies the same file name as the begin file identification record.  In addition, the library tape-handling routines assume the presence of banner words in all records, plus tape label records, end-of-information records, and beginning-of-file, program, and segment identification records as appropriate.  The use of end program and segment identification records is optional.  Such records may be included wherever their use facilitates processing.
 
 ## Appendix E: Honeywell 800 Machine Instructions
 
