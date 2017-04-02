@@ -2143,15 +2143,15 @@ If a data file is to be sorted by an ARGUS generated sort or collate routine, wo
 Word|Digits|Significance 
 ----|------|------------
 Word 5 | Digits 1-3 | Number of items per record (1-250)
- | Digits 4-6 | Number of words per item (1-250)
- | Digit 7 | Fixed-length (0) or variable-length (1) records
- | Digit 8 | Banner words present (0) or missing (1) in data records
- | Digits 9-12 | Not used
+Word 5 | Digits 4-6 | Number of words per item (1-250)
+Word 5 | Digit 7 | Fixed-length (0) or variable-length (1) records
+Word 5 | Digit 8 | Banner words present (0) or missing (1) in data records
+Word 5 | Digits 9-12 | Not used
 Word 6 | Digits 1-3 | 1st key position (word 1-250)
- | Digits 4-6 | 2nd key position (word 1-250)
- | Digits 7-9 | 3rd key position (word 1-250)
- | Digit 10 | Keys not masked (0) or masked (1)
- | Digits 11-12 | Not used
+Word 6 | Digits 4-6 | 2nd key position (word 1-250)
+Word 6 | Digits 7-9 | 3rd key position (word 1-250)
+Word 6 | Digit 10 | Keys not masked (0) or masked (1)
+Word 6 | Digits 11-12 | Not used
 Word 7 | | Mask for 1st key
 Word 8 | | Mask for 2nd key
 Word 9 | | Mask for 3rd key
@@ -2187,20 +2187,20 @@ The first word of every record is a banner word which should contain a record co
 Bits|Significance 
 ----|------------
 Bits 31-32 | `00` = printer or punch record
- | `01` = identification record
- | `10` = program coding record
- | `11` = data record
+Bits 31-32 | `01` = identification record
+Bits 31-32 | `10` = program coding record
+Bits 31-32 | `11` = data record
 In a tape label record, bit position 1 should contain a `1`, which causes the peripheral control to ignore the remaining control bits (2-30) if the tape is printed or punched.  The printer, for example, prints and then skips tpo the head of form.
 
 In the case of an identification record, bit positions 28 through 30 are used to specify the type of identification record as follows:
 Bits|Significance 
 ----|------------
 Bit 28 | `0` = beginning
- | `1` = end
+Bit 28 | `1` = end
 Bits 29-30 | `00` = information
- | `01` = file or program
- | `10` = segment
- | `11` = other (used only on symbolic program tape to identify the boundaries of the two program files)
+Bits 29-30 | `01` = file or program
+Bits 29-30 | `10` = segment
+Bits 29-30 | `11` = other (used only on symbolic program tape to identify the boundaries of the two program files)
 Note that the record type of most records can be determined by examining the contents of banner word bits 31 and 32.  If these bits contain the configuration `01`, then the contents of bits 28 through 30 must also be examined.
 
 ### Summary
