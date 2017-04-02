@@ -10,5 +10,6 @@ The H-x800s were 48-bit word-size machines (with an addiitonal 8 parity bits per
 The _H-1800 Programmers' Reference Manual_ has been transcribed to Markdown here:
 https://github.com/jimlawton/h800/blob/master/docs/prm/Honeywell-1800-PRM.md
 
-The _ARGUS Manual of Assembly Language_ is being transcribed to Markdown here:
+The _ARGUS Manual of Assembly Language_ has been transcribed to Markdown here:
 https://github.com/jimlawton/h800/blob/master/docs/argus/ARGUS_Manual_of_Assembly_Language.md
+(there are 2 pages missing in the original document scan)
