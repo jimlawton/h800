@@ -2227,9 +2227,7 @@ MNEMONIC OPERATION CODE|DESCRIPTION|TIME IN MEMORY CYCLES<sup>1</sup>
 `DM` | Decimal Multiply `(A)` by `(B)`.  Store high-order and low-order products as in `BM` with same sign conventions. | `27`
 `WA`<sup>2</sup> | Word Add.  Binary add absolute value of `(A)` to absolute value of `(B)`, considered as unsigned 48-bit numbers.  Store 48-bit result in `C`.  Observe same overflow conventions as in `BA`. | `4`
 `WD`<sup>2</sup> | Word Difference.  Binary Subtract absolute value of `(B)` from absolute value of `(A)`.  Otherwise identical to `WA`. | `4`
-
-_NOTE: Page 142 is missing from the scanned document, attempting to reconstruct..._
-
+<MISSING> | _NOTE: Page 142 is missing from the scanned document._ | 
 `NN`<sup>2</sup> | Inequality Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≠ `(B)`, change specified copunter to `C`.  Plus `0` equals minus `0`. | `4`
 `NA`<sup>2</sup> | Inequality Comparison, Alphabetic.  Same as `NN` except that absolute values of `(A)` and `(B)` including sign positions are compared.  Plus `0` is not equal to minus `0`. | `4`
 `LN`<sup>2</sup> | Less Than Or Equal Comparison, Numeric.  Compare algebraically `(A)` and `(B)`.  If `(A)` ≤ `(B)`, change specified counter to `C`.  Plus `0` equals minus `0`. | `4`
