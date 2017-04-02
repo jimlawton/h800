@@ -2166,9 +2166,9 @@ Words|Significance
 2 | Name of Program (eight alphanumeric characters)
 3 | Name of Segment (seven high-order alphanumeric characters)
 4 | Date Obsolete and Date Written (begin segment records only).  Each date comprises two decimal digits for year, two digits for month, and two digits for day.
-Words 5 to 5+n-1 | Relocation Information
-Words 5+n to 5+n+1 | Orthowords
-Word 5+n+2 | End-of-Record Word
+5 to 5+n-1 | Relocation Information
+5+n to 5+n+1 | Orthowords
+5+n+2 | End-of-Record Word
 
 ### End-of-Information Records
 
