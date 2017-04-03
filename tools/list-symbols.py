@@ -23,7 +23,7 @@ def main():
 
     filename = args[0]
 
-    d = arguscard.Deck(file=filename)
+    d = h800.arguscard.Deck(file=filename)
 
     symtab = {}
     for card in d.cards:

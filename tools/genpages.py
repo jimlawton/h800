@@ -33,7 +33,7 @@ def main():
     with open(filename, 'r') as f:
         inlines = f.readlines()
 
-    d = arguscard.Deck(inlines)
+    d = h800.arguscard.Deck(inlines)
 
     logsection = d.log_section
     logsectioncol8 = d.log_section_col8
