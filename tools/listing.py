@@ -40,6 +40,8 @@ def main():
             line = card.line.replace('\n', '')
             print("%-64s %-06d %s" % (card.filename, card.linenum, line), file=f)
 
+    print("Wrote listing file to %s" % listfile)
+
 
 if __name__ == '__main__':
     main()
