@@ -11,7 +11,7 @@ from __future__ import print_function
 import sys
 from optparse import OptionParser
 
-import arguscard
+import h800.arguscard
 
 
 def main():

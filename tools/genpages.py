@@ -13,7 +13,7 @@ import os
 import os.path
 from optparse import OptionParser
 
-import arguscard
+import h800.arguscard
 
 
 def main():
