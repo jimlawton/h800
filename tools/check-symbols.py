@@ -17,10 +17,27 @@ import h800.arguscard
 
 def main():
     parser = OptionParser("usage: %prog filename")
-    (options, args) = parser.parse_args()
+    parser.add_option('-a', '--all',
+                      dest='all',
+                      action='store_true',
+                      default=False,
+                      help="Check for all errors.")
+    parser.add_option('-b', '--bad',
+                      dest='bad',
+                      action='store_true',
+                      default=False,
+                      help="Check for bad symbol names.")
+    parser.add_option('-m', '--multiple',
+                      dest='multiple',
+                      action='store_true',
+                      default=False,
+                      help="Check for multiply-defined symbols.")
+    (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
         sys.exit(1)
+    if opts.all:
+        opts.bad = opts.multiple = True
 
     filename = args[0]
 
