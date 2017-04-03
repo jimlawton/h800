@@ -44,6 +44,10 @@ def main():
             if strLabel not in symtab.keys():
                 symtab[strLabel] = symtabEntry
             else:
+                # TODO: check the command code field. Depending on the command
+                # code field operation, multiple declarations might be allowed,
+                # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc all reserve storage,
+                # but ASSIGN doesn't.
                 print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
                 print("Previous definition: %s" % symtab[strLabel])
                 print("Current definition: %s" % symtabEntry)
