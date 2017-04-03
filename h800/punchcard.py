@@ -108,17 +108,21 @@ class PunchCard(object):
 class Deck(object):
     """A simple class to represent a deck of punch-cards."""
     def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, cardclass=PunchCard):
+        self._width = width
+        self._fields = fields
+        self._cardclass = cardclass
         if lines is None and file is None:
             sys.exit("ERROR: no input supplied to class constructor!")
+        self._cards = []
         if file:
-            self._lines = self._readSource(file)
+            self._cards = self._readSource(file)
+            self._lines = [card.line for card in self._cards]
         else:
             self._lines = lines
-        self._cards = []
-        for i, line in enumerate(self._lines):
-            if line.startswith('#'):
-                continue
-            self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1))
+            for i, line in enumerate(self._lines):
+                if line.startswith('#'):
+                    continue
+                self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1))
         self._fields = []
         self._strippedFields = []
         self._records = []
@@ -150,26 +154,28 @@ class Deck(object):
     def _readSource(self, filename, recurse=True):
         """Read an ARGUS source file. If the file includes $ directives,
            include those files recursively into the deck."""
-        lines = []
+        cards = []
         if not os.path.isfile(filename):
             sys.exit("ERROR: File \"%s\" does not exist!" % filename)
-        flines = []
+        lines = []
         with open(filename, 'r') as f:
             print("Reading %s..." % filename)
-            flines = f.readlines()
-        for line in flines:
+            lines = f.readlines()
+        for i, line in enumerate(lines):
+            if line.startswith('#'):
+                continue
             if line.startswith('$'):
                 incname = line[1:].split()[0]
                 if not os.path.isfile(incname):
                     sys.exit("File \"%s\" does not exist" % incname)
                 if recurse:
-                    ilines = self._readSource(incname)
-                    lines.extend(ilines)
+                    icards = self._readSource(incname)
+                    cards.extend(icards)
                 else:
-                    lines.append(line)
+                    cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1))
             else:
-                lines.append(line)
-        return lines
+                cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1))
+        return cards
 
 
 def main():
