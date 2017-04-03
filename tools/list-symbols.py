@@ -36,9 +36,8 @@ def main():
                     "def-lognum": card.lognum
                 }
 
-    import pprint
-    pprint.pprint(symtab)
-
+    for sym in sorted(symtab.keys()):
+        print("%-9s %s" % (sym, symtab[sym]))
 
 
 if __name__ == '__main__':
