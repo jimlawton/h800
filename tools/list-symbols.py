@@ -35,6 +35,8 @@ def main():
                     "def-line": card.linenum,
                     "def-lognum": card.lognum
                 }
+            else:
+                print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
 
     for sym in sorted(symtab.keys()):
         print("%-9s %s" % (sym, symtab[sym]))
