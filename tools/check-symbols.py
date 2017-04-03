@@ -2,10 +2,11 @@
 # -*- coding: iso-8859-15 -*-
 
 # Check symbols in ARGUS assembly source
-# ======================================
 #
 # A script that uses the arguscard classes to read ARGUS assembly format source
 # and check for multiply- or ill-defined symbols.
+#
+# This is intended for debugging assembler development.
 
 from __future__ import print_function
 import sys
