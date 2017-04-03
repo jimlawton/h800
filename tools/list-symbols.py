@@ -2,10 +2,11 @@
 # -*- coding: iso-8859-15 -*-
 
 # List symbols in ARGUS assembly source
-# =====================================
 #
 # A script that uses the arguscard classes to read ARGUS assembly format source
 # and generate a symbol table listing.
+#
+# This is intended for debugging assembler development.
 
 from __future__ import print_function
 import sys
@@ -16,7 +17,7 @@ import h800.arguscard
 
 def main():
     parser = OptionParser("usage: %prog filename")
-    (options, args) = parser.parse_args()
+    (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
         sys.exit(1)
