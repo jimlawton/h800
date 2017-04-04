@@ -32,6 +32,11 @@ def main():
                       action='store_true',
                       default=False,
                       help="Check for multiply-defined symbols.")
+    parser.add_option('-v', '--verbose',
+                      dest='verbose',
+                      action='store_true',
+                      default=False,
+                      help="Enable verbose output.")
     (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
@@ -41,7 +46,7 @@ def main():
 
     filename = args[0]
 
-    d = h800.arguscard.Deck(file=filename)
+    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
     errcount = 0
 
@@ -72,7 +77,7 @@ def main():
                     print("Current definition: %s" % symtabEntry)
                     errcount += 1
 
-    print("\n%d errors encountered!" % errcount)
+    print("%d errors encountered." % errcount)
 
 
 if __name__ == '__main__':

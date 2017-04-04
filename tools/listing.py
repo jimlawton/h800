@@ -17,6 +17,11 @@ import h800.arguscard
 
 def main():
     parser = OptionParser("usage: %prog filename")
+    parser.add_option('-v', '--verbose',
+                      dest='verbose',
+                      action='store_true',
+                      default=False,
+                      help="Enable verbose output.")
     (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
@@ -25,7 +30,7 @@ def main():
     filename = args[0]
     listfile = '.'.join(filename.split('.')[:-1]) + ".lst"
 
-    d = h800.arguscard.Deck(file=filename)
+    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
     errcount = 0
 
@@ -40,7 +45,8 @@ def main():
             line = card.line.replace('\n', '')
             print("%-64s %-06d %s" % (card.filename, card.linenum, line), file=f)
 
-    print("Wrote listing file to %s" % listfile)
+    if opts.verbose:
+        print("Wrote listing file to %s" % listfile)
 
 
 if __name__ == '__main__':

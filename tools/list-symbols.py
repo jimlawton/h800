@@ -17,6 +17,11 @@ import h800.arguscard
 
 def main():
     parser = OptionParser("usage: %prog filename")
+    parser.add_option('-v', '--verbose',
+                      dest='verbose',
+                      action='store_true',
+                      default=False,
+                      help="Enable verbose output.")
     (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
@@ -24,7 +29,7 @@ def main():
 
     filename = args[0]
 
-    d = h800.arguscard.Deck(file=filename)
+    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
     symtab = {}
     for card in d.cards:
