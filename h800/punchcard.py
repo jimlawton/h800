@@ -163,7 +163,8 @@ class Deck(object):
             sys.exit("ERROR: File \"%s\" does not exist!" % filename)
         lines = []
         with open(filename, 'r') as f:
-            print("Reading %s..." % filename)
+            if self._verbose:
+                print("Reading %s..." % filename)
             lines = f.readlines()
         for i, line in enumerate(lines):
             if line.startswith('#'):
