@@ -57,6 +57,9 @@ def main():
     errcount = 0
 
     instrtab = {}
+    for instruction in h800.instructions.INSTRUCTIONS.keys():
+        instrtab[instruction] = 0
+
     for card in d.cards:
         if card.operation:
             if opts.printOpcodes:
@@ -69,16 +72,10 @@ def main():
             instruction = card.operation.strip().replace(' ', '')
             if ',' in instruction:
                 instruction = instruction.split(',')[0]
-            instrtabEntry = {
-                "instruction": instruction,
-                "count": 1,
-                "file": card.filename,
-                "line": card.linenum
-            }
             if instruction not in instrtab.keys():
-                instrtab[instruction] = instrtabEntry
+                instrtab[instruction] = 1
             else:
-                instrtab[instruction]["count"] += 1
+                instrtab[instruction] += 1
             if opts.invalid:
                 if instruction not in h800.instructions.INSTRUCTIONS.keys():
                     print("*** ERROR: Invalid instruction \"%s\"" % instruction)
