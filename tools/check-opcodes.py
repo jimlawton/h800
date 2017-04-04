@@ -13,6 +13,7 @@ import sys
 from optparse import OptionParser
 
 import h800.arguscard
+import h800.opcodes
 
 
 def main():
@@ -73,10 +74,17 @@ def main():
                 optab[opcode] = optabEntry
             else:
                 optab[opcode]["count"] += 1
+            if opts.invalid:
+                if opcode not in h800.opcodes.OPCODES.keys():
+                    print("*** ERROR: Invalid opcode %s" % opcode)
+                    print(optabEntry)
+                    errcount += 1
 
     if opts.count:
         import pprint
         pprint.pprint(optab)
+
+    print("%d errors encountered." % errcount)
 
 
 if __name__ == '__main__':
