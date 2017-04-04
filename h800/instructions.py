@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-OPCODES = {
+MACHINE_INSTRUCTIONS = {
     # General, masked or unmasked.
     "BA":   0o13,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
@@ -77,3 +77,41 @@ OPCODES = {
     "FLN":  0o00,                   # Floating Less than, Normalized
     "FNN":  0o00,                   # Floating Not equal, Normalized
 }
+
+CONTROL_INSTRUCTIONS = {
+    "ASSIGN":   0,                  # Assign Tag to Complex Address
+    "END":      0,                  # Specify Information for Executive
+    "EQUALS":   0,                  # Assign Value to Tag
+    "EVEN":     0,                  # Set Location Counter to Next Even Address
+    "MASKGRP":  0,                  # Assign Shift and Field Group Numbers
+    "MODLOC":   0,                  # Set Location Counter Modulo-N.
+    "RESERVE":  0,                  # Reserve N Words of Memory
+    "SETLOC":   0,                  # Set Location Counter
+    "SIMULATE": 0,                  # Start of Simulator Routine
+    "TAS":      0                   # Temporarily Assign Tag to Complex Address
+}
+
+DATA_CONSTANTS = {
+    "ALF":   0,                     # Alphanumeric Constant
+    "DEC":   0,                     # Fixed Decimal Constant
+    "EBC":   0,                     # Extended Binary Constant
+    "FLBIN": 0,                     # Floating-Point Binary Constant
+    "FLDEC": 0,                     # Floating-Point Decimal Constant
+    "FXBIN": 0,                     # Decimal to Fixed Binary Translation
+    "OCT":   0                      # Octal Constant
+}
+
+CONTROL_CONSTANTS = {
+    "SPEC":     0,                  # Special Address Constant
+    "CAC":      0,                  # Complete Address Constant
+    "MASKBASE": 0,                  # Mask Base Address Constant
+    "CONTROL":  0,                  # Program Control Constant
+    "M":        0,                  # Mixed Constant
+    "TAC":      0,                  # Tape Address Constant
+    "LINK":     0,                  # Linkage Constant
+    "SEGNAME":  0,                  # Segment Name Constant
+    "SUBCALL":  0                   # Subroutine Call Constant
+}
+
+INSTRUCTIONS = dict(MACHINE_INSTRUCTIONS.items() + CONTROL_INSTRUCTIONS.items() +
+                    DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items())
