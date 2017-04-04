@@ -6,7 +6,7 @@ OPCODES = {
     "BA":   0o13,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
     "WA":   0o15,                   # Word Add
-    "BS":   0o31.                   # Binary Subtract
+    "BS":   0o31,                   # Binary Subtract
     "DS":   0o21,                   # Decimal Subtract
     "WD":   0o35,                   # Word Difference
     "NA":   0o16,                   # Not equal, Alphabetic
