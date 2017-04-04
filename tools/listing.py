@@ -16,7 +16,7 @@ import h800.arguscard
 
 
 def main():
-    parser = OptionParser("usage: %prog filename")
+    parser = OptionParser("usage: %prog filename [filename]...")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -27,26 +27,26 @@ def main():
         parser.error("usage: %prog filename")
         sys.exit(1)
 
-    filename = args[0]
-    listfile = '.'.join(filename.split('.')[:-1]) + ".lst"
+    for filename in args:
+        listfile = '.'.join(filename.split('.')[:-1]) + ".lst"
 
-    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
+        d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
-    errcount = 0
+        errcount = 0
 
-    fnamelen = 0
-    for card in d.cards:
-        if len(card.filename) > fnamelen:
-            fnamelen = len(card.filename)
-
-    symtab = {}
-    with open(listfile, 'w') as f:
+        fnamelen = 0
         for card in d.cards:
-            line = card.line.replace('\n', '')
-            print("%-64s %-06d %s" % (card.filename, card.linenum, line), file=f)
+            if len(card.filename) > fnamelen:
+                fnamelen = len(card.filename)
 
-    if opts.verbose:
-        print("Wrote listing file to %s" % listfile)
+        symtab = {}
+        with open(listfile, 'w') as f:
+            for card in d.cards:
+                line = card.line.replace('\n', '')
+                print("%-64s %-06d %s" % (card.filename, card.linenum, line), file=f)
+
+        if opts.verbose:
+            print("Wrote listing file to %s" % listfile)
 
 
 if __name__ == '__main__':

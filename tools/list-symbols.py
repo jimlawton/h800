@@ -16,7 +16,7 @@ import h800.arguscard
 
 
 def main():
-    parser = OptionParser("usage: %prog filename")
+    parser = OptionParser("usage: %prog filename [filename]...")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -27,25 +27,24 @@ def main():
         parser.error("usage: %prog filename")
         sys.exit(1)
 
-    filename = args[0]
+    for filename in args:
+        d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
-    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
+        symtab = {}
+        for card in d.cards:
+            if card.label:
+                strLabel = card.label.strip().replace(' ', '')
+                if strLabel not in symtab.keys():
+                    symtab[strLabel] = {
+                        "def-file": card.filename,
+                        "def-line": card.linenum,
+                        "def-lognum": card.lognum
+                    }
+                else:
+                    print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
 
-    symtab = {}
-    for card in d.cards:
-        if card.label:
-            strLabel = card.label.strip().replace(' ', '')
-            if strLabel not in symtab.keys():
-                symtab[strLabel] = {
-                    "def-file": card.filename,
-                    "def-line": card.linenum,
-                    "def-lognum": card.lognum
-                }
-            else:
-                print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
-
-    for sym in sorted(symtab.keys()):
-        print("%-9s %s" % (sym, symtab[sym]))
+        for sym in sorted(symtab.keys()):
+            print("%-9s %s" % (sym, symtab[sym]))
 
 
 if __name__ == '__main__':
