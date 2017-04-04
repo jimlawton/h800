@@ -82,8 +82,8 @@ def main():
                         errcount += 1
 
     if opts.count:
-        import pprint
-        pprint.pprint(instrtab)
+        for inst in sorted(instrtab.keys()):
+            print("%-8s %d" % (inst, instrtab[inst]))
 
     if errcount == 1:
         print("1 error encountered.")
