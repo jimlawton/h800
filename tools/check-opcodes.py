@@ -13,7 +13,7 @@ import sys
 from optparse import OptionParser
 
 import h800.arguscard
-import h800.opcodes
+import h800.instructions
 
 
 def main():
@@ -56,33 +56,33 @@ def main():
 
     errcount = 0
 
-    optab = {}
+    instrtab = {}
     for card in d.cards:
         if card.operation:
             if opts.printOpcodes:
                 print(card.filename, card.linenum, card.line.replace('\n', ''))
-            opcode = card.operation.strip().replace(' ', '')
-            if ',' in opcode:
-                opcode = opcode.split(',')[0]
-            optabEntry = {
-                "opcode": opcode,
+            instruction = card.operation.strip().replace(' ', '')
+            if ',' in instruction:
+                instruction = instruction.split(',')[0]
+            instrtabEntry = {
+                "instruction": instruction,
                 "count": 1,
                 "file": card.filename,
                 "line": card.linenum
             }
-            if opcode not in optab.keys():
-                optab[opcode] = optabEntry
+            if instruction not in instrtab.keys():
+                instrtab[instruction] = instrtabEntry
             else:
-                optab[opcode]["count"] += 1
+                instrtab[instruction]["count"] += 1
             if opts.invalid:
-                if opcode not in h800.opcodes.OPCODES.keys():
-                    print("*** ERROR: Invalid opcode %s" % opcode)
-                    print(optabEntry)
+                if instruction not in h800.instructions.OPCODES.keys():
+                    print("*** ERROR: Invalid instruction %s" % instruction)
+                    print(instrtabEntry)
                     errcount += 1
 
     if opts.count:
         import pprint
-        pprint.pprint(optab)
+        pprint.pprint(instrtab)
 
     print("%d errors encountered." % errcount)
 
