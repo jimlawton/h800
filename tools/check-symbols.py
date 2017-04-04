@@ -16,7 +16,7 @@ import h800.arguscard
 
 
 def main():
-    parser = OptionParser("usage: %prog filename")
+    parser = OptionParser("usage: %prog filename [filename]...")
     parser.add_option('-a', '--all',
                       dest='all',
                       action='store_true',
