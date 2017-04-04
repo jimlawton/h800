@@ -61,6 +61,11 @@ def main():
         if card.operation:
             if opts.printOpcodes:
                 print(card.filename, card.linenum, card.line.replace('\n', ''))
+            if card.record["column8"] == '*':
+                if opts.verbose:
+                    print("Skipping card with * in column 8:")
+                    print(card.filename, card.linenum, card.line.replace('\n', ''))
+                continue
             instruction = card.operation.strip().replace(' ', '')
             if ',' in instruction:
                 instruction = instruction.split(',')[0]
@@ -76,15 +81,18 @@ def main():
                 instrtab[instruction]["count"] += 1
             if opts.invalid:
                 if instruction not in h800.instructions.INSTRUCTIONS.keys():
-                    print("*** ERROR: Invalid instruction %s" % instruction)
-                    print(instrtabEntry)
+                    print("*** ERROR: Invalid instruction \"%s\"" % instruction)
+                    print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
                     errcount += 1
 
     if opts.count:
         import pprint
         pprint.pprint(instrtab)
 
-    print("%d errors encountered." % errcount)
+    if errcount == 1:
+        print("1 error encountered.")
+    else:
+        print("%d errors encountered." % errcount)
 
 
 if __name__ == '__main__':
