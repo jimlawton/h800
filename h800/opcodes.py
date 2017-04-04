@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 OPCODES = {
-
     # General, masked or unmasked.
     "BA":   0o13,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
@@ -77,5 +76,4 @@ OPCODES = {
     "FCON": 0o00,                   # Conversion
     "FLN":  0o00,                   # Floating Less than, Normalized
     "FNN":  0o00,                   # Floating Not equal, Normalized
-
 }
