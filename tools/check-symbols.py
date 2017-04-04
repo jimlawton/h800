@@ -44,40 +44,40 @@ def main():
     if opts.all:
         opts.bad = opts.multiple = True
 
-    filename = args[0]
-
-    d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
-
-    errcount = 0
-
-    symtab = {}
-    for card in d.cards:
-        if card.label:
-            strLabel = card.label.strip().replace(' ', '')
-            symtabEntry = {
-                "def-file": card.filename,
-                "def-line": card.linenum,
-                "def-lognum": card.lognum
-            }
-            if opts.bad and strLabel.upper() != strLabel:
-                print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
-                print("Current definition: %s" % symtabEntry)
-                errcount += 1
-                continue
-            if strLabel not in symtab.keys():
-                symtab[strLabel] = symtabEntry
-            else:
-                if opts.multiple:
-                    # TODO: check the command code field. Depending on the command
-                    # code field operation, multiple declarations might be allowed,
-                    # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc all reserve storage,
-                    # but ASSIGN doesn't.
-                    print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
-                    print("Previous definition: %s" % symtab[strLabel])
+    toterrs = 0
+    for filename in args:
+        d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
+        errcount = 0
+        symtab = {}
+        for card in d.cards:
+            if card.label:
+                strLabel = card.label.strip().replace(' ', '')
+                symtabEntry = {
+                    "def-file": card.filename,
+                    "def-line": card.linenum,
+                    "def-lognum": card.lognum
+                }
+                if opts.bad and strLabel.upper() != strLabel:
+                    print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
                     print("Current definition: %s" % symtabEntry)
                     errcount += 1
+                    continue
+                if strLabel not in symtab.keys():
+                    symtab[strLabel] = symtabEntry
+                else:
+                    if opts.multiple:
+                        # TODO: check the command code field. Depending on the command
+                        # code field operation, multiple declarations might be allowed,
+                        # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc all reserve storage,
+                        # but ASSIGN doesn't.
+                        print("*** ERROR: Symbol %s is multiply-defined!" % strLabel)
+                        print("Previous definition: %s" % symtab[strLabel])
+                        print("Current definition: %s" % symtabEntry)
+                        errcount += 1
+        print("%s: %d errors encountered." % (filename, errcount))
+        toterrs += errcount
 
-    print("%d errors encountered." % errcount)
+    print("Total: %d errors encountered." % toterrs)
 
 
 if __name__ == '__main__':
