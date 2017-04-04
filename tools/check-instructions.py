@@ -38,6 +38,11 @@ def main():
                       action='store_true',
                       default=False,
                       help="Print all opcodes found.")
+    parser.add_option('-u', '--unused',
+                      dest='unused',
+                      action='store_true',
+                      default=False,
+                      help="Print unused instructions.")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -82,8 +87,15 @@ def main():
                         errcount += 1
 
     if opts.count:
+        print("\nInstruction Frequencies:")
         for inst in sorted(instrtab.keys()):
             print("%-8s %d" % (inst, instrtab[inst]))
+
+    if opts.unused:
+        print("\nUnused Instructions:")
+        for inst in sorted(instrtab.keys()):
+            if instrtab[inst] == 0:
+                print(inst)
 
     if errcount == 1:
         print("1 error encountered.")
