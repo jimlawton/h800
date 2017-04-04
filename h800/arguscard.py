@@ -21,7 +21,7 @@ class Card(punchcard.PunchCard):
     """A simple class to represent an ARGUS punch card."""
     def __init__(self, line, width=_WIDTH, fields=_FIELDS, fieldnames=_FIELDNAMES, filename=None, linenum=0, verbose=False):
         super(Card, self).__init__(line, width=width, fields=fields, fieldnames=fieldnames, filename=filename, linenum=linenum, verbose=verbose)
-        if self.column1 == 'P' or self.column1 == 'R':
+        if self.column1 == 'P' or self.column1 == 'R' or self.column1 == 'L':
             self._record["label"] = None
             self._record["operation"] = None
             self._record["operand1"] = None
