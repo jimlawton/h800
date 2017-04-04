@@ -11,6 +11,7 @@
 from __future__ import print_function
 import sys
 from optparse import OptionParser
+from collections import OrderedDict
 
 import h800.arguscard
 import h800.instructions
@@ -38,6 +39,11 @@ def main():
                       action='store_true',
                       default=False,
                       help="Print all opcodes found.")
+    parser.add_option('-s', '--sort',
+                      dest='sort',
+                      action='store_true',
+                      default=False,
+                      help="Sort by opcode frequency (if --count specified).")
     parser.add_option('-u', '--unused',
                       dest='unused',
                       action='store_true',
@@ -88,9 +94,15 @@ def main():
 
     if opts.count:
         print("\nInstruction Frequencies:")
-        for inst in sorted(instrtab.keys()):
-            if opts.unused and instrtab[inst] != 0 or not opts.unused:
-                print("%-8s %d" % (inst, instrtab[inst]))
+        if opts.sort:
+            freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1], reverse=True))
+            for inst in freqtab.keys():
+                if opts.unused and freqtab[inst] != 0 or not opts.unused:
+                    print("%-8s %d" % (inst, freqtab[inst]))
+        else:
+            for inst in sorted(instrtab.keys()):
+                if opts.unused and instrtab[inst] != 0 or not opts.unused:
+                    print("%-8s %d" % (inst, instrtab[inst]))
 
     if opts.unused:
         print("\nUnused Instructions:")
