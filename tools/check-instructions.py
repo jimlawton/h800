@@ -75,7 +75,7 @@ def main():
             else:
                 instrtab[instruction]["count"] += 1
             if opts.invalid:
-                if instruction not in h800.instructions.OPCODES.keys():
+                if instruction not in h800.instructions.INSTRUCTIONS.keys():
                     print("*** ERROR: Invalid instruction %s" % instruction)
                     print(instrtabEntry)
                     errcount += 1
