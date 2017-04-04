@@ -36,11 +36,12 @@ _DEFAULT_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "op
 
 class PunchCard(object):
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0):
+    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0, verbose=False):
         self._line = line
         self._layout = []
         self._filename = filename
         self._linenum = linenum
+        self._verbose = verbose
         self._comment = line.startswith('#')
         if not self._comment:
             for i, col in enumerate(fields):
@@ -125,7 +126,7 @@ class Deck(object):
                     if self._verbose:
                         print("Skipping meta-comment, file %s, line %d" % (file, i+1))
                     continue
-                self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1))
+                self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1, verbose=verbose))
         self._fields = []
         self._strippedFields = []
         self._records = []
@@ -177,9 +178,9 @@ class Deck(object):
                     icards = self._readSource(incname)
                     cards.extend(icards)
                 else:
-                    cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1))
+                    cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1, verbose=self._verbose))
             else:
-                cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1))
+                cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1, verbose=self._verbose))
         return cards
 
 
