@@ -47,9 +47,6 @@ MACHINE_INSTRUCTIONS = {
     "RB":   0o00,                   # Read Backward
     "WF":   0o00,                   # Write Forward
     "RW":   0o00,                   # Rewind
-    "PRA":  0o00,                   # Print Alphanumeric
-    "PRD":  0o00,                   # Print Decimal
-    "PRO":  0o00,                   # Print Octal
 
     # Simulator.
     "S":    0o00,                   # Simulate
@@ -113,5 +110,18 @@ CONTROL_CONSTANTS = {
     "SUBCALL":  0                   # Subroutine Call Constant
 }
 
+EXTENDED_INSTRUCTIONS = {
+    "CSCON": 0,                     # Turn On Programs, Use Cosequence Counters
+    "DOFF":  0,                     # Turn Off Programs
+    "DON":   0,                     # Turn On Programs
+    "PRA":   0,                     # Print Alphanumeric
+    "PRD":   0,                     # Print Decimal
+    "PRO":   0,                     # Print Octal
+    "SCON":  0,                     # Turn On Programs, Use Sequence Counters
+    "SPCR":  0,                     # Save PCR
+    "STOP":  0,                     # Stop Current Program
+}
+
 INSTRUCTIONS = dict(MACHINE_INSTRUCTIONS.items() + CONTROL_INSTRUCTIONS.items() +
-                    DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items())
+                    DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items() +
+                    EXTENDED_INSTRUCTIONS.items())
