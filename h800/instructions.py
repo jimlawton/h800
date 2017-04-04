@@ -122,6 +122,11 @@ EXTENDED_INSTRUCTIONS = {
     "STOP":  0,                     # Stop Current Program
 }
 
+MISC_INSTRUCTIONS = {
+    "COREDUMP": 0,                  # ?
+    "DUMP":     0                   # ?
+}
+
 INSTRUCTIONS = dict(MACHINE_INSTRUCTIONS.items() + CONTROL_INSTRUCTIONS.items() +
                     DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items() +
-                    EXTENDED_INSTRUCTIONS.items())
+                    EXTENDED_INSTRUCTIONS.items() + MISC_INSTRUCTIONS.items())
