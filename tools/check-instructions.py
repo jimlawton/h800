@@ -89,7 +89,8 @@ def main():
     if opts.count:
         print("\nInstruction Frequencies:")
         for inst in sorted(instrtab.keys()):
-            print("%-8s %d" % (inst, instrtab[inst]))
+            if opts.unused and instrtab[inst] != 0 or not opts.unused:
+                print("%-8s %d" % (inst, instrtab[inst]))
 
     if opts.unused:
         print("\nUnused Instructions:")
