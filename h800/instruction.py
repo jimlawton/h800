@@ -85,3 +85,18 @@ class Scientific(Instruction):
     """Scientific instruction class."""
     def __init__(self, mnemonic, sequence, group, a, b, c, opcode):
         Instruction.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
+
+class PseudoInstruction(Instruction):
+    """Pseudo-instruction class. No code is generated."""
+    def __init__(self, mnemonic, group, a, b, c):
+        Instruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
+
+class AssemblyControl(Instruction):
+    """Assembly control instruction class."""
+    def __init__(self, mnemonic, group, a, b, c):
+        PseudoInstruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
+
+class Constant(Instruction):
+    """Constant instruction class."""
+    def __init__(self, mnemonic, group, a, b, c):
+        PseudoInstruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
