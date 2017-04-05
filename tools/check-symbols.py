@@ -77,7 +77,8 @@ def main():
         print("%s: %d errors encountered." % (filename, errcount))
         toterrs += errcount
 
-    print("Total: %d errors encountered." % toterrs)
+    if len(args) > 1:
+        print("Total: %d errors encountered." % toterrs)
 
 
 if __name__ == '__main__':
