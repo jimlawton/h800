@@ -62,6 +62,7 @@ def main():
         opts.invalid = True
 
     errcount = 0
+    linecount = 0
     instrcount = 0
     instrtab = {}
     for instruction in h800.instructions.INSTRUCTIONS.keys():
@@ -70,6 +71,7 @@ def main():
     for filename in args:
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         for card in d.cards:
+            linecount += 1
             if card.operation:
                 instrcount += 1
                 if opts.printOpcodes:
@@ -95,6 +97,7 @@ def main():
                         errcount += 1
 
     if opts.count:
+        print("\nSource lines: %d" % linecount)
         print("\nInstruction Frequencies:")
         print("%-8s %6d  %6.2f%%" % ("Total", instrcount, 100.0))
         if opts.sort:
