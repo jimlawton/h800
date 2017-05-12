@@ -62,6 +62,7 @@ def main():
         opts.invalid = True
 
     errcount = 0
+    instrcount = 0
     instrtab = {}
     for instruction in h800.instructions.INSTRUCTIONS.keys():
         instrtab[instruction] = 0
@@ -70,6 +71,7 @@ def main():
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         for card in d.cards:
             if card.operation:
+                instrcount += 1
                 if opts.printOpcodes:
                     print(card.filename, card.linenum, card.line.replace('\n', ''))
                 if card.record["column8"] == '*':
@@ -94,15 +96,16 @@ def main():
 
     if opts.count:
         print("\nInstruction Frequencies:")
+        print("%-8s %6d  %6.2f%%" % ("Total", instrcount, 100.0))
         if opts.sort:
             freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1], reverse=True))
             for inst in freqtab.keys():
                 if opts.unused and freqtab[inst] != 0 or not opts.unused:
-                    print("%-8s %d" % (inst, freqtab[inst]))
+                    print("%-8s %6d  %6.2f%%" % (inst, freqtab[inst], 100 * float(freqtab[inst])/float(instrcount)))
         else:
             for inst in sorted(instrtab.keys()):
                 if opts.unused and instrtab[inst] != 0 or not opts.unused:
-                    print("%-8s %d" % (inst, instrtab[inst]))
+                    print("%-8s %6d  %6.2f%%" % (inst, instrtab[inst], 100 * float(freqtab[inst])/float(instrcount)))
 
     if opts.unused:
         print("\nUnused Instructions:")
