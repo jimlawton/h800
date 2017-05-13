@@ -1,5 +1,101 @@
 #!/usr/bin/env python
 
+# Instructions
+# ============
+#
+# Key:
+#   pppppp      6-bit peripheral address
+#   s           sequence/cosequence bit
+#   a,b,c       memory designators
+#   mmmmm       5-bit mask address
+#   x           don't care
+#
+#
+#               +------------------+
+#               | 1             12 |
+# Opcode        +------------------+
+#
+# BA  masked    | s mmmmm  1 01001 |
+# BA  unmasked  | s 10 abc 0 01001 |
+# DA  masked    | s mmmmm  1 00001 |
+# DA  unmasked  | s 10 abc 0 00001 |
+# WA  masked    | s mmmmm  1 01101 |
+# WA  unmasked  | s 10 abc 0 01101 |
+# BS  masked    | s mmmmm  1 11001 |
+# BS  unmasked  | s 10 abc 0 11001 |
+# DS  masked    | s mmmmm  1 10001 |
+# DS  unmasked  | s 10 abc 0 10001 |
+# WD  masked    | s mmmmm  1 11101 |
+# WD  unmasked  | s 10 abc 0 11101 |
+# NA  masked    | s mmmmm  1 01100 |
+# NA  unmasked  | s 10 abc 0 01100 |
+# NN  masked    | s mmmmm  1 01000 |
+# NN  unmasked  | s 10 abc 0 01000 |
+# LA  masked    | s mmmmm  1 11100 |
+# LA  unmasked  | s 10 abc 0 11100 |
+# LN  masked    | s mmmmm  1 11000 |
+# LN  unmasked  | s 10 abc 0 11000 |
+# TX  masked    | s mmmmm  1 10000 |
+# TX  unmasked  | s 10 abc 0 10000 |
+# TS  masked    | s mmmmm  1 00100 |
+# TS  unmasked  | s 10 abc 0 00100 |
+# HA  masked    | s mmmmm  1 10101 |
+# HA  unmasked  | s 10 abc 0 10101 |
+# SM  masked    | s mmmmm  1 00101 |
+# SM  unmasked  | s 10 abc 0 00101 |
+# CP  masked    | s mmmmm  1 10100 |
+# CP  unmasked  | s 10 abc 0 10100 |
+# BM            | s 00 abc 0 01011 |
+# DM            | s 00 abc 0 00011 |
+# BT            | s 10 abc 0 01011 |
+# DT            | s 10 abc 0 00011 |
+# MT            | s 00 abc 0 10000 |
+# TN            | s 01 abc 0 10000 |
+# CC            | s 01 abc 0 01000 |
+# IT            | s 01 abc 0 11000 |
+# EBA           | s 11 abc 0 01011 |
+# EBS           | s 11 abc 0 11011 |
+# RT            | s 11 abc 0 11000 |
+# MPC           | s 10 abc 0 00000 |
+# PR            | x 000 xx 0 00110 |
+# SWS           | s 10 abc 0 00110 |
+# SPS           | s 10 abc 0 00010 |
+# SWE           | s 10 abc 0 01110 |
+# SPE           | s 10 abc 0 01010 |
+# SSL           | s 10 abc 0 10110 |
+# SS            | s 00 abc 0 00110 |
+# EX            | s 00 abc 0 01110 |
+# RF            | pppppp   1 11010 |
+# RB            | pppppp   1 01010 |
+# WF            | pppppp   1 01110 |
+# RW            | pppppp   1 00010 |
+# PRA           | s xx abc 1 00110 |
+# PRD           | s xx abc 1 00110 |
+# PRO           | s xx abc 1 00110 |
+# S   direct    | 0 xxxxxx  xx 110 |
+# S   indexed   | 1 xxxxxx  xx 110 |
+# FBA           | s 01 abc 0 00001 |
+# FDA           | s 01 abc 0 10001 |
+# FBS           | s 01 abc 0 01001 |
+# FDS           | s 01 abc 0 11001 |
+# FBD           | s 01 abc 0 00101 |
+# FDD           | s 01 abc 0 10101 |
+# FBAU          | s 11 abc 0 00001 |
+# FDAU          | s 11 abc 0 10001 |
+# FBSU          | s 11 abc 0 01001 |
+# FDSU          | s 11 abc 0 11001 |
+# FBM           | s 11 abc 0 00101 |
+# FDM           | s 11 abc 0 10101 |
+# ULD           | s 11 abc 0 01101 |
+# FBAE          | s 00 abc 0 00001 |
+# FBSE          | s 00 abc 0 01001 |
+# BD            | s 00 abc 0 00101 |
+# DD            | s 00 abc 0 10101 |
+# FFN           | s 00 abc 0 01101 |
+# FCON          | s 00 abc 0 11101 |
+# FLN           | s 00 abc 0 11000 |
+# FNN           | s 10 abc 0 01100 |
+
 MACHINE_INSTRUCTIONS = {
     # General, masked or unmasked.
     "BA":   0o13,                   # Binary Add
