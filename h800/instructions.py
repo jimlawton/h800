@@ -98,7 +98,7 @@
 
 MACHINE_INSTRUCTIONS = {
     # General, masked or unmasked.
-    "BA":   0o13,                   # Binary Add
+    "BA":   0o11,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
     "WA":   0o15,                   # Word Add
     "BS":   0o31,                   # Binary Subtract
@@ -110,7 +110,7 @@ MACHINE_INSTRUCTIONS = {
     "LN":   0o30,                   # Less than or equal, Numeric
     "TX":   0o20,                   # Transfer A to C
     "TS":   0o06,                   # Transfer A to B and go to C
-    "HA":   0o23,                   # Half Add (mod 2)
+    "HA":   0o25,                   # Half Add (mod 2)
     "SM":   0o05,                   # Superimpose
     "CP":   0o26,                   # Check Parity
 
@@ -132,7 +132,7 @@ MACHINE_INSTRUCTIONS = {
     # Inherent mask.
     "SWS":  0o06,                   # Shift Word and Substitute
     "SPS":  0o02,                   # Shift Preserving sign and Substitute
-    "SWE":  0o36,                   # Shift Word and Extract
+    "SWE":  0o16,                   # Shift Word and Extract
     "SPE":  0o12,                   # Shift Preserving sign and Extract
     "SSL":  0o26,                   # Shift and Select
     "SS":   0o06,                   # Substitute
@@ -140,35 +140,35 @@ MACHINE_INSTRUCTIONS = {
 
     # Peripheral and print.
     "RF":   0o32,                   # Read Forward
-    "RB":   0o00,                   # Read Backward
-    "WF":   0o00,                   # Write Forward
-    "RW":   0o00,                   # Rewind
+    "RB":   0o12,                   # Read Backward
+    "WF":   0o16,                   # Write Forward
+    "RW":   0o02,                   # Rewind
 
     # Simulator.
-    "S":    0o00,                   # Simulate
+    "S":    0o07,                   # Simulate
 
     # Scientific.
-    "FBA":  0o00,                   # Floating Binary Add
-    "FDA":  0o00,                   # Floating Decimal Add
-    "FBS":  0o00,                   # Floating Binary Subtract
-    "FDS":  0o00,                   # Floating Decimal Subtract
-    "FBD":  0o00,                   # Floating Binary Divide
-    "FDD":  0o00,                   # Floating Decimal Divide
-    "FBAU": 0o00,                   # Floating Binary Add, Unnormalized
-    "FDAU": 0o00,                   # Floating Decimal Add, Unnormalized
-    "FBSU": 0o00,                   # Floating Binary Subtract, Unnormalized
-    "FDSU": 0o00,                   # Floating Decimal Subtract, Unnormalized
-    "FBM":  0o00,                   # Floating Binary Multiply
-    "FDM":  0o00,                   # Floating Decimal Multiply
-    "ULD":  0o00,                   # Multiple Unload
-    "FBAE": 0o00,                   # Floating Binary Add, Extended precision
-    "FBSE": 0o00,                   # Floating Binary Subtract, Extended precision
-    "BD":   0o00,                   # Fixed Binary Divide
-    "DD":   0o00,                   # Fixed Decimal Divide
-    "FFN":  0o00,                   # Fixed-to-Floating Normalize
-    "FCON": 0o00,                   # Conversion
-    "FLN":  0o00,                   # Floating Less than, Normalized
-    "FNN":  0o00,                   # Floating Not equal, Normalized
+    "FBA":  0o01,                   # Floating Binary Add
+    "FDA":  0o21,                   # Floating Decimal Add
+    "FBS":  0o11,                   # Floating Binary Subtract
+    "FDS":  0o31,                   # Floating Decimal Subtract
+    "FBD":  0o05,                   # Floating Binary Divide
+    "FDD":  0o25,                   # Floating Decimal Divide
+    "FBAU": 0o01,                   # Floating Binary Add, Unnormalized
+    "FDAU": 0o21,                   # Floating Decimal Add, Unnormalized
+    "FBSU": 0o11,                   # Floating Binary Subtract, Unnormalized
+    "FDSU": 0o31,                   # Floating Decimal Subtract, Unnormalized
+    "FBM":  0o05,                   # Floating Binary Multiply
+    "FDM":  0o25,                   # Floating Decimal Multiply
+    "ULD":  0o15,                   # Multiple Unload
+    "FBAE": 0o01,                   # Floating Binary Add, Extended precision
+    "FBSE": 0o11,                   # Floating Binary Subtract, Extended precision
+    "BD":   0o05,                   # Fixed Binary Divide
+    "DD":   0o25,                   # Fixed Decimal Divide
+    "FFN":  0o15,                   # Fixed-to-Floating Normalize
+    "FCON": 0o35,                   # Conversion
+    "FLN":  0o30,                   # Floating Less than, Normalized
+    "FNN":  0o16,                   # Floating Not equal, Normalized
 }
 
 CONTROL_INSTRUCTIONS = {
@@ -210,9 +210,9 @@ EXTENDED_INSTRUCTIONS = {
     "CSCON": 0,                     # Turn On Programs, Use Cosequence Counters
     "DOFF":  0,                     # Turn Off Programs
     "DON":   0,                     # Turn On Programs
-    "PRA":   0,                     # Print Alphanumeric
-    "PRD":   0,                     # Print Decimal
-    "PRO":   0,                     # Print Octal
+    "PRA":   0o06,                  # Print Alphanumeric
+    "PRD":   0o06,                  # Print Decimal
+    "PRO":   0o06,                  # Print Octal
     "SCON":  0,                     # Turn On Programs, Use Sequence Counters
     "SPCR":  0,                     # Save PCR
     "STOP":  0,                     # Stop Current Program
