@@ -3,7 +3,28 @@
 # H-800/H-1800 Instruction Format
 # ===============================
 #
-#   S       Sequence/cosequence bit, 0=sequence, 1=cosequence. [? TODO]
+# From the PRM, Section III:
+#   Machine instructions fall into five major categories: general instructions,
+#   unmasked and masked; inherent mask instructions; peripheral and print
+#   instructions; simulator instructions; and scientific instructions.
+#
+#   The masked general instructions and the peripheral and print instructions
+#   are uniquely designated by six-bits - bits 7 through 12 of the instruction
+#   word.
+#
+#   The unmasked general instructions, the inherent mask instructions, and the
+#   scientific instructions are uniquely designated by eight bits - bits 7
+#   through 12, plus bits 2 and 3.
+#
+#   The simulator instructions are uniquely defined by only three bits - bits
+#   10 through 12.
+#
+#   These groups of bits which uniquely specify the operation to be performed
+#   are called the operation code.  The bits of the command code which are not
+#   used for the operation code serve various other purposes
+#
+# Key:
+#   S       Sequence/cosequence bit, 0=sequence, 1=cosequence.
 #   MASK    5-bit mask.
 #   OPCODE  5-bit opcode.
 #   A       A address active if 1.
