@@ -329,6 +329,22 @@ class BitField(object):
     def __repr__(self):
         return '{{:{0}>{1}}}'.format(0, self._width).format(bin(self._value)[2:])
 
+    def set(self, index=None):
+        "Set the specified bit (or all bits if not specified) to 1."
+        if index:
+            self._checkIndex(index)
+            self.__setitem__(index, 1)
+        else:
+            self._value = self._maxval
+
+    def clear(self, index=None):
+        "Set the specified bit (or all bits if not specified) to 0."
+        if index:
+            self._checkIndex(index)
+            self.__setitem__(index, 0)
+        else:
+            self._value = 0
+
     def isBit(self, index, value):
         "Return True if the specified bit has the specified value."
         self._checkIndex(index)
