@@ -301,8 +301,9 @@ class BitField(object):
             rstart, rend = self._getRange(start, end)
             bitmask = self._bitmask(start, end)
             shift = self._shift(self._lsbIndex(rstart, rend))
-            # print "%d:%d,%d | %d:%d | B=%d | S=%d | v=%d->%d" % (start, end, value, rstart, rend, bitmask, shift, self._value, (((self._value >> shift) | value) & bitmask) << shift)
-            self._value = (((self._value >> shift) | value) & bitmask) << shift
+            newvalue = (((self._value >> shift) & ~bitmask) | value) << shift
+            # print "%d:%d,%d | %d:%d | B=0x%x | S=%d | v=%d->%d" % \
+            #     (start, end, value, rstart, rend, bitmask, shift, self._value, newvalue)
         else:
             index = key
             self._checkIndex(index)
@@ -311,8 +312,10 @@ class BitField(object):
             shift = self._shift(rindex)
             value = (value & 1L) << shift
             bitmask = (1L) << shift
-            # print "%d,%d | %d | B=%d | S=%d | v=%d->%d" % (index, value, rindex, bitmask, shift, self._value, (self._value & ~bitmask) | value)
-            self._value = (self._value & ~bitmask) | value
+            newvalue = (self._value & ~bitmask) | value
+            # print "%d,%d | %d | B=%d | S=%d | v=%d->%d" % \
+            #     (index, value, rindex, bitmask, shift, self._value, newvalue)
+        self._value = newvalue
 
     def __len__(self):
         return self._width
