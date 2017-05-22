@@ -26,17 +26,13 @@ from bitfield import BitField
 class Word(object):
     """H-x800 word class."""
     def __init__(self, command=0, a=0, b=0, c=0):
-        self._command = command                 # Command code.
-        self._a = a                             # A address group.
-        self._b = b                             # B address group.
-        self._c = c                             # C address group.
         self.data = BitField(0, width=48,
-                              numbering=BitField.BIT_SCHEME_MSB_1,
-                              order=BitField.BIT_ORDER_MSB_LEFT)
-        self.data[1:12] = command
-        self.data[13:24] = a
-        self.data[25:36] = b
-        self.data[37:48] = c
+                             numbering=BitField.BIT_SCHEME_MSB_1,
+                             order=BitField.BIT_ORDER_MSB_LEFT)
+        self.data[1:12] = self._command = command   # Command code.
+        self.data[13:24] = self._a = a              # A address group.
+        self.data[25:36] = self._b = b              # B address group.
+        self.data[37:48] = self._c = c              # C address group.
 
     @property
     def value(self):
