@@ -364,13 +364,11 @@ class BitField(object):
         if value not in (0, 1):
             raise ValueError("Bit-field Value must be 0 or 1!")
         subfield = self.__getitem__(slice(start, end))
-        # print "subfield:", subfield
         bitmask = self._bitmask(start, end)
         if value == 0:
             return True if subfield == 0 else False
         else:
             setval = int(bitmask)
-            # print "setval:", setval
             return True if subfield == setval else False
 
     def isRangeSet(self, start, end):
