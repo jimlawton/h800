@@ -74,6 +74,11 @@ class Word(object):
     def c(self, value):
         self._c = self.data[37:48] = value
 
+    def emit(self):
+        "Emit binary output."
+        # TODO
+        pass
+
 
 def main():
     print "TEST: simple default cases."
