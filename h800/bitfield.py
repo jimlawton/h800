@@ -552,9 +552,50 @@ def main():
     assert b.maxval == 2L ** 48 - 1, "Maxval is %d, should be 255" % b.maxval
     print "TEST: check width"
     assert b.width == 48, "Width is %d, should be 8" % b.width
+    print "TEST: check length"
+    assert len(b) == 48, "Length is %d, should be 8" % len(b)
     print "TEST: set slice [33:48] = 65535"
     b[33:48] = 0b1111111111111111
     assert b.value == 65535, "Value is %d, should be 65535" % b.value
+    print "TEST: set value to zero"
+    b[1:48] = 0
+    assert b.value == 0, "Value is %d, should be 0" % b.value
+    print "TEST: set value to all ones using slice"
+    b[1:48] = b.maxval
+    assert b.value == 2 ** 48 - 1, "Value is %d, should be %d" % (b.value, b.maxval)
+    print "TEST: set value to all zeros using slice"
+    b[1:48] = 0
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
+    print "TEST: set value to all ones using set"
+    b.set()
+    assert b.value == 2 ** 48 - 1, "Value is %d, should be %d" % (b.value, b.maxval)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
+    print "TEST: set high 12 bits to test-pattern"
+    b[1:12] = 0b101010101010
+    assert b.value == 187604171489280, "Value is %d, should be %d" % (b.value, 187604171489280)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
+    print "TEST: set 2nd 12 bits to test-pattern"
+    b[13:24] = 0b101010101010
+    assert b.value == 45801799680, "Value is %d, should be %d" % (b.value, 45801799680)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
+    print "TEST: set 3rd 12 bits to test-pattern"
+    b[25:36] = 0b101010101010
+    assert b.value == 11182080, "Value is %d, should be %d" % (b.value, 11182080)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
+    print "TEST: set low 12 bits to test-pattern"
+    b[37:48] = 0b101010101010
+    assert b.value == 2730, "Value is %d, should be %d" % (b.value, 2730)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    assert b.value == 0, "Value is %d, should be %d" % (b.value, 0)
 
     print "\nPASS"
 
