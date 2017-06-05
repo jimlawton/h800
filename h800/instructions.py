@@ -1131,8 +1131,10 @@ class SubroutineCallConstant(instruction.Constant):
 
 def main():
     # Tester goes here.
-    print "TEST: TBD."
-    # TODO
+    print "TEST: BA"
+    i = BinaryAddMasked(sequence=0, mask=0)
+    assert i.value == 0o51, "Value is %d, should be 0" % i.value
+
     print "PASS"
 
 
