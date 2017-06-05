@@ -257,560 +257,855 @@ class NotImplemented(Exception):
 
 # General, masked or unmasked.
 
-# "BA":   0o11,                   # Binary Add
-# "DA":   0o01,                   # Decimal Add
-# "WA":   0o15,                   # Word Add
-# "BS":   0o31,                   # Binary Subtract
-# "DS":   0o21,                   # Decimal Subtract
-# "WD":   0o35,                   # Word Difference
-# "NA":   0o16,                   # Not equal, Alphabetic
-# "NN":   0o10,                   # Not equal, Numeric
-# "LA":   0o36,                   # Less than or equal, Alphabetic
-# "LN":   0o30,                   # Less than or equal, Numeric
-# "TX":   0o20,                   # Transfer A to C
-# "TS":   0o06,                   # Transfer A to B and go to C
-# "HA":   0o25,                   # Half Add (mod 2)
-# "SM":   0o05,                   # Superimpose
-# "CP":   0o26,                   # Check Parity
-
-class BinaryAddMasked(GeneralMasked):
+class BinaryAddMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="BA", sequence=sequence,
-                               mask=mask, group=1,
-                               opcode=OPCODES["BA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="BA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["BA"])
 
 
-class BinaryAddUnmasked(GeneralUnmasked):
+class BinaryAddUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="BA", sequence=sequence,
-                                 group=0, a=a, b=b, c=c,
-                                 opcode=OPCODES["BA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="BA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["BA"])
 
 
-class DecimalAddMasked(GeneralMasked):
+class DecimalAddMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="DA", sequence=sequence,
-                               mask=mask, group=1,
-                               opcode=OPCODES["DA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="DA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["DA"])
 
 
-class DecimalAddUnmasked(GeneralUnmasked):
+class DecimalAddUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="DA", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["DA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="DA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["DA"])
 
 
-class WordAddMasked(GeneralMasked):
+class WordAddMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="WA", sequence=sequence, mask=mask, group=1, opcode=OPCODES["WA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="WA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["WA"])
 
 
-class WordAddUnmasked(GeneralUnmasked):
+class WordAddUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="WA", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["WA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="WA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["WA"])
 
 
-class BinarySubtractMasked(GeneralMasked):
+class BinarySubtractMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="BS", sequence=sequence, mask=mask, group=1, opcode=OPCODES["BS"])
+        instruction.GeneralMasked.__init__(self, mnemonic="BS",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["BS"])
 
 
-class BinarySubtractUnmasked(GeneralUnmasked):
+class BinarySubtractUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="BS", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["BS"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="BS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["BS"])
 
 
-class DecimalSubtractMasked(GeneralMasked):
+class DecimalSubtractMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="DS", sequence=sequence, mask=mask, group=1, opcode=OPCODES["DS"])
+        instruction.GeneralMasked.__init__(self, mnemonic="DS",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["DS"])
 
 
-class DecimalSubtractUnmasked(GeneralUnmasked):
+class DecimalSubtractUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="DS", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["DS"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="DS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["DS"])
 
 
-class WordDifferenceMasked(GeneralMasked):
+class WordDifferenceMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="WD", sequence=sequence, mask=mask, group=1, opcode=OPCODES["WD"])
+        instruction.GeneralMasked.__init__(self, mnemonic="WD",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["WD"])
 
 
-class WordDifferenceUnmasked(GeneralUnmasked):
+class WordDifferenceUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="WD", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["WD"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="WD",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["WD"])
 
 
-class NotEqualAlphabeticMasked(GeneralMasked):
+class NotEqualAlphabeticMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="NA", sequence=sequence, mask=mask, group=1, opcode=OPCODES["NA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="NA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["NA"])
 
 
-class NotEqualAlphabeticUnmasked(GeneralUnmasked):
+class NotEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="NA", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["NA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="NA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["NA"])
 
 
-class NotEqualNumericMasked(GeneralMasked):
+class NotEqualNumericMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="NN", sequence=sequence, mask=mask, group=1, opcode=OPCODES["NN"])
+        instruction.GeneralMasked.__init__(self, mnemonic="NN",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["NN"])
 
 
-class NotEqualNumericUnmasked(GeneralUnmasked):
+class NotEqualNumericUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="NN", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["NN"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="NN",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["NN"])
 
 
-class LessThanOrEqualAlphabeticMasked(GeneralMasked):
+class LessThanOrEqualAlphabeticMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="LA", sequence=sequence, mask=mask, group=1, opcode=OPCODES["LA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="LA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["LA"])
 
 
-class LessThanOrEqualAlphabeticUnmasked(GeneralUnmasked):
+class LessThanOrEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="LA", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["LA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="LA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["LA"])
 
 
-class LessThanOrEqualNumericMasked(GeneralMasked):
+class LessThanOrEqualNumericMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="LN", sequence=sequence, mask=mask, group=1, opcode=OPCODES["LN"])
+        instruction.GeneralMasked.__init__(self, mnemonic="LN",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["LN"])
 
 
-class LessThanOrEqualNumericUnmasked(GeneralUnmasked):
+class LessThanOrEqualNumericUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="LN", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["LN"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="LN",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["LN"])
 
 
-class TransferMasked(GeneralMasked):
+class TransferMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="TX", sequence=sequence, mask=mask, group=1, opcode=OPCODES["TX"])
+        instruction.GeneralMasked.__init__(self, mnemonic="TX",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["TX"])
 
 
-class TransferUnmasked(GeneralUnmasked):
+class TransferUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="TX", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["TX"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="TX",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["TX"])
 
 
-class TransferChangeSequenceMasked(GeneralMasked):
+class TransferChangeSequenceMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="TS", sequence=sequence, mask=mask, group=1, opcode=OPCODES["TS"])
+        instruction.GeneralMasked.__init__(self, mnemonic="TS",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["TS"])
 
 
-class TransferChangeSequenceUnmasked(GeneralUnmasked):
+class TransferChangeSequenceUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="TS", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["TS"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="TS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["TS"])
 
 
-class HalfAddMasked(GeneralMasked):
+class HalfAddMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="HA", sequence=sequence, mask=mask, group=1, opcode=OPCODES["HA"])
+        instruction.GeneralMasked.__init__(self, mnemonic="HA",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["HA"])
 
 
-class HalfAddUnmasked(GeneralUnmasked):
+class HalfAddUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="HA", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["HA"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="HA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["HA"])
 
 
-class SuperimposeMasked(GeneralMasked):
+class SuperimposeMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="SM", sequence=sequence, mask=mask, group=1, opcode=OPCODES["SM"])
+        instruction.GeneralMasked.__init__(self, mnemonic="SM",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["SM"])
 
 
-class SuperimposeUnmasked(GeneralUnmasked):
+class SuperimposeUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="SM", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["SM"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SM",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SM"])
 
 
-class CheckParityMasked(GeneralMasked):
+class CheckParityMasked(instruction.GeneralMasked):
 
     def __init__(self, sequence, mask):
-        GeneralMasked.__init__(self, mnemonic="CP", sequence=sequence, mask=mask, group=1, opcode=OPCODES["CP"])
+        instruction.GeneralMasked.__init__(self, mnemonic="CP",
+                                           sequence=sequence,
+                                           mask=mask,
+                                           opcode=BIT7_1+BASE_OPCODES["CP"])
 
 
-class CheckParityUnmasked(GeneralUnmasked):
+class CheckParityUnmasked(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="CP", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["CP"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="CP",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["CP"])
 
 
 # General, unmasked.
 
-class BinaryMultiply(GeneralUnmasked):
+class BinaryMultiply(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        GeneralUnmasked.__init__(self, mnemonic="BM", sequence=sequence, group=0, a=a, b=b, c=c, opcode=OPCODES["BM"])
+        instruction.GeneralUnmasked.__init__(self, mnemonic="BM",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["BM"])
 
 
-class DecimalMultiply(GeneralUnmasked):
-    raise NotImplemented
+class DecimalMultiply(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="DM",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["DM"])
 
 
-class BinaryAccumulate(GeneralUnmasked):
-    raise NotImplemented
+class BinaryAccumulate(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="BT",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["BT"])
 
 
-class DecimalAccumulate(GeneralUnmasked):
-    raise NotImplemented
+class DecimalAccumulate(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="DT",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["DT"])
 
 
-class MultipleTransfer(GeneralUnmasked):
-    raise NotImplemented
+class MultipleTransfer(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="MT",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["MT"])
 
 
-class TransferNWords(GeneralUnmasked):
-    raise NotImplemented
+class TransferNWords(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="TN",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_01+BASE_OPCODES["TN"])
 
 
-class ComputeOrthocount(GeneralUnmasked):
-    raise NotImplemented
+class ComputeOrthocount(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="CC",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_01+BASE_OPCODES["CC"])
 
 
-class ItemTransfer(GeneralUnmasked):
-    raise NotImplemented
+class ItemTransfer(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="IT",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_01+BASE_OPCODES["IT"])
 
 
-class ExtendedBinaryAdd(GeneralUnmasked):
-    raise NotImplemented
+class ExtendedBinaryAdd(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="EBA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_11+BASE_OPCODES["EBA"])
 
 
-class ExtendedBinarySubtract(GeneralUnmasked):
-    raise NotImplemented
+class ExtendedBinarySubtract(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="EBS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_11+BASE_OPCODES["EBS"])
 
 
-class RecordTransfer(GeneralUnmasked):
-    raise NotImplemented
+class RecordTransfer(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="RT",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_11+BASE_OPCODES["RT"])
 
 
-class ControlProgram(GeneralUnmasked):
-    raise NotImplemented
+class ControlProgram(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="MPC",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["MPC"])
 
 
-class Proceed(GeneralUnmasked):
-    raise NotImplemented
+class Proceed(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="PR",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["PR"])
 
 
 # # Inherent mask.
 
-class ShiftWordAndSubstitute(GeneralUnmasked):
-    raise NotImplemented
+class ShiftWordAndSubstitute(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SWS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SWS"])
 
 
-class ShiftPreservingSignAndSubstitute(GeneralUnmasked):
-    raise NotImplemented
+class ShiftPreservingSignAndSubstitute(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SPS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SPS"])
 
 
-class ShiftWordAndExtract(GeneralUnmasked):
-    raise NotImplemented
+class ShiftWordAndExtract(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SWE",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SWE"])
 
 
-class ShiftPreservingSignAndExtract(GeneralUnmasked):
-    raise NotImplemented
+class ShiftPreservingSignAndExtract(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SPE",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SPE"])
 
 
-class ShiftAndSelect(GeneralUnmasked):
-    raise NotImplemented
+class ShiftAndSelect(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SSL",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_10+BASE_OPCODES["SSL"])
 
 
-class Substitute(GeneralUnmasked):
-    raise NotImplemented
+class Substitute(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="SS",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["SS"])
 
 
-class Extract(GeneralUnmasked):
-    raise NotImplemented
+class Extract(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="EX",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BITS23_00+BASE_OPCODES["EX"])
 
 
 # Peripheral and print.
 
-class ReadForward(Peripheral):
-    raise NotImplemented
+class ReadForward(instruction.Peripheral):
+
+    def __init__(self, paddr):
+        instruction.Peripheral.__init__(self, mnemonic="RF",
+                                        paddr=paddr,
+                                        opcode=BIT7_1+BASE_OPCODES["RF"])
+
+ß
+class ReadBackward(instruction.Peripheral):
+
+    def __init__(self, paddr):
+        instruction.Peripheral.__init__(self, mnemonic="RB",
+                                        paddr=paddr,
+                                        opcode=BIT7_1+BASE_OPCODES["RB"])
 
 
-class ReadBackward(Peripheral):
-    raise NotImplemented
+class WriteForward(instruction.Peripheral):
+
+    def __init__(self, paddr):
+        instruction.Peripheral.__init__(self, mnemonic="WF",
+                                        paddr=paddr,
+                                        opcode=BIT7_1+BASE_OPCODES["WF"])
 
 
-class WriteForward(Peripheral):
-    raise NotImplemented
+class Rewind(instruction.Peripheral):
+
+    def __init__(self, paddr):
+        instruction.Peripheral.__init__(self, mnemonic="RW",
+                                        paddr=paddr,
+                                        opcode=BIT7_1+BASE_OPCODES["RW"])
 
 
-class Rewind(Peripheral):
-    raise NotImplemented
+class PrintAlphabetic(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="PRA",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BIT7_1+BASE_OPCODES["PRA"])
+
+
+class PrintDecimal(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="PRD",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BIT7_1+BASE_OPCODES["PRD"])
+
+
+class PrintOctal(instruction.GeneralUnmasked):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.GeneralUnmasked.__init__(self, mnemonic="PRO",
+                                             sequence=sequence,
+                                             a=a, b=b, c=c,
+                                             opcode=BIT7_1+BASE_OPCODES["PRO"])
 
 
 # Simulator.
-# "S":    0o07,                   # Simulate
 
-class Simulator(Simulator):
-    raise NotImplemented
+class Simulator(instruction.Simulator):
+
+    def __init__(self, sequence):
+        instruction.Simulator.__init__(self, mnemonic="S",
+                                       sequence=sequence,
+                                       opcode=BASE_OPCODES["S"])
 
 
 # Scientific.
 
-# "FBA":  0o01,                   # Floating Binary Add
+class FloatingBinaryAdd(instruction.Scientific):
 
-class FloatingBinaryAdd(Scientific):
-    raise NotImplemented
-
-
-# "FDA":  0o21,                   # Floating Decimal Add
-class FloatingDecimalAdd(Scientific):
-    raise NotImplemented
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBA",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FBA"])
 
 
-# "FBS":  0o11,                   # Floating Binary Subtract
-class FloatingBinarySubtract(Scientific):
-    raise NotImplemented
+class FloatingDecimalAdd(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDA",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FDA"])
 
 
-# "FDS":  0o31,                   # Floating Decimal Subtract
-class FloatingDecimalSubtract(Scientific):
-    raise NotImplemented
+class FloatingBinarySubtract(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBS",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FBS"])
 
 
-# "FBD":  0o05,                   # Floating Binary Divide
-class FloatingBinaryDivide(Scientific):
-    raise NotImplemented
+class FloatingDecimalSubtract(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDS",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FDS"])
 
 
-# "FDD":  0o25,                   # Floating Decimal Divide
-class FloatingDecimalDivide(Scientific):
-    raise NotImplemented
+class FloatingBinaryDivide(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBD",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FBD"])
 
 
-# "FBAU": 0o01,                   # Floating Binary Add, Unnormalized
-class FloatingBinaryAddUnnormalized(Scientific):
-    raise NotImplemented
+class FloatingDecimalDivide(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDD",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_01+BASE_OPCODES["FDD"])
 
 
-# "FDAU": 0o21,                   # Floating Decimal Add, Unnormalized
-class FloatingDecimalAddUnnormalized(Scientific):
-    raise NotImplemented
+class FloatingBinaryAddUnnormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBAU",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FBAU"])
 
 
-# "FBSU": 0o11,                   # Floating Binary Subtract, Unnormalized
-class FloatingBinarySubtractUnnormalized(Scientific):
-    raise NotImplemented
+class FloatingDecimalAddUnnormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDAU",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FDAU"])
 
 
-# "FDSU": 0o31,                   # Floating Decimal Subtract, Unnormalized
-class FloatingDecimalSubtractUnnormalized(Scientific):
-    raise NotImplemented
+class FloatingBinarySubtractUnnormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBSU",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FBSU"])
 
 
-# "FBM":  0o05,                   # Floating Binary Multiply
-class FloatingBinaryMultiply(Scientific):
-    raise NotImplemented
+class FloatingDecimalSubtractUnnormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDSU",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FDSU"])
 
 
-# "FDM":  0o25,                   # Floating Decimal Multiply
-class FloatingDecimalMultiply(Scientific):
-    raise NotImplemented
+class FloatingBinaryMultiply(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBM",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FBM"])
 
 
-# "ULD":  0o15,                   # Multiple Unload
-class MultipleUnload(Scientific):
-    raise NotImplemented
+class FloatingDecimalMultiply(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FDM",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["FDM"])
 
 
-# "FBAE": 0o01,                   # Floating Binary Add, Extended precision
-class FloatingBinaryAddExtendedPrecision(Scientific):
-    raise NotImplemented
+class MultipleUnload(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="ULD",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_11+BASE_OPCODES["ULD"])
 
 
-# "FBSE": 0o11,                   # Floating Binary Subtract, Extended precision
-class FloatingBinarySubtractExtendedPrecision(Scientific):
-    raise NotImplemented
+class FloatingBinaryAddExtendedPrecision(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBAE",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["FBAE"])
 
 
-# "BD":   0o05,                   # Fixed Binary Divide
-class FixedBinaryDivide(Scientific):
-    raise NotImplemented
+class FloatingBinarySubtractExtendedPrecision(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FBSE",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["FBSE"])
 
 
-# "DD":   0o25,                   # Fixed Decimal Divide
-class FixedDecimalDivide(Scientific):
-    raise NotImplemented
+class FixedBinaryDivide(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="BD",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["BD"])
 
 
-# "FFN":  0o15,                   # Fixed-to-Floating Normalize
-class FixedToFloatingNormalize(Scientific):
-    raise NotImplemented
+class FixedDecimalDivide(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="DD",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["DD"])
 
 
-# "FCON": 0o35,                   # Conversion
-class Conversion(Scientific):
-    raise NotImplemented
+class FixedToFloatingNormalize(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FFN",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["FFN"])
 
 
-# "FLN":  0o30,                   # Floating Less than, Normalized
-class FloatingLessThanNormalized(Scientific):
-    raise NotImplemented
+class Conversion(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FCON",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["FCON"])
 
 
-# "FNN":  0o16,                   # Floating Not equal, Normalized
-class FloatingNotEqualNormalized(Scientific):
-    raise NotImplemented
+class FloatingLessThanNormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FLN",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_00+BASE_OPCODES["FLN"])
+
+
+class FloatingNotEqualNormalized(instruction.Scientific):
+
+    def __init__(self, sequence, a, b, c):
+        instruction.Scientific.__init__(self, mnemonic="FNN",
+                                        sequence=sequence,
+                                        a=a, b=b, c=c,
+                                        opcode=BITS23_10+BASE_OPCODES["FNN"])
 
 
 # Control Instructions.
 
-# "ASSIGN":   0,                  # Assign Tag to Complex Address
-class AssignTag(AssemblyControl):
+# Assign Tag to Complex Address
+class AssignTag(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "END":      0,                  # Specify Information for Executive
-class End(AssemblyControl):
+# Specify Information for Executive
+class End(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "EQUALS":   0,                  # Assign Value to Tag
-class Equals(AssemblyControl):
+# Assign Value to Tag
+class Equals(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "EVEN":     0,                  # Set Location Counter to Next Even Address
-class Even(AssemblyControl):
+# Set Location Counter to Next Even Address
+class Even(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "MASKGRP":  0,                  # Assign Shift and Field Group Numbers
-class MaskGroup(AssemblyControl):
+# Assign Shift and Field Group Numbers
+class MaskGroup(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "MODLOC":   0,                  # Set Location Counter Modulo-N.
-class SetLocationCounterModuloN(AssemblyControl):
+# Set Location Counter Modulo-N.
+class SetLocationCounterModuloN(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "RESERVE":  0,                  # Reserve N Words of Memory
-class Reserve(AssemblyControl):
+# Reserve N Words of Memory
+class Reserve(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "SETLOC":   0,                  # Set Location Counter
-class SetLocationCounter(AssemblyControl):
+# Set Location Counter
+class SetLocationCounter(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "SIMULATE": 0,                  # Start of Simulator Routine
-class Simulate(AssemblyControl):
+# Start of Simulator Routine
+class Simulate(instruction.AssemblyControl):
     raise NotImplemented
 
 
-# "TAS":      0                   # Temporarily Assign Tag to Complex Address
-class TemporarilyAssignTag(AssemblyControl):
+# Temporarily Assign Tag to Complex Address
+class TemporarilyAssignTag(instruction.AssemblyControl):
     raise NotImplemented
 
 
 # Data Constants.
 
-# "ALF":   0,                     # Alphanumeric Constant
-class AlphanumericConstant(Constant):
+# Alphanumeric Constant
+class AlphanumericConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "DEC":   0,                     # Fixed Decimal Constant
-class DecimalConstant(Constant):
+# Fixed Decimal Constant
+class DecimalConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "EBC":   0,                     # Extended Binary Constant
-class ExtendedBinaryConstant(Constant):
+# Extended Binary Constant
+class ExtendedBinaryConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "FLBIN": 0,                     # Floating-Point Binary Constant
-class FloatingBinaryConstant(Constant):
+# Floating-Point Binary Constant
+class FloatingBinaryConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "FLDEC": 0,                     # Floating-Point Decimal Constant
-class FloatingDecimalConstant(Constant):
+# Floating-Point Decimal Constant
+class FloatingDecimalConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "FXBIN": 0,                     # Decimal to Fixed Binary Translation
-class FixedBinaryConstant(Constant):
+# Decimal to Fixed Binary Translation
+class FixedBinaryConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "OCT":   0                      # Octal Constant
-class OctalConstant(Constant):
+# Octal Constant
+class OctalConstant(instruction.Constant):
     raise NotImplemented
 
 
 # Control Constants.
 
-# "SPEC":     0,                  # Special Address Constant
-class SpecialAddressConstant(Constant):
+# Special Address Constant
+class SpecialAddressConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "CAC":      0,                  # Complete Address Constant
-class CompleteAddressConstant(Constant):
+# Complete Address Constant
+class CompleteAddressConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "MASKBASE": 0,                  # Mask Base Address Constant
-class MaskBaseAddressConstant(Constant):
+# Mask Base Address Constant
+class MaskBaseAddressConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "CONTROL":  0,                  # Program Control Constant
-class ProgramControlConstant(Constant):
+# Program Control Constant
+class ProgramControlConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "M":        0,                  # Mixed Constant
-class MixedConstant(Constant):
+# Mixed Constant
+class MixedConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "TAC":      0,                  # Tape Address Constant
-class TapeAddressConstant(Constant):
+# Tape Address Constant
+class TapeAddressConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "LINK":     0,                  # Linkage Constant
-class LinkageConstant(Constant):
+# Linkage Constant
+class LinkageConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "SEGNAME":  0,                  # Segment Name Constant
-class SegmentNameConstant(Constant):
+# Segment Name Constant
+class SegmentNameConstant(instruction.Constant):
     raise NotImplemented
 
 
-# "SUBCALL":  0                   # Subroutine Call Constant
-class SubroutineCallConstant(Constant):
+# Subroutine Call Constant
+class SubroutineCallConstant(instruction.Constant):
     raise NotImplemented
 
 
