@@ -67,7 +67,8 @@ from bitfield import BitField
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, mnemonic, sequence=None, mask=None, a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
+    def __init__(self, mnemonic, sequence=None, mask=None,
+                 a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
         self._mnemonic = mnemonic       # Mnemonic string.
         self._sequence = sequence       # Sequence/cosequence code.
         self._mask = mask               # Mask.
