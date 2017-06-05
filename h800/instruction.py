@@ -134,41 +134,48 @@ class Instruction(object):
 class GeneralMasked(Instruction):
     """General masked instruction class."""
     def __init__(self, mnemonic, sequence, mask, opcode):
-        Instruction.__init__(self, mnemonic, sequence, mask, None, None, None, None, None, opcode)
-
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, group=1, opcode=opcode)
 
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
-    def __init__(self, mnemonic, sequence, group, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
+    def __init__(self, mnemonic, sequence, a, b, c, opcode):
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, group=0, a=a, b=b, c=c, opcode=opcode)
 
 
 class Peripheral(Instruction):
     """Peripheral instruction class."""
     def __init__(self, mnemonic, paddr, opcode):
-        Instruction.__init__(self, mnemonic, None, None, None, None, None, None, paddr, opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, group=1, paddr=paddr, opcode=opcode)
 
 
 class Simulator(Instruction):
     """Simulator instruction class."""
     def __init__(self, mnemonic, sequence, opcode):
-        Instruction.__init__(self, mnemonic, sequence, None, None, None, None, None, None, 7)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, opcode=7)
 
 
 class Scientific(Instruction):
     """Scientific instruction class."""
-    def __init__(self, mnemonic, sequence, group, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic, sequence, None, group, a, b, c, None, opcode)
+    def __init__(self, mnemonic, sequence, a, b, c, opcode):
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, group=0, a=a, b=b, c=c, opcode=opcode)
+
+
+class Constant(Instruction):
+    """Constant instruction class."""
+    def __init__(self, mnemonic, a, b, c):
+        Instruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
+
 
 class PseudoInstruction(Instruction):
     """Pseudo-instruction class. No code is generated."""
-    def __init__(self, mnemonic, group, a, b, c):
-        Instruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
+    def __init__(self, mnemonic, a, b, c):
+        Instruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c, pseudo=True)
 
-class AssemblyControl(Instruction):
+
+class AssemblyControl(PseudoInstruction):
     """Assembly control instruction class."""
-    def __init__(self, mnemonic, group, a, b, c):
-        PseudoInstruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
+    def __init__(self, mnemonic, a, b, c):
+        PseudoInstruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
 
 class Constant(Instruction):
     """Constant instruction class."""
