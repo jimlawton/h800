@@ -722,7 +722,7 @@ class ReadForward(instruction.Peripheral):
                                         paddr=paddr,
                                         opcode=BIT7_1+BASE_OPCODES["RF"])
 
-ß
+
 class ReadBackward(instruction.Peripheral):
 
     def __init__(self, paddr):
