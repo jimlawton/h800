@@ -62,6 +62,9 @@
 # |            PADDRESS         |  1 |         OPCODE         |
 # +----+----+----+----+----+----+----+----+----+----+----+----+
 
+from bitfield import BitField
+
+
 class Instruction(object):
     """Base opcode class."""
     def __init__(self, mnemonic, sequence, mask, group, a, b, c, paddr, opcode):
