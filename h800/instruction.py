@@ -119,6 +119,11 @@ class Instruction(object):
         self.data[7:12] = opcode & 63
         self.data[2:3] = (opcode >> 9) & 3
 
+    @property
+    def value(self):
+        "Return the current integer value of the opcode bitfield."
+        return int(self.data)
+
 
 class GeneralMasked(Instruction):
     """General masked instruction class."""
