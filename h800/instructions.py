@@ -15,86 +15,86 @@
 #               | 1             12 |
 # Opcode        +------------------+
 #
-# BA  masked    | s mmmmm  1 01001 |    101 001
-# BA  unmasked  | s 10 abc 0 01001 | 10 001 001
-# DA  masked    | s mmmmm  1 00001 |    100 001
-# DA  unmasked  | s 10 abc 0 00001 | 10 000 001
-# WA  masked    | s mmmmm  1 01101 |    101 101
-# WA  unmasked  | s 10 abc 0 01101 | 10 001 101
-# BS  masked    | s mmmmm  1 11001 |    111 001
-# BS  unmasked  | s 10 abc 0 11001 | 10 011 001
-# DS  masked    | s mmmmm  1 10001 |    110 001
-# DS  unmasked  | s 10 abc 0 10001 | 10 010 001
-# WD  masked    | s mmmmm  1 11101 |    111 101
-# WD  unmasked  | s 10 abc 0 11101 | 10 011 101
-# NA  masked    | s mmmmm  1 01100 |    101 100
-# NA  unmasked  | s 10 abc 0 01100 | 10 001 100
-# NN  masked    | s mmmmm  1 01000 |    101 000
-# NN  unmasked  | s 10 abc 0 01000 | 10 001 000
-# LA  masked    | s mmmmm  1 11100 |    111 100
-# LA  unmasked  | s 10 abc 0 11100 | 10 011 100
-# LN  masked    | s mmmmm  1 11000 |    111 000
-# LN  unmasked  | s 10 abc 0 11000 | 10 011 000
-# TX  masked    | s mmmmm  1 10000 |    110 000
-# TX  unmasked  | s 10 abc 0 10000 | 10 010 000
-# TS  masked    | s mmmmm  1 00100 |    100 100
-# TS  unmasked  | s 10 abc 0 00100 | 10 000 100
-# HA  masked    | s mmmmm  1 10101 |    110 101
-# HA  unmasked  | s 10 abc 0 10101 | 10 010 101
-# SM  masked    | s mmmmm  1 00101 |    100 101
-# SM  unmasked  | s 10 abc 0 00101 | 10 000 101
-# CP  masked    | s mmmmm  1 10100 |    110 100
-# CP  unmasked  | s 10 abc 0 10100 | 10 010 100
-# BM            | s 00 abc 0 01011 | 00 001 011
-# DM            | s 00 abc 0 00011 | 00 000 011
-# BT            | s 10 abc 0 01011 | 10 001 011
-# DT            | s 10 abc 0 00011 | 10 000 011
-# MT            | s 00 abc 0 10000 | 00 010 000
-# TN            | s 01 abc 0 10000 | 01 010 000
-# CC            | s 01 abc 0 01000 | 01 001 000
-# IT            | s 01 abc 0 11000 | 01 011 000
-# EBA           | s 11 abc 0 01011 | 11 001 011
-# EBS           | s 11 abc 0 11011 | 11 011 011
-# RT            | s 11 abc 0 11000 | 11 011 000
-# MPC           | s 10 abc 0 00000 | 10 000 000
-# PR            | x 000 xx 0 00110 | 00 000 110 *
-# SWS           | s 10 abc 0 00110 | 10 000 110
-# SPS           | s 10 abc 0 00010 | 10 000 010
-# SWE           | s 10 abc 0 01110 | 10 001 110
-# SPE           | s 10 abc 0 01010 | 10 001 010
-# SSL           | s 10 abc 0 10110 | 10 010 110
-# SS            | s 00 abc 0 00110 | 00 000 110
-# EX            | s 00 abc 0 01110 | 00 001 110
-# RF            | pppppp   1 11010 |    111 010
-# RB            | pppppp   1 01010 |    101 010
-# WF            | pppppp   1 01110 |    101 110
-# RW            | pppppp   1 00010 |    100 010
-# PRA           | s xx abc 1 00110 | xx 100 110
-# PRD           | s xx abc 1 00110 | xx 100 110
-# PRO           | s xx abc 1 00110 | xx 100 110
-# S   direct    | 0 xx xxx x xx110 | xx xxx 110 ?
-# S   indexed   | 1 xx xxx x xx110 | xx xxx 110 ?
-# FBA           | s 01 abc 0 00001 | 01 000 001
-# FDA           | s 01 abc 0 10001 | 01 010 001
-# FBS           | s 01 abc 0 01001 | 01 001 001
-# FDS           | s 01 abc 0 11001 | 01 011 001
-# FBD           | s 01 abc 0 00101 | 01 000 101
-# FDD           | s 01 abc 0 10101 | 01 010 101
-# FBAU          | s 11 abc 0 00001 | 11 000 001
-# FDAU          | s 11 abc 0 10001 | 11 010 001
-# FBSU          | s 11 abc 0 01001 | 11 001 001
-# FDSU          | s 11 abc 0 11001 | 11 011 001
-# FBM           | s 11 abc 0 00101 | 11 000 101
-# FDM           | s 11 abc 0 10101 | 11 010 101
-# ULD           | s 11 abc 0 01101 | 11 001 101
-# FBAE          | s 00 abc 0 00001 | 00 000 001
-# FBSE          | s 00 abc 0 01001 | 00 001 001
-# BD            | s 00 abc 0 00101 | 00 000 101
-# DD            | s 00 abc 0 10101 | 00 010 101
-# FFN           | s 00 abc 0 01101 | 00 001 101
-# FCON          | s 00 abc 0 11101 | 00 011 101
-# FLN           | s 00 abc 0 11000 | 00 011 000
-# FNN           | s 10 abc 0 01100 | 10 001 100
+# BA  masked    | s mmmmm  1 01001 |    101 001       51
+# BA  unmasked  | s 10 abc 0 01001 | 10 001 001     2 11
+# DA  masked    | s mmmmm  1 00001 |    100 001       41
+# DA  unmasked  | s 10 abc 0 00001 | 10 000 001     2 01
+# WA  masked    | s mmmmm  1 01101 |    101 101       55
+# WA  unmasked  | s 10 abc 0 01101 | 10 001 101     2 15
+# BS  masked    | s mmmmm  1 11001 |    111 001       71
+# BS  unmasked  | s 10 abc 0 11001 | 10 011 001     2 31
+# DS  masked    | s mmmmm  1 10001 |    110 001       61
+# DS  unmasked  | s 10 abc 0 10001 | 10 010 001     2 21
+# WD  masked    | s mmmmm  1 11101 |    111 101       75
+# WD  unmasked  | s 10 abc 0 11101 | 10 011 101     2 35
+# NA  masked    | s mmmmm  1 01100 |    101 100       54
+# NA  unmasked  | s 10 abc 0 01100 | 10 001 100     2 14
+# NN  masked    | s mmmmm  1 01000 |    101 000       50
+# NN  unmasked  | s 10 abc 0 01000 | 10 001 000     2 10
+# LA  masked    | s mmmmm  1 11100 |    111 100       74
+# LA  unmasked  | s 10 abc 0 11100 | 10 011 100     2 34
+# LN  masked    | s mmmmm  1 11000 |    111 000       70
+# LN  unmasked  | s 10 abc 0 11000 | 10 011 000     2 30
+# TX  masked    | s mmmmm  1 10000 |    110 000       60
+# TX  unmasked  | s 10 abc 0 10000 | 10 010 000     2 20
+# TS  masked    | s mmmmm  1 00100 |    100 100       44
+# TS  unmasked  | s 10 abc 0 00100 | 10 000 100     2 04
+# HA  masked    | s mmmmm  1 10101 |    110 101       65
+# HA  unmasked  | s 10 abc 0 10101 | 10 010 101     2 25
+# SM  masked    | s mmmmm  1 00101 |    100 101       45
+# SM  unmasked  | s 10 abc 0 00101 | 10 000 101     2 05
+# CP  masked    | s mmmmm  1 10100 |    110 100       64
+# CP  unmasked  | s 10 abc 0 10100 | 10 010 100     2 24
+# BM            | s 00 abc 0 01011 | 00 001 011     0 13
+# DM            | s 00 abc 0 00011 | 00 000 011     0 03
+# BT            | s 10 abc 0 01011 | 10 001 011     2 13
+# DT            | s 10 abc 0 00011 | 10 000 011     2 03
+# MT            | s 00 abc 0 10000 | 00 010 000     0 20
+# TN            | s 01 abc 0 10000 | 01 010 000     1 20
+# CC            | s 01 abc 0 01000 | 01 001 000     1 10
+# IT            | s 01 abc 0 11000 | 01 011 000     1 30
+# EBA           | s 11 abc 0 01011 | 11 001 011     3 13
+# EBS           | s 11 abc 0 11011 | 11 011 011     3 33
+# RT            | s 11 abc 0 11000 | 11 011 000     3 30
+# MPC           | s 10 abc 0 00000 | 10 000 000     2 00
+# PR            | x 000 xx 0 00110 | 00 000 110 *   0 06
+# SWS           | s 10 abc 0 00110 | 10 000 110     2 06
+# SPS           | s 10 abc 0 00010 | 10 000 010     2 02
+# SWE           | s 10 abc 0 01110 | 10 001 110     2 16
+# SPE           | s 10 abc 0 01010 | 10 001 010     2 12
+# SSL           | s 10 abc 0 10110 | 10 010 110     2 26
+# SS            | s 00 abc 0 00110 | 00 000 110     0 06
+# EX            | s 00 abc 0 01110 | 00 001 110     0 16
+# RF            | pppppp   1 11010 |    111 010       72
+# RB            | pppppp   1 01010 |    101 010       52
+# WF            | pppppp   1 01110 |    101 110       56
+# RW            | pppppp   1 00010 |    100 010       42
+# PRA           | s xx abc 1 00110 | xx 100 110     x 46
+# PRD           | s xx abc 1 00110 | xx 100 110     x 46
+# PRO           | s xx abc 1 00110 | xx 100 110     x 46
+# S   direct    | 0 xx xxx x xx110 | xx xxx 110 ?   x x6
+# S   indexed   | 1 xx xxx x xx110 | xx xxx 110 ?   x x6
+# FBA           | s 01 abc 0 00001 | 01 000 001     1 01
+# FDA           | s 01 abc 0 10001 | 01 010 001     1 21
+# FBS           | s 01 abc 0 01001 | 01 001 001     1 11
+# FDS           | s 01 abc 0 11001 | 01 011 001     1 31
+# FBD           | s 01 abc 0 00101 | 01 000 101     1 05
+# FDD           | s 01 abc 0 10101 | 01 010 101     1 25
+# FBAU          | s 11 abc 0 00001 | 11 000 001     3 01
+# FDAU          | s 11 abc 0 10001 | 11 010 001     3 21
+# FBSU          | s 11 abc 0 01001 | 11 001 001     3 11
+# FDSU          | s 11 abc 0 11001 | 11 011 001     3 31
+# FBM           | s 11 abc 0 00101 | 11 000 101     3 05
+# FDM           | s 11 abc 0 10101 | 11 010 101     3 25
+# ULD           | s 11 abc 0 01101 | 11 001 101     3 15
+# FBAE          | s 00 abc 0 00001 | 00 000 001     0 01
+# FBSE          | s 00 abc 0 01001 | 00 001 001     0 11
+# BD            | s 00 abc 0 00101 | 00 000 101     0 05
+# DD            | s 00 abc 0 10101 | 00 010 101     0 25
+# FFN           | s 00 abc 0 01101 | 00 001 101     0 15
+# FCON          | s 00 abc 0 11101 | 00 011 101     0 35
+# FLN           | s 00 abc 0 11000 | 00 011 000     0 30
+# FNN           | s 10 abc 0 01100 | 10 001 100     2 14
 
 from instruction import *
 
