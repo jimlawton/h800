@@ -1125,3 +1125,14 @@ class SubroutineCallConstant(instruction.Constant):
 # Miscellaneous Instructions.
 # "COREDUMP": 0,                  # ?
 # "DUMP":     0                   # ?
+
+
+def main():
+    # Tester goes here.
+    print "TEST: TBD."
+    # TODO
+    print "PASS"
+
+
+if __name__ == '__main__':
+    main()
