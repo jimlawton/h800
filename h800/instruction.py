@@ -92,6 +92,8 @@ class Instruction(object):
             if mask < 0 or mask > 31:
                 raise ValueError("Mask must be in the range 0..31!")
             self.data[2:6] = mask
+        else:
+            self.data[2:3] = (opcode >> 9) & 3
         if a:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
@@ -115,9 +117,7 @@ class Instruction(object):
             self.data[1:6] = self._paddr
         if opcode < 0 or opcode > 31:
             raise ValueError("Opcode must be in the range 0..31!")
-        # Split the opcode value into bits 2-3, 7, and 8-12.
         self.data[7:12] = opcode & 63
-        self.data[2:3] = (opcode >> 9) & 3
 
     @property
     def value(self):
