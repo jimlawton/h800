@@ -235,7 +235,7 @@ MISC_INSTRUCTIONS = {
     "DUMP":     0                   # ?
 }
 
-INSTRUCTIONS = dict(OPCODES.items() + CONTROL_INSTRUCTIONS.items() +
+INSTRUCTIONS = dict(BASE_OPCODES.items() + CONTROL_INSTRUCTIONS.items() +
                     DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items() +
                     EXTENDED_INSTRUCTIONS.items() + MISC_INSTRUCTIONS.items())
 
