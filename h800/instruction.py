@@ -67,11 +67,10 @@ from bitfield import BitField
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, mnemonic, sequence=None, mask=None, group=0, a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
+    def __init__(self, mnemonic, sequence=None, mask=None, a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
         self._mnemonic = mnemonic       # Mnemonic string.
         self._sequence = sequence       # Sequence/cosequence code.
         self._mask = mask               # Mask.
-        self._group = group             # Group code.
         self._a = a                     # A register active.
         self._b = b                     # B register active.
         self._c = c                     # C register active.
@@ -90,19 +89,9 @@ class Instruction(object):
         if mask:
             if a or b or c or paddr:
                 raise ValueError("Conflicting arguments!")
-            if not group:
-                raise ValueError("Group must be 1 for masked instructions!")
             if mask < 0 or mask > 31:
                 raise ValueError("Mask must be in the range 0..31!")
             self.data[2:6] = mask
-        else:
-            if group not in (0, False):
-                raise ValueError("Group must be 0 for unmasked instructions!")
-        if group:
-            if group not in (0, 1, True, False):
-                raise ValueError("Group must be boolean!")
-            self._group = 1 if group is True else 0
-            self.data[7] = self._group
         if a:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
@@ -121,8 +110,6 @@ class Instruction(object):
         if paddr:
             if sequence or mask or a or b or c:
                 raise ValueError("Conflicting arguments!")
-            if not group:
-                raise ValueError("Group must be 1 for peripheral instructions!")
             if paddr < 0 or paddr > 63:
                 raise ValueError("Peripheral address must be in the range 0..63!")
             self.data[1:6] = self._paddr
@@ -134,18 +121,18 @@ class Instruction(object):
 class GeneralMasked(Instruction):
     """General masked instruction class."""
     def __init__(self, mnemonic, sequence, mask, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, group=1, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, opcode=opcode)
 
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
     def __init__(self, mnemonic, sequence, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, group=0, a=a, b=b, c=c, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, a=a, b=b, c=c, opcode=opcode)
 
 
 class Peripheral(Instruction):
     """Peripheral instruction class."""
     def __init__(self, mnemonic, paddr, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, group=1, paddr=paddr, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, paddr=paddr, opcode=opcode)
 
 
 class Simulator(Instruction):
@@ -157,7 +144,7 @@ class Simulator(Instruction):
 class Scientific(Instruction):
     """Scientific instruction class."""
     def __init__(self, mnemonic, sequence, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, group=0, a=a, b=b, c=c, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, a=a, b=b, c=c, opcode=opcode)
 
 
 class Constant(Instruction):
