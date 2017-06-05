@@ -99,7 +99,11 @@
 import instruction
 
 
-OPCODES = {
+# Base opcodes (bits 8-12 of the command code). These are modified by the
+# value of bit 7 (0 for unmasked, or 1 for masked), and bits 2-3 for unmasked
+# instructions.
+
+BASE_OPCODES = {
     # General, masked or unmasked.
     "BA":   0o11,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
