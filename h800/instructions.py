@@ -96,7 +96,7 @@
 # FLN           | s 00 abc 0 11000 | 00 011 000 | 0 30
 # FNN           | s 10 abc 0 01100 | 10 001 100 | 2 14
 
-from instruction import *
+import instruction
 
 
 OPCODES = {
