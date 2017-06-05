@@ -115,7 +115,7 @@ class Instruction(object):
             if paddr < 0 or paddr > 63:
                 raise ValueError("Peripheral address must be in the range 0..63!")
             self.data[1:6] = self._paddr
-        if opcode < 0 or opcode > 31:
+        if opcode < 0 or opcode > 255:
             raise ValueError("Opcode must be in the range 0..31!")
         self.data[7:12] = opcode & 63
 
