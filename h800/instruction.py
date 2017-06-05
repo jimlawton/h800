@@ -170,14 +170,3 @@ class AssemblyControl(PseudoInstruction):
     """Assembly control instruction class."""
     def __init__(self, mnemonic, a, b, c):
         PseudoInstruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
-
-
-def main():
-    # Tester goes here.
-    print "TEST: TBD."
-    # TODO
-    print "PASS"
-
-
-if __name__ == '__main__':
-    main()
