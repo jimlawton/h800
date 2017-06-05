@@ -181,6 +181,8 @@ BASE_OPCODES = {
     "FNN":  0o16,                   # Floating Not equal, Normalized
 }
 
+# The remaining instructions are pseudo-instructions of various types.
+
 CONTROL_INSTRUCTIONS = {
     "ASSIGN":   0,                  # Assign Tag to Complex Address
     "END":      0,                  # Specify Information for Executive
