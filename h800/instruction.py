@@ -177,7 +177,12 @@ class AssemblyControl(PseudoInstruction):
     def __init__(self, mnemonic, a, b, c):
         PseudoInstruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
 
-class Constant(Instruction):
-    """Constant instruction class."""
-    def __init__(self, mnemonic, group, a, b, c):
-        PseudoInstruction.__init__(self, mnemonic, None, None, None, a, b, c, None, None)
+
+def main():
+    print "TEST: TBD."
+    # TODO
+    print "PASS"
+
+
+if __name__ == '__main__':
+    main()
