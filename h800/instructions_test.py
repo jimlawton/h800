@@ -3,10 +3,14 @@
 from h800.instructions import *
 
 
+def my_assert(value, good):
+    assert value == good, "Value is 0o%o, should be 0o%o" % (value, good)
+
+
 def test_BA_masked_simple():
     print "TEST: BA (masked): simple"
     i = BinaryAddMasked(sequence=0, mask=0)
-    assert i.value == 0o51, "Value is 0o%o, should be 0o51" % i.value
+    my_assert(i.value, 0o51)
 
 
 def test_BA_masked_invalid_args():
@@ -32,17 +36,17 @@ def test_BA_masked_invalid_args():
 def test_BA_masked_args_range():
     print "TEST: BA (masked): args range"
     i = BinaryAddMasked(sequence=1, mask=0)
-    assert i.value == 0o4051, "Value is 0o%o, should be 0o4051" % i.value
+    my_assert(i.value, 0o4051)
     i = BinaryAddMasked(sequence=0, mask=31)
-    assert i.value == 0o3751, "Value is 0o%o, should be 0o6051" % i.value
+    my_assert(i.value, 0o3751)
     i = BinaryAddMasked(sequence=1, mask=31)
-    assert i.value == 0o7751, "Value is 0o%o, should be 0o7751" % i.value
+    my_assert(i.value, 0o7751)
 
 
 def test_BA_unmasked_simple():
     print "TEST: BA (unmasked): simple"
     i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=0)
-    assert i.value == 0o2011, "Value is 0o%o, should be 0o2011" % i.value
+    my_assert(i.value, 0o2011)
 
 
 def test_BA_unmasked_invalid_args():
@@ -76,34 +80,34 @@ def test_BA_unmasked_invalid_args():
 def test_BA_unmasked_args_range():
     print "TEST: BA (unmasked): args range"
     i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=0)
-    assert i.value == 0o2011, "Value is 0o%o, should be 0o2011" % i.value
+    my_assert(i.value, 0o2011)
     i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=1)
-    assert i.value == 0o2111, "Value is 0o%o, should be 0o2111" % i.value
+    my_assert(i.value, 0o2111)
     i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=0)
-    assert i.value == 0o2211, "Value is 0o%o, should be 0o2211" % i.value
+    my_assert(i.value, 0o2211)
     i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=1)
-    assert i.value == 0o2311, "Value is 0o%o, should be 0o2311" % i.value
+    my_assert(i.value, 0o2311)
     i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=0)
-    assert i.value == 0o2411, "Value is 0o%o, should be 0o2411" % i.value
+    my_assert(i.value, 0o2411)
     i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=1)
-    assert i.value == 0o2511, "Value is 0o%o, should be 0o2511" % i.value
+    my_assert(i.value, 0o2511)
     i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=0)
-    assert i.value == 0o2611, "Value is 0o%o, should be 0o2611" % i.value
+    my_assert(i.value, 0o2611)
     i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=1)
-    assert i.value == 0o2711, "Value is 0o%o, should be 0o2711" % i.value
+    my_assert(i.value, 0o2711)
     i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=0)
-    assert i.value == 0o6011, "Value is 0o%o, should be 0o6011" % i.value
+    my_assert(i.value, 0o6011)
     i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=1)
-    assert i.value == 0o6111, "Value is 0o%o, should be 0o6111" % i.value
+    my_assert(i.value, 0o6111)
     i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=0)
-    assert i.value == 0o6211, "Value is 0o%o, should be 0o6211" % i.value
+    my_assert(i.value, 0o6211)
     i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=1)
-    assert i.value == 0o6311, "Value is 0o%o, should be 0o6311" % i.value
+    my_assert(i.value, 0o6311)
     i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=0)
-    assert i.value == 0o6411, "Value is 0o%o, should be 0o6411" % i.value
+    my_assert(i.value, 0o6411)
     i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=1)
-    assert i.value == 0o6511, "Value is 0o%o, should be 0o6511" % i.value
+    my_assert(i.value, 0o6511)
     i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=0)
-    assert i.value == 0o6611, "Value is 0o%o, should be 0o6611" % i.value
+    my_assert(i.value, 0o6611)
     i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=1)
-    assert i.value == 0o6711, "Value is 0o%o, should be 0o6711" % i.value
+    my_assert(i.value, 0o6711)
