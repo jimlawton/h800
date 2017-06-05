@@ -251,8 +251,10 @@ BIT7_0 = 0o00
 BIT7_1 = 0o40
 
 
-class NotImplemented(Exception):
-    raise NotImplemented
+class NotImplementedException(Exception):
+
+    def __init__(self):
+        super(NotImplementedException, self).__init__("This feature is not yet implemented!")
 
 
 # General, masked or unmasked.
