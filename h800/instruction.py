@@ -94,7 +94,7 @@ class Instruction(object):
                 raise ValueError("Mask must be in the range 0..31!")
             self.data[2:6] = mask
         else:
-            self.data[2:3] = (opcode >> 9) & 3
+            self.data[2:3] = (opcode >> 6) & 3
         if a:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
