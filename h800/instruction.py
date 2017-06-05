@@ -166,6 +166,7 @@ class AssemblyControl(PseudoInstruction):
 
 
 def main():
+    # Tester goes here.
     print "TEST: TBD."
     # TODO
     print "PASS"
