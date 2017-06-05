@@ -240,6 +240,17 @@ INSTRUCTIONS = dict(BASE_OPCODES.items() + CONTROL_INSTRUCTIONS.items() +
                     EXTENDED_INSTRUCTIONS.items() + MISC_INSTRUCTIONS.items())
 
 
+# These are just convenient representations of bits 2 and 3 of the command code.
+BITS23_00 = 0o000
+BITS23_01 = 0o100
+BITS23_10 = 0o200
+BITS23_11 = 0o300
+
+# These are just convenient representations of bit 7 of the command code.
+BIT7_0 = 0o00
+BIT7_1 = 0o40
+
+
 class NotImplemented(Exception):
     raise NotImplemented
 
