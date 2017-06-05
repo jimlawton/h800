@@ -115,7 +115,9 @@ class Instruction(object):
             self.data[1:6] = self._paddr
         if opcode < 0 or opcode > 31:
             raise ValueError("Opcode must be in the range 0..31!")
-        self.data[8:12] = opcode
+        # Split the opcode value into bits 2-3, 7, and 8-12.
+        self.data[7:12] = opcode & 63
+        self.data[2:3] = (opcode >> 9) & 3
 
 
 class GeneralMasked(Instruction):
