@@ -67,18 +67,68 @@ from bitfield import BitField
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, mnemonic, sequence, mask, group, a, b, c, paddr, opcode):
-        self._mnemonic = mnemonic               # Mnemonic string.
-        self._sequence = sequence               # Sequence/cosequence code.
-        self._mask = mask                       # Mask.
-        self._group = group                     # Group code.
-        self._a = a                             # A register active.
-        self._b = b                             # B register active.
-        self._c = c                             # C register active.
-        self._paddr = paddr                     # Peripheral address (6 bits).
-        self._opcode = opcode                   # Opcode binary.
-        # TODO: form the resulting machine code.
-        pass
+    def __init__(self, mnemonic, sequence=None, mask=None, group=0, a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
+        self._mnemonic = mnemonic       # Mnemonic string.
+        self._sequence = sequence       # Sequence/cosequence code.
+        self._mask = mask               # Mask.
+        self._group = group             # Group code.
+        self._a = a                     # A register active.
+        self._b = b                     # B register active.
+        self._c = c                     # C register active.
+        self._paddr = paddr             # Peripheral address (6 bits).
+        self._opcode = opcode           # Opcode binary.
+        self._pseudo = pseudo           # Pseudo-instructions generate no code.
+        self.data = BitField(0, width=12,
+                             numbering=BitField.BIT_SCHEME_MSB_1,
+                             order=BitField.BIT_ORDER_MSB_LEFT)
+        if sequence:
+            if paddr:
+                raise ValueError("Conflicting arguments!")
+            if sequence not in (0, 1, True, False):
+                raise ValueError("Sequence must be boolean!")
+            self.data[1] = sequence
+        if mask:
+            if a or b or c or paddr:
+                raise ValueError("Conflicting arguments!")
+            if not group:
+                raise ValueError("Group must be 1 for masked instructions!")
+            if mask < 0 or mask > 31:
+                raise ValueError("Mask must be in the range 0..31!")
+            self.data[2:6] = mask
+        else:
+            if group not in (0, False):
+                raise ValueError("Group must be 0 for unmasked instructions!")
+        if group:
+            if group not in (0, 1, True, False):
+                raise ValueError("Group must be boolean!")
+            self._group = 1 if group is True else 0
+            self.data[7] = self._group
+        if a:
+            if a not in (0, 1, True, False):
+                raise ValueError("A must be boolean!")
+            self._a = 1 if a is True else 0
+            self.data[4] = self._a
+        if b:
+            if b not in (0, 1, True, False):
+                raise ValueError("B must be boolean!")
+            self._b = 1 if b is True else 0
+            self.data[5] = self._b
+        if c:
+            if c not in (0, 1, True, False):
+                raise ValueError("C must be boolean!")
+            self._c = 1 if c is True else 0
+            self.data[6] = self._c
+        if paddr:
+            if sequence or mask or a or b or c:
+                raise ValueError("Conflicting arguments!")
+            if not group:
+                raise ValueError("Group must be 1 for peripheral instructions!")
+            if paddr < 0 or paddr > 63:
+                raise ValueError("Peripheral address must be in the range 0..63!")
+            self.data[1:6] = self._paddr
+        if opcode < 0 or opcode > 31:
+            raise ValueError("Opcode must be in the range 0..31!")
+        self.data[8:12] = opcode
 
 
 class GeneralMasked(Instruction):
