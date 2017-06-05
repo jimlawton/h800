@@ -78,32 +78,32 @@ def test_BA_unmasked_args_range():
     i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=0)
     assert i.value == 0o2011, "Value is 0o%o, should be 0o2011" % i.value
     i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2111, "Value is 0o%o, should be 0o2111" % i.value
     i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2211, "Value is 0o%o, should be 0o2211" % i.value
     i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2311, "Value is 0o%o, should be 0o2311" % i.value
     i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2411, "Value is 0o%o, should be 0o2411" % i.value
     i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2511, "Value is 0o%o, should be 0o2511" % i.value
     i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2611, "Value is 0o%o, should be 0o2611" % i.value
     i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o2711, "Value is 0o%o, should be 0o2711" % i.value
     i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=0)
-    assert i.value == 0o2011, "Value is 0o%o, should be 0o2051" % i.value
+    assert i.value == 0o6011, "Value is 0o%o, should be 0o6011" % i.value
     i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6111, "Value is 0o%o, should be 0o6111" % i.value
     i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6211, "Value is 0o%o, should be 0o6211" % i.value
     i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6311, "Value is 0o%o, should be 0o6311" % i.value
     i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6411, "Value is 0o%o, should be 0o6411" % i.value
     i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6511, "Value is 0o%o, should be 0o6511" % i.value
     i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=0)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6611, "Value is 0o%o, should be 0o6611" % i.value
     i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=1)
-    assert i.value == 0o3711, "Value is 0o%o, should be 0o6051" % i.value
+    assert i.value == 0o6711, "Value is 0o%o, should be 0o6711" % i.value
