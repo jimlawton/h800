@@ -98,17 +98,17 @@ class Instruction(object):
         if a:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
-            self._a = 1 if a is True else 0
+            self._a = 1 if a else 0
             self.data[4] = self._a
         if b:
             if b not in (0, 1, True, False):
                 raise ValueError("B must be boolean!")
-            self._b = 1 if b is True else 0
+            self._b = 1 if b else 0
             self.data[5] = self._b
         if c:
             if c not in (0, 1, True, False):
                 raise ValueError("C must be boolean!")
-            self._c = 1 if c is True else 0
+            self._c = 1 if c else 0
             self.data[6] = self._c
         if paddr:
             if sequence or mask or a or b or c:
