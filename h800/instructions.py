@@ -979,136 +979,136 @@ class FloatingNotEqualNormalized(instruction.Scientific):
 
 # Assign Tag to Complex Address
 class AssignTag(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Specify Information for Executive
 class End(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Assign Value to Tag
 class Equals(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Set Location Counter to Next Even Address
 class Even(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Assign Shift and Field Group Numbers
 class MaskGroup(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Set Location Counter Modulo-N.
 class SetLocationCounterModuloN(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Reserve N Words of Memory
 class Reserve(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Set Location Counter
 class SetLocationCounter(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Start of Simulator Routine
 class Simulate(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Temporarily Assign Tag to Complex Address
 class TemporarilyAssignTag(instruction.AssemblyControl):
-    raise NotImplemented
+    pass
 
 
 # Data Constants.
 
 # Alphanumeric Constant
 class AlphanumericConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Fixed Decimal Constant
 class DecimalConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Extended Binary Constant
 class ExtendedBinaryConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Floating-Point Binary Constant
 class FloatingBinaryConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Floating-Point Decimal Constant
 class FloatingDecimalConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Decimal to Fixed Binary Translation
 class FixedBinaryConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Octal Constant
 class OctalConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Control Constants.
 
 # Special Address Constant
 class SpecialAddressConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Complete Address Constant
 class CompleteAddressConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Mask Base Address Constant
 class MaskBaseAddressConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Program Control Constant
 class ProgramControlConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Mixed Constant
 class MixedConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Tape Address Constant
 class TapeAddressConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Linkage Constant
 class LinkageConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Segment Name Constant
 class SegmentNameConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Subroutine Call Constant
 class SubroutineCallConstant(instruction.Constant):
-    raise NotImplemented
+    pass
 
 
 # Extended Instructions.
