@@ -148,3 +148,61 @@ def test_DA_unmasked_args_range():
         [DecimalAddUnmasked, 1, 1, 1, 1, 0o6701]
     ]
     run_tests("TEST: DA (unmasked): args range", testdata)
+
+
+def test_WA_masked_simple():
+    testdata = [[WordAddMasked, 0, 0, 0o55]]
+    run_tests("TEST: WA (masked): simple", testdata)
+
+
+def test_WA_masked_invalid_args():
+    testdata = [
+        [WordAddMasked, 0, 32, 0],
+        [WordAddMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: WA (masked): invalid args", testdata)
+
+
+def test_WA_masked_args_range():
+    testdata = [
+        [WordAddMasked, 1, 0, 0o4055],
+        [WordAddMasked, 0, 31, 0o3755],
+        [WordAddMasked, 1, 31, 0o7755]
+    ]
+    run_tests("TEST: WA (masked): args range", testdata)
+
+
+def test_WA_unmasked_simple():
+    testdata = [[WordAddUnmasked, 0, 0, 0, 0, 0o2015]]
+    run_tests("TEST: WA (unmasked): simple", testdata)
+
+
+def test_WA_unmasked_invalid_args():
+    testdata = [
+        [WordAddUnmasked, 2, 0, 0, 0, 0],
+        [WordAddUnmasked, 0, 2, 0, 0, 0],
+        [WordAddUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: WA (unmasked): invalid args", testdata)
+
+
+def test_WA_unmasked_args_range():
+    testdata = [
+        [WordAddUnmasked, 0, 0, 0, 0, 0o2015],
+        [WordAddUnmasked, 0, 0, 0, 1, 0o2115],
+        [WordAddUnmasked, 0, 0, 1, 0, 0o2215],
+        [WordAddUnmasked, 0, 0, 1, 1, 0o2315],
+        [WordAddUnmasked, 0, 1, 0, 0, 0o2415],
+        [WordAddUnmasked, 0, 1, 0, 1, 0o2515],
+        [WordAddUnmasked, 0, 1, 1, 0, 0o2615],
+        [WordAddUnmasked, 0, 1, 1, 1, 0o2715],
+        [WordAddUnmasked, 1, 0, 0, 0, 0o6015],
+        [WordAddUnmasked, 1, 0, 0, 1, 0o6115],
+        [WordAddUnmasked, 1, 0, 1, 0, 0o6215],
+        [WordAddUnmasked, 1, 0, 1, 1, 0o6315],
+        [WordAddUnmasked, 1, 1, 0, 0, 0o6415],
+        [WordAddUnmasked, 1, 1, 0, 1, 0o6515],
+        [WordAddUnmasked, 1, 1, 1, 0, 0o6615],
+        [WordAddUnmasked, 1, 1, 1, 1, 0o6715]
+    ]
+    run_tests("TEST: WA (unmasked): args range", testdata)
