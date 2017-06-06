@@ -2148,3 +2148,801 @@ def test_S_args_range():
     ]
     run_tests("TEST: S args range", testdata)
 
+
+# ######## FBA ########
+
+def test_FBA_simple():
+    testdata = [[FloatingBinaryAdd, [0, 0, 0, 0], 0o1001]]
+    run_tests("TEST: FBA simple", testdata)
+
+
+def test_FBA_invalid_args():
+    testdata = [
+        [FloatingBinaryAdd, [2, 0, 0, 0], 0],
+        [FloatingBinaryAdd, [0, 2, 0, 0], 0],
+        [FloatingBinaryAdd, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBA invalid args", testdata)
+
+
+def test_FBA_args_range():
+    testdata = [
+        [FloatingBinaryAdd, [0, 0, 0, 0], 0o1001],
+        [FloatingBinaryAdd, [0, 0, 0, 1], 0o1101],
+        [FloatingBinaryAdd, [0, 0, 1, 0], 0o1201],
+        [FloatingBinaryAdd, [0, 0, 1, 1], 0o1301],
+        [FloatingBinaryAdd, [0, 1, 0, 0], 0o1401],
+        [FloatingBinaryAdd, [0, 1, 0, 1], 0o1501],
+        [FloatingBinaryAdd, [0, 1, 1, 0], 0o1601],
+        [FloatingBinaryAdd, [0, 1, 1, 1], 0o1701],
+        [FloatingBinaryAdd, [1, 0, 0, 0], 0o5001],
+        [FloatingBinaryAdd, [1, 0, 0, 1], 0o5101],
+        [FloatingBinaryAdd, [1, 0, 1, 0], 0o5201],
+        [FloatingBinaryAdd, [1, 0, 1, 1], 0o5301],
+        [FloatingBinaryAdd, [1, 1, 0, 0], 0o5401],
+        [FloatingBinaryAdd, [1, 1, 0, 1], 0o5501],
+        [FloatingBinaryAdd, [1, 1, 1, 0], 0o5601],
+        [FloatingBinaryAdd, [1, 1, 1, 1], 0o5701]
+    ]
+    run_tests("TEST: FBA args range", testdata)
+
+
+# ######## FDA ########
+
+def test_FDA_simple():
+    testdata = [[FloatingDecimalAdd, [0, 0, 0, 0], 0o1021]]
+    run_tests("TEST: FDA simple", testdata)
+
+
+def test_FDA_invalid_args():
+    testdata = [
+        [FloatingDecimalAdd, [2, 0, 0, 0], 0],
+        [FloatingDecimalAdd, [0, 2, 0, 0], 0],
+        [FloatingDecimalAdd, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDA invalid args", testdata)
+
+
+def test_FDA_args_range():
+    testdata = [
+        [FloatingDecimalAdd, [0, 0, 0, 0], 0o1021],
+        [FloatingDecimalAdd, [0, 0, 0, 1], 0o1121],
+        [FloatingDecimalAdd, [0, 0, 1, 0], 0o1221],
+        [FloatingDecimalAdd, [0, 0, 1, 1], 0o1321],
+        [FloatingDecimalAdd, [0, 1, 0, 0], 0o1421],
+        [FloatingDecimalAdd, [0, 1, 0, 1], 0o1521],
+        [FloatingDecimalAdd, [0, 1, 1, 0], 0o1621],
+        [FloatingDecimalAdd, [0, 1, 1, 1], 0o1721],
+        [FloatingDecimalAdd, [1, 0, 0, 0], 0o5021],
+        [FloatingDecimalAdd, [1, 0, 0, 1], 0o5121],
+        [FloatingDecimalAdd, [1, 0, 1, 0], 0o5221],
+        [FloatingDecimalAdd, [1, 0, 1, 1], 0o5321],
+        [FloatingDecimalAdd, [1, 1, 0, 0], 0o5421],
+        [FloatingDecimalAdd, [1, 1, 0, 1], 0o5521],
+        [FloatingDecimalAdd, [1, 1, 1, 0], 0o5621],
+        [FloatingDecimalAdd, [1, 1, 1, 1], 0o5721]
+    ]
+    run_tests("TEST: FDA args range", testdata)
+
+
+# ######## FBS ########
+
+def test_FBS_simple():
+    testdata = [[FloatingBinarySubtract, [0, 0, 0, 0], 0o1011]]
+    run_tests("TEST: FBS simple", testdata)
+
+
+def test_FBS_invalid_args():
+    testdata = [
+        [FloatingBinarySubtract, [2, 0, 0, 0], 0],
+        [FloatingBinarySubtract, [0, 2, 0, 0], 0],
+        [FloatingBinarySubtract, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBS invalid args", testdata)
+
+
+def test_FBS_args_range():
+    testdata = [
+        [FloatingBinarySubtract, [0, 0, 0, 0], 0o1011],
+        [FloatingBinarySubtract, [0, 0, 0, 1], 0o1111],
+        [FloatingBinarySubtract, [0, 0, 1, 0], 0o1211],
+        [FloatingBinarySubtract, [0, 0, 1, 1], 0o1311],
+        [FloatingBinarySubtract, [0, 1, 0, 0], 0o1411],
+        [FloatingBinarySubtract, [0, 1, 0, 1], 0o1511],
+        [FloatingBinarySubtract, [0, 1, 1, 0], 0o1611],
+        [FloatingBinarySubtract, [0, 1, 1, 1], 0o1711],
+        [FloatingBinarySubtract, [1, 0, 0, 0], 0o5011],
+        [FloatingBinarySubtract, [1, 0, 0, 1], 0o5111],
+        [FloatingBinarySubtract, [1, 0, 1, 0], 0o5211],
+        [FloatingBinarySubtract, [1, 0, 1, 1], 0o5311],
+        [FloatingBinarySubtract, [1, 1, 0, 0], 0o5411],
+        [FloatingBinarySubtract, [1, 1, 0, 1], 0o5511],
+        [FloatingBinarySubtract, [1, 1, 1, 0], 0o5611],
+        [FloatingBinarySubtract, [1, 1, 1, 1], 0o5711]
+    ]
+    run_tests("TEST: FBS args range", testdata)
+
+
+# ######## FDS ########
+
+def test_FDS_simple():
+    testdata = [[FloatingDecimalSubtract, [0, 0, 0, 0], 0o1031]]
+    run_tests("TEST: FDS simple", testdata)
+
+
+def test_FDS_invalid_args():
+    testdata = [
+        [FloatingDecimalSubtract, [2, 0, 0, 0], 0],
+        [FloatingDecimalSubtract, [0, 2, 0, 0], 0],
+        [FloatingDecimalSubtract, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDS invalid args", testdata)
+
+
+def test_FDS_args_range():
+    testdata = [
+        [FloatingDecimalSubtract, [0, 0, 0, 0], 0o1031],
+        [FloatingDecimalSubtract, [0, 0, 0, 1], 0o1131],
+        [FloatingDecimalSubtract, [0, 0, 1, 0], 0o1231],
+        [FloatingDecimalSubtract, [0, 0, 1, 1], 0o1331],
+        [FloatingDecimalSubtract, [0, 1, 0, 0], 0o1431],
+        [FloatingDecimalSubtract, [0, 1, 0, 1], 0o1531],
+        [FloatingDecimalSubtract, [0, 1, 1, 0], 0o1631],
+        [FloatingDecimalSubtract, [0, 1, 1, 1], 0o1731],
+        [FloatingDecimalSubtract, [1, 0, 0, 0], 0o5031],
+        [FloatingDecimalSubtract, [1, 0, 0, 1], 0o5131],
+        [FloatingDecimalSubtract, [1, 0, 1, 0], 0o5231],
+        [FloatingDecimalSubtract, [1, 0, 1, 1], 0o5331],
+        [FloatingDecimalSubtract, [1, 1, 0, 0], 0o5431],
+        [FloatingDecimalSubtract, [1, 1, 0, 1], 0o5531],
+        [FloatingDecimalSubtract, [1, 1, 1, 0], 0o5631],
+        [FloatingDecimalSubtract, [1, 1, 1, 1], 0o5731]
+    ]
+    run_tests("TEST: FDS args range", testdata)
+
+
+# ######## FBD ########
+
+def test_FBD_simple():
+    testdata = [[FloatingBinaryDivide, [0, 0, 0, 0], 0o1005]]
+    run_tests("TEST: FBD simple", testdata)
+
+
+def test_FBD_invalid_args():
+    testdata = [
+        [FloatingBinaryDivide, [2, 0, 0, 0], 0],
+        [FloatingBinaryDivide, [0, 2, 0, 0], 0],
+        [FloatingBinaryDivide, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBD invalid args", testdata)
+
+
+def test_FBD_args_range():
+    testdata = [
+        [FloatingBinaryDivide, [0, 0, 0, 0], 0o1005],
+        [FloatingBinaryDivide, [0, 0, 0, 1], 0o1105],
+        [FloatingBinaryDivide, [0, 0, 1, 0], 0o1205],
+        [FloatingBinaryDivide, [0, 0, 1, 1], 0o1305],
+        [FloatingBinaryDivide, [0, 1, 0, 0], 0o1405],
+        [FloatingBinaryDivide, [0, 1, 0, 1], 0o1505],
+        [FloatingBinaryDivide, [0, 1, 1, 0], 0o1605],
+        [FloatingBinaryDivide, [0, 1, 1, 1], 0o1705],
+        [FloatingBinaryDivide, [1, 0, 0, 0], 0o5005],
+        [FloatingBinaryDivide, [1, 0, 0, 1], 0o5105],
+        [FloatingBinaryDivide, [1, 0, 1, 0], 0o5205],
+        [FloatingBinaryDivide, [1, 0, 1, 1], 0o5305],
+        [FloatingBinaryDivide, [1, 1, 0, 0], 0o5405],
+        [FloatingBinaryDivide, [1, 1, 0, 1], 0o5505],
+        [FloatingBinaryDivide, [1, 1, 1, 0], 0o5605],
+        [FloatingBinaryDivide, [1, 1, 1, 1], 0o5705]
+    ]
+    run_tests("TEST: FBD args range", testdata)
+
+
+# ######## FDD ########
+
+def test_FDD_simple():
+    testdata = [[FloatingDecimalDivide, [0, 0, 0, 0], 0o1025]]
+    run_tests("TEST: FDD simple", testdata)
+
+
+def test_FDD_invalid_args():
+    testdata = [
+        [FloatingDecimalDivide, [2, 0, 0, 0], 0],
+        [FloatingDecimalDivide, [0, 2, 0, 0], 0],
+        [FloatingDecimalDivide, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDD invalid args", testdata)
+
+
+def test_FDD_args_range():
+    testdata = [
+        [FloatingDecimalDivide, [0, 0, 0, 0], 0o1025],
+        [FloatingDecimalDivide, [0, 0, 0, 1], 0o1125],
+        [FloatingDecimalDivide, [0, 0, 1, 0], 0o1225],
+        [FloatingDecimalDivide, [0, 0, 1, 1], 0o1325],
+        [FloatingDecimalDivide, [0, 1, 0, 0], 0o1425],
+        [FloatingDecimalDivide, [0, 1, 0, 1], 0o1525],
+        [FloatingDecimalDivide, [0, 1, 1, 0], 0o1625],
+        [FloatingDecimalDivide, [0, 1, 1, 1], 0o1725],
+        [FloatingDecimalDivide, [1, 0, 0, 0], 0o5025],
+        [FloatingDecimalDivide, [1, 0, 0, 1], 0o5125],
+        [FloatingDecimalDivide, [1, 0, 1, 0], 0o5225],
+        [FloatingDecimalDivide, [1, 0, 1, 1], 0o5325],
+        [FloatingDecimalDivide, [1, 1, 0, 0], 0o5425],
+        [FloatingDecimalDivide, [1, 1, 0, 1], 0o5525],
+        [FloatingDecimalDivide, [1, 1, 1, 0], 0o5625],
+        [FloatingDecimalDivide, [1, 1, 1, 1], 0o5725]
+    ]
+    run_tests("TEST: FDD args range", testdata)
+
+
+# ######## FBAU ########
+
+def test_FBAU_simple():
+    testdata = [[FloatingBinaryAddUnnormalized, [0, 0, 0, 0], 0o3001]]
+    run_tests("TEST: FBAU simple", testdata)
+
+
+def test_FBAU_invalid_args():
+    testdata = [
+        [FloatingBinaryAddUnnormalized, [2, 0, 0, 0], 0],
+        [FloatingBinaryAddUnnormalized, [0, 2, 0, 0], 0],
+        [FloatingBinaryAddUnnormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBAU invalid args", testdata)
+
+
+def test_FBAU_args_range():
+    testdata = [
+        [FloatingBinaryAddUnnormalized, [0, 0, 0, 0], 0o3001],
+        [FloatingBinaryAddUnnormalized, [0, 0, 0, 1], 0o3101],
+        [FloatingBinaryAddUnnormalized, [0, 0, 1, 0], 0o3201],
+        [FloatingBinaryAddUnnormalized, [0, 0, 1, 1], 0o3301],
+        [FloatingBinaryAddUnnormalized, [0, 1, 0, 0], 0o3401],
+        [FloatingBinaryAddUnnormalized, [0, 1, 0, 1], 0o3501],
+        [FloatingBinaryAddUnnormalized, [0, 1, 1, 0], 0o3601],
+        [FloatingBinaryAddUnnormalized, [0, 1, 1, 1], 0o3701],
+        [FloatingBinaryAddUnnormalized, [1, 0, 0, 0], 0o7001],
+        [FloatingBinaryAddUnnormalized, [1, 0, 0, 1], 0o7101],
+        [FloatingBinaryAddUnnormalized, [1, 0, 1, 0], 0o7201],
+        [FloatingBinaryAddUnnormalized, [1, 0, 1, 1], 0o7301],
+        [FloatingBinaryAddUnnormalized, [1, 1, 0, 0], 0o7401],
+        [FloatingBinaryAddUnnormalized, [1, 1, 0, 1], 0o7501],
+        [FloatingBinaryAddUnnormalized, [1, 1, 1, 0], 0o7601],
+        [FloatingBinaryAddUnnormalized, [1, 1, 1, 1], 0o7701]
+    ]
+    run_tests("TEST: FBAU args range", testdata)
+
+
+# ######## FDAU ########
+
+def test_FDAU_simple():
+    testdata = [[FloatingDecimalAddUnnormalized, [0, 0, 0, 0], 0o3021]]
+    run_tests("TEST: FDAU simple", testdata)
+
+
+def test_FDAU_invalid_args():
+    testdata = [
+        [FloatingDecimalAddUnnormalized, [2, 0, 0, 0], 0],
+        [FloatingDecimalAddUnnormalized, [0, 2, 0, 0], 0],
+        [FloatingDecimalAddUnnormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDAU invalid args", testdata)
+
+
+def test_FDAU_args_range():
+    testdata = [
+        [FloatingDecimalAddUnnormalized, [0, 0, 0, 0], 0o3021],
+        [FloatingDecimalAddUnnormalized, [0, 0, 0, 1], 0o3121],
+        [FloatingDecimalAddUnnormalized, [0, 0, 1, 0], 0o3221],
+        [FloatingDecimalAddUnnormalized, [0, 0, 1, 1], 0o3321],
+        [FloatingDecimalAddUnnormalized, [0, 1, 0, 0], 0o3421],
+        [FloatingDecimalAddUnnormalized, [0, 1, 0, 1], 0o3521],
+        [FloatingDecimalAddUnnormalized, [0, 1, 1, 0], 0o3621],
+        [FloatingDecimalAddUnnormalized, [0, 1, 1, 1], 0o3721],
+        [FloatingDecimalAddUnnormalized, [1, 0, 0, 0], 0o7021],
+        [FloatingDecimalAddUnnormalized, [1, 0, 0, 1], 0o7121],
+        [FloatingDecimalAddUnnormalized, [1, 0, 1, 0], 0o7221],
+        [FloatingDecimalAddUnnormalized, [1, 0, 1, 1], 0o7321],
+        [FloatingDecimalAddUnnormalized, [1, 1, 0, 0], 0o7421],
+        [FloatingDecimalAddUnnormalized, [1, 1, 0, 1], 0o7521],
+        [FloatingDecimalAddUnnormalized, [1, 1, 1, 0], 0o7621],
+        [FloatingDecimalAddUnnormalized, [1, 1, 1, 1], 0o7721]
+    ]
+    run_tests("TEST: FDAU args range", testdata)
+
+
+# ######## FBSU ########
+
+def test_FBSU_simple():
+    testdata = [[FloatingBinarySubtractUnnormalized, [0, 0, 0, 0], 0o3011]]
+    run_tests("TEST: FBSU simple", testdata)
+
+
+def test_FBSU_invalid_args():
+    testdata = [
+        [FloatingBinarySubtractUnnormalized, [2, 0, 0, 0], 0],
+        [FloatingBinarySubtractUnnormalized, [0, 2, 0, 0], 0],
+        [FloatingBinarySubtractUnnormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBSU invalid args", testdata)
+
+
+def test_FBSU_args_range():
+    testdata = [
+        [FloatingBinarySubtractUnnormalized, [0, 0, 0, 0], 0o3011],
+        [FloatingBinarySubtractUnnormalized, [0, 0, 0, 1], 0o3111],
+        [FloatingBinarySubtractUnnormalized, [0, 0, 1, 0], 0o3211],
+        [FloatingBinarySubtractUnnormalized, [0, 0, 1, 1], 0o3311],
+        [FloatingBinarySubtractUnnormalized, [0, 1, 0, 0], 0o3411],
+        [FloatingBinarySubtractUnnormalized, [0, 1, 0, 1], 0o3511],
+        [FloatingBinarySubtractUnnormalized, [0, 1, 1, 0], 0o3611],
+        [FloatingBinarySubtractUnnormalized, [0, 1, 1, 1], 0o3711],
+        [FloatingBinarySubtractUnnormalized, [1, 0, 0, 0], 0o7011],
+        [FloatingBinarySubtractUnnormalized, [1, 0, 0, 1], 0o7111],
+        [FloatingBinarySubtractUnnormalized, [1, 0, 1, 0], 0o7211],
+        [FloatingBinarySubtractUnnormalized, [1, 0, 1, 1], 0o7311],
+        [FloatingBinarySubtractUnnormalized, [1, 1, 0, 0], 0o7411],
+        [FloatingBinarySubtractUnnormalized, [1, 1, 0, 1], 0o7511],
+        [FloatingBinarySubtractUnnormalized, [1, 1, 1, 0], 0o7611],
+        [FloatingBinarySubtractUnnormalized, [1, 1, 1, 1], 0o7711]
+    ]
+    run_tests("TEST: FBSU args range", testdata)
+
+
+# ######## FDSU ########
+
+def test_FDSU_simple():
+    testdata = [[FloatingDecimalSubtractUnnormalized, [0, 0, 0, 0], 0o3031]]
+    run_tests("TEST: FDSU simple", testdata)
+
+
+def test_FDSU_invalid_args():
+    testdata = [
+        [FloatingDecimalSubtractUnnormalized, [2, 0, 0, 0], 0],
+        [FloatingDecimalSubtractUnnormalized, [0, 2, 0, 0], 0],
+        [FloatingDecimalSubtractUnnormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDSU invalid args", testdata)
+
+
+def test_FDSU_args_range():
+    testdata = [
+        [FloatingDecimalSubtractUnnormalized, [0, 0, 0, 0], 0o3031],
+        [FloatingDecimalSubtractUnnormalized, [0, 0, 0, 1], 0o3131],
+        [FloatingDecimalSubtractUnnormalized, [0, 0, 1, 0], 0o3231],
+        [FloatingDecimalSubtractUnnormalized, [0, 0, 1, 1], 0o3331],
+        [FloatingDecimalSubtractUnnormalized, [0, 1, 0, 0], 0o3431],
+        [FloatingDecimalSubtractUnnormalized, [0, 1, 0, 1], 0o3531],
+        [FloatingDecimalSubtractUnnormalized, [0, 1, 1, 0], 0o3631],
+        [FloatingDecimalSubtractUnnormalized, [0, 1, 1, 1], 0o3731],
+        [FloatingDecimalSubtractUnnormalized, [1, 0, 0, 0], 0o7031],
+        [FloatingDecimalSubtractUnnormalized, [1, 0, 0, 1], 0o7131],
+        [FloatingDecimalSubtractUnnormalized, [1, 0, 1, 0], 0o7231],
+        [FloatingDecimalSubtractUnnormalized, [1, 0, 1, 1], 0o7331],
+        [FloatingDecimalSubtractUnnormalized, [1, 1, 0, 0], 0o7431],
+        [FloatingDecimalSubtractUnnormalized, [1, 1, 0, 1], 0o7531],
+        [FloatingDecimalSubtractUnnormalized, [1, 1, 1, 0], 0o7631],
+        [FloatingDecimalSubtractUnnormalized, [1, 1, 1, 1], 0o7731]
+    ]
+    run_tests("TEST: FDSU args range", testdata)
+
+
+# ######## FBM ########
+
+def test_FBM_simple():
+    testdata = [[FloatingBinaryMultiply, [0, 0, 0, 0], 0o3005]]
+    run_tests("TEST: FBM simple", testdata)
+
+
+def test_FBM_invalid_args():
+    testdata = [
+        [FloatingBinaryMultiply, [2, 0, 0, 0], 0],
+        [FloatingBinaryMultiply, [0, 2, 0, 0], 0],
+        [FloatingBinaryMultiply, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBM invalid args", testdata)
+
+
+def test_FBM_args_range():
+    testdata = [
+        [FloatingBinaryMultiply, [0, 0, 0, 0], 0o3005],
+        [FloatingBinaryMultiply, [0, 0, 0, 1], 0o3105],
+        [FloatingBinaryMultiply, [0, 0, 1, 0], 0o3205],
+        [FloatingBinaryMultiply, [0, 0, 1, 1], 0o3305],
+        [FloatingBinaryMultiply, [0, 1, 0, 0], 0o3405],
+        [FloatingBinaryMultiply, [0, 1, 0, 1], 0o3505],
+        [FloatingBinaryMultiply, [0, 1, 1, 0], 0o3605],
+        [FloatingBinaryMultiply, [0, 1, 1, 1], 0o3705],
+        [FloatingBinaryMultiply, [1, 0, 0, 0], 0o7005],
+        [FloatingBinaryMultiply, [1, 0, 0, 1], 0o7105],
+        [FloatingBinaryMultiply, [1, 0, 1, 0], 0o7205],
+        [FloatingBinaryMultiply, [1, 0, 1, 1], 0o7305],
+        [FloatingBinaryMultiply, [1, 1, 0, 0], 0o7405],
+        [FloatingBinaryMultiply, [1, 1, 0, 1], 0o7505],
+        [FloatingBinaryMultiply, [1, 1, 1, 0], 0o7605],
+        [FloatingBinaryMultiply, [1, 1, 1, 1], 0o7705]
+    ]
+    run_tests("TEST: FBM args range", testdata)
+
+
+# ######## FDM ########
+
+def test_FDM_simple():
+    testdata = [[FloatingDecimalMultiply, [0, 0, 0, 0], 0o3025]]
+    run_tests("TEST: FDM simple", testdata)
+
+
+def test_FDM_invalid_args():
+    testdata = [
+        [FloatingDecimalMultiply, [2, 0, 0, 0], 0],
+        [FloatingDecimalMultiply, [0, 2, 0, 0], 0],
+        [FloatingDecimalMultiply, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FDM invalid args", testdata)
+
+
+def test_FDM_args_range():
+    testdata = [
+        [FloatingDecimalMultiply, [0, 0, 0, 0], 0o3025],
+        [FloatingDecimalMultiply, [0, 0, 0, 1], 0o3125],
+        [FloatingDecimalMultiply, [0, 0, 1, 0], 0o3225],
+        [FloatingDecimalMultiply, [0, 0, 1, 1], 0o3325],
+        [FloatingDecimalMultiply, [0, 1, 0, 0], 0o3425],
+        [FloatingDecimalMultiply, [0, 1, 0, 1], 0o3525],
+        [FloatingDecimalMultiply, [0, 1, 1, 0], 0o3625],
+        [FloatingDecimalMultiply, [0, 1, 1, 1], 0o3725],
+        [FloatingDecimalMultiply, [1, 0, 0, 0], 0o7025],
+        [FloatingDecimalMultiply, [1, 0, 0, 1], 0o7125],
+        [FloatingDecimalMultiply, [1, 0, 1, 0], 0o7225],
+        [FloatingDecimalMultiply, [1, 0, 1, 1], 0o7325],
+        [FloatingDecimalMultiply, [1, 1, 0, 0], 0o7425],
+        [FloatingDecimalMultiply, [1, 1, 0, 1], 0o7525],
+        [FloatingDecimalMultiply, [1, 1, 1, 0], 0o7625],
+        [FloatingDecimalMultiply, [1, 1, 1, 1], 0o7725]
+    ]
+    run_tests("TEST: FDM args range", testdata)
+
+
+# ######## ULD ########
+
+def test_ULD_simple():
+    testdata = [[MultipleUnload, [0, 0, 0, 0], 0o3015]]
+    run_tests("TEST: ULD simple", testdata)
+
+
+def test_ULD_invalid_args():
+    testdata = [
+        [MultipleUnload, [2, 0, 0, 0], 0],
+        [MultipleUnload, [0, 2, 0, 0], 0],
+        [MultipleUnload, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: ULD invalid args", testdata)
+
+
+def test_ULD_args_range():
+    testdata = [
+        [MultipleUnload, [0, 0, 0, 0], 0o3015],
+        [MultipleUnload, [0, 0, 0, 1], 0o3115],
+        [MultipleUnload, [0, 0, 1, 0], 0o3215],
+        [MultipleUnload, [0, 0, 1, 1], 0o3315],
+        [MultipleUnload, [0, 1, 0, 0], 0o3415],
+        [MultipleUnload, [0, 1, 0, 1], 0o3515],
+        [MultipleUnload, [0, 1, 1, 0], 0o3615],
+        [MultipleUnload, [0, 1, 1, 1], 0o3715],
+        [MultipleUnload, [1, 0, 0, 0], 0o7015],
+        [MultipleUnload, [1, 0, 0, 1], 0o7115],
+        [MultipleUnload, [1, 0, 1, 0], 0o7215],
+        [MultipleUnload, [1, 0, 1, 1], 0o7315],
+        [MultipleUnload, [1, 1, 0, 0], 0o7415],
+        [MultipleUnload, [1, 1, 0, 1], 0o7515],
+        [MultipleUnload, [1, 1, 1, 0], 0o7615],
+        [MultipleUnload, [1, 1, 1, 1], 0o7715]
+    ]
+    run_tests("TEST: ULD args range", testdata)
+
+
+# ######## FBAE ########
+
+def test_FBAE_simple():
+    testdata = [[FloatingBinaryAddExtendedPrecision, [0, 0, 0, 0], 0o0001]]
+    run_tests("TEST: FBAE simple", testdata)
+
+
+def test_FBAE_invalid_args():
+    testdata = [
+        [FloatingBinaryAddExtendedPrecision, [2, 0, 0, 0], 0],
+        [FloatingBinaryAddExtendedPrecision, [0, 2, 0, 0], 0],
+        [FloatingBinaryAddExtendedPrecision, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBAE invalid args", testdata)
+
+
+def test_FBAE_args_range():
+    testdata = [
+        [FloatingBinaryAddExtendedPrecision, [0, 0, 0, 0], 0o0001],
+        [FloatingBinaryAddExtendedPrecision, [0, 0, 0, 1], 0o0101],
+        [FloatingBinaryAddExtendedPrecision, [0, 0, 1, 0], 0o0201],
+        [FloatingBinaryAddExtendedPrecision, [0, 0, 1, 1], 0o0301],
+        [FloatingBinaryAddExtendedPrecision, [0, 1, 0, 0], 0o0401],
+        [FloatingBinaryAddExtendedPrecision, [0, 1, 0, 1], 0o0501],
+        [FloatingBinaryAddExtendedPrecision, [0, 1, 1, 0], 0o0601],
+        [FloatingBinaryAddExtendedPrecision, [0, 1, 1, 1], 0o0701],
+        [FloatingBinaryAddExtendedPrecision, [1, 0, 0, 0], 0o4001],
+        [FloatingBinaryAddExtendedPrecision, [1, 0, 0, 1], 0o4101],
+        [FloatingBinaryAddExtendedPrecision, [1, 0, 1, 0], 0o4201],
+        [FloatingBinaryAddExtendedPrecision, [1, 0, 1, 1], 0o4301],
+        [FloatingBinaryAddExtendedPrecision, [1, 1, 0, 0], 0o4401],
+        [FloatingBinaryAddExtendedPrecision, [1, 1, 0, 1], 0o4501],
+        [FloatingBinaryAddExtendedPrecision, [1, 1, 1, 0], 0o4601],
+        [FloatingBinaryAddExtendedPrecision, [1, 1, 1, 1], 0o4701]
+    ]
+    run_tests("TEST: FBAE args range", testdata)
+
+
+# ######## FBSE ########
+
+def test_FBSE_simple():
+    testdata = [[FloatingBinarySubtractExtendedPrecision, [0, 0, 0, 0], 0o0011]]
+    run_tests("TEST: FBSE simple", testdata)
+
+
+def test_FBSE_invalid_args():
+    testdata = [
+        [FloatingBinarySubtractExtendedPrecision, [2, 0, 0, 0], 0],
+        [FloatingBinarySubtractExtendedPrecision, [0, 2, 0, 0], 0],
+        [FloatingBinarySubtractExtendedPrecision, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FBSE invalid args", testdata)
+
+
+def test_FBSE_args_range():
+    testdata = [
+        [FloatingBinarySubtractExtendedPrecision, [0, 0, 0, 0], 0o0011],
+        [FloatingBinarySubtractExtendedPrecision, [0, 0, 0, 1], 0o0111],
+        [FloatingBinarySubtractExtendedPrecision, [0, 0, 1, 0], 0o0211],
+        [FloatingBinarySubtractExtendedPrecision, [0, 0, 1, 1], 0o0311],
+        [FloatingBinarySubtractExtendedPrecision, [0, 1, 0, 0], 0o0411],
+        [FloatingBinarySubtractExtendedPrecision, [0, 1, 0, 1], 0o0511],
+        [FloatingBinarySubtractExtendedPrecision, [0, 1, 1, 0], 0o0611],
+        [FloatingBinarySubtractExtendedPrecision, [0, 1, 1, 1], 0o0711],
+        [FloatingBinarySubtractExtendedPrecision, [1, 0, 0, 0], 0o4011],
+        [FloatingBinarySubtractExtendedPrecision, [1, 0, 0, 1], 0o4111],
+        [FloatingBinarySubtractExtendedPrecision, [1, 0, 1, 0], 0o4211],
+        [FloatingBinarySubtractExtendedPrecision, [1, 0, 1, 1], 0o4311],
+        [FloatingBinarySubtractExtendedPrecision, [1, 1, 0, 0], 0o4411],
+        [FloatingBinarySubtractExtendedPrecision, [1, 1, 0, 1], 0o4511],
+        [FloatingBinarySubtractExtendedPrecision, [1, 1, 1, 0], 0o4611],
+        [FloatingBinarySubtractExtendedPrecision, [1, 1, 1, 1], 0o4711]
+    ]
+    run_tests("TEST: FBSE args range", testdata)
+
+
+# ######## BD ########
+
+def test_BD_simple():
+    testdata = [[FixedBinaryDivide, [0, 0, 0, 0], 0o0005]]
+    run_tests("TEST: BD simple", testdata)
+
+
+def test_BD_invalid_args():
+    testdata = [
+        [FixedBinaryDivide, [2, 0, 0, 0], 0],
+        [FixedBinaryDivide, [0, 2, 0, 0], 0],
+        [FixedBinaryDivide, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: BD invalid args", testdata)
+
+
+def test_BD_args_range():
+    testdata = [
+        [FixedBinaryDivide, [0, 0, 0, 0], 0o0005],
+        [FixedBinaryDivide, [0, 0, 0, 1], 0o0105],
+        [FixedBinaryDivide, [0, 0, 1, 0], 0o0205],
+        [FixedBinaryDivide, [0, 0, 1, 1], 0o0305],
+        [FixedBinaryDivide, [0, 1, 0, 0], 0o0405],
+        [FixedBinaryDivide, [0, 1, 0, 1], 0o0505],
+        [FixedBinaryDivide, [0, 1, 1, 0], 0o0605],
+        [FixedBinaryDivide, [0, 1, 1, 1], 0o0705],
+        [FixedBinaryDivide, [1, 0, 0, 0], 0o4005],
+        [FixedBinaryDivide, [1, 0, 0, 1], 0o4105],
+        [FixedBinaryDivide, [1, 0, 1, 0], 0o4205],
+        [FixedBinaryDivide, [1, 0, 1, 1], 0o4305],
+        [FixedBinaryDivide, [1, 1, 0, 0], 0o4405],
+        [FixedBinaryDivide, [1, 1, 0, 1], 0o4505],
+        [FixedBinaryDivide, [1, 1, 1, 0], 0o4605],
+        [FixedBinaryDivide, [1, 1, 1, 1], 0o4705]
+    ]
+    run_tests("TEST: BD args range", testdata)
+
+
+# ######## DD ########
+
+def test_DD_simple():
+    testdata = [[FixedDecimalDivide, [0, 0, 0, 0], 0o0025]]
+    run_tests("TEST: DD simple", testdata)
+
+
+def test_DD_invalid_args():
+    testdata = [
+        [FixedDecimalDivide, [2, 0, 0, 0], 0],
+        [FixedDecimalDivide, [0, 2, 0, 0], 0],
+        [FixedDecimalDivide, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: DD invalid args", testdata)
+
+
+def test_DD_args_range():
+    testdata = [
+        [FixedDecimalDivide, [0, 0, 0, 0], 0o0025],
+        [FixedDecimalDivide, [0, 0, 0, 1], 0o0125],
+        [FixedDecimalDivide, [0, 0, 1, 0], 0o0225],
+        [FixedDecimalDivide, [0, 0, 1, 1], 0o0325],
+        [FixedDecimalDivide, [0, 1, 0, 0], 0o0425],
+        [FixedDecimalDivide, [0, 1, 0, 1], 0o0525],
+        [FixedDecimalDivide, [0, 1, 1, 0], 0o0625],
+        [FixedDecimalDivide, [0, 1, 1, 1], 0o0725],
+        [FixedDecimalDivide, [1, 0, 0, 0], 0o4025],
+        [FixedDecimalDivide, [1, 0, 0, 1], 0o4125],
+        [FixedDecimalDivide, [1, 0, 1, 0], 0o4225],
+        [FixedDecimalDivide, [1, 0, 1, 1], 0o4325],
+        [FixedDecimalDivide, [1, 1, 0, 0], 0o4425],
+        [FixedDecimalDivide, [1, 1, 0, 1], 0o4525],
+        [FixedDecimalDivide, [1, 1, 1, 0], 0o4625],
+        [FixedDecimalDivide, [1, 1, 1, 1], 0o4725]
+    ]
+    run_tests("TEST: DD args range", testdata)
+
+
+# ######## FFN ########
+
+def test_FFN_simple():
+    testdata = [[FixedToFloatingNormalize, [0, 0, 0, 0], 0o0015]]
+    run_tests("TEST: FFN simple", testdata)
+
+
+def test_FFN_invalid_args():
+    testdata = [
+        [FixedToFloatingNormalize, [2, 0, 0, 0], 0],
+        [FixedToFloatingNormalize, [0, 2, 0, 0], 0],
+        [FixedToFloatingNormalize, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FFN invalid args", testdata)
+
+
+def test_FFN_args_range():
+    testdata = [
+        [FixedToFloatingNormalize, [0, 0, 0, 0], 0o0015],
+        [FixedToFloatingNormalize, [0, 0, 0, 1], 0o0115],
+        [FixedToFloatingNormalize, [0, 0, 1, 0], 0o0215],
+        [FixedToFloatingNormalize, [0, 0, 1, 1], 0o0315],
+        [FixedToFloatingNormalize, [0, 1, 0, 0], 0o0415],
+        [FixedToFloatingNormalize, [0, 1, 0, 1], 0o0515],
+        [FixedToFloatingNormalize, [0, 1, 1, 0], 0o0615],
+        [FixedToFloatingNormalize, [0, 1, 1, 1], 0o0715],
+        [FixedToFloatingNormalize, [1, 0, 0, 0], 0o4015],
+        [FixedToFloatingNormalize, [1, 0, 0, 1], 0o4115],
+        [FixedToFloatingNormalize, [1, 0, 1, 0], 0o4215],
+        [FixedToFloatingNormalize, [1, 0, 1, 1], 0o4315],
+        [FixedToFloatingNormalize, [1, 1, 0, 0], 0o4415],
+        [FixedToFloatingNormalize, [1, 1, 0, 1], 0o4515],
+        [FixedToFloatingNormalize, [1, 1, 1, 0], 0o4615],
+        [FixedToFloatingNormalize, [1, 1, 1, 1], 0o4715]
+    ]
+    run_tests("TEST: FFN args range", testdata)
+
+
+# ######## FCON ########
+
+def test_FCON_simple():
+    testdata = [[Conversion, [0, 0, 0, 0], 0o0035]]
+    run_tests("TEST: FCON simple", testdata)
+
+
+def test_FCON_invalid_args():
+    testdata = [
+        [Conversion, [2, 0, 0, 0], 0],
+        [Conversion, [0, 2, 0, 0], 0],
+        [Conversion, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FCON invalid args", testdata)
+
+
+def test_FCON_args_range():
+    testdata = [
+        [Conversion, [0, 0, 0, 0], 0o0035],
+        [Conversion, [0, 0, 0, 1], 0o0135],
+        [Conversion, [0, 0, 1, 0], 0o0235],
+        [Conversion, [0, 0, 1, 1], 0o0335],
+        [Conversion, [0, 1, 0, 0], 0o0435],
+        [Conversion, [0, 1, 0, 1], 0o0535],
+        [Conversion, [0, 1, 1, 0], 0o0635],
+        [Conversion, [0, 1, 1, 1], 0o0735],
+        [Conversion, [1, 0, 0, 0], 0o4035],
+        [Conversion, [1, 0, 0, 1], 0o4135],
+        [Conversion, [1, 0, 1, 0], 0o4235],
+        [Conversion, [1, 0, 1, 1], 0o4335],
+        [Conversion, [1, 1, 0, 0], 0o4435],
+        [Conversion, [1, 1, 0, 1], 0o4535],
+        [Conversion, [1, 1, 1, 0], 0o4635],
+        [Conversion, [1, 1, 1, 1], 0o4735]
+    ]
+    run_tests("TEST: FCON args range", testdata)
+
+
+# ######## FLN ########
+
+def test_FLN_simple():
+    testdata = [[FloatingLessThanNormalized, [0, 0, 0, 0], 0o0030]]
+    run_tests("TEST: FLN simple", testdata)
+
+
+def test_FLN_invalid_args():
+    testdata = [
+        [FloatingLessThanNormalized, [2, 0, 0, 0], 0],
+        [FloatingLessThanNormalized, [0, 2, 0, 0], 0],
+        [FloatingLessThanNormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FLN invalid args", testdata)
+
+
+def test_FLN_args_range():
+    testdata = [
+        [FloatingLessThanNormalized, [0, 0, 0, 0], 0o0030],
+        [FloatingLessThanNormalized, [0, 0, 0, 1], 0o0130],
+        [FloatingLessThanNormalized, [0, 0, 1, 0], 0o0230],
+        [FloatingLessThanNormalized, [0, 0, 1, 1], 0o0330],
+        [FloatingLessThanNormalized, [0, 1, 0, 0], 0o0430],
+        [FloatingLessThanNormalized, [0, 1, 0, 1], 0o0530],
+        [FloatingLessThanNormalized, [0, 1, 1, 0], 0o0630],
+        [FloatingLessThanNormalized, [0, 1, 1, 1], 0o0730],
+        [FloatingLessThanNormalized, [1, 0, 0, 0], 0o4030],
+        [FloatingLessThanNormalized, [1, 0, 0, 1], 0o4130],
+        [FloatingLessThanNormalized, [1, 0, 1, 0], 0o4230],
+        [FloatingLessThanNormalized, [1, 0, 1, 1], 0o4330],
+        [FloatingLessThanNormalized, [1, 1, 0, 0], 0o4430],
+        [FloatingLessThanNormalized, [1, 1, 0, 1], 0o4530],
+        [FloatingLessThanNormalized, [1, 1, 1, 0], 0o4630],
+        [FloatingLessThanNormalized, [1, 1, 1, 1], 0o4730]
+    ]
+    run_tests("TEST: FLN args range", testdata)
+
+
+# ######## FNN ########
+
+def test_FNN_simple():
+    testdata = [[FloatingNotEqualNormalized, [0, 0, 0, 0], 0o2014]]
+    run_tests("TEST: FNN simple", testdata)
+
+
+def test_FNN_invalid_args():
+    testdata = [
+        [FloatingNotEqualNormalized, [2, 0, 0, 0], 0],
+        [FloatingNotEqualNormalized, [0, 2, 0, 0], 0],
+        [FloatingNotEqualNormalized, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: FNN invalid args", testdata)
+
+
+def test_FNN_args_range():
+    testdata = [
+        [FloatingNotEqualNormalized, [0, 0, 0, 0], 0o2014],
+        [FloatingNotEqualNormalized, [0, 0, 0, 1], 0o2114],
+        [FloatingNotEqualNormalized, [0, 0, 1, 0], 0o2214],
+        [FloatingNotEqualNormalized, [0, 0, 1, 1], 0o2314],
+        [FloatingNotEqualNormalized, [0, 1, 0, 0], 0o2414],
+        [FloatingNotEqualNormalized, [0, 1, 0, 1], 0o2514],
+        [FloatingNotEqualNormalized, [0, 1, 1, 0], 0o2614],
+        [FloatingNotEqualNormalized, [0, 1, 1, 1], 0o2714],
+        [FloatingNotEqualNormalized, [1, 0, 0, 0], 0o6014],
+        [FloatingNotEqualNormalized, [1, 0, 0, 1], 0o6114],
+        [FloatingNotEqualNormalized, [1, 0, 1, 0], 0o6214],
+        [FloatingNotEqualNormalized, [1, 0, 1, 1], 0o6314],
+        [FloatingNotEqualNormalized, [1, 1, 0, 0], 0o6414],
+        [FloatingNotEqualNormalized, [1, 1, 0, 1], 0o6514],
+        [FloatingNotEqualNormalized, [1, 1, 1, 0], 0o6614],
+        [FloatingNotEqualNormalized, [1, 1, 1, 1], 0o6714]
+    ]
+    run_tests("TEST: FNN args range", testdata)
+
