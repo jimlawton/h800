@@ -146,7 +146,7 @@ class Peripheral(Instruction):
 class Simulator(Instruction):
     """Simulator instruction class."""
     def __init__(self, mnemonic, sequence, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, opcode=7)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, opcode=opcode)
 
 
 class Scientific(Instruction):
