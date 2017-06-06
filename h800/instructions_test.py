@@ -814,3 +814,62 @@ def test_HA_unmasked_args_range():
     run_tests("TEST: HA (unmasked): args range", testdata)
 
 
+# ######## SM ########
+
+def test_SM_masked_simple():
+    testdata = [[SuperimposeMasked, 0, 0, 0o45]]
+    run_tests("TEST: SM (masked): simple", testdata)
+
+
+def test_SM_masked_invalid_args():
+    testdata = [
+        [SuperimposeMasked, 0, 32, 0],
+        [SuperimposeMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: SM (masked): invalid args", testdata)
+
+
+def test_SM_masked_args_range():
+    testdata = [
+        [SuperimposeMasked, 1, 0, 0o4045],
+        [SuperimposeMasked, 0, 31, 0o3745],
+        [SuperimposeMasked, 1, 31, 0o7745]
+    ]
+    run_tests("TEST: SM (masked): args range", testdata)
+
+
+def test_SM_unmasked_simple():
+    testdata = [[SuperimposeUnmasked, 0, 0, 0, 0, 0o2005]]
+    run_tests("TEST: SM (unmasked): simple", testdata)
+
+
+def test_SM_unmasked_invalid_args():
+    testdata = [
+        [SuperimposeUnmasked, 2, 0, 0, 0, 0],
+        [SuperimposeUnmasked, 0, 2, 0, 0, 0],
+        [SuperimposeUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SM (unmasked): invalid args", testdata)
+
+
+def test_SM_unmasked_args_range():
+    testdata = [
+        [SuperimposeUnmasked, 0, 0, 0, 0, 0o2005],
+        [SuperimposeUnmasked, 0, 0, 0, 1, 0o2105],
+        [SuperimposeUnmasked, 0, 0, 1, 0, 0o2205],
+        [SuperimposeUnmasked, 0, 0, 1, 1, 0o2305],
+        [SuperimposeUnmasked, 0, 1, 0, 0, 0o2405],
+        [SuperimposeUnmasked, 0, 1, 0, 1, 0o2505],
+        [SuperimposeUnmasked, 0, 1, 1, 0, 0o2605],
+        [SuperimposeUnmasked, 0, 1, 1, 1, 0o2705],
+        [SuperimposeUnmasked, 1, 0, 0, 0, 0o6005],
+        [SuperimposeUnmasked, 1, 0, 0, 1, 0o6105],
+        [SuperimposeUnmasked, 1, 0, 1, 0, 0o6205],
+        [SuperimposeUnmasked, 1, 0, 1, 1, 0o6305],
+        [SuperimposeUnmasked, 1, 1, 0, 0, 0o6405],
+        [SuperimposeUnmasked, 1, 1, 0, 1, 0o6505],
+        [SuperimposeUnmasked, 1, 1, 1, 0, 0o6605],
+        [SuperimposeUnmasked, 1, 1, 1, 1, 0o6705]
+    ]
+    run_tests("TEST: SM (unmasked): args range", testdata)
+
