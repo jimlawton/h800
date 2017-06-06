@@ -454,3 +454,63 @@ def test_NA_unmasked_args_range():
     run_tests("TEST: NA (unmasked): args range", testdata)
 
 
+# ######## NN ########
+
+def test_NN_masked_simple():
+    testdata = [[NotEqualNumericMasked, 0, 0, 0o50]]
+    run_tests("TEST: NN (masked): simple", testdata)
+
+
+def test_NN_masked_invalid_args():
+    testdata = [
+        [NotEqualNumericMasked, 0, 32, 0],
+        [NotEqualNumericMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: NN (masked): invalid args", testdata)
+
+
+def test_NN_masked_args_range():
+    testdata = [
+        [NotEqualNumericMasked, 1, 0, 0o4050],
+        [NotEqualNumericMasked, 0, 31, 0o3750],
+        [NotEqualNumericMasked, 1, 31, 0o7750]
+    ]
+    run_tests("TEST: NN (masked): args range", testdata)
+
+
+def test_NN_unmasked_simple():
+    testdata = [[NotEqualNumericUnmasked, 0, 0, 0, 0, 0o2010]]
+    run_tests("TEST: NN (unmasked): simple", testdata)
+
+
+def test_NN_unmasked_invalid_args():
+    testdata = [
+        [NotEqualNumericUnmasked, 2, 0, 0, 0, 0],
+        [NotEqualNumericUnmasked, 0, 2, 0, 0, 0],
+        [NotEqualNumericUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: NN (unmasked): invalid args", testdata)
+
+
+def test_NN_unmasked_args_range():
+    testdata = [
+        [NotEqualNumericUnmasked, 0, 0, 0, 0, 0o2010],
+        [NotEqualNumericUnmasked, 0, 0, 0, 1, 0o2110],
+        [NotEqualNumericUnmasked, 0, 0, 1, 0, 0o2210],
+        [NotEqualNumericUnmasked, 0, 0, 1, 1, 0o2310],
+        [NotEqualNumericUnmasked, 0, 1, 0, 0, 0o2410],
+        [NotEqualNumericUnmasked, 0, 1, 0, 1, 0o2510],
+        [NotEqualNumericUnmasked, 0, 1, 1, 0, 0o2610],
+        [NotEqualNumericUnmasked, 0, 1, 1, 1, 0o2710],
+        [NotEqualNumericUnmasked, 1, 0, 0, 0, 0o6010],
+        [NotEqualNumericUnmasked, 1, 0, 0, 1, 0o6110],
+        [NotEqualNumericUnmasked, 1, 0, 1, 0, 0o6210],
+        [NotEqualNumericUnmasked, 1, 0, 1, 1, 0o6310],
+        [NotEqualNumericUnmasked, 1, 1, 0, 0, 0o6410],
+        [NotEqualNumericUnmasked, 1, 1, 0, 1, 0o6510],
+        [NotEqualNumericUnmasked, 1, 1, 1, 0, 0o6610],
+        [NotEqualNumericUnmasked, 1, 1, 1, 1, 0o6710]
+    ]
+    run_tests("TEST: NN (unmasked): args range", testdata)
+
+
