@@ -634,3 +634,123 @@ def test_LN_unmasked_args_range():
     run_tests("TEST: LN (unmasked): args range", testdata)
 
 
+# ######## TX ########
+
+def test_TX_masked_simple():
+    testdata = [[TransferMasked, 0, 0, 0o60]]
+    run_tests("TEST: TX (masked): simple", testdata)
+
+
+def test_TX_masked_invalid_args():
+    testdata = [
+        [TransferMasked, 0, 32, 0],
+        [TransferMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: TX (masked): invalid args", testdata)
+
+
+def test_TX_masked_args_range():
+    testdata = [
+        [TransferMasked, 1, 0, 0o4060],
+        [TransferMasked, 0, 31, 0o3760],
+        [TransferMasked, 1, 31, 0o7760]
+    ]
+    run_tests("TEST: TX (masked): args range", testdata)
+
+
+def test_TX_unmasked_simple():
+    testdata = [[TransferUnmasked, 0, 0, 0, 0, 0o2020]]
+    run_tests("TEST: TX (unmasked): simple", testdata)
+
+
+def test_TX_unmasked_invalid_args():
+    testdata = [
+        [TransferUnmasked, 2, 0, 0, 0, 0],
+        [TransferUnmasked, 0, 2, 0, 0, 0],
+        [TransferUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: TX (unmasked): invalid args", testdata)
+
+
+def test_TX_unmasked_args_range():
+    testdata = [
+        [TransferUnmasked, 0, 0, 0, 0, 0o2020],
+        [TransferUnmasked, 0, 0, 0, 1, 0o2120],
+        [TransferUnmasked, 0, 0, 1, 0, 0o2220],
+        [TransferUnmasked, 0, 0, 1, 1, 0o2320],
+        [TransferUnmasked, 0, 1, 0, 0, 0o2420],
+        [TransferUnmasked, 0, 1, 0, 1, 0o2520],
+        [TransferUnmasked, 0, 1, 1, 0, 0o2620],
+        [TransferUnmasked, 0, 1, 1, 1, 0o2720],
+        [TransferUnmasked, 1, 0, 0, 0, 0o6020],
+        [TransferUnmasked, 1, 0, 0, 1, 0o6120],
+        [TransferUnmasked, 1, 0, 1, 0, 0o6220],
+        [TransferUnmasked, 1, 0, 1, 1, 0o6320],
+        [TransferUnmasked, 1, 1, 0, 0, 0o6420],
+        [TransferUnmasked, 1, 1, 0, 1, 0o6520],
+        [TransferUnmasked, 1, 1, 1, 0, 0o6620],
+        [TransferUnmasked, 1, 1, 1, 1, 0o6720]
+    ]
+    run_tests("TEST: TX (unmasked): args range", testdata)
+
+
+# ######## TS ########
+
+def test_TS_masked_simple():
+    testdata = [[TransferChangeSequenceMasked, 0, 0, 0o44]]
+    run_tests("TEST: TS (masked): simple", testdata)
+
+
+def test_TS_masked_invalid_args():
+    testdata = [
+        [TransferChangeSequenceMasked, 0, 32, 0],
+        [TransferChangeSequenceMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: TS (masked): invalid args", testdata)
+
+
+def test_TS_masked_args_range():
+    testdata = [
+        [TransferChangeSequenceMasked, 1, 0, 0o4044],
+        [TransferChangeSequenceMasked, 0, 31, 0o3744],
+        [TransferChangeSequenceMasked, 1, 31, 0o7744]
+    ]
+    run_tests("TEST: TS (masked): args range", testdata)
+
+
+def test_TS_unmasked_simple():
+    testdata = [[TransferChangeSequenceUnmasked, 0, 0, 0, 0, 0o2004]]
+    run_tests("TEST: TS (unmasked): simple", testdata)
+
+
+def test_TS_unmasked_invalid_args():
+    testdata = [
+        [TransferChangeSequenceUnmasked, 2, 0, 0, 0, 0],
+        [TransferChangeSequenceUnmasked, 0, 2, 0, 0, 0],
+        [TransferChangeSequenceUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: TS (unmasked): invalid args", testdata)
+
+
+def test_TS_unmasked_args_range():
+    testdata = [
+        [TransferChangeSequenceUnmasked, 0, 0, 0, 0, 0o2004],
+        [TransferChangeSequenceUnmasked, 0, 0, 0, 1, 0o2104],
+        [TransferChangeSequenceUnmasked, 0, 0, 1, 0, 0o2204],
+        [TransferChangeSequenceUnmasked, 0, 0, 1, 1, 0o2304],
+        [TransferChangeSequenceUnmasked, 0, 1, 0, 0, 0o2404],
+        [TransferChangeSequenceUnmasked, 0, 1, 0, 1, 0o2504],
+        [TransferChangeSequenceUnmasked, 0, 1, 1, 0, 0o2604],
+        [TransferChangeSequenceUnmasked, 0, 1, 1, 1, 0o2704],
+        [TransferChangeSequenceUnmasked, 1, 0, 0, 0, 0o6004],
+        [TransferChangeSequenceUnmasked, 1, 0, 0, 1, 0o6104],
+        [TransferChangeSequenceUnmasked, 1, 0, 1, 0, 0o6204],
+        [TransferChangeSequenceUnmasked, 1, 0, 1, 1, 0o6304],
+        [TransferChangeSequenceUnmasked, 1, 1, 0, 0, 0o6404],
+        [TransferChangeSequenceUnmasked, 1, 1, 0, 1, 0o6504],
+        [TransferChangeSequenceUnmasked, 1, 1, 1, 0, 0o6604],
+        [TransferChangeSequenceUnmasked, 1, 1, 1, 1, 0o6704]
+    ]
+    run_tests("TEST: TS (unmasked): args range", testdata)
+
+
