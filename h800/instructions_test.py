@@ -873,3 +873,63 @@ def test_SM_unmasked_args_range():
     ]
     run_tests("TEST: SM (unmasked): args range", testdata)
 
+
+# ######## CP ########
+
+def test_CP_masked_simple():
+    testdata = [[CheckParityMasked, 0, 0, 0o64]]
+    run_tests("TEST: CP (masked): simple", testdata)
+
+
+def test_CP_masked_invalid_args():
+    testdata = [
+        [CheckParityMasked, 0, 32, 0],
+        [CheckParityMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: CP (masked): invalid args", testdata)
+
+
+def test_CP_masked_args_range():
+    testdata = [
+        [CheckParityMasked, 1, 0, 0o4064],
+        [CheckParityMasked, 0, 31, 0o3764],
+        [CheckParityMasked, 1, 31, 0o7764]
+    ]
+    run_tests("TEST: CP (masked): args range", testdata)
+
+
+def test_CP_unmasked_simple():
+    testdata = [[CheckParityUnmasked, 0, 0, 0, 0, 0o2024]]
+    run_tests("TEST: CP (unmasked): simple", testdata)
+
+
+def test_CP_unmasked_invalid_args():
+    testdata = [
+        [CheckParityUnmasked, 2, 0, 0, 0, 0],
+        [CheckParityUnmasked, 0, 2, 0, 0, 0],
+        [CheckParityUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: CP (unmasked): invalid args", testdata)
+
+
+def test_CP_unmasked_args_range():
+    testdata = [
+        [CheckParityUnmasked, 0, 0, 0, 0, 0o2024],
+        [CheckParityUnmasked, 0, 0, 0, 1, 0o2124],
+        [CheckParityUnmasked, 0, 0, 1, 0, 0o2224],
+        [CheckParityUnmasked, 0, 0, 1, 1, 0o2324],
+        [CheckParityUnmasked, 0, 1, 0, 0, 0o2424],
+        [CheckParityUnmasked, 0, 1, 0, 1, 0o2524],
+        [CheckParityUnmasked, 0, 1, 1, 0, 0o2624],
+        [CheckParityUnmasked, 0, 1, 1, 1, 0o2724],
+        [CheckParityUnmasked, 1, 0, 0, 0, 0o6024],
+        [CheckParityUnmasked, 1, 0, 0, 1, 0o6124],
+        [CheckParityUnmasked, 1, 0, 1, 0, 0o6224],
+        [CheckParityUnmasked, 1, 0, 1, 1, 0o6324],
+        [CheckParityUnmasked, 1, 1, 0, 0, 0o6424],
+        [CheckParityUnmasked, 1, 1, 0, 1, 0o6524],
+        [CheckParityUnmasked, 1, 1, 1, 0, 0o6624],
+        [CheckParityUnmasked, 1, 1, 1, 1, 0o6724]
+    ]
+    run_tests("TEST: CP (unmasked): args range", testdata)
+
