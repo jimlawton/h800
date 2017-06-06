@@ -754,3 +754,63 @@ def test_TS_unmasked_args_range():
     run_tests("TEST: TS (unmasked): args range", testdata)
 
 
+# ######## HA ########
+
+def test_HA_masked_simple():
+    testdata = [[HalfAddMasked, 0, 0, 0o65]]
+    run_tests("TEST: HA (masked): simple", testdata)
+
+
+def test_HA_masked_invalid_args():
+    testdata = [
+        [HalfAddMasked, 0, 32, 0],
+        [HalfAddMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: HA (masked): invalid args", testdata)
+
+
+def test_HA_masked_args_range():
+    testdata = [
+        [HalfAddMasked, 1, 0, 0o4065],
+        [HalfAddMasked, 0, 31, 0o3765],
+        [HalfAddMasked, 1, 31, 0o7765]
+    ]
+    run_tests("TEST: HA (masked): args range", testdata)
+
+
+def test_HA_unmasked_simple():
+    testdata = [[HalfAddUnmasked, 0, 0, 0, 0, 0o2025]]
+    run_tests("TEST: HA (unmasked): simple", testdata)
+
+
+def test_HA_unmasked_invalid_args():
+    testdata = [
+        [HalfAddUnmasked, 2, 0, 0, 0, 0],
+        [HalfAddUnmasked, 0, 2, 0, 0, 0],
+        [HalfAddUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: HA (unmasked): invalid args", testdata)
+
+
+def test_HA_unmasked_args_range():
+    testdata = [
+        [HalfAddUnmasked, 0, 0, 0, 0, 0o2025],
+        [HalfAddUnmasked, 0, 0, 0, 1, 0o2125],
+        [HalfAddUnmasked, 0, 0, 1, 0, 0o2225],
+        [HalfAddUnmasked, 0, 0, 1, 1, 0o2325],
+        [HalfAddUnmasked, 0, 1, 0, 0, 0o2425],
+        [HalfAddUnmasked, 0, 1, 0, 1, 0o2525],
+        [HalfAddUnmasked, 0, 1, 1, 0, 0o2625],
+        [HalfAddUnmasked, 0, 1, 1, 1, 0o2725],
+        [HalfAddUnmasked, 1, 0, 0, 0, 0o6025],
+        [HalfAddUnmasked, 1, 0, 0, 1, 0o6125],
+        [HalfAddUnmasked, 1, 0, 1, 0, 0o6225],
+        [HalfAddUnmasked, 1, 0, 1, 1, 0o6325],
+        [HalfAddUnmasked, 1, 1, 0, 0, 0o6425],
+        [HalfAddUnmasked, 1, 1, 0, 1, 0o6525],
+        [HalfAddUnmasked, 1, 1, 1, 0, 0o6625],
+        [HalfAddUnmasked, 1, 1, 1, 1, 0o6725]
+    ]
+    run_tests("TEST: HA (unmasked): args range", testdata)
+
+
