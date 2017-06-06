@@ -514,3 +514,123 @@ def test_NN_unmasked_args_range():
     run_tests("TEST: NN (unmasked): args range", testdata)
 
 
+# ######## LA ########
+
+def test_LA_masked_simple():
+    testdata = [[LessThanOrEqualAlphabeticMasked, 0, 0, 0o74]]
+    run_tests("TEST: LA (masked): simple", testdata)
+
+
+def test_LA_masked_invalid_args():
+    testdata = [
+        [LessThanOrEqualAlphabeticMasked, 0, 32, 0],
+        [LessThanOrEqualAlphabeticMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: LA (masked): invalid args", testdata)
+
+
+def test_LA_masked_args_range():
+    testdata = [
+        [LessThanOrEqualAlphabeticMasked, 1, 0, 0o4074],
+        [LessThanOrEqualAlphabeticMasked, 0, 31, 0o3774],
+        [LessThanOrEqualAlphabeticMasked, 1, 31, 0o7774]
+    ]
+    run_tests("TEST: LA (masked): args range", testdata)
+
+
+def test_LA_unmasked_simple():
+    testdata = [[LessThanOrEqualAlphabeticUnmasked, 0, 0, 0, 0, 0o2034]]
+    run_tests("TEST: LA (unmasked): simple", testdata)
+
+
+def test_LA_unmasked_invalid_args():
+    testdata = [
+        [LessThanOrEqualAlphabeticUnmasked, 2, 0, 0, 0, 0],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 2, 0, 0, 0],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: LA (unmasked): invalid args", testdata)
+
+
+def test_LA_unmasked_args_range():
+    testdata = [
+        [LessThanOrEqualAlphabeticUnmasked, 0, 0, 0, 0, 0o2034],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 0, 0, 1, 0o2134],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 0, 1, 0, 0o2234],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 0, 1, 1, 0o2334],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 1, 0, 0, 0o2434],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 1, 0, 1, 0o2534],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 1, 1, 0, 0o2634],
+        [LessThanOrEqualAlphabeticUnmasked, 0, 1, 1, 1, 0o2734],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 0, 0, 0, 0o6034],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 0, 0, 1, 0o6134],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 0, 1, 0, 0o6234],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 0, 1, 1, 0o6334],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 1, 0, 0, 0o6434],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 1, 0, 1, 0o6534],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 1, 1, 0, 0o6634],
+        [LessThanOrEqualAlphabeticUnmasked, 1, 1, 1, 1, 0o6734]
+    ]
+    run_tests("TEST: LA (unmasked): args range", testdata)
+
+
+# ######## LN ########
+
+def test_LN_masked_simple():
+    testdata = [[LessThanOrEqualNumericMasked, 0, 0, 0o70]]
+    run_tests("TEST: LN (masked): simple", testdata)
+
+
+def test_LN_masked_invalid_args():
+    testdata = [
+        [LessThanOrEqualNumericMasked, 0, 32, 0],
+        [LessThanOrEqualNumericMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: LN (masked): invalid args", testdata)
+
+
+def test_LN_masked_args_range():
+    testdata = [
+        [LessThanOrEqualNumericMasked, 1, 0, 0o4070],
+        [LessThanOrEqualNumericMasked, 0, 31, 0o3770],
+        [LessThanOrEqualNumericMasked, 1, 31, 0o7770]
+    ]
+    run_tests("TEST: LN (masked): args range", testdata)
+
+
+def test_LN_unmasked_simple():
+    testdata = [[LessThanOrEqualNumericUnmasked, 0, 0, 0, 0, 0o2030]]
+    run_tests("TEST: LN (unmasked): simple", testdata)
+
+
+def test_LN_unmasked_invalid_args():
+    testdata = [
+        [LessThanOrEqualNumericUnmasked, 2, 0, 0, 0, 0],
+        [LessThanOrEqualNumericUnmasked, 0, 2, 0, 0, 0],
+        [LessThanOrEqualNumericUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: LN (unmasked): invalid args", testdata)
+
+
+def test_LN_unmasked_args_range():
+    testdata = [
+        [LessThanOrEqualNumericUnmasked, 0, 0, 0, 0, 0o2030],
+        [LessThanOrEqualNumericUnmasked, 0, 0, 0, 1, 0o2130],
+        [LessThanOrEqualNumericUnmasked, 0, 0, 1, 0, 0o2230],
+        [LessThanOrEqualNumericUnmasked, 0, 0, 1, 1, 0o2330],
+        [LessThanOrEqualNumericUnmasked, 0, 1, 0, 0, 0o2430],
+        [LessThanOrEqualNumericUnmasked, 0, 1, 0, 1, 0o2530],
+        [LessThanOrEqualNumericUnmasked, 0, 1, 1, 0, 0o2630],
+        [LessThanOrEqualNumericUnmasked, 0, 1, 1, 1, 0o2730],
+        [LessThanOrEqualNumericUnmasked, 1, 0, 0, 0, 0o6030],
+        [LessThanOrEqualNumericUnmasked, 1, 0, 0, 1, 0o6130],
+        [LessThanOrEqualNumericUnmasked, 1, 0, 1, 0, 0o6230],
+        [LessThanOrEqualNumericUnmasked, 1, 0, 1, 1, 0o6330],
+        [LessThanOrEqualNumericUnmasked, 1, 1, 0, 0, 0o6430],
+        [LessThanOrEqualNumericUnmasked, 1, 1, 0, 1, 0o6530],
+        [LessThanOrEqualNumericUnmasked, 1, 1, 1, 0, 0o6630],
+        [LessThanOrEqualNumericUnmasked, 1, 1, 1, 1, 0o6730]
+    ]
+    run_tests("TEST: LN (unmasked): args range", testdata)
+
+
