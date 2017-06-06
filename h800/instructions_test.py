@@ -933,3 +933,155 @@ def test_CP_unmasked_args_range():
     ]
     run_tests("TEST: CP (unmasked): args range", testdata)
 
+
+# ######## BM ########
+
+def test_BM_simple():
+    testdata = [[BinaryMultiply, 0, 0, 0, 0, 0o13]]
+    run_tests("TEST: BM simple", testdata)
+
+
+def test_BM_invalid_args():
+    testdata = [
+        [BinaryMultiply, 2, 0, 0, 0, 0],
+        [BinaryMultiply, 0, 2, 0, 0, 0],
+        [BinaryMultiply, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: BM invalid args", testdata)
+
+
+def test_BM_args_range():
+    testdata = [
+        [BinaryMultiply, 0, 0, 0, 0, 0o0013],
+        [BinaryMultiply, 0, 0, 0, 1, 0o0113],
+        [BinaryMultiply, 0, 0, 1, 0, 0o0213],
+        [BinaryMultiply, 0, 0, 1, 1, 0o0313],
+        [BinaryMultiply, 0, 1, 0, 0, 0o0413],
+        [BinaryMultiply, 0, 1, 0, 1, 0o0513],
+        [BinaryMultiply, 0, 1, 1, 0, 0o0613],
+        [BinaryMultiply, 0, 1, 1, 1, 0o0713],
+        [BinaryMultiply, 1, 0, 0, 0, 0o4013],
+        [BinaryMultiply, 1, 0, 0, 1, 0o4113],
+        [BinaryMultiply, 1, 0, 1, 0, 0o4213],
+        [BinaryMultiply, 1, 0, 1, 1, 0o4313],
+        [BinaryMultiply, 1, 1, 0, 0, 0o4413],
+        [BinaryMultiply, 1, 1, 0, 1, 0o4513],
+        [BinaryMultiply, 1, 1, 1, 0, 0o4613],
+        [BinaryMultiply, 1, 1, 1, 1, 0o4713]
+    ]
+    run_tests("TEST: BM args range", testdata)
+
+
+# ######## DM ########
+
+def test_DM_simple():
+    testdata = [[DecimalMultiply, 0, 0, 0, 0, 0o03]]
+    run_tests("TEST: DM simple", testdata)
+
+
+def test_DM_invalid_args():
+    testdata = [
+        [DecimalMultiply, 2, 0, 0, 0, 0],
+        [DecimalMultiply, 0, 2, 0, 0, 0],
+        [DecimalMultiply, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: DM invalid args", testdata)
+
+
+def test_DM_args_range():
+    testdata = [
+        [DecimalMultiply, 0, 0, 0, 0, 0o0003],
+        [DecimalMultiply, 0, 0, 0, 1, 0o0103],
+        [DecimalMultiply, 0, 0, 1, 0, 0o0203],
+        [DecimalMultiply, 0, 0, 1, 1, 0o0303],
+        [DecimalMultiply, 0, 1, 0, 0, 0o0403],
+        [DecimalMultiply, 0, 1, 0, 1, 0o0503],
+        [DecimalMultiply, 0, 1, 1, 0, 0o0603],
+        [DecimalMultiply, 0, 1, 1, 1, 0o0703],
+        [DecimalMultiply, 1, 0, 0, 0, 0o4003],
+        [DecimalMultiply, 1, 0, 0, 1, 0o4103],
+        [DecimalMultiply, 1, 0, 1, 0, 0o4203],
+        [DecimalMultiply, 1, 0, 1, 1, 0o4303],
+        [DecimalMultiply, 1, 1, 0, 0, 0o4403],
+        [DecimalMultiply, 1, 1, 0, 1, 0o4503],
+        [DecimalMultiply, 1, 1, 1, 0, 0o4603],
+        [DecimalMultiply, 1, 1, 1, 1, 0o4703]
+    ]
+    run_tests("TEST: DM args range", testdata)
+
+
+# ######## BT ########
+
+def test_BT_simple():
+    testdata = [[BinaryAccumulate, 0, 0, 0, 0, 0o2013]]
+    run_tests("TEST: BT simple", testdata)
+
+
+def test_BT_invalid_args():
+    testdata = [
+        [BinaryAccumulate, 2, 0, 0, 0, 0],
+        [BinaryAccumulate, 0, 2, 0, 0, 0],
+        [BinaryAccumulate, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: BT invalid args", testdata)
+
+
+def test_BT_args_range():
+    testdata = [
+        [BinaryAccumulate, 0, 0, 0, 0, 0o2013],
+        [BinaryAccumulate, 0, 0, 0, 1, 0o2113],
+        [BinaryAccumulate, 0, 0, 1, 0, 0o2213],
+        [BinaryAccumulate, 0, 0, 1, 1, 0o2313],
+        [BinaryAccumulate, 0, 1, 0, 0, 0o2413],
+        [BinaryAccumulate, 0, 1, 0, 1, 0o2513],
+        [BinaryAccumulate, 0, 1, 1, 0, 0o2613],
+        [BinaryAccumulate, 0, 1, 1, 1, 0o2713],
+        [BinaryAccumulate, 1, 0, 0, 0, 0o6013],
+        [BinaryAccumulate, 1, 0, 0, 1, 0o6113],
+        [BinaryAccumulate, 1, 0, 1, 0, 0o6213],
+        [BinaryAccumulate, 1, 0, 1, 1, 0o6313],
+        [BinaryAccumulate, 1, 1, 0, 0, 0o6413],
+        [BinaryAccumulate, 1, 1, 0, 1, 0o6513],
+        [BinaryAccumulate, 1, 1, 1, 0, 0o6613],
+        [BinaryAccumulate, 1, 1, 1, 1, 0o6713]
+    ]
+    run_tests("TEST: BT args range", testdata)
+
+
+# ######## DT ########
+
+def test_DT_simple():
+    testdata = [[DecimalAccumulate, 0, 0, 0, 0, 0o2003]]
+    run_tests("TEST: DT simple", testdata)
+
+
+def test_DT_invalid_args():
+    testdata = [
+        [DecimalAccumulate, 2, 0, 0, 0, 0],
+        [DecimalAccumulate, 0, 2, 0, 0, 0],
+        [DecimalAccumulate, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: DT invalid args", testdata)
+
+
+def test_DT_args_range():
+    testdata = [
+        [DecimalAccumulate, 0, 0, 0, 0, 0o2003],
+        [DecimalAccumulate, 0, 0, 0, 1, 0o2103],
+        [DecimalAccumulate, 0, 0, 1, 0, 0o2203],
+        [DecimalAccumulate, 0, 0, 1, 1, 0o2303],
+        [DecimalAccumulate, 0, 1, 0, 0, 0o2403],
+        [DecimalAccumulate, 0, 1, 0, 1, 0o2503],
+        [DecimalAccumulate, 0, 1, 1, 0, 0o2603],
+        [DecimalAccumulate, 0, 1, 1, 1, 0o2703],
+        [DecimalAccumulate, 1, 0, 0, 0, 0o6003],
+        [DecimalAccumulate, 1, 0, 0, 1, 0o6103],
+        [DecimalAccumulate, 1, 0, 1, 0, 0o6203],
+        [DecimalAccumulate, 1, 0, 1, 1, 0o6303],
+        [DecimalAccumulate, 1, 1, 0, 0, 0o6403],
+        [DecimalAccumulate, 1, 1, 0, 1, 0o6503],
+        [DecimalAccumulate, 1, 1, 1, 0, 0o6603],
+        [DecimalAccumulate, 1, 1, 1, 1, 0o6703]
+    ]
+    run_tests("TEST: DT args range", testdata)
+
