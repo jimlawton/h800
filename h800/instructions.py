@@ -641,9 +641,9 @@ class ControlProgram(instruction.GeneralUnmasked):
 
 class Proceed(instruction.GeneralUnmasked):
 
-    def __init__(self, sequence):
+    def __init__(self):
         instruction.GeneralUnmasked.__init__(self, mnemonic="PR",
-                                             sequence=sequence,
+                                             sequence=0,
                                              a=0, b=0, c=0,
                                              opcode=BITS23_00+BASE_OPCODES["PR"])
 
