@@ -119,7 +119,7 @@ BASE_OPCODES = {
     "TS":   0o04,                   # Transfer A to B and go to C
     "HA":   0o25,                   # Half Add (mod 2)
     "SM":   0o05,                   # Superimpose
-    "CP":   0o26,                   # Check Parity
+    "CP":   0o24,                   # Check Parity
 
     # General, unmasked.
     "BM":   0o13,                   # Binary Multiply
