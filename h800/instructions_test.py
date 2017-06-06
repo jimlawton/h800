@@ -7,18 +7,25 @@ def my_assert(value, good):
     assert value == good, "Value is 0o%o, should be 0o%o" % (value, good)
 
 
+def run_test(testdata):
+    print testdata
+    if len(testdata[1]) == 4:
+        i = testdata[0](sequence=testdata[1][0], a=testdata[1][1], b=testdata[1][2], c=testdata[1][3])
+    elif len(testdata[1]) == 2:
+        i = testdata[0](sequence=testdata[1][0], mask=testdata[1][1])
+    elif len(testdata[1]) == 1:
+        i = testdata[0](paddr=testdata[1][0])
+    elif len(testdata[1]) == 0:
+        i = testdata[0]()
+    else:
+        assert False, "Illegal argument length!"
+    my_assert(i.value, testdata[2])
+
+
 def run_tests(message, testdata):
     print message
     for t in testdata:
-        if t[0].__name__.endswith("Masked"):
-            i = t[0](sequence=t[1], mask=t[2])
-            my_assert(i.value, t[3])
-        else:
-            if t[1] is None or t[2] is None or t[3] is None or t[4] is None:
-                i = t[0]()
-            else:
-                i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
-            my_assert(i.value, t[5])
+        run_test(t)
 
 
 def run_exception_tests(message, testdata):
@@ -26,13 +33,7 @@ def run_exception_tests(message, testdata):
     for t in testdata:
         gotexc = False
         try:
-            if t[0].__name__.endswith("Masked"):
-                i = t[0](sequence=t[1], mask=t[2])
-            else:
-                if t[1] is None or t[2] is None or t[3] is None or t[4] is None:
-                    i = t[0]()
-                else:
-                    i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
+            run_test(t)
         except ValueError:
             gotexc = True
         else:
