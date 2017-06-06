@@ -7,6 +7,33 @@ def my_assert(value, good):
     assert value == good, "Value is 0o%o, should be 0o%o" % (value, good)
 
 
+def run_tests(message, testdata):
+    print message
+    for t in testdata:
+        if t[0].__name__.endswith("Masked"):
+            i = t[0](sequence=t[1], mask=t[2])
+            my_assert(i.value, t[3])
+        else:
+            i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
+            my_assert(i.value, t[5])
+
+
+def run_exception_tests(message, testdata):
+    print message
+    for t in testdata:
+        gotexc = False
+        try:
+            if t[0].__name__.endswith("Masked"):
+                i = t[0](sequence=t[1], mask=t[2])
+            else:
+                i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
+        except ValueError:
+            gotexc = True
+        else:
+            raise
+        assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
 def test_BA_masked_simple():
     print "TEST: BA (masked): simple"
     i = BinaryAddMasked(sequence=0, mask=0)
