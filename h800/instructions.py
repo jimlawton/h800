@@ -113,7 +113,7 @@ BASE_OPCODES = {
     "WD":   0o35,                   # Word Difference
     "NA":   0o14,                   # Not equal, Alphabetic
     "NN":   0o10,                   # Not equal, Numeric
-    "LA":   0o36,                   # Less than or equal, Alphabetic
+    "LA":   0o34,                   # Less than or equal, Alphabetic
     "LN":   0o30,                   # Less than or equal, Numeric
     "TX":   0o20,                   # Transfer A to C
     "TS":   0o06,                   # Transfer A to B and go to C
