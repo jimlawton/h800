@@ -116,7 +116,7 @@ BASE_OPCODES = {
     "LA":   0o34,                   # Less than or equal, Alphabetic
     "LN":   0o30,                   # Less than or equal, Numeric
     "TX":   0o20,                   # Transfer A to C
-    "TS":   0o06,                   # Transfer A to B and go to C
+    "TS":   0o04,                   # Transfer A to B and go to C
     "HA":   0o25,                   # Half Add (mod 2)
     "SM":   0o05,                   # Superimpose
     "CP":   0o26,                   # Check Parity
