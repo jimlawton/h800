@@ -14,7 +14,10 @@ def run_test(testdata):
     elif len(testdata[1]) == 2:
         i = testdata[0](sequence=testdata[1][0], mask=testdata[1][1])
     elif len(testdata[1]) == 1:
-        i = testdata[0](paddr=testdata[1][0])
+        if testdata[0].__name__ == "Simulator":
+            i = testdata[0](sequence=testdata[1][0])
+        else:
+            i = testdata[0](paddr=testdata[1][0])
     elif len(testdata[1]) == 0:
         i = testdata[0]()
     else:
