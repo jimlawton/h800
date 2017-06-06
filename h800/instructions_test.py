@@ -90,3 +90,61 @@ def test_BA_unmasked_args_range():
         [BinaryAddUnmasked, 1, 1, 1, 1, 0o6711]
     ]
     run_tests("TEST: BA (unmasked): args range", testdata)
+
+
+def test_DA_masked_simple():
+    testdata = [[DecimalAddMasked, 0, 0, 0o41]]
+    run_tests("TEST: DA (masked): simple", testdata)
+
+
+def test_DA_masked_invalid_args():
+    testdata = [
+        [DecimalAddMasked, 0, 32, 0],
+        [DecimalAddMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: DA (masked): invalid args", testdata)
+
+
+def test_DA_masked_args_range():
+    testdata = [
+        [DecimalAddMasked, 1, 0, 0o4041],
+        [DecimalAddMasked, 0, 31, 0o3741],
+        [DecimalAddMasked, 1, 31, 0o7741]
+    ]
+    run_tests("TEST: DA (masked): args range", testdata)
+
+
+def test_DA_unmasked_simple():
+    testdata = [[DecimalAddUnmasked, 0, 0, 0, 0, 0o2001]]
+    run_tests("TEST: DA (unmasked): simple", testdata)
+
+
+def test_DA_unmasked_invalid_args():
+    testdata = [
+        [DecimalAddUnmasked, 2, 0, 0, 0, 0],
+        [DecimalAddUnmasked, 0, 2, 0, 0, 0],
+        [DecimalAddUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: DA (unmasked): invalid args", testdata)
+
+
+def test_DA_unmasked_args_range():
+    testdata = [
+        [DecimalAddUnmasked, 0, 0, 0, 0, 0o2001],
+        [DecimalAddUnmasked, 0, 0, 0, 1, 0o2101],
+        [DecimalAddUnmasked, 0, 0, 1, 0, 0o2201],
+        [DecimalAddUnmasked, 0, 0, 1, 1, 0o2301],
+        [DecimalAddUnmasked, 0, 1, 0, 0, 0o2401],
+        [DecimalAddUnmasked, 0, 1, 0, 1, 0o2501],
+        [DecimalAddUnmasked, 0, 1, 1, 0, 0o2601],
+        [DecimalAddUnmasked, 0, 1, 1, 1, 0o2701],
+        [DecimalAddUnmasked, 1, 0, 0, 0, 0o6001],
+        [DecimalAddUnmasked, 1, 0, 0, 1, 0o6101],
+        [DecimalAddUnmasked, 1, 0, 1, 0, 0o6201],
+        [DecimalAddUnmasked, 1, 0, 1, 1, 0o6301],
+        [DecimalAddUnmasked, 1, 1, 0, 0, 0o6401],
+        [DecimalAddUnmasked, 1, 1, 0, 1, 0o6501],
+        [DecimalAddUnmasked, 1, 1, 1, 0, 0o6601],
+        [DecimalAddUnmasked, 1, 1, 1, 1, 0o6701]
+    ]
+    run_tests("TEST: DA (unmasked): args range", testdata)
