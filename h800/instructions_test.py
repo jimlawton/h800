@@ -14,7 +14,10 @@ def run_tests(message, testdata):
             i = t[0](sequence=t[1], mask=t[2])
             my_assert(i.value, t[3])
         else:
-            i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
+            if t[1] is None or t[2] is None or t[3] is None or t[4] is None:
+                i = t[0](sequence=t[1])
+            else:
+                i = t[0](sequence=t[1], a=t[2], b=t[3], c=t[4])
             my_assert(i.value, t[5])
 
 
