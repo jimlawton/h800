@@ -1402,3 +1402,270 @@ def test_PR_simple():
     testdata = [[Proceed, None, None, None, None, 0o0000]]
     run_tests("TEST: PR simple", testdata)
 
+
+# ######## SWS ########
+
+def test_SWS_simple():
+    testdata = [[ShiftWordAndSubstitute, 0, 0, 0, 0, 0o2006]]
+    run_tests("TEST: SWS simple", testdata)
+
+
+def test_SWS_invalid_args():
+    testdata = [
+        [ShiftWordAndSubstitute, 2, 0, 0, 0, 0],
+        [ShiftWordAndSubstitute, 0, 2, 0, 0, 0],
+        [ShiftWordAndSubstitute, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SWS invalid args", testdata)
+
+
+def test_SWS_args_range():
+    testdata = [
+        [ShiftWordAndSubstitute, 0, 0, 0, 0, 0o2006],
+        [ShiftWordAndSubstitute, 0, 0, 0, 1, 0o2106],
+        [ShiftWordAndSubstitute, 0, 0, 1, 0, 0o2206],
+        [ShiftWordAndSubstitute, 0, 0, 1, 1, 0o2306],
+        [ShiftWordAndSubstitute, 0, 1, 0, 0, 0o2406],
+        [ShiftWordAndSubstitute, 0, 1, 0, 1, 0o2506],
+        [ShiftWordAndSubstitute, 0, 1, 1, 0, 0o2606],
+        [ShiftWordAndSubstitute, 0, 1, 1, 1, 0o2706],
+        [ShiftWordAndSubstitute, 1, 0, 0, 0, 0o6006],
+        [ShiftWordAndSubstitute, 1, 0, 0, 1, 0o6106],
+        [ShiftWordAndSubstitute, 1, 0, 1, 0, 0o6206],
+        [ShiftWordAndSubstitute, 1, 0, 1, 1, 0o6306],
+        [ShiftWordAndSubstitute, 1, 1, 0, 0, 0o6406],
+        [ShiftWordAndSubstitute, 1, 1, 0, 1, 0o6506],
+        [ShiftWordAndSubstitute, 1, 1, 1, 0, 0o6606],
+        [ShiftWordAndSubstitute, 1, 1, 1, 1, 0o6706]
+    ]
+    run_tests("TEST: SWS args range", testdata)
+
+
+# ######## SPS ########
+
+def test_SPS_simple():
+    testdata = [[ShiftPreservingSignAndSubstitute, 0, 0, 0, 0, 0o2002]]
+    run_tests("TEST: SPS simple", testdata)
+
+
+def test_SPS_invalid_args():
+    testdata = [
+        [ShiftPreservingSignAndSubstitute, 2, 0, 0, 0, 0],
+        [ShiftPreservingSignAndSubstitute, 0, 2, 0, 0, 0],
+        [ShiftPreservingSignAndSubstitute, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SPS invalid args", testdata)
+
+
+def test_SPS_args_range():
+    testdata = [
+        [ShiftPreservingSignAndSubstitute, 0, 0, 0, 0, 0o2002],
+        [ShiftPreservingSignAndSubstitute, 0, 0, 0, 1, 0o2102],
+        [ShiftPreservingSignAndSubstitute, 0, 0, 1, 0, 0o2202],
+        [ShiftPreservingSignAndSubstitute, 0, 0, 1, 1, 0o2302],
+        [ShiftPreservingSignAndSubstitute, 0, 1, 0, 0, 0o2402],
+        [ShiftPreservingSignAndSubstitute, 0, 1, 0, 1, 0o2502],
+        [ShiftPreservingSignAndSubstitute, 0, 1, 1, 0, 0o2602],
+        [ShiftPreservingSignAndSubstitute, 0, 1, 1, 1, 0o2702],
+        [ShiftPreservingSignAndSubstitute, 1, 0, 0, 0, 0o6002],
+        [ShiftPreservingSignAndSubstitute, 1, 0, 0, 1, 0o6102],
+        [ShiftPreservingSignAndSubstitute, 1, 0, 1, 0, 0o6202],
+        [ShiftPreservingSignAndSubstitute, 1, 0, 1, 1, 0o6302],
+        [ShiftPreservingSignAndSubstitute, 1, 1, 0, 0, 0o6402],
+        [ShiftPreservingSignAndSubstitute, 1, 1, 0, 1, 0o6502],
+        [ShiftPreservingSignAndSubstitute, 1, 1, 1, 0, 0o6602],
+        [ShiftPreservingSignAndSubstitute, 1, 1, 1, 1, 0o6702]
+    ]
+    run_tests("TEST: SPS args range", testdata)
+
+
+# ######## SWE ########
+
+def test_SWE_simple():
+    testdata = [[ShiftWordAndExtract, 0, 0, 0, 0, 0o2016]]
+    run_tests("TEST: SWE simple", testdata)
+
+
+def test_SWE_invalid_args():
+    testdata = [
+        [ShiftWordAndExtract, 2, 0, 0, 0, 0],
+        [ShiftWordAndExtract, 0, 2, 0, 0, 0],
+        [ShiftWordAndExtract, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SWE invalid args", testdata)
+
+
+def test_SWE_args_range():
+    testdata = [
+        [ShiftWordAndExtract, 0, 0, 0, 0, 0o2016],
+        [ShiftWordAndExtract, 0, 0, 0, 1, 0o2116],
+        [ShiftWordAndExtract, 0, 0, 1, 0, 0o2216],
+        [ShiftWordAndExtract, 0, 0, 1, 1, 0o2316],
+        [ShiftWordAndExtract, 0, 1, 0, 0, 0o2416],
+        [ShiftWordAndExtract, 0, 1, 0, 1, 0o2516],
+        [ShiftWordAndExtract, 0, 1, 1, 0, 0o2616],
+        [ShiftWordAndExtract, 0, 1, 1, 1, 0o2716],
+        [ShiftWordAndExtract, 1, 0, 0, 0, 0o6016],
+        [ShiftWordAndExtract, 1, 0, 0, 1, 0o6116],
+        [ShiftWordAndExtract, 1, 0, 1, 0, 0o6216],
+        [ShiftWordAndExtract, 1, 0, 1, 1, 0o6316],
+        [ShiftWordAndExtract, 1, 1, 0, 0, 0o6416],
+        [ShiftWordAndExtract, 1, 1, 0, 1, 0o6516],
+        [ShiftWordAndExtract, 1, 1, 1, 0, 0o6616],
+        [ShiftWordAndExtract, 1, 1, 1, 1, 0o6716]
+    ]
+    run_tests("TEST: SWE args range", testdata)
+
+
+# ######## SPE ########
+
+def test_SPE_simple():
+    testdata = [[ShiftPreservingSignAndExtract, 0, 0, 0, 0, 0o2012]]
+    run_tests("TEST: SPE simple", testdata)
+
+
+def test_SPE_invalid_args():
+    testdata = [
+        [ShiftPreservingSignAndExtract, 2, 0, 0, 0, 0],
+        [ShiftPreservingSignAndExtract, 0, 2, 0, 0, 0],
+        [ShiftPreservingSignAndExtract, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SPE invalid args", testdata)
+
+
+def test_SPE_args_range():
+    testdata = [
+        [ShiftPreservingSignAndExtract, 0, 0, 0, 0, 0o2012],
+        [ShiftPreservingSignAndExtract, 0, 0, 0, 1, 0o2112],
+        [ShiftPreservingSignAndExtract, 0, 0, 1, 0, 0o2212],
+        [ShiftPreservingSignAndExtract, 0, 0, 1, 1, 0o2312],
+        [ShiftPreservingSignAndExtract, 0, 1, 0, 0, 0o2412],
+        [ShiftPreservingSignAndExtract, 0, 1, 0, 1, 0o2512],
+        [ShiftPreservingSignAndExtract, 0, 1, 1, 0, 0o2612],
+        [ShiftPreservingSignAndExtract, 0, 1, 1, 1, 0o2712],
+        [ShiftPreservingSignAndExtract, 1, 0, 0, 0, 0o6012],
+        [ShiftPreservingSignAndExtract, 1, 0, 0, 1, 0o6112],
+        [ShiftPreservingSignAndExtract, 1, 0, 1, 0, 0o6212],
+        [ShiftPreservingSignAndExtract, 1, 0, 1, 1, 0o6312],
+        [ShiftPreservingSignAndExtract, 1, 1, 0, 0, 0o6412],
+        [ShiftPreservingSignAndExtract, 1, 1, 0, 1, 0o6512],
+        [ShiftPreservingSignAndExtract, 1, 1, 1, 0, 0o6612],
+        [ShiftPreservingSignAndExtract, 1, 1, 1, 1, 0o6712]
+    ]
+    run_tests("TEST: SPE args range", testdata)
+
+
+# ######## SSL ########
+
+def test_SSL_simple():
+    testdata = [[ShiftAndSelect, 0, 0, 0, 0, 0o2026]]
+    run_tests("TEST: SSL simple", testdata)
+
+
+def test_SSL_invalid_args():
+    testdata = [
+        [ShiftAndSelect, 2, 0, 0, 0, 0],
+        [ShiftAndSelect, 0, 2, 0, 0, 0],
+        [ShiftAndSelect, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SSL invalid args", testdata)
+
+
+def test_SSL_args_range():
+    testdata = [
+        [ShiftAndSelect, 0, 0, 0, 0, 0o2026],
+        [ShiftAndSelect, 0, 0, 0, 1, 0o2126],
+        [ShiftAndSelect, 0, 0, 1, 0, 0o2226],
+        [ShiftAndSelect, 0, 0, 1, 1, 0o2326],
+        [ShiftAndSelect, 0, 1, 0, 0, 0o2426],
+        [ShiftAndSelect, 0, 1, 0, 1, 0o2526],
+        [ShiftAndSelect, 0, 1, 1, 0, 0o2626],
+        [ShiftAndSelect, 0, 1, 1, 1, 0o2726],
+        [ShiftAndSelect, 1, 0, 0, 0, 0o6026],
+        [ShiftAndSelect, 1, 0, 0, 1, 0o6126],
+        [ShiftAndSelect, 1, 0, 1, 0, 0o6226],
+        [ShiftAndSelect, 1, 0, 1, 1, 0o6326],
+        [ShiftAndSelect, 1, 1, 0, 0, 0o6426],
+        [ShiftAndSelect, 1, 1, 0, 1, 0o6526],
+        [ShiftAndSelect, 1, 1, 1, 0, 0o6626],
+        [ShiftAndSelect, 1, 1, 1, 1, 0o6726]
+    ]
+    run_tests("TEST: SSL args range", testdata)
+
+
+# ######## SS ########
+
+def test_SS_simple():
+    testdata = [[Substitute, 0, 0, 0, 0, 0o0006]]
+    run_tests("TEST: SS simple", testdata)
+
+
+def test_SS_invalid_args():
+    testdata = [
+        [Substitute, 2, 0, 0, 0, 0],
+        [Substitute, 0, 2, 0, 0, 0],
+        [Substitute, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: SS invalid args", testdata)
+
+
+def test_SS_args_range():
+    testdata = [
+        [Substitute, 0, 0, 0, 0, 0o0006],
+        [Substitute, 0, 0, 0, 1, 0o0106],
+        [Substitute, 0, 0, 1, 0, 0o0206],
+        [Substitute, 0, 0, 1, 1, 0o0306],
+        [Substitute, 0, 1, 0, 0, 0o0406],
+        [Substitute, 0, 1, 0, 1, 0o0506],
+        [Substitute, 0, 1, 1, 0, 0o0606],
+        [Substitute, 0, 1, 1, 1, 0o0706],
+        [Substitute, 1, 0, 0, 0, 0o4006],
+        [Substitute, 1, 0, 0, 1, 0o4106],
+        [Substitute, 1, 0, 1, 0, 0o4206],
+        [Substitute, 1, 0, 1, 1, 0o4306],
+        [Substitute, 1, 1, 0, 0, 0o4406],
+        [Substitute, 1, 1, 0, 1, 0o4506],
+        [Substitute, 1, 1, 1, 0, 0o4606],
+        [Substitute, 1, 1, 1, 1, 0o4706]
+    ]
+    run_tests("TEST: SS args range", testdata)
+
+
+# ######## EX ########
+
+def test_EX_simple():
+    testdata = [[Extract, 0, 0, 0, 0, 0o0016]]
+    run_tests("TEST: EX simple", testdata)
+
+
+def test_EX_invalid_args():
+    testdata = [
+        [Extract, 2, 0, 0, 0, 0],
+        [Extract, 0, 2, 0, 0, 0],
+        [Extract, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: EX invalid args", testdata)
+
+
+def test_EX_args_range():
+    testdata = [
+        [Extract, 0, 0, 0, 0, 0o0016],
+        [Extract, 0, 0, 0, 1, 0o0116],
+        [Extract, 0, 0, 1, 0, 0o0216],
+        [Extract, 0, 0, 1, 1, 0o0316],
+        [Extract, 0, 1, 0, 0, 0o0416],
+        [Extract, 0, 1, 0, 1, 0o0516],
+        [Extract, 0, 1, 1, 0, 0o0616],
+        [Extract, 0, 1, 1, 1, 0o0716],
+        [Extract, 1, 0, 0, 0, 0o4016],
+        [Extract, 1, 0, 0, 1, 0o4116],
+        [Extract, 1, 0, 1, 0, 0o4216],
+        [Extract, 1, 0, 1, 1, 0o4316],
+        [Extract, 1, 1, 0, 0, 0o4416],
+        [Extract, 1, 1, 0, 1, 0o4516],
+        [Extract, 1, 1, 1, 0, 0o4616],
+        [Extract, 1, 1, 1, 1, 0o4716]
+    ]
+    run_tests("TEST: EX args range", testdata)
+
+
