@@ -1091,3 +1091,314 @@ def test_DT_args_range():
     ]
     run_tests("TEST: DT args range", testdata)
 
+
+# ######## MT ########
+
+def test_MT_simple():
+    testdata = [[MultipleTransfer, 0, 0, 0, 0, 0o0020]]
+    run_tests("TEST: MT simple", testdata)
+
+
+def test_MT_invalid_args():
+    testdata = [
+        [MultipleTransfer, 2, 0, 0, 0, 0],
+        [MultipleTransfer, 0, 2, 0, 0, 0],
+        [MultipleTransfer, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: MT invalid args", testdata)
+
+
+def test_MT_args_range():
+    testdata = [
+        [MultipleTransfer, 0, 0, 0, 0, 0o0020],
+        [MultipleTransfer, 0, 0, 0, 1, 0o0120],
+        [MultipleTransfer, 0, 0, 1, 0, 0o0220],
+        [MultipleTransfer, 0, 0, 1, 1, 0o0320],
+        [MultipleTransfer, 0, 1, 0, 0, 0o0420],
+        [MultipleTransfer, 0, 1, 0, 1, 0o0520],
+        [MultipleTransfer, 0, 1, 1, 0, 0o0620],
+        [MultipleTransfer, 0, 1, 1, 1, 0o0720],
+        [MultipleTransfer, 1, 0, 0, 0, 0o4020],
+        [MultipleTransfer, 1, 0, 0, 1, 0o4120],
+        [MultipleTransfer, 1, 0, 1, 0, 0o4220],
+        [MultipleTransfer, 1, 0, 1, 1, 0o4320],
+        [MultipleTransfer, 1, 1, 0, 0, 0o4420],
+        [MultipleTransfer, 1, 1, 0, 1, 0o4520],
+        [MultipleTransfer, 1, 1, 1, 0, 0o4620],
+        [MultipleTransfer, 1, 1, 1, 1, 0o4720]
+    ]
+    run_tests("TEST: MT args range", testdata)
+
+
+# ######## TN ########
+
+def test_TN_simple():
+    testdata = [[TransferNWords, 0, 0, 0, 0, 0o1020]]
+    run_tests("TEST: TN simple", testdata)
+
+
+def test_TN_invalid_args():
+    testdata = [
+        [TransferNWords, 2, 0, 0, 0, 0],
+        [TransferNWords, 0, 2, 0, 0, 0],
+        [TransferNWords, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: TN invalid args", testdata)
+
+
+def test_TN_args_range():
+    testdata = [
+        [TransferNWords, 0, 0, 0, 0, 0o1020],
+        [TransferNWords, 0, 0, 0, 1, 0o1120],
+        [TransferNWords, 0, 0, 1, 0, 0o1220],
+        [TransferNWords, 0, 0, 1, 1, 0o1320],
+        [TransferNWords, 0, 1, 0, 0, 0o1420],
+        [TransferNWords, 0, 1, 0, 1, 0o1520],
+        [TransferNWords, 0, 1, 1, 0, 0o1620],
+        [TransferNWords, 0, 1, 1, 1, 0o1720],
+        [TransferNWords, 1, 0, 0, 0, 0o5020],
+        [TransferNWords, 1, 0, 0, 1, 0o5120],
+        [TransferNWords, 1, 0, 1, 0, 0o5220],
+        [TransferNWords, 1, 0, 1, 1, 0o5320],
+        [TransferNWords, 1, 1, 0, 0, 0o5420],
+        [TransferNWords, 1, 1, 0, 1, 0o5520],
+        [TransferNWords, 1, 1, 1, 0, 0o5620],
+        [TransferNWords, 1, 1, 1, 1, 0o5720]
+    ]
+    run_tests("TEST: TN args range", testdata)
+
+
+# ######## CC ########
+
+def test_CC_simple():
+    testdata = [[ComputeOrthocount, 0, 0, 0, 0, 0o1010]]
+    run_tests("TEST: CC simple", testdata)
+
+
+def test_CC_invalid_args():
+    testdata = [
+        [ComputeOrthocount, 2, 0, 0, 0, 0],
+        [ComputeOrthocount, 0, 2, 0, 0, 0],
+        [ComputeOrthocount, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: CC invalid args", testdata)
+
+
+def test_CC_args_range():
+    testdata = [
+        [ComputeOrthocount, 0, 0, 0, 0, 0o1010],
+        [ComputeOrthocount, 0, 0, 0, 1, 0o1110],
+        [ComputeOrthocount, 0, 0, 1, 0, 0o1210],
+        [ComputeOrthocount, 0, 0, 1, 1, 0o1310],
+        [ComputeOrthocount, 0, 1, 0, 0, 0o1410],
+        [ComputeOrthocount, 0, 1, 0, 1, 0o1510],
+        [ComputeOrthocount, 0, 1, 1, 0, 0o1610],
+        [ComputeOrthocount, 0, 1, 1, 1, 0o1710],
+        [ComputeOrthocount, 1, 0, 0, 0, 0o5010],
+        [ComputeOrthocount, 1, 0, 0, 1, 0o5110],
+        [ComputeOrthocount, 1, 0, 1, 0, 0o5210],
+        [ComputeOrthocount, 1, 0, 1, 1, 0o5310],
+        [ComputeOrthocount, 1, 1, 0, 0, 0o5410],
+        [ComputeOrthocount, 1, 1, 0, 1, 0o5510],
+        [ComputeOrthocount, 1, 1, 1, 0, 0o5610],
+        [ComputeOrthocount, 1, 1, 1, 1, 0o5710]
+    ]
+    run_tests("TEST: CC args range", testdata)
+
+
+# ######## IT ########
+
+def test_IT_simple():
+    testdata = [[ItemTransfer, 0, 0, 0, 0, 0o1030]]
+    run_tests("TEST: IT simple", testdata)
+
+
+def test_IT_invalid_args():
+    testdata = [
+        [ItemTransfer, 2, 0, 0, 0, 0],
+        [ItemTransfer, 0, 2, 0, 0, 0],
+        [ItemTransfer, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: IT invalid args", testdata)
+
+
+def test_IT_args_range():
+    testdata = [
+        [ItemTransfer, 0, 0, 0, 0, 0o1030],
+        [ItemTransfer, 0, 0, 0, 1, 0o1130],
+        [ItemTransfer, 0, 0, 1, 0, 0o1230],
+        [ItemTransfer, 0, 0, 1, 1, 0o1330],
+        [ItemTransfer, 0, 1, 0, 0, 0o1430],
+        [ItemTransfer, 0, 1, 0, 1, 0o1530],
+        [ItemTransfer, 0, 1, 1, 0, 0o1630],
+        [ItemTransfer, 0, 1, 1, 1, 0o1730],
+        [ItemTransfer, 1, 0, 0, 0, 0o5030],
+        [ItemTransfer, 1, 0, 0, 1, 0o5130],
+        [ItemTransfer, 1, 0, 1, 0, 0o5230],
+        [ItemTransfer, 1, 0, 1, 1, 0o5330],
+        [ItemTransfer, 1, 1, 0, 0, 0o5430],
+        [ItemTransfer, 1, 1, 0, 1, 0o5530],
+        [ItemTransfer, 1, 1, 1, 0, 0o5630],
+        [ItemTransfer, 1, 1, 1, 1, 0o5730]
+    ]
+    run_tests("TEST: IT args range", testdata)
+
+
+# ######## EBA ########
+
+def test_EBA_simple():
+    testdata = [[ExtendedBinaryAdd, 0, 0, 0, 0, 0o3013]]
+    run_tests("TEST: EBA simple", testdata)
+
+
+def test_EBA_invalid_args():
+    testdata = [
+        [ExtendedBinaryAdd, 2, 0, 0, 0, 0],
+        [ExtendedBinaryAdd, 0, 2, 0, 0, 0],
+        [ExtendedBinaryAdd, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: EBA invalid args", testdata)
+
+
+def test_EBA_args_range():
+    testdata = [
+        [ExtendedBinaryAdd, 0, 0, 0, 0, 0o3013],
+        [ExtendedBinaryAdd, 0, 0, 0, 1, 0o3113],
+        [ExtendedBinaryAdd, 0, 0, 1, 0, 0o3213],
+        [ExtendedBinaryAdd, 0, 0, 1, 1, 0o3313],
+        [ExtendedBinaryAdd, 0, 1, 0, 0, 0o3413],
+        [ExtendedBinaryAdd, 0, 1, 0, 1, 0o3513],
+        [ExtendedBinaryAdd, 0, 1, 1, 0, 0o3613],
+        [ExtendedBinaryAdd, 0, 1, 1, 1, 0o3713],
+        [ExtendedBinaryAdd, 1, 0, 0, 0, 0o7013],
+        [ExtendedBinaryAdd, 1, 0, 0, 1, 0o7113],
+        [ExtendedBinaryAdd, 1, 0, 1, 0, 0o7213],
+        [ExtendedBinaryAdd, 1, 0, 1, 1, 0o7313],
+        [ExtendedBinaryAdd, 1, 1, 0, 0, 0o7413],
+        [ExtendedBinaryAdd, 1, 1, 0, 1, 0o7513],
+        [ExtendedBinaryAdd, 1, 1, 1, 0, 0o7613],
+        [ExtendedBinaryAdd, 1, 1, 1, 1, 0o7713]
+    ]
+    run_tests("TEST: EBA args range", testdata)
+
+
+# ######## EBS ########
+
+def test_EBS_simple():
+    testdata = [[ExtendedBinarySubtract, 0, 0, 0, 0, 0o3033]]
+    run_tests("TEST: EBS simple", testdata)
+
+
+def test_EBS_invalid_args():
+    testdata = [
+        [ExtendedBinarySubtract, 2, 0, 0, 0, 0],
+        [ExtendedBinarySubtract, 0, 2, 0, 0, 0],
+        [ExtendedBinarySubtract, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: EBS invalid args", testdata)
+
+
+def test_EBS_args_range():
+    testdata = [
+        [ExtendedBinarySubtract, 0, 0, 0, 0, 0o3033],
+        [ExtendedBinarySubtract, 0, 0, 0, 1, 0o3133],
+        [ExtendedBinarySubtract, 0, 0, 1, 0, 0o3233],
+        [ExtendedBinarySubtract, 0, 0, 1, 1, 0o3333],
+        [ExtendedBinarySubtract, 0, 1, 0, 0, 0o3433],
+        [ExtendedBinarySubtract, 0, 1, 0, 1, 0o3533],
+        [ExtendedBinarySubtract, 0, 1, 1, 0, 0o3633],
+        [ExtendedBinarySubtract, 0, 1, 1, 1, 0o3733],
+        [ExtendedBinarySubtract, 1, 0, 0, 0, 0o7033],
+        [ExtendedBinarySubtract, 1, 0, 0, 1, 0o7133],
+        [ExtendedBinarySubtract, 1, 0, 1, 0, 0o7233],
+        [ExtendedBinarySubtract, 1, 0, 1, 1, 0o7333],
+        [ExtendedBinarySubtract, 1, 1, 0, 0, 0o7433],
+        [ExtendedBinarySubtract, 1, 1, 0, 1, 0o7533],
+        [ExtendedBinarySubtract, 1, 1, 1, 0, 0o7633],
+        [ExtendedBinarySubtract, 1, 1, 1, 1, 0o7733]
+    ]
+    run_tests("TEST: EBS args range", testdata)
+
+
+# ######## RT ########
+
+def test_RT_simple():
+    testdata = [[RecordTransfer, 0, 0, 0, 0, 0o3030]]
+    run_tests("TEST: RT simple", testdata)
+
+
+def test_RT_invalid_args():
+    testdata = [
+        [RecordTransfer, 2, 0, 0, 0, 0],
+        [RecordTransfer, 0, 2, 0, 0, 0],
+        [RecordTransfer, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: RT invalid args", testdata)
+
+
+def test_RT_args_range():
+    testdata = [
+        [RecordTransfer, 0, 0, 0, 0, 0o3030],
+        [RecordTransfer, 0, 0, 0, 1, 0o3130],
+        [RecordTransfer, 0, 0, 1, 0, 0o3230],
+        [RecordTransfer, 0, 0, 1, 1, 0o3330],
+        [RecordTransfer, 0, 1, 0, 0, 0o3430],
+        [RecordTransfer, 0, 1, 0, 1, 0o3530],
+        [RecordTransfer, 0, 1, 1, 0, 0o3630],
+        [RecordTransfer, 0, 1, 1, 1, 0o3730],
+        [RecordTransfer, 1, 0, 0, 0, 0o7030],
+        [RecordTransfer, 1, 0, 0, 1, 0o7130],
+        [RecordTransfer, 1, 0, 1, 0, 0o7230],
+        [RecordTransfer, 1, 0, 1, 1, 0o7330],
+        [RecordTransfer, 1, 1, 0, 0, 0o7430],
+        [RecordTransfer, 1, 1, 0, 1, 0o7530],
+        [RecordTransfer, 1, 1, 1, 0, 0o7630],
+        [RecordTransfer, 1, 1, 1, 1, 0o7730]
+    ]
+    run_tests("TEST: RT args range", testdata)
+
+
+# ######## MPC ########
+
+def test_MPC_simple():
+    testdata = [[ControlProgram, 0, 0, 0, 0, 0o2000]]
+    run_tests("TEST: MPC simple", testdata)
+
+
+def test_MPC_invalid_args():
+    testdata = [
+        [ControlProgram, 2, 0, 0, 0, 0],
+        [ControlProgram, 0, 2, 0, 0, 0],
+        [ControlProgram, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: MPC invalid args", testdata)
+
+
+def test_MPC_args_range():
+    testdata = [
+        [ControlProgram, 0, 0, 0, 0, 0o2000],
+        [ControlProgram, 0, 0, 0, 1, 0o2100],
+        [ControlProgram, 0, 0, 1, 0, 0o2200],
+        [ControlProgram, 0, 0, 1, 1, 0o2300],
+        [ControlProgram, 0, 1, 0, 0, 0o2400],
+        [ControlProgram, 0, 1, 0, 1, 0o2500],
+        [ControlProgram, 0, 1, 1, 0, 0o2600],
+        [ControlProgram, 0, 1, 1, 1, 0o2700],
+        [ControlProgram, 1, 0, 0, 0, 0o6000],
+        [ControlProgram, 1, 0, 0, 1, 0o6100],
+        [ControlProgram, 1, 0, 1, 0, 0o6200],
+        [ControlProgram, 1, 0, 1, 1, 0o6300],
+        [ControlProgram, 1, 1, 0, 0, 0o6400],
+        [ControlProgram, 1, 1, 0, 1, 0o6500],
+        [ControlProgram, 1, 1, 1, 0, 0o6600],
+        [ControlProgram, 1, 1, 1, 1, 0o6700]
+    ]
+    run_tests("TEST: MPC args range", testdata)
+
+
+# ######## PR ########
+
+def test_PR_simple():
+    testdata = [[Proceed, None, None, None, None, 0o0000]]
+    run_tests("TEST: PR simple", testdata)
+
