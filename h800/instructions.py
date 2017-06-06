@@ -150,9 +150,9 @@ BASE_OPCODES = {
     "RB":   0o12,                   # Read Backward
     "WF":   0o16,                   # Write Forward
     "RW":   0o02,                   # Rewind
-    "PRA":  0o46,                   # Print Alphabetic
-    "PRD":  0o46,                   # Print Decimal
-    "PRO":  0o46,                   # Print OCtal
+    "PRA":  0o06,                   # Print Alphabetic
+    "PRD":  0o06,                   # Print Decimal
+    "PRO":  0o06,                   # Print OCtal
 
     # Simulator.
     "S":    0o07,                   # Simulate
