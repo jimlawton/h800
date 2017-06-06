@@ -1758,3 +1758,393 @@ def test_RF_args_range():
     run_tests("TEST: RF args range", testdata)
 
 
+# ######## RB ########
+
+def test_RB_simple():
+    testdata = [[ReadBackward, [0], 0o0052]]
+    run_tests("TEST: RB simple", testdata)
+
+
+def test_RB_invalid_args():
+    testdata = [
+        [ReadBackward, [-1], 0],
+        [ReadBackward, [64], 0]
+    ]
+    run_exception_tests("TEST: RB invalid args", testdata)
+
+
+def test_RB_args_range():
+    testdata = [
+        [ReadBackward, [0], 0o0052],
+        [ReadBackward, [1], 0o0152],
+        [ReadBackward, [2], 0o0252],
+        [ReadBackward, [3], 0o0352],
+        [ReadBackward, [4], 0o0452],
+        [ReadBackward, [5], 0o0552],
+        [ReadBackward, [6], 0o0652],
+        [ReadBackward, [7], 0o0752],
+        [ReadBackward, [8], 0o1052],
+        [ReadBackward, [9], 0o1152],
+        [ReadBackward, [10], 0o1252],
+        [ReadBackward, [11], 0o1352],
+        [ReadBackward, [12], 0o1452],
+        [ReadBackward, [13], 0o1552],
+        [ReadBackward, [14], 0o1652],
+        [ReadBackward, [15], 0o1752],
+        [ReadBackward, [16], 0o2052],
+        [ReadBackward, [17], 0o2152],
+        [ReadBackward, [18], 0o2252],
+        [ReadBackward, [19], 0o2352],
+        [ReadBackward, [20], 0o2452],
+        [ReadBackward, [21], 0o2552],
+        [ReadBackward, [22], 0o2652],
+        [ReadBackward, [23], 0o2752],
+        [ReadBackward, [24], 0o3052],
+        [ReadBackward, [25], 0o3152],
+        [ReadBackward, [26], 0o3252],
+        [ReadBackward, [27], 0o3352],
+        [ReadBackward, [28], 0o3452],
+        [ReadBackward, [29], 0o3552],
+        [ReadBackward, [30], 0o3652],
+        [ReadBackward, [31], 0o3752],
+        [ReadBackward, [32], 0o4052],
+        [ReadBackward, [33], 0o4152],
+        [ReadBackward, [34], 0o4252],
+        [ReadBackward, [35], 0o4352],
+        [ReadBackward, [36], 0o4452],
+        [ReadBackward, [37], 0o4552],
+        [ReadBackward, [38], 0o4652],
+        [ReadBackward, [39], 0o4752],
+        [ReadBackward, [40], 0o5052],
+        [ReadBackward, [41], 0o5152],
+        [ReadBackward, [42], 0o5252],
+        [ReadBackward, [43], 0o5352],
+        [ReadBackward, [44], 0o5452],
+        [ReadBackward, [45], 0o5552],
+        [ReadBackward, [46], 0o5652],
+        [ReadBackward, [47], 0o5752],
+        [ReadBackward, [48], 0o6052],
+        [ReadBackward, [49], 0o6152],
+        [ReadBackward, [50], 0o6252],
+        [ReadBackward, [51], 0o6352],
+        [ReadBackward, [52], 0o6452],
+        [ReadBackward, [53], 0o6552],
+        [ReadBackward, [54], 0o6652],
+        [ReadBackward, [55], 0o6752],
+        [ReadBackward, [56], 0o7052],
+        [ReadBackward, [57], 0o7152],
+        [ReadBackward, [58], 0o7252],
+        [ReadBackward, [59], 0o7352],
+        [ReadBackward, [60], 0o7452],
+        [ReadBackward, [61], 0o7552],
+        [ReadBackward, [62], 0o7652],
+        [ReadBackward, [63], 0o7752]
+    ]
+    run_tests("TEST: RB args range", testdata)
+
+
+# ######## WF ########
+
+def test_WF_simple():
+    testdata = [[WriteForward, [0], 0o0056]]
+    run_tests("TEST: WF simple", testdata)
+
+
+def test_WF_invalid_args():
+    testdata = [
+        [WriteForward, [-1], 0],
+        [WriteForward, [64], 0]
+    ]
+    run_exception_tests("TEST: WF invalid args", testdata)
+
+
+def test_WF_args_range():
+    testdata = [
+        [WriteForward, [0], 0o0056],
+        [WriteForward, [1], 0o0156],
+        [WriteForward, [2], 0o0256],
+        [WriteForward, [3], 0o0356],
+        [WriteForward, [4], 0o0456],
+        [WriteForward, [5], 0o0556],
+        [WriteForward, [6], 0o0656],
+        [WriteForward, [7], 0o0756],
+        [WriteForward, [8], 0o1056],
+        [WriteForward, [9], 0o1156],
+        [WriteForward, [10], 0o1256],
+        [WriteForward, [11], 0o1356],
+        [WriteForward, [12], 0o1456],
+        [WriteForward, [13], 0o1556],
+        [WriteForward, [14], 0o1656],
+        [WriteForward, [15], 0o1756],
+        [WriteForward, [16], 0o2056],
+        [WriteForward, [17], 0o2156],
+        [WriteForward, [18], 0o2256],
+        [WriteForward, [19], 0o2356],
+        [WriteForward, [20], 0o2456],
+        [WriteForward, [21], 0o2556],
+        [WriteForward, [22], 0o2656],
+        [WriteForward, [23], 0o2756],
+        [WriteForward, [24], 0o3056],
+        [WriteForward, [25], 0o3156],
+        [WriteForward, [26], 0o3256],
+        [WriteForward, [27], 0o3356],
+        [WriteForward, [28], 0o3456],
+        [WriteForward, [29], 0o3556],
+        [WriteForward, [30], 0o3656],
+        [WriteForward, [31], 0o3756],
+        [WriteForward, [32], 0o4056],
+        [WriteForward, [33], 0o4156],
+        [WriteForward, [34], 0o4256],
+        [WriteForward, [35], 0o4356],
+        [WriteForward, [36], 0o4456],
+        [WriteForward, [37], 0o4556],
+        [WriteForward, [38], 0o4656],
+        [WriteForward, [39], 0o4756],
+        [WriteForward, [40], 0o5056],
+        [WriteForward, [41], 0o5156],
+        [WriteForward, [42], 0o5256],
+        [WriteForward, [43], 0o5356],
+        [WriteForward, [44], 0o5456],
+        [WriteForward, [45], 0o5556],
+        [WriteForward, [46], 0o5656],
+        [WriteForward, [47], 0o5756],
+        [WriteForward, [48], 0o6056],
+        [WriteForward, [49], 0o6156],
+        [WriteForward, [50], 0o6256],
+        [WriteForward, [51], 0o6356],
+        [WriteForward, [52], 0o6456],
+        [WriteForward, [53], 0o6556],
+        [WriteForward, [54], 0o6656],
+        [WriteForward, [55], 0o6756],
+        [WriteForward, [56], 0o7056],
+        [WriteForward, [57], 0o7156],
+        [WriteForward, [58], 0o7256],
+        [WriteForward, [59], 0o7356],
+        [WriteForward, [60], 0o7456],
+        [WriteForward, [61], 0o7556],
+        [WriteForward, [62], 0o7656],
+        [WriteForward, [63], 0o7756]
+    ]
+    run_tests("TEST: WF args range", testdata)
+
+
+# ######## RW ########
+
+def test_RW_simple():
+    testdata = [[Rewind, [0], 0o0042]]
+    run_tests("TEST: RW simple", testdata)
+
+
+def test_RW_invalid_args():
+    testdata = [
+        [Rewind, [-1], 0],
+        [Rewind, [64], 0]
+    ]
+    run_exception_tests("TEST: RW invalid args", testdata)
+
+
+def test_RW_args_range():
+    testdata = [
+        [Rewind, [0], 0o0042],
+        [Rewind, [1], 0o0142],
+        [Rewind, [2], 0o0242],
+        [Rewind, [3], 0o0342],
+        [Rewind, [4], 0o0442],
+        [Rewind, [5], 0o0542],
+        [Rewind, [6], 0o0642],
+        [Rewind, [7], 0o0742],
+        [Rewind, [8], 0o1042],
+        [Rewind, [9], 0o1142],
+        [Rewind, [10], 0o1242],
+        [Rewind, [11], 0o1342],
+        [Rewind, [12], 0o1442],
+        [Rewind, [13], 0o1542],
+        [Rewind, [14], 0o1642],
+        [Rewind, [15], 0o1742],
+        [Rewind, [16], 0o2042],
+        [Rewind, [17], 0o2142],
+        [Rewind, [18], 0o2242],
+        [Rewind, [19], 0o2342],
+        [Rewind, [20], 0o2442],
+        [Rewind, [21], 0o2542],
+        [Rewind, [22], 0o2642],
+        [Rewind, [23], 0o2742],
+        [Rewind, [24], 0o3042],
+        [Rewind, [25], 0o3142],
+        [Rewind, [26], 0o3242],
+        [Rewind, [27], 0o3342],
+        [Rewind, [28], 0o3442],
+        [Rewind, [29], 0o3542],
+        [Rewind, [30], 0o3642],
+        [Rewind, [31], 0o3742],
+        [Rewind, [32], 0o4042],
+        [Rewind, [33], 0o4142],
+        [Rewind, [34], 0o4242],
+        [Rewind, [35], 0o4342],
+        [Rewind, [36], 0o4442],
+        [Rewind, [37], 0o4542],
+        [Rewind, [38], 0o4642],
+        [Rewind, [39], 0o4742],
+        [Rewind, [40], 0o5042],
+        [Rewind, [41], 0o5142],
+        [Rewind, [42], 0o5242],
+        [Rewind, [43], 0o5342],
+        [Rewind, [44], 0o5442],
+        [Rewind, [45], 0o5542],
+        [Rewind, [46], 0o5642],
+        [Rewind, [47], 0o5742],
+        [Rewind, [48], 0o6042],
+        [Rewind, [49], 0o6142],
+        [Rewind, [50], 0o6242],
+        [Rewind, [51], 0o6342],
+        [Rewind, [52], 0o6442],
+        [Rewind, [53], 0o6542],
+        [Rewind, [54], 0o6642],
+        [Rewind, [55], 0o6742],
+        [Rewind, [56], 0o7042],
+        [Rewind, [57], 0o7142],
+        [Rewind, [58], 0o7242],
+        [Rewind, [59], 0o7342],
+        [Rewind, [60], 0o7442],
+        [Rewind, [61], 0o7542],
+        [Rewind, [62], 0o7642],
+        [Rewind, [63], 0o7742]
+    ]
+    run_tests("TEST: RW args range", testdata)
+
+
+# ######## PRA ########
+
+def test_PRA_simple():
+    testdata = [[PrintAlphabetic, [0, 0, 0, 0], 0o0046]]
+    run_tests("TEST: PRA simple", testdata)
+
+
+def test_PRA_invalid_args():
+    testdata = [
+        [PrintAlphabetic, [2, 0, 0, 0], 0],
+        [PrintAlphabetic, [0, 2, 0, 0], 0],
+        [PrintAlphabetic, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: PRA invalid args", testdata)
+
+
+def test_PRA_args_range():
+    testdata = [
+        [PrintAlphabetic, [0, 0, 0, 0], 0o0046],
+        [PrintAlphabetic, [0, 0, 0, 1], 0o0146],
+        [PrintAlphabetic, [0, 0, 1, 0], 0o0246],
+        [PrintAlphabetic, [0, 0, 1, 1], 0o0346],
+        [PrintAlphabetic, [0, 1, 0, 0], 0o0446],
+        [PrintAlphabetic, [0, 1, 0, 1], 0o0546],
+        [PrintAlphabetic, [0, 1, 1, 0], 0o0646],
+        [PrintAlphabetic, [0, 1, 1, 1], 0o0746],
+        [PrintAlphabetic, [1, 0, 0, 0], 0o4046],
+        [PrintAlphabetic, [1, 0, 0, 1], 0o4146],
+        [PrintAlphabetic, [1, 0, 1, 0], 0o4246],
+        [PrintAlphabetic, [1, 0, 1, 1], 0o4346],
+        [PrintAlphabetic, [1, 1, 0, 0], 0o4446],
+        [PrintAlphabetic, [1, 1, 0, 1], 0o4546],
+        [PrintAlphabetic, [1, 1, 1, 0], 0o4646],
+        [PrintAlphabetic, [1, 1, 1, 1], 0o4746]
+    ]
+    run_tests("TEST: PRA args range", testdata)
+
+
+# ######## PRD ########
+
+def test_PRD_simple():
+    testdata = [[PrintDecimal, [0, 0, 0, 0], 0o0046]]
+    run_tests("TEST: PRD simple", testdata)
+
+
+def test_PRD_invalid_args():
+    testdata = [
+        [PrintDecimal, [2, 0, 0, 0], 0],
+        [PrintDecimal, [0, 2, 0, 0], 0],
+        [PrintDecimal, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: PRD invalid args", testdata)
+
+
+def test_PRD_args_range():
+    testdata = [
+        [PrintDecimal, [0, 0, 0, 0], 0o0046],
+        [PrintDecimal, [0, 0, 0, 1], 0o0146],
+        [PrintDecimal, [0, 0, 1, 0], 0o0246],
+        [PrintDecimal, [0, 0, 1, 1], 0o0346],
+        [PrintDecimal, [0, 1, 0, 0], 0o0446],
+        [PrintDecimal, [0, 1, 0, 1], 0o0546],
+        [PrintDecimal, [0, 1, 1, 0], 0o0646],
+        [PrintDecimal, [0, 1, 1, 1], 0o0746],
+        [PrintDecimal, [1, 0, 0, 0], 0o4046],
+        [PrintDecimal, [1, 0, 0, 1], 0o4146],
+        [PrintDecimal, [1, 0, 1, 0], 0o4246],
+        [PrintDecimal, [1, 0, 1, 1], 0o4346],
+        [PrintDecimal, [1, 1, 0, 0], 0o4446],
+        [PrintDecimal, [1, 1, 0, 1], 0o4546],
+        [PrintDecimal, [1, 1, 1, 0], 0o4646],
+        [PrintDecimal, [1, 1, 1, 1], 0o4746]
+    ]
+    run_tests("TEST: PRD args range", testdata)
+
+
+# ######## PRO ########
+
+def test_PRO_simple():
+    testdata = [[PrintOctal, [0, 0, 0, 0], 0o0046]]
+    run_tests("TEST: PRO simple", testdata)
+
+
+def test_PRO_invalid_args():
+    testdata = [
+        [PrintOctal, [2, 0, 0, 0], 0],
+        [PrintOctal, [0, 2, 0, 0], 0],
+        [PrintOctal, [0, 1, 2, 3], 0]
+    ]
+    run_exception_tests("TEST: PRO invalid args", testdata)
+
+
+def test_PRO_args_range():
+    testdata = [
+        [PrintOctal, [0, 0, 0, 0], 0o0046],
+        [PrintOctal, [0, 0, 0, 1], 0o0146],
+        [PrintOctal, [0, 0, 1, 0], 0o0246],
+        [PrintOctal, [0, 0, 1, 1], 0o0346],
+        [PrintOctal, [0, 1, 0, 0], 0o0446],
+        [PrintOctal, [0, 1, 0, 1], 0o0546],
+        [PrintOctal, [0, 1, 1, 0], 0o0646],
+        [PrintOctal, [0, 1, 1, 1], 0o0746],
+        [PrintOctal, [1, 0, 0, 0], 0o4046],
+        [PrintOctal, [1, 0, 0, 1], 0o4146],
+        [PrintOctal, [1, 0, 1, 0], 0o4246],
+        [PrintOctal, [1, 0, 1, 1], 0o4346],
+        [PrintOctal, [1, 1, 0, 0], 0o4446],
+        [PrintOctal, [1, 1, 0, 1], 0o4546],
+        [PrintOctal, [1, 1, 1, 0], 0o4646],
+        [PrintOctal, [1, 1, 1, 1], 0o4746]
+    ]
+    run_tests("TEST: PRO args range", testdata)
+
+
+# ######## S ########
+
+def test_S_simple():
+    testdata = [[Simulator, [0], 0o0007]]
+    run_tests("TEST: S simple", testdata)
+
+
+def test_S_invalid_args():
+    testdata = [
+        [Simulator, [2], 0]
+    ]
+    run_exception_tests("TEST: S invalid args", testdata)
+
+
+def test_S_args_range():
+    testdata = [
+        [Simulator, [0], 0o0007],
+        [Simulator, [1], 0o4007]
+    ]
+    run_tests("TEST: S args range", testdata)
+
