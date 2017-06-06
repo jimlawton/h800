@@ -392,3 +392,65 @@ def test_WD_unmasked_args_range():
         [WordDifferenceUnmasked, 1, 1, 1, 1, 0o6735]
     ]
     run_tests("TEST: WA (unmasked): args range", testdata)
+
+
+# ######## NA ########
+
+def test_NA_masked_simple():
+    testdata = [[NotEqualAlphabeticMasked, 0, 0, 0o54]]
+    run_tests("TEST: NA (masked): simple", testdata)
+
+
+def test_NA_masked_invalid_args():
+    testdata = [
+        [NotEqualAlphabeticMasked, 0, 32, 0],
+        [NotEqualAlphabeticMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: NA (masked): invalid args", testdata)
+
+
+def test_NA_masked_args_range():
+    testdata = [
+        [NotEqualAlphabeticMasked, 1, 0, 0o4054],
+        [NotEqualAlphabeticMasked, 0, 31, 0o3754],
+        [NotEqualAlphabeticMasked, 1, 31, 0o7754]
+    ]
+    run_tests("TEST: NA (masked): args range", testdata)
+
+
+def test_NA_unmasked_simple():
+    testdata = [[NotEqualAlphabeticUnmasked, 0, 0, 0, 0, 0o2014]]
+    run_tests("TEST: NA (unmasked): simple", testdata)
+
+
+def test_NA_unmasked_invalid_args():
+    testdata = [
+        [NotEqualAlphabeticUnmasked, 2, 0, 0, 0, 0],
+        [NotEqualAlphabeticUnmasked, 0, 2, 0, 0, 0],
+        [NotEqualAlphabeticUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: NA (unmasked): invalid args", testdata)
+
+
+def test_NA_unmasked_args_range():
+    testdata = [
+        [NotEqualAlphabeticUnmasked, 0, 0, 0, 0, 0o2014],
+        [NotEqualAlphabeticUnmasked, 0, 0, 0, 1, 0o2114],
+        [NotEqualAlphabeticUnmasked, 0, 0, 1, 0, 0o2214],
+        [NotEqualAlphabeticUnmasked, 0, 0, 1, 1, 0o2314],
+        [NotEqualAlphabeticUnmasked, 0, 1, 0, 0, 0o2414],
+        [NotEqualAlphabeticUnmasked, 0, 1, 0, 1, 0o2514],
+        [NotEqualAlphabeticUnmasked, 0, 1, 1, 0, 0o2614],
+        [NotEqualAlphabeticUnmasked, 0, 1, 1, 1, 0o2714],
+        [NotEqualAlphabeticUnmasked, 1, 0, 0, 0, 0o6014],
+        [NotEqualAlphabeticUnmasked, 1, 0, 0, 1, 0o6114],
+        [NotEqualAlphabeticUnmasked, 1, 0, 1, 0, 0o6214],
+        [NotEqualAlphabeticUnmasked, 1, 0, 1, 1, 0o6314],
+        [NotEqualAlphabeticUnmasked, 1, 1, 0, 0, 0o6414],
+        [NotEqualAlphabeticUnmasked, 1, 1, 0, 1, 0o6514],
+        [NotEqualAlphabeticUnmasked, 1, 1, 1, 0, 0o6614],
+        [NotEqualAlphabeticUnmasked, 1, 1, 1, 1, 0o6714]
+    ]
+    run_tests("TEST: NA (unmasked): args range", testdata)
+
+
