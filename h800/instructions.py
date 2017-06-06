@@ -178,7 +178,7 @@ BASE_OPCODES = {
     "FFN":  0o15,                   # Fixed-to-Floating Normalize
     "FCON": 0o35,                   # Conversion
     "FLN":  0o30,                   # Floating Less than, Normalized
-    "FNN":  0o16,                   # Floating Not equal, Normalized
+    "FNN":  0o14,                   # Floating Not equal, Normalized
 }
 
 # The remaining instructions are pseudo-instructions of various types.
