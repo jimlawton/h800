@@ -35,106 +35,58 @@ def run_exception_tests(message, testdata):
 
 
 def test_BA_masked_simple():
-    print "TEST: BA (masked): simple"
-    i = BinaryAddMasked(sequence=0, mask=0)
-    my_assert(i.value, 0o51)
+    testdata = [[BinaryAddMasked, 0, 0, 0o51]]
+    run_tests("TEST: BA (masked): simple", testdata)
 
 
 def test_BA_masked_invalid_args():
-    print "TEST: BA (masked): invalid args"
-    gotexc = False
-    try:
-        i = BinaryAddMasked(sequence=0, mask=32)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
-    gotexc = False
-    try:
-        i = BinaryAddMasked(sequence=2, mask=0)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    testdata = [
+        [BinaryAddMasked, 0, 32, 0],
+        [BinaryAddMasked, 2, 0, 0]
+    ]
+    run_exception_tests("TEST: BA (masked): invalid args", testdata)
 
 
 def test_BA_masked_args_range():
-    print "TEST: BA (masked): args range"
-    i = BinaryAddMasked(sequence=1, mask=0)
-    my_assert(i.value, 0o4051)
-    i = BinaryAddMasked(sequence=0, mask=31)
-    my_assert(i.value, 0o3751)
-    i = BinaryAddMasked(sequence=1, mask=31)
-    my_assert(i.value, 0o7751)
+    testdata = [
+        [BinaryAddMasked, 1, 0, 0o4051],
+        [BinaryAddMasked, 0, 31, 0o3751],
+        [BinaryAddMasked, 1, 31, 0o7751]
+    ]
+    run_tests("TEST: BA (masked): args range", testdata)
 
 
 def test_BA_unmasked_simple():
-    print "TEST: BA (unmasked): simple"
-    i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=0)
-    my_assert(i.value, 0o2011)
+    testdata = [[BinaryAddUnmasked, 0, 0, 0, 0, 0o2011]]
+    run_tests("TEST: BA (unmasked): simple", testdata)
 
 
 def test_BA_unmasked_invalid_args():
-    print "TEST: BA (unmasked): invalid args"
-    gotexc = False
-    try:
-        i = BinaryAddUnmasked(sequence=2, a=0, b=0, c=0)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
-    gotexc = False
-    try:
-        i = BinaryAddUnmasked(sequence=0, a=2, b=0, c=0)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
-    gotexc = False
-    try:
-        i = BinaryAddUnmasked(sequence=0, a=-1, b=2, c=3)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    testdata = [
+        [BinaryAddUnmasked, 2, 0, 0, 0, 0],
+        [BinaryAddUnmasked, 0, 2, 0, 0, 0],
+        [BinaryAddUnmasked, 0, 1, 2, 3, 0]
+    ]
+    run_exception_tests("TEST: BA (unmasked): invalid args", testdata)
 
 
 def test_BA_unmasked_args_range():
-    print "TEST: BA (unmasked): args range"
-    i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=0)
-    my_assert(i.value, 0o2011)
-    i = BinaryAddUnmasked(sequence=0, a=0, b=0, c=1)
-    my_assert(i.value, 0o2111)
-    i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=0)
-    my_assert(i.value, 0o2211)
-    i = BinaryAddUnmasked(sequence=0, a=0, b=1, c=1)
-    my_assert(i.value, 0o2311)
-    i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=0)
-    my_assert(i.value, 0o2411)
-    i = BinaryAddUnmasked(sequence=0, a=1, b=0, c=1)
-    my_assert(i.value, 0o2511)
-    i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=0)
-    my_assert(i.value, 0o2611)
-    i = BinaryAddUnmasked(sequence=0, a=1, b=1, c=1)
-    my_assert(i.value, 0o2711)
-    i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=0)
-    my_assert(i.value, 0o6011)
-    i = BinaryAddUnmasked(sequence=1, a=0, b=0, c=1)
-    my_assert(i.value, 0o6111)
-    i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=0)
-    my_assert(i.value, 0o6211)
-    i = BinaryAddUnmasked(sequence=1, a=0, b=1, c=1)
-    my_assert(i.value, 0o6311)
-    i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=0)
-    my_assert(i.value, 0o6411)
-    i = BinaryAddUnmasked(sequence=1, a=1, b=0, c=1)
-    my_assert(i.value, 0o6511)
-    i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=0)
-    my_assert(i.value, 0o6611)
-    i = BinaryAddUnmasked(sequence=1, a=1, b=1, c=1)
-    my_assert(i.value, 0o6711)
+    testdata = [
+        [BinaryAddUnmasked, 0, 0, 0, 0, 0o2011],
+        [BinaryAddUnmasked, 0, 0, 0, 1, 0o2111],
+        [BinaryAddUnmasked, 0, 0, 1, 0, 0o2211],
+        [BinaryAddUnmasked, 0, 0, 1, 1, 0o2311],
+        [BinaryAddUnmasked, 0, 1, 0, 0, 0o2411],
+        [BinaryAddUnmasked, 0, 1, 0, 1, 0o2511],
+        [BinaryAddUnmasked, 0, 1, 1, 0, 0o2611],
+        [BinaryAddUnmasked, 0, 1, 1, 1, 0o2711],
+        [BinaryAddUnmasked, 1, 0, 0, 0, 0o6011],
+        [BinaryAddUnmasked, 1, 0, 0, 1, 0o6111],
+        [BinaryAddUnmasked, 1, 0, 1, 0, 0o6211],
+        [BinaryAddUnmasked, 1, 0, 1, 1, 0o6311],
+        [BinaryAddUnmasked, 1, 1, 0, 0, 0o6411],
+        [BinaryAddUnmasked, 1, 1, 0, 1, 0o6511],
+        [BinaryAddUnmasked, 1, 1, 1, 0, 0o6611],
+        [BinaryAddUnmasked, 1, 1, 1, 1, 0o6711]
+    ]
+    run_tests("TEST: BA (unmasked): args range", testdata)
