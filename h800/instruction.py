@@ -63,6 +63,7 @@
 # +----+----+----+----+----+----+----+----+----+----+----+----+
 
 from bitfield import BitField
+from word import Word
 
 
 class Instruction(object):
@@ -157,8 +158,8 @@ class Scientific(Instruction):
 
 class Constant(Instruction):
     """Constant instruction class."""
-    def __init__(self, mnemonic, a, b, c):
-        Instruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
+    def __init__(self, mnemonic, data):
+        Word.__init__(self, data=data)
 
 
 class PseudoInstruction(Instruction):
