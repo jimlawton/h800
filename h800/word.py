@@ -3,6 +3,19 @@
 # H-800/H-1800 Word Format
 # ===============================
 #
+# The Word class represents the general contents of an H-800 memory location.
+# It is a 48-bit quantity as follows:
+#
+#  MSB                                                             LSB
+# +----------------+----------------+----------------+----------------+
+# | 1           12 | 13          24 | 25          36 | 37          48 |
+# +----------------+----------------+----------------+----------------+
+# |                                                                   |
+# +----------------+----------------+----------------+----------------+
+#
+# The InstructionWord class represents a Word that is being used to hold a
+# machine instruction along with associated address arguments.
+#
 # From the PRM, Section III:
 #   The 48 bits of a Honeywell 1800 instruction word are interpreted as four
 #   groups of 12 bits each.  Bits 1-12 represent the command code; bits 13-24,
