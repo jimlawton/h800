@@ -2955,3 +2955,29 @@ def test_FNN_args_range():
     ]
     run_tests("TEST: FNN args range", testdata)
 
+
+# ######## ALF ########
+
+def test_ALF_simple():
+    testdata = [[AlphanumericConstant, [0], 0o0]]
+    run_tests("TEST: ALF simple", testdata)
+
+
+def test_ALF_invalid_args():
+    testdata = [
+        [AlphanumericConstant, [-1], 0],
+        [AlphanumericConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: ALF invalid args", testdata)
+
+
+def test_ALF_args_range():
+    testdata = [
+        [AlphanumericConstant, [0], 0],
+        [AlphanumericConstant, [1], 1],
+        [AlphanumericConstant, [4095], 4095],
+        [AlphanumericConstant, [4096], 4096],
+        [AlphanumericConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: ALF args range", testdata)
+
