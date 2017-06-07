@@ -158,8 +158,9 @@ class Scientific(Instruction):
 
 class Constant(Word):
     """Constant instruction class."""
-    def __init__(self, mnemonic, a, b, c):
-        data = a << 24 + b << 12 + c
+    def __init__(self, mnemonic, data):
+        if data < 0 or data > 2 ** 48 - 1:
+            raise ValueError("Opcode must be in the range 0..%d!" % (2 ** 48 - 1))
         Word.__init__(self, data=data)
 
 
