@@ -25,14 +25,11 @@ from bitfield import BitField
 
 class Word(object):
     """H-x800 word class."""
-    def __init__(self, command=0, a=0, b=0, c=0):
+    def __init__(self, data=0):
         self.data = BitField(0, width=48,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
-        self.data[1:12] = self._command = command   # Command code.
-        self.data[13:24] = self._a = a              # A address group.
-        self.data[25:36] = self._b = b              # B address group.
-        self.data[37:48] = self._c = c              # C address group.
+        self.data[1:48] = data
 
     @property
     def value(self):
@@ -41,6 +38,23 @@ class Word(object):
     @value.setter
     def value(self, value):
         self.data.value = value
+
+    def emit(self):
+        "Emit binary output."
+        # TODO
+        pass
+
+
+class InstructionWord(Word):
+
+    """H-x800 instruction word class."""
+
+    def __init__(self, command=0, a=0, b=0, c=0):
+        Word.__init__(self)
+        self.data[1:12] = self._command = command   # Command code.
+        self.data[13:24] = self._a = a              # A address group.
+        self.data[25:36] = self._b = b              # B address group.
+        self.data[37:48] = self._c = c              # C address group.
 
     @property
     def command(self):
@@ -74,7 +88,3 @@ class Word(object):
     def c(self, value):
         self._c = self.data[37:48] = value
 
-    def emit(self):
-        "Emit binary output."
-        # TODO
-        pass
