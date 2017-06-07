@@ -2981,3 +2981,159 @@ def test_ALF_args_range():
     ]
     run_tests("TEST: ALF args range", testdata)
 
+
+# ######## DEC ########
+
+def test_DEC_simple():
+    testdata = [[DecimalConstant, [0], 0o0]]
+    run_tests("TEST: DEC simple", testdata)
+
+
+def test_DEC_invalid_args():
+    testdata = [
+        [DecimalConstant, [-1], 0],
+        [DecimalConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: DEC invalid args", testdata)
+
+
+def test_DEC_args_range():
+    testdata = [
+        [DecimalConstant, [0], 0],
+        [DecimalConstant, [1], 1],
+        [DecimalConstant, [4095], 4095],
+        [DecimalConstant, [4096], 4096],
+        [DecimalConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: DEC args range", testdata)
+
+
+# ######## EBC ########
+
+def test_EBC_simple():
+    testdata = [[ExtendedBinaryConstant, [0], 0o0]]
+    run_tests("TEST: EBC simple", testdata)
+
+
+def test_EBC_invalid_args():
+    testdata = [
+        [ExtendedBinaryConstant, [-1], 0],
+        [ExtendedBinaryConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: EBC invalid args", testdata)
+
+
+def test_EBC_args_range():
+    testdata = [
+        [ExtendedBinaryConstant, [0], 0],
+        [ExtendedBinaryConstant, [1], 1],
+        [ExtendedBinaryConstant, [4095], 4095],
+        [ExtendedBinaryConstant, [4096], 4096],
+        [ExtendedBinaryConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: EBC args range", testdata)
+
+
+# ######## FLBIN ########
+
+def test_FLBIN_simple():
+    testdata = [[FloatingBinaryConstant, [0], 0o0]]
+    run_tests("TEST: FLBIN simple", testdata)
+
+
+def test_FLBIN_invalid_args():
+    testdata = [
+        [FloatingBinaryConstant, [-1], 0],
+        [FloatingBinaryConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: FLBIN invalid args", testdata)
+
+
+def test_FLBIN_args_range():
+    testdata = [
+        [FloatingBinaryConstant, [0], 0],
+        [FloatingBinaryConstant, [1], 1],
+        [FloatingBinaryConstant, [4095], 4095],
+        [FloatingBinaryConstant, [4096], 4096],
+        [FloatingBinaryConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: FLBIN args range", testdata)
+
+
+# ######## FLDEC ########
+
+def test_FLDEC_simple():
+    testdata = [[FloatingDecimalConstant, [0], 0o0]]
+    run_tests("TEST: FLDEC simple", testdata)
+
+
+def test_FLDEC_invalid_args():
+    testdata = [
+        [FloatingDecimalConstant, [-1], 0],
+        [FloatingDecimalConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: FLDEC invalid args", testdata)
+
+
+def test_FLDEC_args_range():
+    testdata = [
+        [FloatingDecimalConstant, [0], 0],
+        [FloatingDecimalConstant, [1], 1],
+        [FloatingDecimalConstant, [4095], 4095],
+        [FloatingDecimalConstant, [4096], 4096],
+        [FloatingDecimalConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: FLDEC args range", testdata)
+
+
+# ######## FXBIN ########
+
+def test_FXBIN_simple():
+    testdata = [[FixedBinaryConstant, [0], 0o0]]
+    run_tests("TEST: FXBIN simple", testdata)
+
+
+def test_FXBIN_invalid_args():
+    testdata = [
+        [FixedBinaryConstant, [-1], 0],
+        [FixedBinaryConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: FXBIN invalid args", testdata)
+
+
+def test_FXBIN_args_range():
+    testdata = [
+        [FixedBinaryConstant, [0], 0],
+        [FixedBinaryConstant, [1], 1],
+        [FixedBinaryConstant, [4095], 4095],
+        [FixedBinaryConstant, [4096], 4096],
+        [FixedBinaryConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: FXBIN args range", testdata)
+
+
+# ######## OCT ########
+
+def test_OCT_simple():
+    testdata = [[OctalConstant, [0], 0o0]]
+    run_tests("TEST: OCT simple", testdata)
+
+
+def test_OCT_invalid_args():
+    testdata = [
+        [OctalConstant, [-1], 0],
+        [OctalConstant, [2 ** 48], 0]
+    ]
+    run_exception_tests("TEST: OCT invalid args", testdata)
+
+
+def test_OCT_args_range():
+    testdata = [
+        [OctalConstant, [0], 0],
+        [OctalConstant, [1], 1],
+        [OctalConstant, [4095], 4095],
+        [OctalConstant, [4096], 4096],
+        [OctalConstant, [2 ** 48 - 1], 2 ** 48 - 1],
+    ]
+    run_tests("TEST: OCT args range", testdata)
+
