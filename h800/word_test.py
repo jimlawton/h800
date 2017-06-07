@@ -7,21 +7,33 @@ def my_assert(value, good):
     assert value == good, "Value is %d, should be %d" % (value, good)
 
 
-def test_simple_defaults():
-    print "TEST: simple default cases."
+def test_word_simple_defaults():
+    print "TEST: word simple default cases."
     w = Word()
     my_assert(w.value, 0)
-    w = Word(0, 4095, 0, 4095)
-    my_assert(w.value, 68702703615)
-    w = Word(4095, 0, 4095, 0)
+    w = Word(4095)
+    my_assert(w.value, 4095)
+    w = Word(281406274007040)
     my_assert(w.value, 281406274007040)
-    w = Word(4095, 4095, 4095, 4095)
+    w = Word(2 ** 48 - 1)
     my_assert(w.value, 2 ** 48 - 1)
 
 
-def test_field_set_get():
-    print "TEST: test field set/get."
-    w = Word()
+def test_inst_simple_defaults():
+    print "TEST: inst simple default cases."
+    w = InstructionWord()
+    my_assert(w.value, 0)
+    w = InstructionWord(0, 4095, 0, 4095)
+    my_assert(w.value, 68702703615)
+    w = InstructionWord(4095, 0, 4095, 0)
+    my_assert(w.value, 281406274007040)
+    w = InstructionWord(4095, 4095, 4095, 4095)
+    my_assert(w.value, 2 ** 48 - 1)
+
+
+def test_inst_field_set_get():
+    print "TEST: inst test field set/get."
+    w = InstructionWord()
     my_assert(w.value, 0)
 
     w.command = 4095
