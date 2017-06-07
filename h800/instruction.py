@@ -156,9 +156,10 @@ class Scientific(Instruction):
         Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, a=a, b=b, c=c, opcode=opcode)
 
 
-class Constant(Instruction):
+class Constant(Word):
     """Constant instruction class."""
-    def __init__(self, mnemonic, data):
+    def __init__(self, mnemonic, a, b, c):
+        data = a << 24 + b << 12 + c
         Word.__init__(self, data=data)
 
 
