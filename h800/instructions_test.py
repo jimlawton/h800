@@ -10,15 +10,24 @@ def my_assert(value, good):
 def run_test(testdata):
     print testdata
     if len(testdata[1]) == 4:
+        # Unmasked instructions.
         i = testdata[0](sequence=testdata[1][0], a=testdata[1][1], b=testdata[1][2], c=testdata[1][3])
+    elif len(testdata[1]) == 3:
+        assert False, "Illegal argument length!"
     elif len(testdata[1]) == 2:
+        # Masked instructions.
         i = testdata[0](sequence=testdata[1][0], mask=testdata[1][1])
     elif len(testdata[1]) == 1:
-        if testdata[0].__name__ == "Simulator":
+        # Peripheral or misc instructions, or constant.
+        if testdata[0].__name__.endswith("Constant"):
+            # Constants.
+            i = testdata[0](data=testdata[1][0])
+        elif testdata[0].__name__ == "Simulator":
             i = testdata[0](sequence=testdata[1][0])
         else:
             i = testdata[0](paddr=testdata[1][0])
     elif len(testdata[1]) == 0:
+        # Instructions with no args, e.g. Proceed.
         i = testdata[0]()
     else:
         assert False, "Illegal argument length!"
