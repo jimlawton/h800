@@ -251,6 +251,14 @@ BIT7_0 = 0o00
 BIT7_1 = 0o40
 
 
+def make_masked_opcode(mnemonic, sequence, mask):
+    return 0o4000 * sequence + 0o100 * mask + BASE_OPCODES[mnemonic]
+
+
+def make_unmasked_opcode(mnemonic, sequence, a, b, c):
+    return 0o4000 * sequence + 0o400 * a + 0o200 * b + 0o100 * c + BASE_OPCODES[mnemonic]
+
+
 class NotImplementedException(Exception):
 
     def __init__(self):
