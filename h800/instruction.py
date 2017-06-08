@@ -68,15 +68,18 @@ from word import Word
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, mnemonic, sequence=None, mask=None,
-                 a=0, b=0, c=0, paddr=None, opcode=0, pseudo=False):
+    def __init__(self, mnemonic, sequence=None, bits23=0, mask=None,
+                 a=0, b=0, c=0, paddr=None, bit7=0, opcode=0,
+                 pseudo=False):
         self._mnemonic = mnemonic       # Mnemonic string.
         self._sequence = sequence       # Sequence/cosequence code.
+        self._bits23 = bits23           # Bits 2,3.
         self._mask = mask               # Mask.
         self._a = a                     # A register active.
         self._b = b                     # B register active.
         self._c = c                     # C register active.
         self._paddr = paddr             # Peripheral address (6 bits).
+        self._bit7 = bit7               # Bit 7 (1 for masked, 0 for unmasked).
         self._opcode = opcode           # Opcode binary.
         self._pseudo = pseudo           # Pseudo-instructions generate no code.
         self.data = BitField(0, width=12,
@@ -95,7 +98,7 @@ class Instruction(object):
                 raise ValueError("Mask must be in the range 0..31!")
             self.data[2:6] = mask
         else:
-            self.data[2:3] = (opcode >> 6) & 3
+            self.data[2:3] = bits23 & 3
         if a:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
@@ -117,9 +120,10 @@ class Instruction(object):
             if paddr < 0 or paddr > 63:
                 raise ValueError("Peripheral address must be in the range 0..63!")
             self.data[1:6] = self._paddr
-        if opcode < 0 or opcode > 255:
+        self.data[7] = bit7 & 1
+        if opcode < 0 or opcode > 31:
             raise ValueError("Opcode must be in the range 0..31!")
-        self.data[7:12] = opcode & 63
+        self.data[8:12] = opcode & 31
 
     @property
     def value(self):
