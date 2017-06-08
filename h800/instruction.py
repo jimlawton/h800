@@ -134,18 +134,18 @@ class Instruction(object):
 class GeneralMasked(Instruction):
     """General masked instruction class."""
     def __init__(self, mnemonic, sequence, mask, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, bit7=1, opcode=opcode)
 
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
-    def __init__(self, mnemonic, sequence, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, a=a, b=b, c=c, opcode=opcode)
+    def __init__(self, mnemonic, sequence, a, b, c, opcode, bits23=0, bit7=0):
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, bits23=bits23, a=a, b=b, c=c, bit7=bit7, opcode=opcode)
 
 
 class Peripheral(Instruction):
     """Peripheral instruction class."""
     def __init__(self, mnemonic, paddr, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, paddr=paddr, opcode=opcode)
+        Instruction.__init__(self, mnemonic=mnemonic, paddr=paddr, bit7=1, opcode=opcode)
 
 
 class Simulator(Instruction):
@@ -156,8 +156,8 @@ class Simulator(Instruction):
 
 class Scientific(Instruction):
     """Scientific instruction class."""
-    def __init__(self, mnemonic, sequence, a, b, c, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, a=a, b=b, c=c, opcode=opcode)
+    def __init__(self, mnemonic, sequence, a, b, c, opcode, bits23=0):
+        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, bits23=bits23, a=a, b=b, c=c, opcode=opcode)
 
 
 class Constant(Word):
