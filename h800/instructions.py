@@ -255,8 +255,16 @@ def make_masked_opcode(mnemonic, sequence, mask):
     return ((0o4000 * sequence) + (0o100 * mask) + BIT7_1 + OPCODES[mnemonic])
 
 
-def make_unmasked_opcode(mnemonic, sequence, a, b, c):
-    return 0o4000 * sequence + BITS23_10 + 0o400 * a + 0o200 * b + 0o100 * c + OPCODES[mnemonic]
+def make_unmasked_opcode(mnemonic, sequence, a, b, c, bits23=0b10):
+    return 0o4000 * sequence + 0o1000 * bits23 + 0o400 * a + 0o200 * b + 0o100 * c + OPCODES[mnemonic]
+
+
+def make_peripheral_opcode(mnemonic, paddr):
+    return 0o100 * paddr + BIT7_1 + OPCODES[mnemonic]
+
+
+def make_print_opcode(mnemonic, sequence, a, b, c):
+    return 0o4000 * sequence + 0o400 * a + 0o200 * b + 0o100 * c + BIT7_1 + OPCODES[mnemonic]
 
 
 class NotImplementedException(Exception):
