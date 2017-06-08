@@ -103,7 +103,7 @@ import instruction
 # value of bit 7 (0 for unmasked, or 1 for masked), and bits 2-3 for unmasked
 # instructions.
 
-BASE_OPCODES = {
+OPCODES = {
     # General, masked or unmasked.
     "BA":   0o11,                   # Binary Add
     "DA":   0o01,                   # Decimal Add
@@ -235,16 +235,16 @@ MISC_INSTRUCTIONS = {
     "DUMP":     0                   # ?
 }
 
-INSTRUCTIONS = dict(BASE_OPCODES.items() + CONTROL_INSTRUCTIONS.items() +
+INSTRUCTIONS = dict(OPCODES.items() + CONTROL_INSTRUCTIONS.items() +
                     DATA_CONSTANTS.items() + CONTROL_CONSTANTS.items() +
                     EXTENDED_INSTRUCTIONS.items() + MISC_INSTRUCTIONS.items())
 
 
 # These are just convenient representations of bits 2 and 3 of the command code.
-BITS23_00 = 0o000
-BITS23_01 = 0o100
-BITS23_10 = 0o200
-BITS23_11 = 0o300
+BITS23_00 = 0b00
+BITS23_01 = 0b01
+BITS23_10 = 0b10
+BITS23_11 = 0b11
 
 # These are just convenient representations of bit 7 of the command code.
 BIT7_0 = 0o00
