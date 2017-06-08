@@ -281,7 +281,7 @@ class BinaryAddMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="BA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["BA"])
+                                           opcode=OPCODES["BA"])
 
 
 class BinaryAddUnmasked(instruction.GeneralUnmasked):
@@ -289,8 +289,9 @@ class BinaryAddUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="BA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["BA"])
+                                             opcode=OPCODES["BA"])
 
 
 class DecimalAddMasked(instruction.GeneralMasked):
@@ -299,7 +300,7 @@ class DecimalAddMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="DA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["DA"])
+                                           opcode=OPCODES["DA"])
 
 
 class DecimalAddUnmasked(instruction.GeneralUnmasked):
@@ -307,8 +308,9 @@ class DecimalAddUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="DA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["DA"])
+                                             opcode=OPCODES["DA"])
 
 
 class WordAddMasked(instruction.GeneralMasked):
@@ -317,7 +319,7 @@ class WordAddMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="WA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["WA"])
+                                           opcode=OPCODES["WA"])
 
 
 class WordAddUnmasked(instruction.GeneralUnmasked):
@@ -325,8 +327,9 @@ class WordAddUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="WA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["WA"])
+                                             opcode=OPCODES["WA"])
 
 
 class BinarySubtractMasked(instruction.GeneralMasked):
@@ -335,7 +338,7 @@ class BinarySubtractMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="BS",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["BS"])
+                                           opcode=OPCODES["BS"])
 
 
 class BinarySubtractUnmasked(instruction.GeneralUnmasked):
@@ -343,8 +346,9 @@ class BinarySubtractUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="BS",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["BS"])
+                                             opcode=OPCODES["BS"])
 
 
 class DecimalSubtractMasked(instruction.GeneralMasked):
@@ -353,7 +357,7 @@ class DecimalSubtractMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="DS",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["DS"])
+                                           opcode=OPCODES["DS"])
 
 
 class DecimalSubtractUnmasked(instruction.GeneralUnmasked):
@@ -361,8 +365,9 @@ class DecimalSubtractUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="DS",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["DS"])
+                                             opcode=OPCODES["DS"])
 
 
 class WordDifferenceMasked(instruction.GeneralMasked):
@@ -371,7 +376,7 @@ class WordDifferenceMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="WD",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["WD"])
+                                           opcode=OPCODES["WD"])
 
 
 class WordDifferenceUnmasked(instruction.GeneralUnmasked):
@@ -379,8 +384,9 @@ class WordDifferenceUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="WD",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["WD"])
+                                             opcode=OPCODES["WD"])
 
 
 class NotEqualAlphabeticMasked(instruction.GeneralMasked):
@@ -389,7 +395,7 @@ class NotEqualAlphabeticMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="NA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["NA"])
+                                           opcode=OPCODES["NA"])
 
 
 class NotEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
@@ -397,8 +403,9 @@ class NotEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="NA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["NA"])
+                                             opcode=OPCODES["NA"])
 
 
 class NotEqualNumericMasked(instruction.GeneralMasked):
@@ -407,7 +414,7 @@ class NotEqualNumericMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="NN",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["NN"])
+                                           opcode=OPCODES["NN"])
 
 
 class NotEqualNumericUnmasked(instruction.GeneralUnmasked):
@@ -415,8 +422,9 @@ class NotEqualNumericUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="NN",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["NN"])
+                                             opcode=OPCODES["NN"])
 
 
 class LessThanOrEqualAlphabeticMasked(instruction.GeneralMasked):
@@ -425,7 +433,7 @@ class LessThanOrEqualAlphabeticMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="LA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["LA"])
+                                           opcode=OPCODES["LA"])
 
 
 class LessThanOrEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
@@ -433,8 +441,9 @@ class LessThanOrEqualAlphabeticUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="LA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["LA"])
+                                             opcode=OPCODES["LA"])
 
 
 class LessThanOrEqualNumericMasked(instruction.GeneralMasked):
@@ -443,7 +452,7 @@ class LessThanOrEqualNumericMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="LN",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["LN"])
+                                           opcode=OPCODES["LN"])
 
 
 class LessThanOrEqualNumericUnmasked(instruction.GeneralUnmasked):
@@ -451,8 +460,9 @@ class LessThanOrEqualNumericUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="LN",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["LN"])
+                                             opcode=OPCODES["LN"])
 
 
 class TransferMasked(instruction.GeneralMasked):
@@ -461,7 +471,7 @@ class TransferMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="TX",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["TX"])
+                                           opcode=OPCODES["TX"])
 
 
 class TransferUnmasked(instruction.GeneralUnmasked):
@@ -469,8 +479,9 @@ class TransferUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="TX",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["TX"])
+                                             opcode=OPCODES["TX"])
 
 
 class TransferChangeSequenceMasked(instruction.GeneralMasked):
@@ -479,7 +490,7 @@ class TransferChangeSequenceMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="TS",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["TS"])
+                                           opcode=OPCODES["TS"])
 
 
 class TransferChangeSequenceUnmasked(instruction.GeneralUnmasked):
@@ -487,8 +498,9 @@ class TransferChangeSequenceUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="TS",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["TS"])
+                                             opcode=OPCODES["TS"])
 
 
 class HalfAddMasked(instruction.GeneralMasked):
@@ -497,7 +509,7 @@ class HalfAddMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="HA",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["HA"])
+                                           opcode=OPCODES["HA"])
 
 
 class HalfAddUnmasked(instruction.GeneralUnmasked):
@@ -505,8 +517,9 @@ class HalfAddUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="HA",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["HA"])
+                                             opcode=OPCODES["HA"])
 
 
 class SuperimposeMasked(instruction.GeneralMasked):
@@ -515,7 +528,7 @@ class SuperimposeMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="SM",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["SM"])
+                                           opcode=OPCODES["SM"])
 
 
 class SuperimposeUnmasked(instruction.GeneralUnmasked):
@@ -523,8 +536,9 @@ class SuperimposeUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SM",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SM"])
+                                             opcode=OPCODES["SM"])
 
 
 class CheckParityMasked(instruction.GeneralMasked):
@@ -533,7 +547,7 @@ class CheckParityMasked(instruction.GeneralMasked):
         instruction.GeneralMasked.__init__(self, mnemonic="CP",
                                            sequence=sequence,
                                            mask=mask,
-                                           opcode=BIT7_1+BASE_OPCODES["CP"])
+                                           opcode=OPCODES["CP"])
 
 
 class CheckParityUnmasked(instruction.GeneralUnmasked):
@@ -541,8 +555,9 @@ class CheckParityUnmasked(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="CP",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["CP"])
+                                             opcode=OPCODES["CP"])
 
 
 # General, unmasked.
@@ -552,8 +567,9 @@ class BinaryMultiply(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="BM",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_00+BASE_OPCODES["BM"])
+                                             opcode=OPCODES["BM"])
 
 
 class DecimalMultiply(instruction.GeneralUnmasked):
@@ -561,8 +577,9 @@ class DecimalMultiply(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="DM",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_00+BASE_OPCODES["DM"])
+                                             opcode=OPCODES["DM"])
 
 
 class BinaryAccumulate(instruction.GeneralUnmasked):
@@ -570,8 +587,9 @@ class BinaryAccumulate(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="BT",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["BT"])
+                                             opcode=OPCODES["BT"])
 
 
 class DecimalAccumulate(instruction.GeneralUnmasked):
@@ -579,8 +597,9 @@ class DecimalAccumulate(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="DT",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["DT"])
+                                             opcode=OPCODES["DT"])
 
 
 class MultipleTransfer(instruction.GeneralUnmasked):
@@ -588,8 +607,9 @@ class MultipleTransfer(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="MT",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_00+BASE_OPCODES["MT"])
+                                             opcode=OPCODES["MT"])
 
 
 class TransferNWords(instruction.GeneralUnmasked):
@@ -597,8 +617,9 @@ class TransferNWords(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="TN",
                                              sequence=sequence,
+                                             bits23=0b01,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_01+BASE_OPCODES["TN"])
+                                             opcode=OPCODES["TN"])
 
 
 class ComputeOrthocount(instruction.GeneralUnmasked):
@@ -606,8 +627,9 @@ class ComputeOrthocount(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="CC",
                                              sequence=sequence,
+                                             bits23=0b01,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_01+BASE_OPCODES["CC"])
+                                             opcode=OPCODES["CC"])
 
 
 class ItemTransfer(instruction.GeneralUnmasked):
@@ -615,8 +637,9 @@ class ItemTransfer(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="IT",
                                              sequence=sequence,
+                                             bits23=0b01,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_01+BASE_OPCODES["IT"])
+                                             opcode=OPCODES["IT"])
 
 
 class ExtendedBinaryAdd(instruction.GeneralUnmasked):
@@ -624,8 +647,9 @@ class ExtendedBinaryAdd(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="EBA",
                                              sequence=sequence,
+                                             bits23=0b11,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_11+BASE_OPCODES["EBA"])
+                                             opcode=OPCODES["EBA"])
 
 
 class ExtendedBinarySubtract(instruction.GeneralUnmasked):
@@ -633,8 +657,9 @@ class ExtendedBinarySubtract(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="EBS",
                                              sequence=sequence,
+                                             bits23=0b11,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_11+BASE_OPCODES["EBS"])
+                                             opcode=OPCODES["EBS"])
 
 
 class RecordTransfer(instruction.GeneralUnmasked):
@@ -642,8 +667,9 @@ class RecordTransfer(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="RT",
                                              sequence=sequence,
+                                             bits23=0b11,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_11+BASE_OPCODES["RT"])
+                                             opcode=OPCODES["RT"])
 
 
 class ControlProgram(instruction.GeneralUnmasked):
@@ -651,8 +677,9 @@ class ControlProgram(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="MPC",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["MPC"])
+                                             opcode=OPCODES["MPC"])
 
 
 class Proceed(instruction.GeneralUnmasked):
@@ -660,8 +687,9 @@ class Proceed(instruction.GeneralUnmasked):
     def __init__(self):
         instruction.GeneralUnmasked.__init__(self, mnemonic="PR",
                                              sequence=0,
+                                             bits23=0b00,
                                              a=0, b=0, c=0,
-                                             opcode=BITS23_00+BASE_OPCODES["PR"])
+                                             opcode=OPCODES["PR"])
 
 
 # # Inherent mask.
@@ -671,8 +699,9 @@ class ShiftWordAndSubstitute(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SWS",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SWS"])
+                                             opcode=OPCODES["SWS"])
 
 
 class ShiftPreservingSignAndSubstitute(instruction.GeneralUnmasked):
@@ -680,8 +709,9 @@ class ShiftPreservingSignAndSubstitute(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SPS",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SPS"])
+                                             opcode=OPCODES["SPS"])
 
 
 class ShiftWordAndExtract(instruction.GeneralUnmasked):
@@ -689,8 +719,9 @@ class ShiftWordAndExtract(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SWE",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SWE"])
+                                             opcode=OPCODES["SWE"])
 
 
 class ShiftPreservingSignAndExtract(instruction.GeneralUnmasked):
@@ -698,8 +729,9 @@ class ShiftPreservingSignAndExtract(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SPE",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SPE"])
+                                             opcode=OPCODES["SPE"])
 
 
 class ShiftAndSelect(instruction.GeneralUnmasked):
@@ -707,8 +739,9 @@ class ShiftAndSelect(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SSL",
                                              sequence=sequence,
+                                             bits23=0b10,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_10+BASE_OPCODES["SSL"])
+                                             opcode=OPCODES["SSL"])
 
 
 class Substitute(instruction.GeneralUnmasked):
@@ -716,8 +749,9 @@ class Substitute(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="SS",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_00+BASE_OPCODES["SS"])
+                                             opcode=OPCODES["SS"])
 
 
 class Extract(instruction.GeneralUnmasked):
@@ -725,8 +759,9 @@ class Extract(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="EX",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BITS23_00+BASE_OPCODES["EX"])
+                                             opcode=OPCODES["EX"])
 
 
 # Peripheral and print.
@@ -736,7 +771,7 @@ class ReadForward(instruction.Peripheral):
     def __init__(self, paddr):
         instruction.Peripheral.__init__(self, mnemonic="RF",
                                         paddr=paddr,
-                                        opcode=BIT7_1+BASE_OPCODES["RF"])
+                                        opcode=OPCODES["RF"])
 
 
 class ReadBackward(instruction.Peripheral):
@@ -744,7 +779,7 @@ class ReadBackward(instruction.Peripheral):
     def __init__(self, paddr):
         instruction.Peripheral.__init__(self, mnemonic="RB",
                                         paddr=paddr,
-                                        opcode=BIT7_1+BASE_OPCODES["RB"])
+                                        opcode=OPCODES["RB"])
 
 
 class WriteForward(instruction.Peripheral):
@@ -752,7 +787,7 @@ class WriteForward(instruction.Peripheral):
     def __init__(self, paddr):
         instruction.Peripheral.__init__(self, mnemonic="WF",
                                         paddr=paddr,
-                                        opcode=BIT7_1+BASE_OPCODES["WF"])
+                                        opcode=OPCODES["WF"])
 
 
 class Rewind(instruction.Peripheral):
@@ -760,7 +795,7 @@ class Rewind(instruction.Peripheral):
     def __init__(self, paddr):
         instruction.Peripheral.__init__(self, mnemonic="RW",
                                         paddr=paddr,
-                                        opcode=BIT7_1+BASE_OPCODES["RW"])
+                                        opcode=OPCODES["RW"])
 
 
 class PrintAlphabetic(instruction.GeneralUnmasked):
@@ -768,8 +803,10 @@ class PrintAlphabetic(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="PRA",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BIT7_1+BASE_OPCODES["PRA"])
+                                             bit7=1,
+                                             opcode=OPCODES["PRA"])
 
 
 class PrintDecimal(instruction.GeneralUnmasked):
@@ -777,8 +814,10 @@ class PrintDecimal(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="PRD",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BIT7_1+BASE_OPCODES["PRD"])
+                                             bit7=1,
+                                             opcode=OPCODES["PRD"])
 
 
 class PrintOctal(instruction.GeneralUnmasked):
@@ -786,8 +825,10 @@ class PrintOctal(instruction.GeneralUnmasked):
     def __init__(self, sequence, a, b, c):
         instruction.GeneralUnmasked.__init__(self, mnemonic="PRO",
                                              sequence=sequence,
+                                             bits23=0b00,
                                              a=a, b=b, c=c,
-                                             opcode=BIT7_1+BASE_OPCODES["PRO"])
+                                             bit7=1,
+                                             opcode=OPCODES["PRO"])
 
 
 # Simulator.
@@ -797,7 +838,7 @@ class Simulator(instruction.Simulator):
     def __init__(self, sequence):
         instruction.Simulator.__init__(self, mnemonic="S",
                                        sequence=sequence,
-                                       opcode=BASE_OPCODES["S"])
+                                       opcode=OPCODES["S"])
 
 
 # Scientific.
@@ -807,8 +848,9 @@ class FloatingBinaryAdd(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBA",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FBA"])
+                                        opcode=OPCODES["FBA"])
 
 
 class FloatingDecimalAdd(instruction.Scientific):
@@ -816,8 +858,9 @@ class FloatingDecimalAdd(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDA",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FDA"])
+                                        opcode=OPCODES["FDA"])
 
 
 class FloatingBinarySubtract(instruction.Scientific):
@@ -825,8 +868,9 @@ class FloatingBinarySubtract(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBS",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FBS"])
+                                        opcode=OPCODES["FBS"])
 
 
 class FloatingDecimalSubtract(instruction.Scientific):
@@ -834,8 +878,9 @@ class FloatingDecimalSubtract(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDS",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FDS"])
+                                        opcode=OPCODES["FDS"])
 
 
 class FloatingBinaryDivide(instruction.Scientific):
@@ -843,8 +888,9 @@ class FloatingBinaryDivide(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBD",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FBD"])
+                                        opcode=OPCODES["FBD"])
 
 
 class FloatingDecimalDivide(instruction.Scientific):
@@ -852,8 +898,9 @@ class FloatingDecimalDivide(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDD",
                                         sequence=sequence,
+                                        bits23=0b01,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_01+BASE_OPCODES["FDD"])
+                                        opcode=OPCODES["FDD"])
 
 
 class FloatingBinaryAddUnnormalized(instruction.Scientific):
@@ -861,8 +908,9 @@ class FloatingBinaryAddUnnormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBAU",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FBAU"])
+                                        opcode=OPCODES["FBAU"])
 
 
 class FloatingDecimalAddUnnormalized(instruction.Scientific):
@@ -870,8 +918,9 @@ class FloatingDecimalAddUnnormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDAU",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FDAU"])
+                                        opcode=OPCODES["FDAU"])
 
 
 class FloatingBinarySubtractUnnormalized(instruction.Scientific):
@@ -879,8 +928,9 @@ class FloatingBinarySubtractUnnormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBSU",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FBSU"])
+                                        opcode=OPCODES["FBSU"])
 
 
 class FloatingDecimalSubtractUnnormalized(instruction.Scientific):
@@ -888,8 +938,9 @@ class FloatingDecimalSubtractUnnormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDSU",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FDSU"])
+                                        opcode=OPCODES["FDSU"])
 
 
 class FloatingBinaryMultiply(instruction.Scientific):
@@ -897,8 +948,9 @@ class FloatingBinaryMultiply(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBM",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FBM"])
+                                        opcode=OPCODES["FBM"])
 
 
 class FloatingDecimalMultiply(instruction.Scientific):
@@ -906,8 +958,9 @@ class FloatingDecimalMultiply(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FDM",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["FDM"])
+                                        opcode=OPCODES["FDM"])
 
 
 class MultipleUnload(instruction.Scientific):
@@ -915,8 +968,9 @@ class MultipleUnload(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="ULD",
                                         sequence=sequence,
+                                        bits23=0b11,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_11+BASE_OPCODES["ULD"])
+                                        opcode=OPCODES["ULD"])
 
 
 class FloatingBinaryAddExtendedPrecision(instruction.Scientific):
@@ -924,8 +978,9 @@ class FloatingBinaryAddExtendedPrecision(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBAE",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["FBAE"])
+                                        opcode=OPCODES["FBAE"])
 
 
 class FloatingBinarySubtractExtendedPrecision(instruction.Scientific):
@@ -933,8 +988,9 @@ class FloatingBinarySubtractExtendedPrecision(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FBSE",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["FBSE"])
+                                        opcode=OPCODES["FBSE"])
 
 
 class FixedBinaryDivide(instruction.Scientific):
@@ -942,8 +998,9 @@ class FixedBinaryDivide(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="BD",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["BD"])
+                                        opcode=OPCODES["BD"])
 
 
 class FixedDecimalDivide(instruction.Scientific):
@@ -951,8 +1008,9 @@ class FixedDecimalDivide(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="DD",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["DD"])
+                                        opcode=OPCODES["DD"])
 
 
 class FixedToFloatingNormalize(instruction.Scientific):
@@ -960,8 +1018,9 @@ class FixedToFloatingNormalize(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FFN",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["FFN"])
+                                        opcode=OPCODES["FFN"])
 
 
 class Conversion(instruction.Scientific):
@@ -969,8 +1028,9 @@ class Conversion(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FCON",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["FCON"])
+                                        opcode=OPCODES["FCON"])
 
 
 class FloatingLessThanNormalized(instruction.Scientific):
@@ -978,8 +1038,9 @@ class FloatingLessThanNormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FLN",
                                         sequence=sequence,
+                                        bits23=0b00,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_00+BASE_OPCODES["FLN"])
+                                        opcode=OPCODES["FLN"])
 
 
 class FloatingNotEqualNormalized(instruction.Scientific):
@@ -987,8 +1048,9 @@ class FloatingNotEqualNormalized(instruction.Scientific):
     def __init__(self, sequence, a, b, c):
         instruction.Scientific.__init__(self, mnemonic="FNN",
                                         sequence=sequence,
+                                        bits23=0b10,
                                         a=a, b=b, c=c,
-                                        opcode=BITS23_10+BASE_OPCODES["FNN"])
+                                        opcode=OPCODES["FNN"])
 
 
 # Control Instructions.
