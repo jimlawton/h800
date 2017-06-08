@@ -222,9 +222,9 @@ EXTENDED_INSTRUCTIONS = {
     "CSCON": 0,                     # Turn On Programs, Use Cosequence Counters
     "DOFF":  0,                     # Turn Off Programs
     "DON":   0,                     # Turn On Programs
-    "PRA":   0o06,                  # Print Alphanumeric
-    "PRD":   0o06,                  # Print Decimal
-    "PRO":   0o06,                  # Print Octal
+    # "PRA":   0o06,                  # Print Alphanumeric
+    # "PRD":   0o06,                  # Print Decimal
+    # "PRO":   0o06,                  # Print Octal
     "SCON":  0,                     # Turn On Programs, Use Sequence Counters
     "SPCR":  0,                     # Save PCR
     "STOP":  0,                     # Stop Current Program
