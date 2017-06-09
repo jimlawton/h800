@@ -141,21 +141,21 @@ OPCODES = {
     # "*" in the mnemonic is used as an internal representation of masked instructions.
 
     # General, masked or unmasked.
-    "BA":   Opcode("BA", "BinaryAdd", 0b10, 0b1, 0o11, True),
-    "DA":   Opcode("DA", "DecimalAdd", 0b10, 0b1, 0o01, True),
-    "WA":   Opcode("WA", "WordAdd", 0b10, 0b1, 0o15, True),
-    "BS":   Opcode("BS", "BinarySubtract", 0b10, 0b1, 0o31, True),
-    "DS":   Opcode("DS", "DecimalSubtract", 0b10, 0b1, 0o21, True),
-    "WD":   Opcode("WD", "WordDifference", 0b10, 0b1, 0o35, True),
-    "NA":   Opcode("NA", "NotEqualAlphabetic", 0b10, 0b1, 0o14, True),
-    "NN":   Opcode("NN", "NotEqualNumeric", 0b10, 0b1, 0o10, True),
-    "LA":   Opcode("LA", "LessThanOrEqualAlphabetic", 0b10, 0b1, 0o34, True),
-    "LN":   Opcode("LN", "LessThanOrEqualNumeric", 0b10, 0b1, 0o30, True),
-    "TX":   Opcode("TX", "Transfer", 0b10, 0b1, 0o20, True),
-    "TS":   Opcode("TS", "TransferAndChangeSequence", 0b10, 0b1, 0o04, True),
-    "HA":   Opcode("HA", "HalfAdd", 0b10, 0b1, 0o25, True),
-    "SM":   Opcode("SM", "Superimpose", 0b10, 0b1, 0o05, True),
-    "CP":   Opcode("CP", "CheckParity", 0b10, 0b1, 0o24, True),
+    "BA":   Opcode("BA", "BinaryAdd", 0b10, 0b1, 0o11, "maskable"),
+    "DA":   Opcode("DA", "DecimalAdd", 0b10, 0b1, 0o01, "maskable"),
+    "WA":   Opcode("WA", "WordAdd", 0b10, 0b1, 0o15, "maskable"),
+    "BS":   Opcode("BS", "BinarySubtract", 0b10, 0b1, 0o31, "maskable"),
+    "DS":   Opcode("DS", "DecimalSubtract", 0b10, 0b1, 0o21, "maskable"),
+    "WD":   Opcode("WD", "WordDifference", 0b10, 0b1, 0o35, "maskable"),
+    "NA":   Opcode("NA", "NotEqualAlphabetic", 0b10, 0b1, 0o14, "maskable"),
+    "NN":   Opcode("NN", "NotEqualNumeric", 0b10, 0b1, 0o10, "maskable"),
+    "LA":   Opcode("LA", "LessThanOrEqualAlphabetic", 0b10, 0b1, 0o34, "maskable"),
+    "LN":   Opcode("LN", "LessThanOrEqualNumeric", 0b10, 0b1, 0o30, "maskable"),
+    "TX":   Opcode("TX", "Transfer", 0b10, 0b1, 0o20, "maskable"),
+    "TS":   Opcode("TS", "TransferAndChangeSequence", 0b10, 0b1, 0o04, "maskable"),
+    "HA":   Opcode("HA", "HalfAdd", 0b10, 0b1, 0o25, "maskable"),
+    "SM":   Opcode("SM", "Superimpose", 0b10, 0b1, 0o05, "maskable"),
+    "CP":   Opcode("CP", "CheckParity", 0b10, 0b1, 0o24, "maskable"),
 
     # General, unmasked.
     "BM":   Opcode("BM", "BinaryMultiply", 0b00, 0b0, 0o13),
@@ -182,16 +182,16 @@ OPCODES = {
     "EX":   Opcode("EX", "Extract", 0b00, 0b0, 0o16),
 
     # Peripheral and print.
-    "RF":   Opcode("RF", "ReadForward", None, 0b1, 0o32),
-    "RB":   Opcode("RB", "ReadBackward", None, 0b1, 0o12),
-    "WF":   Opcode("WF", "WriteForward", None, 0b1, 0o16),
-    "RW":   Opcode("RW", "Rewind", None, 0b1, 0o02),
-    "PRA":  Opcode("PRA", "PrintAlphabetic", None, 0b1, 0o06),
-    "PRD":  Opcode("PRD", "PrintDecimal", None, 0b1, 0o06),
-    "PRO":  Opcode("PRO", "PrintOctal", None, 0b1, 0o06),
+    "RF":   Opcode("RF", "ReadForward", None, 0b1, 0o32, "peripheral"),
+    "RB":   Opcode("RB", "ReadBackward", None, 0b1, 0o12, "peripheral"),
+    "WF":   Opcode("WF", "WriteForward", None, 0b1, 0o16, "peripheral"),
+    "RW":   Opcode("RW", "Rewind", None, 0b1, 0o02, "peripheral"),
+    "PRA":  Opcode("PRA", "PrintAlphabetic", None, 0b1, 0o06, "print"),
+    "PRD":  Opcode("PRD", "PrintDecimal", None, 0b1, 0o06, "print"),
+    "PRO":  Opcode("PRO", "PrintOctal", None, 0b1, 0o06, "print"),
 
     # Simulator.
-    "S":    Opcode("S", "Simulator", None, None, 0o07),
+    "S":    Opcode("S", "Simulator", None, None, 0o07, "simulator"),
 
     # Scientific.
     "FBA":  Opcode("FBA", "FloatingBinaryAdd", 0b01, 0b0, 0o01),
