@@ -82,58 +82,84 @@ class Instruction(object):
         self._bits23 = opcode.b23           # Bits 2,3.
         self._bit7 = opcode.b7              # Bit 7 (1 for masked, 0 for unmasked).
         self._op = opcode.op                # Opcode binary.
-        self._maskable = opcode.maskable    # Is the instruction maskable?
+        self._type = opcode.type            # Instruction type.
         self.data = BitField(0, width=12,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
-        if sequence is not None:
-            if paddr:
-                raise ValueError("Conflicting arguments!")
-            if sequence not in (0, 1, True, False):
-                raise ValueError("Sequence must be boolean!")
-            self.data[1] = sequence
-        if mask is not None:
-            if not self._maskable:
-                raise ValueError("Mask supplied to an instruction that is not maskable!")
-            if a is not None or b is not None or c is not None or paddr is not None:
-                raise ValueError("Conflicting arguments!")
-            if mask < 0 or mask > 31:
-                raise ValueError("Mask must be in the range 0..31!")
-            self.data[2:6] = mask
+        self._check()
+        print "1 0%04o" % self.data
+        if self._sequence is not None:
+            print "*** setting sequence to %d" % self._sequence
+            self.data[1] = self._sequence
+        print "2 0%04o" % self.data
+        if self._type in ("maskable", "peripheral", "print"):
             if self._bit7 is not None:
-                self.data[7] = (self._bit7 & 1)
+                print "*** setting bit7 to %d" % self._bit7
+                self.data[7] = self._bit7
+        print "3 0%04o" % self.data
+        if self._mask is not None:
+            print "*** setting mask to 0o%05o" % self._mask
+            self.data[2:6] = self._mask
         else:
             if self._bits23 is not None:
-                self.data[2:3] = (self._bits23 & 3)
-            if not self._maskable:
-                if self._bit7 is not None:
-                    self.data[7] = (self._bit7 & 1)
-        if a is not None:
-            if a not in (0, 1, True, False):
-                raise ValueError("A must be boolean!")
-            self._a = 1 if a else 0
-            self.data[4] = self._a
+                print "*** setting bits 2,3 to %d" % self._bits23
+                self.data[2:3] = self._bits23
+        print "4 0%04o" % self.data
+        if self._a is not None:
+            print "*** a: %d" % 1 if self._a else 0
+            self.data[4] = 1 if self._a else 0
+        print "5 0%04o" % self.data
         if b is not None:
-            if b not in (0, 1, True, False):
-                raise ValueError("B must be boolean!")
-            self._b = 1 if b else 0
-            self.data[5] = self._b
+            print "*** b: %d" % 1 if self._b else 0
+            self.data[5] = 1 if self._b else 0
+        print "6 0%04o" % self.data
         if c is not None:
-            if c not in (0, 1, True, False):
-                raise ValueError("C must be boolean!")
-            self._c = 1 if c else 0
-            self.data[6] = self._c
+            print "*** c: %d" % 1 if self._c else 0
+            self.data[6] = 1 if self._c else 0
+        print "7 0%04o" % self.data
         if paddr is not None:
-            if sequence is not None or mask is not None or a is not None or b is not None or c is not None:
-                raise ValueError("Conflicting arguments!")
-            if paddr < 0 or paddr > 63:
-                raise ValueError("Peripheral address must be in the range 0..63!")
             self.data[1:6] = self._paddr
-            if self._bit7 is not None:
-                self.data[7] = (self._bit7 & 1)
+            print "*** paddr: %d" % self._paddr
+        print "8 0%04o" % self.data
+        self.data[8:12] = self._op
+        print "9 0%04o" % self.data
+
+    def _check(self):
+        "Check the instruction for correctness."
+        if self._sequence is not None:
+            if self._paddr:
+                raise ValueError("Cannot specify sequence and peripheral address!")
+            if self._sequence not in (0, 1, True, False):
+                raise ValueError("Sequence must be boolean!")
+        if self._mask is not None:
+            if self._type != "maskable":
+                raise ValueError("Mask supplied to an instruction that is not maskable!")
+            if self._a is not None or self._b is not None or self._c is not None or self._paddr is not None:
+                raise ValueError("Cannot specify A, B, C, or peripheral address with mask!")
+            if mask < 0 or mask > 31:
+                raise ValueError("Mask must be in the range 0..31!")
+        if self._a is not None:
+            if self._a not in (0, 1, True, False):
+                raise ValueError("A must be boolean!")
+        if self._b is not None:
+            if self._b not in (0, 1, True, False):
+                raise ValueError("B must be boolean!")
+        if self._c is not None:
+            if self._c not in (0, 1, True, False):
+                raise ValueError("C must be boolean!")
+        if self._paddr is not None:
+            if self._sequence is not None or self._mask is not None or self._a is not None or self._b is not None or self._c is not None:
+                raise ValueError("Cannot specify sequence, mask, A, B, or C with peripheral address!")
+            if self._paddr < 0 or self._paddr > 63:
+                raise ValueError("Peripheral address must be in the range 0..63!")
+        if self._bit7 is not None:
+            if self._bit7 < 0 or self._bit7 > 1:
+                raise ValueError("Bit 7 must be in the range 0..1!")
+        if self._bits23 is not None:
+            if self._bits23 < 0 or self._bits23 > 3:
+                raise ValueError("Bits 2-3 must be in the range 0..3!")
         if self._op < 0 or self._op > 31:
             raise ValueError("Opcode must be in the range 0..31!")
-        self.data[8:12] = self._op & 31
 
     @property
     def value(self):
