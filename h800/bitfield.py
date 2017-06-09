@@ -269,9 +269,13 @@ class BitField(object):
         rend = self._index(end)
         return (rstart, rend)
 
-    def _checkValue(self, value):
-        if value > self.maxval:
-            raise ValueError("Value is greater than allowed for %d-bit field!" % self.width)
+    def _checkValue(self, value, width=None):
+        if width is None:
+            width = self.width
+        if width < 0 or width > self.maxval:
+            raise ValueError("Illegal bit-field width %d!" % self.width)
+        if value > 2 ** width:
+            raise ValueError("Value is greater than allowed for %d-bit field!" % width)
 
     def _bitmask(self, start, end):
         self._checkRange(start, end)
