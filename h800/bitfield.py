@@ -189,12 +189,14 @@ class BitField(object):
     # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_1    I - 1
     # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_0    N - (I + 1)
     # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_1    N - I
-    def _index(self, index):
+    def _index(self, index, width=None):
+        if width is None:
+            width = self._width
         if self._order == self.BIT_ORDER_MSB_LEFT:
             if self._numbering == self.BIT_SCHEME_LSB_0:
-                return self._width - (index + 1)
+                return width - (index + 1)
             elif self._numbering == self.BIT_SCHEME_LSB_1:
-                return self._width - index
+                return width - index
             elif self._numbering == self.BIT_SCHEME_MSB_0:
                 return index
             elif self._numbering == self.BIT_SCHEME_MSB_1:
@@ -205,9 +207,9 @@ class BitField(object):
             elif self._numbering == self.BIT_SCHEME_LSB_1:
                 return index - 1
             elif self._numbering == self.BIT_SCHEME_MSB_0:
-                return self._width - (index + 1)
+                return width - (index + 1)
             elif self._numbering == self.BIT_SCHEME_MSB_1:
-                return self._width - index
+                return width - index
 
     def _shift(self, index):
         # Given a bit index, return the shift required to get it to the zeroth
