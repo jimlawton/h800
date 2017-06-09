@@ -282,6 +282,13 @@ class BitField(object):
         rstart, rend = self._getRange(start, end)
         return 2L ** (rend - rstart + 1) - 1
 
+    def _getBitValue(self, index, value, width):
+        "Get the value of the specified bit index in the supplied value."
+        self._checkValue(value, width=width)
+        rindex = self._index(index, width=width)
+        shift = self._shift(rindex)
+        return (value >> shift) & 1L
+
     def __getitem__(self, key):
         if isinstance(key, slice):
             start = key.start
