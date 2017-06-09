@@ -2447,4 +2447,19 @@ def test_OCT_args_range():
 def test_machine_instructions():
     # Generate all possible instruction codes and look for duplicates.
     opcodes = []
+    # for mnemonic in OPCODES:
+    #     o = OPCODES[mnemonic]
+    #     if o.maskable:
+    #         for i in range(2):
+    #             for j in range(32):
+    #                 opcode = make_masked_opcode(mnemonic, i, j)
+    #                 assert opcode not in opcodes
+    #                 opcodes.append(opcode)
+    #     for i in range(2):
+    #         for j in range(2):
+    #             for k in range(2):
+    #                 for l in range(2):
+    #                     opcode = make_unmasked_opcode(mnemonic, i, j, k, l)
+    #                     assert opcode not in opcodes
+    #                     opcodes.append(opcode)
     #run_tests("TEST: machine instructions check", testdata)
