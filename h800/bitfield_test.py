@@ -300,3 +300,22 @@ def test_msb_left_msb1_12bit():
         my_assert(b.value, good)
     b.clear()
     my_assert(b.value, 0)
+
+
+def test_misc_12bit():
+    b = BitField(0, width=12, numbering=BitField.BIT_SCHEME_MSB_1,
+                 order=BitField.BIT_ORDER_MSB_LEFT)
+    print "TEST: check initial value"
+    my_assert(b.value, 0)
+    print "TEST: set bit 1"
+    b[1] = 1
+    my_assert(b.value, 2 ** 11)
+    print "TEST: set bit 7"
+    b[7] = 1
+    my_assert(b.value, 2 ** 11 + 2 ** 5)
+    print "TEST: clear bits 1:6"
+    b[1:6] = 0
+    my_assert(b.value, 2 ** 5)
+    print "TEST: set bits 8:12 to 00101"
+    b[8:12] = 5
+    my_assert(b.value, 2 ** 5 + 5)
