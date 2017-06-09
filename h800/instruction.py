@@ -68,62 +68,72 @@ from word import Word
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, mnemonic, sequence=None, bits23=0, mask=None,
-                 a=0, b=0, c=0, paddr=None, bit7=0, opcode=0,
-                 pseudo=False):
-        self._mnemonic = mnemonic       # Mnemonic string.
-        self._sequence = sequence       # Sequence/cosequence code.
-        self._bits23 = bits23           # Bits 2,3.
-        self._mask = mask               # Mask.
-        self._a = a                     # A register active.
-        self._b = b                     # B register active.
-        self._c = c                     # C register active.
-        self._paddr = paddr             # Peripheral address (6 bits).
-        self._bit7 = bit7               # Bit 7 (1 for masked, 0 for unmasked).
-        self._opcode = opcode           # Opcode binary.
-        self._pseudo = pseudo           # Pseudo-instructions generate no code.
+    def __init__(self, opcode, sequence=None, mask=None, a=None, b=None, c=None, paddr=None, pseudo=False):
+        print "opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" % (opcode, sequence, mask, a, b, c, paddr)
+        self._opcode = opcode               # Opcode object.
+        self._sequence = sequence           # Sequence/cosequence code.
+        self._mask = mask                   # Mask.
+        self._a = a                         # A register active.
+        self._b = b                         # B register active.
+        self._c = c                         # C register active.
+        self._paddr = paddr                 # Peripheral address (6 bits).
+        self._pseudo = pseudo               # Pseudo-instructions generate no code.
+        self._mnemonic = opcode.m           # Mnemonic string.
+        self._bits23 = opcode.b23           # Bits 2,3.
+        self._bit7 = opcode.b7              # Bit 7 (1 for masked, 0 for unmasked).
+        self._op = opcode.op                # Opcode binary.
+        self._maskable = opcode.maskable    # Is the instruction maskable?
         self.data = BitField(0, width=12,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
-        if sequence:
+        if sequence is not None:
             if paddr:
                 raise ValueError("Conflicting arguments!")
             if sequence not in (0, 1, True, False):
                 raise ValueError("Sequence must be boolean!")
             self.data[1] = sequence
-        if mask:
-            if a or b or c or paddr:
+        if mask is not None:
+            if not self._maskable:
+                raise ValueError("Mask supplied to an instruction that is not maskable!")
+            if a is not None or b is not None or c is not None or paddr is not None:
                 raise ValueError("Conflicting arguments!")
             if mask < 0 or mask > 31:
                 raise ValueError("Mask must be in the range 0..31!")
             self.data[2:6] = mask
+            if self._bit7 is not None:
+                self.data[7] = (self._bit7 & 1)
         else:
-            self.data[2:3] = bits23 & 3
-        if a:
+            if self._bits23 is not None:
+                self.data[2:3] = (self._bits23 & 3)
+            if not self._maskable:
+                if self._bit7 is not None:
+                    self.data[7] = (self._bit7 & 1)
+        if a is not None:
             if a not in (0, 1, True, False):
                 raise ValueError("A must be boolean!")
             self._a = 1 if a else 0
             self.data[4] = self._a
-        if b:
+        if b is not None:
             if b not in (0, 1, True, False):
                 raise ValueError("B must be boolean!")
             self._b = 1 if b else 0
             self.data[5] = self._b
-        if c:
+        if c is not None:
             if c not in (0, 1, True, False):
                 raise ValueError("C must be boolean!")
             self._c = 1 if c else 0
             self.data[6] = self._c
-        if paddr:
-            if sequence or mask or a or b or c:
+        if paddr is not None:
+            if sequence is not None or mask is not None or a is not None or b is not None or c is not None:
                 raise ValueError("Conflicting arguments!")
             if paddr < 0 or paddr > 63:
                 raise ValueError("Peripheral address must be in the range 0..63!")
             self.data[1:6] = self._paddr
-        self.data[7] = bit7 & 1
-        if opcode < 0 or opcode > 31:
+            if self._bit7 is not None:
+                self.data[7] = (self._bit7 & 1)
+        if self._op < 0 or self._op > 31:
             raise ValueError("Opcode must be in the range 0..31!")
-        self.data[8:12] = opcode & 31
+        self.data[8:12] = self._op & 31
 
     @property
     def value(self):
@@ -133,31 +143,31 @@ class Instruction(object):
 
 class GeneralMasked(Instruction):
     """General masked instruction class."""
-    def __init__(self, mnemonic, sequence, mask, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, mask=mask, bit7=1, opcode=opcode)
+    def __init__(self, opcode, sequence, mask):
+        Instruction.__init__(self, opcode=opcode, sequence=sequence, mask=mask)
 
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
-    def __init__(self, mnemonic, sequence, a, b, c, opcode, bits23=0, bit7=0):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, bits23=bits23, a=a, b=b, c=c, bit7=bit7, opcode=opcode)
+    def __init__(self, opcode, sequence, a, b, c):
+        Instruction.__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
 
 
 class Peripheral(Instruction):
     """Peripheral instruction class."""
-    def __init__(self, mnemonic, paddr, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, paddr=paddr, bit7=1, opcode=opcode)
+    def __init__(self, opcode, paddr):
+        Instruction.__init__(self, opcode=opcode, paddr=paddr)
 
 
 class Simulator(Instruction):
     """Simulator instruction class."""
-    def __init__(self, mnemonic, sequence, opcode):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, opcode=opcode)
+    def __init__(self, opcode, sequence):
+        Instruction.__init__(self, opcode=opcode, sequence=sequence)
 
 
 class Scientific(Instruction):
     """Scientific instruction class."""
-    def __init__(self, mnemonic, sequence, a, b, c, opcode, bits23=0):
-        Instruction.__init__(self, mnemonic=mnemonic, sequence=sequence, bits23=bits23, a=a, b=b, c=c, opcode=opcode)
+    def __init__(self, opcode, sequence, a, b, c):
+        Instruction.__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
 
 
 class Constant(Word):
