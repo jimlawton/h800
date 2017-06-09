@@ -229,3 +229,74 @@ def test_msb_left_msb1_48bit():
     print "TEST: set value to all zeros using clear"
     b.clear()
     my_assert(b.value, 0)
+
+
+def test_msb_left_msb1_12bit():
+    b = BitField(0, width=12, numbering=BitField.BIT_SCHEME_MSB_1,
+                 order=BitField.BIT_ORDER_MSB_LEFT)
+    print "TEST: check initial value"
+    my_assert(b.value, 0)
+    print "TEST: check maxval"
+    my_assert(b.maxval, 4095)
+    print "TEST: check width"
+    my_assert(b.width, 12)
+    print "TEST: check length"
+    my_assert(len(b), 12)
+    print "TEST: set slice [9:12] = 15"
+    b[9:12] = 0b1111
+    my_assert(b.value, 15)
+    print "TEST: set value to zero"
+    b[1:12] = 0
+    my_assert(b.value, 0)
+    print "TEST: set value to all ones using slice"
+    b[1:12] = b.maxval
+    my_assert(b.value, 4095)
+    print "TEST: set value to all zeros using slice"
+    b[1:12] = 0
+    my_assert(b.value, 0)
+    print "TEST: set value to all ones using set"
+    b.set()
+    my_assert(b.value, 4095)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    my_assert(b.value, 0)
+    print "TEST: set high 6 bits to test-pattern"
+    b[1:6] = 0b101010
+    my_assert(b.value, 2688)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    my_assert(b.value, 0)
+    print "TEST: set low 6 bits to test-pattern"
+    b[7:12] = 0b101010
+    my_assert(b.value, 42)
+    print "TEST: set value to all zeros using clear"
+    b.clear()
+    my_assert(b.value, 0)
+    print "TEST: ripple a one right"
+    for i in range(12):
+        b.set(i + 1)
+        my_assert(b.value, 2 ** (12 - i - 1))
+        b.clear(i + 1)
+        my_assert(b.value, 0)
+    print "TEST: ripple a one left"
+    for i in range(12):
+        b.set(12 - i)
+        my_assert(b.value, 2 ** i)
+        b.clear(12 - i)
+        my_assert(b.value, 0)
+    print "TEST: shift a one right, filling"
+    good = 0
+    for i in range(12):
+        b.set(i + 1)
+        good += 2 ** (12 - i - 1)
+        my_assert(b.value, good)
+    b.clear()
+    my_assert(b.value, 0)
+    print "TEST: shift a one left, filling"
+    good = 0
+    for i in range(12):
+        b.set(12 - i)
+        good += 2 ** i
+        my_assert(b.value, good)
+    b.clear()
+    my_assert(b.value, 0)
