@@ -101,6 +101,7 @@ from collections import namedtuple
 import instruction
 
 
+# A version of namedtuple that takes a list of default values and applies them.
 def namedtuple_defaults(typename, field_names, default_values=()):
     T = namedtuple(typename, field_names)
     T.__new__.__defaults__ = (None,) * len(T._fields)
@@ -120,8 +121,16 @@ def namedtuple_defaults(typename, field_names, default_values=()):
 #   b23: bits 2-3 (00 - 11)
 #   b7: bit 7 (0, 1)
 #   op: bits 8-12 (00000 - 11111)
+#   type: the instruction type, one of
+#     None: general unmasked or scientific instructions.
+#     "maskable": maskable instructions.
+#     "peripheral": peripheral instructions.
+#     "print": print instructions.
+#     "simulator": simulator instruction.
 #
-Opcode = namedtuple_defaults('Opcode', ['m', 'c', 'b23', 'b7', 'op', 'maskable'], (None, None, None, None, None, False))
+Opcode = namedtuple_defaults('Opcode',
+                             ['m', 'c', 'b23', 'b7', 'op', 'type'],
+                             (None, None, None, None, None, None))
 
 OPCODES = {
 
