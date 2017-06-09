@@ -290,7 +290,7 @@ class BitField(object):
             index = key
             self._checkIndex(index)
             rindex = self._index(index)
-            bitmask = 1
+            bitmask = 1L
             shift = self._shift(rindex)
         # print "K=%s | B=%d | S=%d | v=%d->%d" % (key, bitmask, shift, self._value, (self._value >> shift) & bitmask)
         return (self._value >> shift) & bitmask
