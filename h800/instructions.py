@@ -130,7 +130,7 @@ def namedtuple_defaults(typename, field_names, default_values=()):
 #
 Opcode = namedtuple_defaults('Opcode',
                              ['m', 'c', 'b23', 'b7', 'op', 'type'],
-                             (None, None, None, None, None, None))
+                             (None, None, None, None, None, "unmasked"))
 
 OPCODES = {
 
