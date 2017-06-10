@@ -354,22 +354,30 @@ class BitField(object):
             end = key.stop
             self._checkRange(start, end)
             rstart, rend = self._getRange(start, end)
+            width = rend - rstart + 1
+            self._checkValue(value, width=width)
             bitmask = self._bitmask(start, end)
-            shift = self._shift(self._lsbIndex(rstart, rend))
-            newvalue = (((self._value >> shift) & ~bitmask) | value) << shift
-            # print "%d:%d,%d | %d:%d | B=0x%x | S=%d | v=%d->%d" % \
-            #     (start, end, value, rstart, rend, bitmask, shift, self._value, newvalue)
+            lsbindex = self._lsbIndex(rstart, rend)
+            shift = self._shift(lsbindex)
+            svalue = value << shift
+            # newvalue = (((self._value >> shift) & (self.maxval - bitmask)) | value) << shift
+            newvalue = (self._value & (self.maxval - bitmask)) | svalue
+            print "%d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | 0x%x | v=0x%x->0x%x" % \
+                 (start, end, value, rstart, rend, bitmask, self.maxval - bitmask, shift, svalue, self._value, newvalue)
         else:
             index = key
             self._checkIndex(index)
-            self._checkValue(value)
-            rindex = self._index(index)
+            self._checkValue(value, width=1)
+            rindex = self._rindex(index)
             shift = self._shift(rindex)
-            value = (value & 1L) << shift
             bitmask = (1L) << shift
-            newvalue = (self._value & ~bitmask) | value
-            # print "%d,%d | %d | B=%d | S=%d | v=%d->%d" % \
-            #     (index, value, rindex, bitmask, shift, self._value, newvalue)
+            svalue = ((value & 1L) << shift)
+            if value == 1:
+                newvalue = self._value | svalue
+            else:
+                newvalue = self._value & (self.maxval - svalue)
+            print "INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" % \
+                (index, value, rindex, bitmask, shift, self._value, newvalue)
         self._value = newvalue
 
     def __len__(self):
