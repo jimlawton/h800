@@ -272,7 +272,7 @@ class BitField(object):
             return max(start, end)
 
     def _checkIndex(self, index):
-        rindex = self._index(index)
+        rindex = self._rindex(index)
         if rindex < 0 or rindex >= self._width:
             raise ValueError("Invalid index for %d-bit bit-field!" % self._width)
 
@@ -300,8 +300,8 @@ class BitField(object):
 
     def _getRange(self, start, end):
         self._checkRange(start, end)
-        rstart = self._index(start)
-        rend = self._index(end)
+        rstart = self._rindex(start)
+        rend = self._rindex(end)
         return (rstart, rend)
 
     def _checkValue(self, value, width=None):
@@ -335,7 +335,7 @@ class BitField(object):
         else:
             index = key
             self._checkIndex(index)
-            rindex = self._index(index)
+            rindex = self._rindex(index)
             bitmask = 1L
             shift = self._shift(rindex)
         # print "K=%s | B=%d | S=%d | v=%d->%d" % (key, bitmask, shift, self._value, (self._value >> shift) & bitmask)
