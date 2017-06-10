@@ -177,19 +177,19 @@ class BitField(object):
         else:
             return self.indices[-1]
 
-    # Calculating real indexes from supplied virtual indexes:
-    # ("I" is the supplied virtual index)
+    # Calculating real indexes from supplied virtual index.
+    # ("V" is the supplied virtual index, "W" is the width)
     #
     # Order                 Scheme              Real Index
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_0    N - (I + 1)
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_1    N - I
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_0    I
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_1    I - 1
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_0    I
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_1    I - 1
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_0    N - (I + 1)
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_1    N - I
-    def _index(self, index, width=None):
+    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_0    R = W - (V + 1)
+    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_1    R = W - V
+    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_0    R = V
+    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_1    R = V - 1
+    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_0    R = V
+    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_1    R = V - 1
+    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_0    R = W - (V + 1)
+    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_1    R = W - V
+    def _rindex(self, index, width=None):
         if width is None:
             width = self._width
         if self._order == self.BIT_ORDER_MSB_LEFT:
