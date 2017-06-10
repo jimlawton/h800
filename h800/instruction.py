@@ -136,7 +136,7 @@ class Instruction(object):
                 raise ValueError("Mask supplied to an instruction that is not maskable!")
             if self._a is not None or self._b is not None or self._c is not None or self._paddr is not None:
                 raise ValueError("Cannot specify A, B, C, or peripheral address with mask!")
-            if mask < 0 or mask > 31:
+            if self._mask < 0 or self._mask > 31:
                 raise ValueError("Mask must be in the range 0..31!")
         if self._a is not None:
             if self._a not in (0, 1, True, False):
