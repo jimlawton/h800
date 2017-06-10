@@ -23,6 +23,7 @@ def test_simple():
 
 def test_msb_left_8bit():
     b = BitField(8, order=BitField.BIT_ORDER_MSB_LEFT)
+    print "TEST: indices=", b.indices
     print "TEST: check initial value"
     my_assert(b.value, 8)
     print "TEST: check maxval"
@@ -236,6 +237,7 @@ def test_msb_left_msb1_12bit():
                  order=BitField.BIT_ORDER_MSB_LEFT)
     print "TEST: check initial value"
     my_assert(b.value, 0)
+    print "TEST: indices=", b.indices
     print "TEST: check maxval"
     my_assert(b.maxval, 4095)
     print "TEST: check width"
