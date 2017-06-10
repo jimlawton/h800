@@ -65,7 +65,7 @@ def main():
     linecount = 0
     instrcount = 0
     instrtab = {}
-    for instruction in h800.instructions.INSTRUCTIONS.keys():
+    for instruction in h800.instructions.INSTRUCTIONS:
         instrtab[instruction] = 0
 
     for filename in args:
