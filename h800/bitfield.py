@@ -339,14 +339,16 @@ class BitField(object):
             rstart, rend = self._getRange(start, end)
             bitmask = self._bitmask(start, end)
             shift = self._shift(self._lsbIndex(rstart, rend))
+            # print "GET-SLICE: %d:%d | B=0x%x | S=%d | v=0x%x->0x%x" % (start, end, bitmask, shift, self._value, ((self._value & bitmask) >> shift))
+            return (self._value & bitmask) >> shift
         else:
             index = key
             self._checkIndex(index)
             rindex = self._rindex(index)
             bitmask = 1L
             shift = self._shift(rindex)
-        # print "K=%s | B=%d | S=%d | v=%d->%d" % (key, bitmask, shift, self._value, (self._value >> shift) & bitmask)
-        return (self._value >> shift) & bitmask
+            # print "GET-INDEX: %d | B=0x%x | S=%d | v=0x%x->0x%x" % (index, bitmask, shift, self._value, ((self._value >> shift) & bitmask))
+            return (self._value >> shift) & bitmask
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
