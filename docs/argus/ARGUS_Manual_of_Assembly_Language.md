@@ -411,6 +411,7 @@ Tags may be punched anywhere in the location field; spaces are ignored.
 ### Symbolic Tags
 
 A symbolic tag is a group of up to eight alphanumeric characters, of which at least one must be non-numeric.  However, there are certain characters which have significance to ARGUS and must not be included in symbolic tags.
+
 Key Punch | Symbol | Machine Code
 --------- | ------ | ------------
 12 | `+` (plus) | `010000`
@@ -419,7 +420,9 @@ Key Punch | Symbol | Machine Code
 12, 8, 3 | `.` (period) | `011011`
 11, 8, 4 | `*` (asterisk) | `101100`
 0, 1 | `/` (slash) | `110001`
+
 In addition, the following characters are not permitted within symbols even though they have no special significance.
+
 Key Punch | Symbol | Machine Code
 --------- | ------ | ------------
 8, 4 | `-` (hyphen) | `001100`
@@ -427,6 +430,7 @@ Key Punch | Symbol | Machine Code
 12, 8, 2 | `;` (semicolon) | `011010`
 8,5 | ◊ (not assigned) | `110000`
 0, 8, 7 | ⨂ (not assigned) | `111111`
+
 Space codes (`001101`) within symbolic tags are ignored by assembly.
 
 Tags are frequently chosen as mnemonic representations of the content or function of the tagged words, e.g., `GROSSPAY`, `INPUT1`, or `DIVIDEND`.  Such a tag may directly represent any location in the high-speed memory.  Every symbolic tag which appears in an address field within a program must appear in the location field within that program.
