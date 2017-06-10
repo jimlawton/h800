@@ -359,11 +359,13 @@ class BitField(object):
             bitmask = self._bitmask(start, end)
             lsbindex = self._lsbIndex(rstart, rend)
             shift = self._shift(lsbindex)
-            svalue = value << shift
-            # newvalue = (((self._value >> shift) & (self.maxval - bitmask)) | value) << shift
-            newvalue = (self._value & (self.maxval - bitmask)) | svalue
-            print "%d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | 0x%x | v=0x%x->0x%x" % \
-                 (start, end, value, rstart, rend, bitmask, self.maxval - bitmask, shift, svalue, self._value, newvalue)
+            if value == 0:
+                newvalue = (self._value & (self.maxval - bitmask)) | (value << shift)
+            else:
+                # newvalue = (((self._value >> shift) & (self.maxval - bitmask)) | value) << shift
+                newvalue = (self._value & (self.maxval - bitmask)) | (value << shift)
+            # print "%d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | v=0x%x->0x%x" % \
+            #      (start, end, value, rstart, rend, bitmask, self.maxval - bitmask, shift, self._value, newvalue)
         else:
             index = key
             self._checkIndex(index)
@@ -371,13 +373,12 @@ class BitField(object):
             rindex = self._rindex(index)
             shift = self._shift(rindex)
             bitmask = (1L) << shift
-            svalue = ((value & 1L) << shift)
             if value == 1:
-                newvalue = self._value | svalue
+                newvalue = self._value | (value << shift)
             else:
-                newvalue = self._value & (self.maxval - svalue)
-            print "INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" % \
-                (index, value, rindex, bitmask, shift, self._value, newvalue)
+                newvalue = self._value & (self.maxval - (1L << shift))
+            # print "INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" % \
+            #     (index, value, rindex, bitmask, shift, self._value, newvalue)
         self._value = newvalue
 
     def __len__(self):
