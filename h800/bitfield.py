@@ -319,7 +319,7 @@ class BitField(object):
         if width == self._width:
             shift = 0
         else:
-            shift = rend - 1
+            shift = self._shift(rend)
         bitmask = (2L ** width - 1) << shift
         # print "BM: %d:%d | %d:%d | S=%d | B=0x%x" % (start, end, rstart, rend, shift, bitmask)
         return bitmask
