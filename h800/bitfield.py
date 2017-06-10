@@ -158,7 +158,7 @@ class BitField(object):
         "Return a list of the bit indices of the bit-field."
         indices = []
         for i in range(0, self._width):
-            indices.append(self._index(i))
+            indices.append(self._vindex(i))
         return indices
 
     @property
