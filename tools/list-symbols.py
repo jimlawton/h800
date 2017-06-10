@@ -41,10 +41,13 @@ def main():
                         "def-lognum": card.lognum
                     }
                 else:
-                    print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel)
-                    print(card.filename, card.linenum, card.lognum)
-                    print(card.line)
-                    print("\nPrevious definition:", symtab[strLabel])
+                    if card.operation != "ASSIGN" and card.operation != "TAS":
+                        # ASSIGN and TAS can doubly-define symbols in some
+                        # arcane way that I do not yet understand.
+                        print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel)
+                        print(card.filename, card.linenum, card.lognum)
+                        print(card.line)
+                        print("\nPrevious definition:", symtab[strLabel])
 
         for sym in sorted(symtab.keys()):
             print("%-9s %s" % (sym, symtab[sym]))
