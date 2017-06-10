@@ -315,13 +315,20 @@ class BitField(object):
     def _bitmask(self, start, end):
         self._checkRange(start, end)
         rstart, rend = self._getRange(start, end)
-        return 2L ** (rend - rstart + 1) - 1
+        width = rend - rstart + 1
+        if width == self._width:
+            shift = 0
+        else:
+            shift = rend - 1
+        bitmask = (2L ** width - 1) << shift
+        # print "BM: %d:%d | %d:%d | S=%d | B=0x%x" % (start, end, rstart, rend, shift, bitmask)
+        return bitmask
 
     def _getBitValue(self, index, value, width):
         "Get the value of the specified bit index in the supplied value."
         self._checkValue(value, width=width)
-        rindex = self._index(index, width=width)
-        shift = self._shift(rindex)
+        shift = index
+        # print "BIT: %d,%d | W=%d | S=%d | %d" % (index, value, width, shift, (value >> shift) & 1L)
         return (value >> shift) & 1L
 
     def __getitem__(self, key):
