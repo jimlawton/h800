@@ -357,8 +357,7 @@ class BitField(object):
             width = rend - rstart + 1
             self._checkValue(value, width=width)
             bitmask = self._bitmask(start, end)
-            lsbindex = self._lsbIndex(rstart, rend)
-            shift = self._shift(lsbindex)
+            shift = self._shift(self._lsbIndex(rstart, rend))
             if value == 0:
                 newvalue = (self._value & (self.maxval - bitmask)) | (value << shift)
             else:
