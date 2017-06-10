@@ -2445,21 +2445,47 @@ def test_OCT_args_range():
 
 
 def test_machine_instructions():
+    print "TEST: check for duplicate machine instructions"
     # Generate all possible instruction codes and look for duplicates.
     opcodes = []
-    # for mnemonic in OPCODES:
-    #     o = OPCODES[mnemonic]
-    #     if o.maskable:
-    #         for i in range(2):
-    #             for j in range(32):
-    #                 opcode = make_masked_opcode(mnemonic, i, j)
-    #                 assert opcode not in opcodes
-    #                 opcodes.append(opcode)
-    #     for i in range(2):
-    #         for j in range(2):
-    #             for k in range(2):
-    #                 for l in range(2):
-    #                     opcode = make_unmasked_opcode(mnemonic, i, j, k, l)
-    #                     assert opcode not in opcodes
-    #                     opcodes.append(opcode)
-    #run_tests("TEST: machine instructions check", testdata)
+    for mnemonic in OPCODES:
+        o = OPCODES[mnemonic]
+        if o.type == "maskable":
+            for i in range(2):
+                for j in range(32):
+                    opcode = make_masked_opcode(mnemonic, i, j)
+                    assert opcode not in opcodes
+                    opcodes.append(opcode)
+        elif o.type == "unmasked":
+            for i in range(2):
+                for j in range(2):
+                    for k in range(2):
+                        for l in range(2):
+                            opcode = make_unmasked_opcode(mnemonic, i, j, k, l)
+                            assert opcode not in opcodes
+                            opcodes.append(opcode)
+        elif o.type == "peripheral":
+            for i in range(64):
+                opcode = make_peripheral_opcode(mnemonic, i)
+                assert opcode not in opcodes
+                opcodes.append(opcode)
+        elif o.type == "print":
+            # Note: PRA, PRD and PRO all generate the same range of opcodes.
+            # Only count once.
+            if mnemonic == "PRD":
+                for i in range(2):
+                    for j in range(2):
+                        for k in range(2):
+                            for l in range(2):
+                                opcode = make_print_opcode(mnemonic, i, j, k, l)
+                                assert opcode not in opcodes
+                                opcodes.append(opcode)
+        elif o.type == "simulator":
+            opcode = 0o0007
+            assert opcode not in opcodes
+            opcodes.append(opcode)
+            opcode = 0o4007
+            assert opcode not in opcodes
+            opcodes.append(opcode)
+        else:
+            assert False, "Invalid instruction type!"
