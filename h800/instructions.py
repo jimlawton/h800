@@ -1020,3 +1020,48 @@ class SubroutineCallConstant(instruction.Constant):
 # Miscellaneous Instructions.
 # "COREDUMP": 0,                  # ?
 # "DUMP":     0                   # ?
+
+def print_instructions():
+    # Generate all possible instruction codes and look for duplicates.
+    opcodes = {}
+    for mnemonic in OPCODES:
+        opcodes[mnemonic] = []
+        o = OPCODES[mnemonic]
+        if o.type == "maskable":
+            for i in range(2):
+                for j in range(32):
+                    opcodes[mnemonic].append(make_masked_opcode(mnemonic, i, j))
+        elif o.type == "unmasked":
+            for i in range(2):
+                for j in range(2):
+                    for k in range(2):
+                        for l in range(2):
+                            opcodes[mnemonic].append(make_unmasked_opcode(mnemonic, i, j, k, l))
+        elif o.type == "peripheral":
+            for i in range(64):
+                opcodes[mnemonic].append(make_peripheral_opcode(mnemonic, i))
+        elif o.type == "print":
+            # Note: PRA, PRD and PRO all generate the same range of opcodes.
+            # Only count once.
+            if mnemonic == "PRD":
+                for i in range(2):
+                    for j in range(2):
+                        for k in range(2):
+                            for l in range(2):
+                                opcodes[mnemonic].append(make_print_opcode(mnemonic, i, j, k, l))
+        elif o.type == "simulator":
+            opcodes[mnemonic].append(0o0007)
+            opcodes[mnemonic].append(0o4007)
+        else:
+            assert False, "Invalid instruction type!"
+    opmap = {}
+    for mnemonic in opcodes:
+        opvals = sorted(opcodes[mnemonic])
+        for opval in opvals:
+            opmap[opval] = mnemonic
+    for opval in sorted(opmap):
+        print "0o%04o %s" % (opval, opmap[opval])
+
+
+if __name__ == "__main__":
+    print_instructions()
