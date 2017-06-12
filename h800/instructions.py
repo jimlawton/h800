@@ -271,9 +271,25 @@ MISC_INSTRUCTIONS = {
     "DUMP":     0                   # ?
 }
 
+ARGUS_INSTRUCTIONS = {
+    "ARGUS":    0,                  #
+    "U":        0,                  #
+    "MACRODEF": 0,                  #
+    "FINIS":    0,                  #
+    "ELIMSEG":  0,                  #
+    "SEGMENT":  0,                  #
+    "PROGRAM":  0,                  #
+    "TESTDATA": 0,                  #
+    "ELIMDATA": 0,                  #
+    "ELIMDERL": 0,                  #
+    "DELETE":   0,                  #
+    "ENDARGUS": 0                   #
+}
+
 INSTRUCTIONS = list(OPCODES.keys() + CONTROL_INSTRUCTIONS.keys() +
                     DATA_CONSTANTS.keys() + CONTROL_CONSTANTS.keys() +
-                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys())
+                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys() +
+                    ARGUS_INSTRUCTIONS.keys())
 
 
 def make_masked_opcode(mnemonic, sequence, mask):
