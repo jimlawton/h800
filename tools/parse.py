@@ -38,7 +38,7 @@ def main():
     linecount = 0
     instrcount = 0
     instrtab = {}
-    for instruction in h800.instructions.INSTRUCTIONS.keys():
+    for instruction in h800.instructions.INSTRUCTIONS:
         instrtab[instruction] = 0
 
     for filename in args:
@@ -63,7 +63,7 @@ def main():
                     errcount += 1
                     continue
                 instrtab[instruction] += 1
-                if instruction not in h800.instructions.INSTRUCTIONS.keys():
+                if instruction not in h800.instructions.INSTRUCTIONS:
                     print("*** ERROR: Invalid instruction \"%s\":" % instruction)
                     print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
                     errcount += 1
