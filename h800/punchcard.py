@@ -37,7 +37,7 @@ _DEFAULT_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "op
 class PunchCard(object):
     """A simple class to represent a punch card."""
     def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0, verbose=False):
-        self._line = line
+        self._line = line.replace('\n', '')
         self._layout = []
         self._filename = filename
         self._linenum = linenum
