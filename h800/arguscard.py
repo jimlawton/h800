@@ -95,6 +95,9 @@ class Card(punchcard.PunchCard):
     def instruction(self):
         return self._record["instruction"]
 
+    def parse(self):
+        pass
+
 
 class Deck(punchcard.Deck):
     """A simple class to represent a deck of ARGUS punch-cards."""
