@@ -19,6 +19,11 @@ import h800.instructions
 
 def main():
     parser = OptionParser("usage: %prog opcode filename [filename]...")
+    parser.add_option('-D', '--details',
+                      dest='details',
+                      action='store_true',
+                      default=False,
+                      help="Print details (file, line number, etc.).")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -50,7 +55,10 @@ def main():
                     instruction = instruction.split(',')[0]
                 if instruction == opcode or (
                         opcode.endswith(',') and instruction.startswith(opcode)):
-                    print(card.filename, card.linenum, card.line.replace('\n', ''))
+                    if opts.details:
+                        print(card.filename, card.linenum, card.line.replace('\n', ''))
+                    else:
+                        print(card.line.replace('\n', ''))
 
 
 if __name__ == '__main__':
