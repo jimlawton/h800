@@ -72,7 +72,7 @@ def main():
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         for card in d.cards:
             linecount += 1
-            if card.operation:
+            if card.instruction:
                 instrcount += 1
                 if opts.printOpcodes:
                     print(card.filename, card.linenum, card.line.replace('\n', ''))
@@ -81,18 +81,15 @@ def main():
                         print("Skipping card with * in column 8:")
                         print(card.filename, card.linenum, card.line.replace('\n', ''))
                     continue
-                instruction = card.operation.strip().replace(' ', '')
-                if ',' in instruction:
-                    instruction = instruction.split(',')[0]
-                if instruction not in instrtab.keys():
-                    print("*** ERROR: Invalid instruction \"%s\":" % instruction)
+                if card.instruction not in instrtab.keys():
+                    print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
                     print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
                     errcount += 1
                     continue
-                instrtab[instruction] += 1
+                instrtab[card.instruction] += 1
                 if opts.invalid:
-                    if instruction not in h800.instructions.INSTRUCTIONS:
-                        print("*** ERROR: Invalid instruction \"%s\":" % instruction)
+                    if card.instruction not in h800.instructions.INSTRUCTIONS:
+                        print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
                         print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
                         errcount += 1
 
