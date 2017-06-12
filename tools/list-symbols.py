@@ -48,7 +48,10 @@ def main():
                         print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel)
                         print(card.filename, card.linenum, card.lognum)
                         print(card.line)
-                        print("\nPrevious definition:", symtab[strLabel])
+                        print("Previous definition:")
+                        print(symtab[strLabel]["def-file"], symtab[strLabel]["def-line"], symtab[strLabel]["def-lognum"])
+                        print(symtab[strLabel]["def-source"])
+                        print()
 
         for sym in sorted(symtab.keys()):
             print("%-9s %s" % (sym, symtab[sym]))
