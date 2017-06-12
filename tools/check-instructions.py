@@ -97,8 +97,8 @@ def main():
         print("\nSource lines: %d" % linecount)
         print("\nInstruction Frequencies:")
         print("%-8s %6d  %6.2f%%" % ("Total", instrcount, 100.0))
+        freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1], reverse=True))
         if opts.sort:
-            freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1], reverse=True))
             for inst in freqtab.keys():
                 if opts.unused and freqtab[inst] != 0 or not opts.unused:
                     print("%-8s %6d  %6.2f%%" % (inst, freqtab[inst], 100 * float(freqtab[inst])/float(instrcount)))
