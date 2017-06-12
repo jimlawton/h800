@@ -28,7 +28,12 @@ def main():
     if len(args) < 1:
         parser.error("usage: %prog filename [filename]...")
     opcode = args[0]
-    if opcode not in h800.instructions.INSTRUCTIONS:
+    masked = False
+    command = opcode
+    if ',' in opcode:
+        masked = True
+        command = opcode.split(',')[0]
+    if command not in h800.instructions.INSTRUCTIONS:
         parser.error("ERROR: invalid opcode \"%s\"" % opcode)
 
     for filename in args[1:]:
@@ -41,9 +46,10 @@ def main():
                         print(card.filename, card.linenum, card.line.replace('\n', ''))
                     continue
                 instruction = card.operation.strip().replace(' ', '')
-                if ',' in instruction:
+                if ',' in instruction and ',' not in opcode:
                     instruction = instruction.split(',')[0]
-                if instruction == opcode:
+                if instruction == opcode or (
+                        opcode.endswith(',') and instruction.startswith(opcode)):
                     print(card.filename, card.linenum, card.line.replace('\n', ''))
 
 
