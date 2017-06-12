@@ -15,7 +15,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name="h800",
-    version="0.4",
+    version="0.5",
     description="H-800 Tools",
     url="https://github.com/jimlawton/h800",
     author="Jim Lawton",
