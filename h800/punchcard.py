@@ -59,12 +59,12 @@ class PunchCard(object):
             if linenum != 0:
                 self._record["linenum"] = linenum
             for i, field in enumerate(self._fields):
-                if field.rstrip() == "":
+                if field.strip() == "":
                     self._strippedFields.append(None)
                     self._record[fieldnames[i]] = None
                 else:
-                    self._strippedFields.append(field.rstrip())
-                    self._record[fieldnames[i]] = field.rstrip()
+                    self._strippedFields.append(field.strip())
+                    self._record[fieldnames[i]] = field.strip()
 
     @property
     def line(self):
