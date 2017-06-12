@@ -31,10 +31,9 @@ class Card(punchcard.PunchCard):
             self._record["remarks"] = self._line[9:].strip()
         if self.column1 == 'L':
             self._record["remarks"] = self._line[9:].strip()
-        if self._record["operation"]:
-            self._record["instruction"] = self._record["operation"]
-            if ',' in self._record["operation"]:
-                self._record["instruction"] = self._record["operation"].split(',')[0]
+        self._record["instruction"] = self._record["operation"]
+        if self._record["operation"] and ',' in self._record["operation"]:
+            self._record["instruction"] = self._record["operation"].split(',')[0]
 
     @property
     def column1(self):
