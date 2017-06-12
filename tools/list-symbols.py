@@ -38,7 +38,8 @@ def main():
                     symtab[strLabel] = {
                         "def-file": card.filename,
                         "def-line": card.linenum,
-                        "def-lognum": card.lognum
+                        "def-lognum": card.lognum,
+                        "def-source": card.line
                     }
                 else:
                     if card.operation != "ASSIGN" and card.operation != "TAS":
