@@ -64,6 +64,7 @@ def main():
                     print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
                     print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
                     errcount += 1
+                card.parse()
 
     print("\nSource lines: %d" % linecount)
 
