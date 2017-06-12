@@ -46,7 +46,7 @@ def main():
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         for card in d.cards:
             linecount += 1
-            if card.operation:
+            if card.instruction:
                 instrcount += 1
                 if opts.debug:
                     print(card.filename, card.linenum, card.line.replace('\n', ''))
