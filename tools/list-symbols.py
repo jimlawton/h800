@@ -27,8 +27,12 @@ def main():
         parser.error("usage: %prog filename")
         sys.exit(1)
 
+    errors = 0
+
     for filename in args:
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
+
+        file_errors = 0
 
         symtab = {}
         for card in d.cards:
@@ -45,16 +49,21 @@ def main():
                     if card.operation != "ASSIGN" and card.operation != "TAS":
                         # ASSIGN and TAS can doubly-define symbols in some
                         # arcane way that I do not yet understand.
-                        print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel)
-                        print(card.filename, card.linenum, card.lognum)
-                        print(card.line)
-                        print("Previous definition:")
-                        print(symtab[strLabel]["def-file"], symtab[strLabel]["def-line"], symtab[strLabel]["def-lognum"])
-                        print(symtab[strLabel]["def-source"])
-                        print()
+                        print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel, file=sys.stderr)
+                        print(card.filename, card.linenum, card.lognum, file=sys.stderr)
+                        print(card.line, file=sys.stderr)
+                        print("Previous definition:", file=sys.stderr)
+                        print(symtab[strLabel]["def-file"], symtab[strLabel]["def-line"], symtab[strLabel]["def-lognum"], file=sys.stderr)
+                        print(symtab[strLabel]["def-source"], file=sys.stderr)
+                        print("", file=sys.stderr)
+                        file_errors += 1
+        errors += file_errors
 
         for sym in sorted(symtab.keys()):
             print("%-9s %s" % (sym, symtab[sym]))
+
+    if errors > 0:
+        print("%d errors found" % errors, file=sys.stderr)
 
 
 if __name__ == '__main__':
