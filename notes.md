@@ -106,7 +106,7 @@ Unknown ARGUS Opcodes
 Constants
 ---------
 
-- Decimal
+- Decimal (DEC)
 -- Signed constants assume high-order zeros. E.g. "+125": +00...0125, "-125": -00...0125. Decimals with all MSBs zero have to be negative.
 --  Unsigned constants assume low-order zeros. E.g. "32": 3200...00.
 
@@ -121,6 +121,27 @@ Constants
 "G": 15, 0x0F.
 Confusing or what...
 -- To produce a binary number with zeros in the top 4 bits, it has to be something like "-G...".
+
+- Octal (OCT)
+
+- Mixed (M)
+
+Examples:
+```
+ 1009              M,A,         A,            A,            ADD COMP            ADD A NEW COMPUTER NAME.
+ 1012              M,A,         A,            A,            RMOV COMP           REMOVE AN EXISTING COMPUTER NAME.
+ 1015              M,A,         A,            A,            MESSAGE             TYPE OUT ARBITRARY MESSAGE.
+ 1018              M,A,         A,            A,            ELIM PRSU           INITIATE DELETION OF PROG OR SUB.
+ 1021              M,A,         A,            A,            ASSEMBLY            PROGRAM OR SUBROUTINE ASSEMBLY OR REVN.
+ 1024              M,A,         A,            A,            REPRINT             REPRINT ASSEMBLY LISTING.
+ 1033              M,A,UR       A,E           A,            MANUFACT            MANUFACTURE ASSEMBLED PROGRAM.
+ 1039              M,A,         A,            A,            CONTROL             BAR REVISION OR DELETION OF SUBROUTINE.
+ 1051              M,A,         A,            A,            PUNCH PSR           PUNCH SYMBOLIC PROG. OR SUBRO. DECK.
+ 1054              M,A,         A,            A,            PASS STAT           ASSEMBLY PASS STATUS OPERATIONS.
+ 1057              M,A,UR       A,IN          A,G           MANU STAT           MANUFACTURING STATUS STATUS OPERATIONS.
+ 1063              M,A,         A,            A,            CREATE BU           CREATE BACKUP TAPE IN MIDJOB.
+ 1066   LAS DIREC  M,A,         A,            A,            UNREADY             LIST PORTIONS OF YUL FILE DIRECTORY.
+ ```
 
 
 END
