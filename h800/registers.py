@@ -82,7 +82,7 @@ class Register(object):
     def value(self, value):
         if value < 0 or value > (2 ** self._width - 1):
             raise ValueError("Invalid value for %d-bit register!" % self._width)
-        self._data.value = value
+        self._data[1:self._width] = value
 
     @property
     def name(self):
