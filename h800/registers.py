@@ -95,3 +95,43 @@ class Register(object):
             return "0o%06o" % self.value
 
 
+class RegisterBank(object):
+    """H-x800 register bank class."""
+
+    def __init__(self, width=16):
+        self._width = width
+        self._registers = []
+        for regname in REGISTERS:
+            self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
+
+    @property
+    def value(self):
+        return int(self._data)
+
+    @value.setter
+    def value(self, value):
+        self._data.value = value
+
+    @property
+    def width(self):
+        return int(self._width)
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            raise ValueError("Slices not supported!")
+        return self._registers[key]
+
+    def __setitem__(self, key, value):
+        if isinstance(key, slice):
+            raise ValueError("Slices not supported!")
+        self._registers[key] = value
+
+    def __len__(self):
+        return len(self._registers)
+
+    def __repr__(self):
+        text = ""
+        for r in self._registers:
+            text += "%s " % r
+        return text
+
