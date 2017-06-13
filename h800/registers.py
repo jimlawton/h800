@@ -148,11 +148,11 @@ class RegisterBank(object):
         if isinstance(key, str):
             if key not in REGISTERS:
                 raise ValueError("Invalid register name %s!" % key)
-            return self._registers[key]
+            return self._registers[REGISTERS[key]]
         else:
             if key < 0 or key >= len(REGISTERS):
                 raise ValueError("Invalid register number %d!" % key)
-            return self._registers[REGISTERS[key]]
+            return self._registers[key]
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
