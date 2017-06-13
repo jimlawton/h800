@@ -50,6 +50,8 @@ class Word(object):
 
     @value.setter
     def value(self, value):
+        if value < 0 or value > 2 ** 48 - 1:
+            raise ValueError("Invalid value for 48-bit word!")
         self.data.value = value
 
     def emit(self):
