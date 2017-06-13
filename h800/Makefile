@@ -8,6 +8,7 @@ tests: $(TESTS)
 	pytest -x arguscard_test.py 
 	pytest -x bitfield_test.py 
 	pytest -x word_test.py 
+	pytest -x registers_test.py 
 	pytest -x instruction_test.py 
 	pytest -x instructions_test.py
 
