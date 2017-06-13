@@ -53,7 +53,7 @@ def test_registers_24bit_simple_defaults():
     r = Register(2 ** 16 - 1, width=24)
     my_assert(r.value, 2 ** 16 - 1)
     r = Register(2 ** 24 - 1, width=24)
-    my_assert(r.value, 2 ** 16 - 1)
+    my_assert(r.value, 2 ** 24 - 1)
 
 
 def test_registers_24bit_invalid_args():
