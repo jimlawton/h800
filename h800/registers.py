@@ -85,6 +85,10 @@ class Register(object):
     def __init__(self, data=0, name=None, width=16):
         if data < 0 or data > (2 ** width - 1):
             raise ValueError("Invalid value for %d-bit register!" % width)
+        if name and name not in REGISTER_NAMES:
+            raise ValueError("Invalid register name %s!" % name)
+        if width != 16 and width != 24:
+            raise ValueError("Invalid register width %d, must be 16 or 24!" % width)
         self._data = BitField(0, width=width,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
