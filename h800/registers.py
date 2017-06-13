@@ -38,12 +38,17 @@ REGISTERS = {
     'S4':   28,     # General Purpose Register
     'S5':   29,     # General Purpose Register
     'S6':   30,     # General Purpose Register
-    'S7':   31,     # General Purpose Register
+    'S7':   31      # General Purpose Register
+}
+
+ALIASES = {
     'RAC':  28,     # Read Address Counter
     'DRAC': 29,     # Distributed Read Address Counter
     'WAC':  30,     # Write Address Counter
     'DWAC': 31      # Distributed Write Address Counter
 }
+
+REGISTER_NAMES = REGISTERS.keys() + ALIASES.keys()
 
 
 def registerName(number):
