@@ -19,6 +19,28 @@ def test_word_simple_defaults():
     my_assert(w.value, 2 ** 48 - 1)
 
 
+def test_word_invalid_args():
+    gotexc = False
+    try:
+        print "TEST: test negative value"
+        w = Word(-1)
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        print "TEST: test too-large value"
+        w = Word(2 ** 48)
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
 def test_inst_simple_defaults():
     print "TEST: inst simple default cases."
     w = InstructionWord()
