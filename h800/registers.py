@@ -119,12 +119,18 @@ class RegisterBank(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             raise ValueError("Slices not supported!")
-        return self._registers[key]
+        if isinstance(key, str):
+            return self._registers[key]
+        else:
+            return self._registers[REGISTERS[key]]
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
             raise ValueError("Slices not supported!")
-        self._registers[key] = value
+        if isinstance(key, str):
+            self._registers[key] = value
+        else:
+            self._registers[REGISTERS[key]] = value
 
     def __len__(self):
         return len(self._registers)
