@@ -65,6 +65,8 @@ class Register(object):
     """H-x800 register class."""
 
     def __init__(self, data=0, name=None, width=16):
+        if data < 0 or data > (2 ** width - 1):
+            raise ValueError("Invalid value for %d-bit register!" % width)
         self._data = BitField(0, width=width,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
