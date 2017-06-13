@@ -39,6 +39,8 @@ from bitfield import BitField
 class Word(object):
     """H-x800 word class."""
     def __init__(self, data=0):
+        if data < 0 or data > (2 ** 48 - 1):
+            raise ValueError("Invalid value for 48-bit word!")
         self.data = BitField(0, width=48,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
@@ -50,7 +52,7 @@ class Word(object):
 
     @value.setter
     def value(self, value):
-        if value < 0 or value > 2 ** 48 - 1:
+        if value < 0 or value > (2 ** 48 - 1):
             raise ValueError("Invalid value for 48-bit word!")
         self.data.value = value
 
