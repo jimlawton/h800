@@ -168,6 +168,6 @@ class RegisterBank(object):
     def __repr__(self):
         text = ""
         for r in self._registers:
-            text += "%s " % r
+            text += "%s " % self._registers[r]
         return text
 
