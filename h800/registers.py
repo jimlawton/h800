@@ -80,3 +80,18 @@ class Register(object):
     def value(self, value):
         self._data.value = value
 
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def width(self):
+        return int(self._width)
+
+    def __repr__(self):
+        if self.name:
+            return "%s: 0o%06o" % (self.name, self.value)
+        else:
+            return "0o%06o" % self.value
+
+
