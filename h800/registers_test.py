@@ -42,6 +42,14 @@ def test_registers_16bit_invalid_args():
     assert gotexc == True, "Invalid value should have thrown an exception!"
 
 
+def test_registers_16bit_args_range():
+    print "TEST: registers 16-bit args range."
+    r = Register()
+    for i in range(2 ** 16, 16):
+        r.value = i
+        my_assert(r.value, i)
+
+
 def test_registers_24bit_simple_defaults():
     print "TEST: registers 24-bit simple default cases."
     r = Register(width=24)
@@ -77,4 +85,12 @@ def test_registers_24bit_invalid_args():
     else:
         raise
     assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
+def test_registers_24bit_args_range():
+    print "TEST: registers 24-bit args range."
+    r = Register(width=24)
+    for i in range(2 ** 24, 16):
+        r.value = i
+        my_assert(r.value, i)
 
