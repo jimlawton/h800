@@ -23,7 +23,6 @@ def test_registers_16bit_invalid_args():
     print "TEST: registers 16-bit invalid args."
     gotexc = False
     try:
-        print "TEST: test negative value"
         r = Register(-1)
     except ValueError:
         gotexc = True
@@ -33,7 +32,6 @@ def test_registers_16bit_invalid_args():
 
     gotexc = False
     try:
-        print "TEST: test too-large value"
         r = Register(2 ** 16)
     except ValueError:
         gotexc = True
@@ -68,7 +66,6 @@ def test_registers_24bit_invalid_args():
     print "TEST: registers 24-bit invalid args."
     gotexc = False
     try:
-        print "TEST: test negative value"
         r = Register(-1, width=24)
     except ValueError:
         gotexc = True
@@ -78,7 +75,6 @@ def test_registers_24bit_invalid_args():
 
     gotexc = False
     try:
-        print "TEST: test too-large value"
         r = Register(2 ** 24, width=24)
     except ValueError:
         gotexc = True
@@ -93,4 +89,132 @@ def test_registers_24bit_args_range():
     for i in range(2 ** 24, 16):
         r.value = i
         my_assert(r.value, i)
+
+
+def test_registerbank_invalid_args():
+    print "TEST: register bank 16-bit invalid args."
+    gotexc = False
+    try:
+        r = RegisterBank(17)
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        r = RegisterBank(25)
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
+def test_registerbank_16bit_simple_defaults():
+    print "TEST: register bank 16-bit simple default cases."
+    r = RegisterBank()
+    for i in range(len(REGISTERS)):
+        my_assert(r[i].value, 0)
+    for i in range(len(REGISTERS)):
+        r[i].value = 65535
+        my_assert(r[i].value, 65535)
+
+
+def test_registerbank_16bit_invalid_args():
+    print "TEST: register bank 16-bit invalid args."
+    r = RegisterBank()
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)+1):
+            r[i].value = 0
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)):
+            r[i].value = -1
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)):
+            r[i].value = 2 ** 16
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
+def test_registerbank_16bit_args_range():
+    print "TEST: register bank 16-bit args range."
+    r = RegisterBank()
+    for i in range(len(REGISTERS)):
+        for j in range(2 ** 16, 16):
+            r[i].value = j
+            my_assert(r[i].value, j)
+
+
+def test_registers_24bit_simple_defaults():
+    print "TEST: register bank 16-bit simple default cases."
+    r = RegisterBank(24)
+    for i in range(len(REGISTERS)):
+        my_assert(r[i].value, 0)
+    for i in range(len(REGISTERS)):
+        r[i].value = 2** 24 - 1
+        my_assert(r[i].value, 2 ** 24 - 1)
+
+
+def test_registerbank_24bit_invalid_args():
+    print "TEST: register bank 24-bit invalid args."
+    r = RegisterBank(24)
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)+1):
+            r[i].value = 0
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)):
+            r[i].value = -1
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+    gotexc = False
+    try:
+        for i in range(len(REGISTERS)):
+            r[i].value = 2 ** 24
+    except ValueError:
+        gotexc = True
+    else:
+        raise
+    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+
+def test_registers_24bit_args_range():
+    print "TEST: registers 24-bit args range."
+    print "TEST: register bank 16-bit args range."
+    r = RegisterBank(24)
+    for i in range(len(REGISTERS)):
+        for j in range(2 ** 24, 16):
+            r[i].value = j
+            my_assert(r[i].value, j)
 
