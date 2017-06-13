@@ -126,7 +126,7 @@ class RegisterBank(object):
 
     def __init__(self, width=16):
         self._width = width
-        self._registers = []
+        self._registers = {}
         for regname in REGISTERS:
             self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
 
