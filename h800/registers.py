@@ -70,7 +70,7 @@ class Register(object):
         self._data = BitField(0, width=width,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
-        self._data[1:16] = data
+        self._data[1:width] = data
         self._name = name
         self._width = width
 
