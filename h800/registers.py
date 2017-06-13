@@ -59,10 +59,23 @@ def registerName(number):
     raise ValueError("Invalid register number %d!" % number)
 
 
+def registerAlias(number):
+    "Return the register alias for the specified number."
+    for name in ALIASES:
+        if ALIASES[name] == number:
+            return name
+    for name in REGISTERS:
+        if REGISTERS[name] == number:
+            return name
+    raise ValueError("Invalid register number %d!" % number)
+
+
 def registerNumber(name):
     "Return the register number for the specified name."
     if name in REGISTERS:
         return REGISTERS[name]
+    if name in ALIASES:
+        return ALIASES[name]
     raise ValueError("Invalid register name %s!" % name)
 
 
