@@ -133,8 +133,8 @@ class Register(object):
         return "0o%06o" % self.value
 
 
-class RegisterBank(object):
-    """H-x800 register bank class."""
+class RegisterGroup(object):
+    """H-x800 register group class."""
 
     def __init__(self, width=16):
         self._width = width
