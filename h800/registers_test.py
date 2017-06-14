@@ -7,7 +7,7 @@ def my_assert(value, good):
     assert value == good, "Value is 0o%06o, should be 0o%06o" % (value, good)
 
 
-def test_registers_16bit_simple_defaults():
+def test_register_16bit_simple_defaults():
     print "TEST: registers 16-bit simple default cases."
     r = Register()
     my_assert(r.value, 0)
@@ -19,7 +19,7 @@ def test_registers_16bit_simple_defaults():
     my_assert(r.value, 2 ** 16 - 1)
 
 
-def test_registers_16bit_invalid_args():
+def test_register_16bit_invalid_args():
     print "TEST: registers 16-bit invalid args."
     gotexc = False
     try:
@@ -40,7 +40,7 @@ def test_registers_16bit_invalid_args():
     assert gotexc == True, "Invalid value should have thrown an exception!"
 
 
-def test_registers_16bit_args_range():
+def test_register_16bit_args_range():
     print "TEST: registers 16-bit args range."
     r = Register()
     for i in range(2 ** 16, 16):
@@ -48,7 +48,7 @@ def test_registers_16bit_args_range():
         my_assert(r.value, i)
 
 
-def test_registers_16bit_slices():
+def test_register_16bit_slices():
     print "TEST: registers 16-bit slices."
     r = Register(width=16)
     my_assert(r.value, 0)
@@ -69,7 +69,7 @@ def test_registers_16bit_slices():
         my_assert(r.value, 0)
 
 
-def test_registers_24bit_simple_defaults():
+def test_register_24bit_simple_defaults():
     print "TEST: registers 24-bit simple default cases."
     r = Register(width=24)
     my_assert(r.value, 0)
@@ -83,7 +83,7 @@ def test_registers_24bit_simple_defaults():
     my_assert(r.value, 2 ** 24 - 1)
 
 
-def test_registers_24bit_invalid_args():
+def test_register_24bit_invalid_args():
     print "TEST: registers 24-bit invalid args."
     gotexc = False
     try:
@@ -104,7 +104,7 @@ def test_registers_24bit_invalid_args():
     assert gotexc == True, "Invalid value should have thrown an exception!"
 
 
-def test_registers_24bit_args_range():
+def test_register_24bit_args_range():
     print "TEST: registers 24-bit args range."
     r = Register(width=24)
     for i in range(2 ** 24, 16):
@@ -112,7 +112,7 @@ def test_registers_24bit_args_range():
         my_assert(r.value, i)
 
 
-def test_registers_24bit_slices():
+def test_register_24bit_slices():
     print "TEST: registers 24-bit slices."
     r = Register(width=24)
     my_assert(r.value, 0)
@@ -207,7 +207,7 @@ def test_registergroup_16bit_args_range():
             my_assert(r[i].value, j)
 
 
-def test_registers_24bit_simple_defaults():
+def test_registergroup_24bit_simple_defaults():
     print "TEST: register group 16-bit simple default cases."
     r = RegisterGroup(24)
     for i in range(len(REGISTERS)):
