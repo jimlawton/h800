@@ -273,3 +273,50 @@ def test_registers_16bit_simple():
             register[1] = 0
             my_assert(register.value, 0)
 
+
+def test_registers_16bit_clear():
+    print "TEST: registers 24-bit clear."
+    registers = Registers(width=16)
+    for group in registers:
+        for register in group:
+            my_assert(register.value, 0)
+    for group in registers:
+        for register in group:
+            val = randrange(2 ** 16)
+            register.value = val
+            my_assert(register.value, val)
+    registers.clear()
+    for group in registers:
+        for register in group:
+            my_assert(register.value, 0)
+
+
+def test_registers_24bit_simple():
+    print "TEST: registers 24-bit simple cases."
+    registers = Registers(width=24)
+    for group in registers:
+        for register in group:
+            my_assert(register.value, 0)
+    for group in registers:
+        for register in group:
+            register[1] = 1
+            my_assert(register.value, 2 ** 15)
+            register[1] = 0
+            my_assert(register.value, 0)
+
+
+def test_registers_24bit_clear():
+    print "TEST: registers 24-bit clear."
+    registers = Registers(width=24)
+    for group in registers:
+        for register in group:
+            my_assert(register.value, 0)
+    for group in registers:
+        for register in group:
+            val = randrange(2 ** 24)
+            register.value = val
+            my_assert(register.value, val)
+    registers.clear()
+    for group in registers:
+        for register in group:
+            my_assert(register.value, 0)
