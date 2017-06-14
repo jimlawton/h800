@@ -96,6 +96,9 @@ class Card(punchcard.PunchCard):
         return self._record["instruction"]
 
     def parse(self):
+        # Do general parse and preparation here.
+        # Resolve symbols.
+        # Invoke instruction-specific parser.
         pass
 
 
