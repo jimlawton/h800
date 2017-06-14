@@ -183,3 +183,46 @@ class RegisterGroup(object):
             text += "%s " % self._registers[r]
         return text
 
+
+class Registers(object):
+    """H-x800 registers class."""
+
+    _NUM_GROUPS = 8
+
+    def __init__(self, width=16):
+        self._width = width
+        self._registers = {}
+        for group in range(self._NUM_GROUPS):
+            self._registers[group] = RegisterGroup(width=width)
+
+    @property
+    def width(self):
+        return int(self._width)
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            raise ValueError("Slices not supported!")
+        if not isinstance(key, int):
+            raise ValueError("Invalid register group number %s!" % key)
+        else:
+            if key < 0 or key >= self._NUM_GROUPS:
+                raise ValueError("Invalid register group number %d!" % key)
+            return self._registers[key]
+
+    def __setitem__(self, key, value):
+        if isinstance(key, slice):
+            raise ValueError("Slices not supported!")
+        if not isinstance(key, int):
+            raise ValueError("Invalid register group number %s!" % key)
+        else:
+            self._registers[key] = value
+
+    def __len__(self):
+        return len(self._registers)
+
+    def __repr__(self):
+        text = ""
+        for i in self._registers:
+            text += "[%d] %s\n" % (i, self._registers[i])
+        return text
+
