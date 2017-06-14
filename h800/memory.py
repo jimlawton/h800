@@ -4,7 +4,7 @@
 # ===================
 
 from bitfield import BitField
-from word import word
+from word import Word
 
 
 class MemoryBank(object):
