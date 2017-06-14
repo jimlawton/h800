@@ -243,8 +243,8 @@ class Registers(object):
 
     def __repr__(self):
         text = ""
-        for i in self._registers:
-            text += "[%d] %s\n" % (i, self._registers[i])
+        for group in self._registers:
+            text += "[%d] %s\n" % (group, self._registers[group])
         return text
 
     def clear(self):
