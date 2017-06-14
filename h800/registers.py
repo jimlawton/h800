@@ -124,7 +124,7 @@ class Register(object):
         if isinstance(key, slice):
             self._data[key.start:key.stop] = value
         else:
-            return self._data[key] = value
+            self._data[key] = value
 
     def __len__(self):
         return self.width
