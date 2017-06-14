@@ -19,11 +19,10 @@ class MemoryBank(object):
             raise ValueError("Invalid value (%d) for memory bank number!" % banknum)
         self._banknum = banknum
         self._data = {}
-        for addr in range(BANK_SIZE):
-            self._data[addr] = Word(0, width=self.MEMORY_WIDTH,
-                                    numbering=BitField.BIT_SCHEME_MSB_1,
-                                    order=BitField.BIT_ORDER_MSB_LEFT)
+        for addr in range(self.BANK_SIZE):
+            self._data[addr] = Word(0)
         self._width = self.MEMORY_WIDTH
+        self._current = 0
 
     def _checkValue(self, value):
         if value < 0 or value > (2 ** self._width - 1):
@@ -70,13 +69,23 @@ class MemoryBank(object):
     def __len__(self):
         return len(self._data)
 
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self._current >= len(self._data):
+            raise StopIteration
+        else:
+            self._current += 1
+            return self._data[self._current - 1]
+
     def __repr__(self):
         text = ""
         for addr in self._data:
-            text += "0o%08o" % self._data[addr].value
+            text += "0o%016o " % self._data[addr].value
         return text
 
     def clear(self):
         for addr in self._data:
-            self._data[addr].clear()
+            self._data[addr].value = 0
 
