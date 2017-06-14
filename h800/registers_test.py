@@ -263,10 +263,13 @@ def test_registergroup_24bit_args_range():
 def test_registers_16bit_simple():
     print "TEST: registers 16-bit simple cases."
     registers = Registers()
-    print registers
     for group in registers:
-        print group
         for register in group:
-            print register
+            my_assert(register.value, 0)
+    for group in registers:
+        for register in group:
+            register[1] = 1
+            my_assert(register.value, 2 ** 15)
+            register[1] = 0
             my_assert(register.value, 0)
 
