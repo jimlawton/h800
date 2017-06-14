@@ -220,70 +220,67 @@ OPCODES = {
 # The remaining instructions are pseudo-instructions of various types.
 
 CONTROL_INSTRUCTIONS = {
-    "ASSIGN":   0,                  # Assign Tag to Complex Address
-    "END":      0,                  # Specify Information for Executive
-    "EQUALS":   0,                  # Assign Value to Tag
-    "EVEN":     0,                  # Set Location Counter to Next Even Address
-    "MASKGRP":  0,                  # Assign Shift and Field Group Numbers
-    "MODLOC":   0,                  # Set Location Counter Modulo-N.
-    "RESERVE":  0,                  # Reserve N Words of Memory
-    "SETLOC":   0,                  # Set Location Counter
-    "SIMULATE": 0,                  # Start of Simulator Routine
-    "TAS":      0                   # Temporarily Assign Tag to Complex Address
+    "ASSIGN":   None,                  # Assign Tag to Complex Address
+    "END":      None,                  # Specify Information for Executive
+    "EQUALS":   None,                  # Assign Value to Tag
+    "EVEN":     None,                  # Set Location Counter to Next Even Address
+    "MASKGRP":  None,                  # Assign Shift and Field Group Numbers
+    "MODLOC":   None,                  # Set Location Counter Modulo-N.
+    "RESERVE":  None,                  # Reserve N Words of Memory
+    "SETLOC":   None,                  # Set Location Counter
+    "SIMULATE": None,                  # Start of Simulator Routine
+    "TAS":      None                   # Temporarily Assign Tag to Complex Address
 }
 
 DATA_CONSTANTS = {
-    "ALF":   0,                     # Alphanumeric Constant
-    "DEC":   0,                     # Fixed Decimal Constant
-    "EBC":   0,                     # Extended Binary Constant
-    "FLBIN": 0,                     # Floating-Point Binary Constant
-    "FLDEC": 0,                     # Floating-Point Decimal Constant
-    "FXBIN": 0,                     # Decimal to Fixed Binary Translation
-    "OCT":   0                      # Octal Constant
+    "ALF":   None,                     # Alphanumeric Constant
+    "DEC":   None,                     # Fixed Decimal Constant
+    "EBC":   None,                     # Extended Binary Constant
+    "FLBIN": None,                     # Floating-Point Binary Constant
+    "FLDEC": None,                     # Floating-Point Decimal Constant
+    "FXBIN": None,                     # Decimal to Fixed Binary Translation
+    "OCT":   None                      # Octal Constant
 }
 
 CONTROL_CONSTANTS = {
-    "SPEC":     0,                  # Special Address Constant
-    "CAC":      0,                  # Complete Address Constant
-    "MASKBASE": 0,                  # Mask Base Address Constant
-    "CONTROL":  0,                  # Program Control Constant
-    "M":        0,                  # Mixed Constant
-    "TAC":      0,                  # Tape Address Constant
-    "LINK":     0,                  # Linkage Constant
-    "SEGNAME":  0,                  # Segment Name Constant
-    "SUBCALL":  0                   # Subroutine Call Constant
+    "SPEC":     None,                  # Special Address Constant
+    "CAC":      None,                  # Complete Address Constant
+    "MASKBASE": None,                  # Mask Base Address Constant
+    "CONTROL":  None,                  # Program Control Constant
+    "M":        None,                  # Mixed Constant
+    "TAC":      None,                  # Tape Address Constant
+    "LINK":     None,                  # Linkage Constant
+    "SEGNAME":  None,                  # Segment Name Constant
+    "SUBCALL":  None                   # Subroutine Call Constant
 }
 
 EXTENDED_INSTRUCTIONS = {
-    "CSCON": 0,                     # Turn On Programs, Use Cosequence Counters
-    "DOFF":  0,                     # Turn Off Programs
-    "DON":   0,                     # Turn On Programs
-    # "PRA":   0o06,                  # Print Alphanumeric
-    # "PRD":   0o06,                  # Print Decimal
-    # "PRO":   0o06,                  # Print Octal
-    "SCON":  0,                     # Turn On Programs, Use Sequence Counters
-    "SPCR":  0,                     # Save PCR
-    "STOP":  0,                     # Stop Current Program
+    "CSCON": None,                     # Turn On Programs, Use Cosequence Counters
+    "DOFF":  None,                     # Turn Off Programs
+    "DON":   None,                     # Turn On Programs
+    "SCON":  None,                     # Turn On Programs, Use Sequence Counters
+    "SPCR":  None,                     # Save PCR
+    "STOP":  None                      # Stop Current Program
 }
 
 MISC_INSTRUCTIONS = {
-    "COREDUMP": 0,                  # ?
-    "DUMP":     0                   # ?
+    "COREDUMP": None,                  # ?
+    "DUMP":     None                   # ?
 }
 
 ARGUS_INSTRUCTIONS = {
-    "ARGUS":    0,                  #
-    "U":        0,                  #
-    "MACRODEF": 0,                  #
-    "FINIS":    0,                  #
-    "ELIMSEG":  0,                  #
-    "SEGMENT":  0,                  #
-    "PROGRAM":  0,                  #
-    "TESTDATA": 0,                  #
-    "ELIMDATA": 0,                  #
-    "ELIMDERL": 0,                  #
-    "DELETE":   0,                  #
-    "ENDARGUS": 0                   #
+    "ARGUS":    None,                  #
+    "U":        None,                  #
+    "MACRODEF": None,                  #
+    "FINIS":    None,                  #
+    "ELIMSEG":  None,                  #
+    "SEGMENT":  None,                  #
+    "PROGRAM":  None,                  #
+    "TESTDATA": None,                  #
+    "ELIMDATA": None,                  #
+    "ELIMDERL": None,                  #
+    "DELETE":   None,                  #
+    "ENDARGUS": None                   #
 }
 
 INSTRUCTIONS = list(OPCODES.keys() + CONTROL_INSTRUCTIONS.keys() +
