@@ -11,13 +11,9 @@ class MemoryBank(object):
     """H-x800 memory bank class."""
 
     MEMORY_WIDTH = 48       # 48 data, 6 parity.
-    NUM_BANKS = 4
     BANK_SIZE = 2048
 
-    def __init__(self, banknum=0):
-        if banknum < 0 or banknum > self.NUM_BANKS:
-            raise ValueError("Invalid value (%d) for memory bank number!" % banknum)
-        self._banknum = banknum
+    def __init__(self):
         self._data = {}
         for addr in range(self.BANK_SIZE):
             self._data[addr] = Word(0)
