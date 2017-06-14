@@ -48,6 +48,27 @@ def test_registers_16bit_args_range():
         my_assert(r.value, i)
 
 
+def test_registers_16bit_slices():
+    print "TEST: registers 16-bit slices."
+    r = Register(width=16)
+    my_assert(r.value, 0)
+    r = Register(0o777)
+    my_assert(r.value, 0o777)
+    r[1] = 1
+    my_assert(r.value, 0o100777)
+    r[1] = 0
+    my_assert(r.value, 0o0777)
+    r[1:16] = 0
+    my_assert(r[1:16], 0)
+    for i in range(r.width):
+        r[i+1] = 1
+        my_assert(r[i+1], 1)
+        my_assert(r.value, 2 ** (16 - i - 1))
+        r[i+1] = 0
+        my_assert(r[i+1], 0)
+        my_assert(r.value, 0)
+
+
 def test_registers_24bit_simple_defaults():
     print "TEST: registers 24-bit simple default cases."
     r = Register(width=24)
@@ -89,6 +110,27 @@ def test_registers_24bit_args_range():
     for i in range(2 ** 24, 16):
         r.value = i
         my_assert(r.value, i)
+
+
+def test_registers_24bit_slices():
+    print "TEST: registers 24-bit slices."
+    r = Register(width=24)
+    my_assert(r.value, 0)
+    r = Register(0o777, width=24)
+    my_assert(r.value, 0o777)
+    r[1] = 1
+    my_assert(r.value, 2 ** 23 + 0o0777)
+    r[1] = 0
+    my_assert(r.value, 0o0777)
+    r[1:r.width] = 0
+    my_assert(r[1:r.width], 0)
+    for i in range(r.width):
+        r[i+1] = 1
+        my_assert(r[i+1], 1)
+        my_assert(r.value, 2 ** (r.width - i - 1))
+        r[i+1] = 0
+        my_assert(r[i+1], 0)
+        my_assert(r.value, 0)
 
 
 def test_registerbank_invalid_args():
