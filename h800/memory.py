@@ -10,7 +10,7 @@ from word import word
 class MemoryBank(object):
     """H-x800 memory bank class."""
 
-    MEMORY_WIDTH = 56       # 48 data, 6 parity.
+    MEMORY_WIDTH = 48       # 48 data, 6 parity.
     NUM_BANKS = 4
     BANK_SIZE = 2048
 
