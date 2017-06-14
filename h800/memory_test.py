@@ -24,21 +24,41 @@ def test_memorybank_simple_defaults():
 
 def test_memorybank_invalid_args():
     print "TEST: memory bank invalid args."
-    gotexc = False
-    try:
-        m = MemoryBank(-1)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    pass
 
-    gotexc = False
-    try:
-        m = MemoryBank(5)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+
+def test_memorymodule_simple_defaults():
+    print "TEST: memory module simple default cases."
+    m = MemoryModule()
+    my_assert(m.size(), 8192)
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            my_assert(m[i][j], 0)
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            m[i][j] = 2 ** 48 - 1
+            my_assert(m[i][j], 2 ** 48 - 1)
+    for i in range(len(m)):
+        m[i].clear()
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            my_assert(m[i][j], 0)
+
+
+def test_expansionmemorymodule_simple_defaults():
+    print "TEST: expansion memory module simple default cases."
+    m = ExpansionMemoryModule()
+    my_assert(m.size(), 16384)
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            my_assert(m[i][j], 0)
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            m[i][j] = 2 ** 48 - 1
+            my_assert(m[i][j], 2 ** 48 - 1)
+    for i in range(len(m)):
+        m[i].clear()
+    for i in range(len(m)):
+        for j in range(len(m[i])):
+            my_assert(m[i][j], 0)
 
