@@ -259,3 +259,14 @@ def test_registergroup_24bit_args_range():
             r[i].value = j
             my_assert(r[i].value, j)
 
+
+def test_registers_16bit_simple():
+    print "TEST: registers 16-bit simple cases."
+    registers = Registers()
+    print registers
+    for group in registers:
+        print group
+        for register in group:
+            print register
+            my_assert(register.value, 0)
+
