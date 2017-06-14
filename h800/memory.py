@@ -86,3 +86,57 @@ class MemoryBank(object):
         for addr in self._data:
             self._data[addr].value = 0
 
+
+class MemoryModule(object):
+    """H-x800 memory module class."""
+
+    NUM_BANKS = 4
+
+    def __init__(self):
+        self._data = {}
+        for b in range(self.NUM_BANKS):
+            self._data[b] = MemoryBank()
+        self._current = 0
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            banks = []
+            for i in range(key.start, key.stop):
+                banks.append(self._data[i])
+            return banks
+        else:
+            return self._data[key]
+
+    def __len__(self):
+        return len(self._data)
+
+    def size(self):
+        return self.NUM_BANKS * len(self._data[0])
+
+
+class ExpansionMemoryModule(object):
+    """H-1800 expansion memory module class."""
+
+    NUM_BANKS = 8
+
+    def __init__(self):
+        self._data = {}
+        for b in range(self.NUM_BANKS):
+            self._data[b] = MemoryBank()
+        self._current = 0
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            banks = []
+            for i in range(key.start, key.stop):
+                banks.append(self._data[i])
+            return banks
+        else:
+            return self._data[key]
+
+    def __len__(self):
+        return len(self._data)
+
+    def size(self):
+        return self.NUM_BANKS * len(self._data[0])
+
