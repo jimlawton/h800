@@ -52,6 +52,7 @@ class MemoryBank(object):
             values = []
             for i in range(key.start, key.stop):
                 values.append(self._data[i].value)
+            return values
         else:
             return self._data[key].value
 
