@@ -9,6 +9,7 @@ tests: $(TESTS)
 	pytest -x bitfield_test.py 
 	pytest -x word_test.py 
 	pytest -x registers_test.py 
+	pytest -x memory_test.py 
 	pytest -x instruction_test.py 
 	pytest -x instructions_test.py
 
