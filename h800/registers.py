@@ -114,11 +114,23 @@ class Register(object):
     def width(self):
         return int(self._width)
 
-    def __repr__(self):
-        if self.name:
-            return "%s: 0o%06o" % (self.name, self.value)
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return self._data[key.start:key.stop]
         else:
-            return "0o%06o" % self.value
+            return self._data[key]
+
+    def __setitem__(self, key, value):
+        if isinstance(key, slice):
+            self._data[key.start:key.stop] = value
+        else:
+            return self._data[key] = value
+
+    def __len__(self):
+        return self.width
+
+    def __repr__(self):
+        return "0o%06o" % self.value
 
 
 class RegisterBank(object):
