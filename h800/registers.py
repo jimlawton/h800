@@ -190,8 +190,8 @@ class RegisterGroup(object):
         return text
 
     def clear(self):
-        for r in self._registers:
-            r.clear()
+        for register in self:
+            register.clear()
 
 
 class Registers(object):
@@ -248,6 +248,6 @@ class Registers(object):
         return text
 
     def clear(self):
-        for group in self._registers:
+        for group in self:
             group.clear()
 
