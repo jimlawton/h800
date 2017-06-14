@@ -209,9 +209,8 @@ def test_registerbank_24bit_invalid_args():
     assert gotexc == True, "Invalid value should have thrown an exception!"
 
 
-def test_registers_24bit_args_range():
-    print "TEST: registers 24-bit args range."
-    print "TEST: register bank 16-bit args range."
+def test_registerbank_24bit_args_range():
+    print "TEST: register bank 24-bit args range."
     r = RegisterBank(24)
     for i in range(len(REGISTERS)):
         for j in range(2 ** 24, 16):
