@@ -132,6 +132,9 @@ class Register(object):
     def __repr__(self):
         return "0o%06o" % self.value
 
+    def clear(self):
+        self._data.clear()
+
 
 class RegisterGroup(object):
     """H-x800 register group class."""
@@ -186,6 +189,10 @@ class RegisterGroup(object):
             text += "%s " % self._registers[r]
         return text
 
+    def clear(self):
+        for r in self._registers:
+            r.clear()
+
 
 class Registers(object):
     """H-x800 registers class."""
@@ -239,4 +246,8 @@ class Registers(object):
         for i in self._registers:
             text += "[%d] %s\n" % (i, self._registers[i])
         return text
+
+    def clear(self):
+        for group in self._registers:
+            group.clear()
 
