@@ -141,14 +141,7 @@ class RegisterGroup(object):
         self._registers = {}
         for regname in REGISTERS:
             self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
-
-    @property
-    def value(self):
-        return int(self._data)
-
-    @value.setter
-    def value(self, value):
-        self._data.value = value
+        self._current = 0
 
     @property
     def width(self):
@@ -177,6 +170,16 @@ class RegisterGroup(object):
     def __len__(self):
         return len(self._registers)
 
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self._current >= len(REGISTERS):
+            raise StopIteration
+        else:
+            self._current += 1
+            return self._registers[self._current - 1]
+
     def __repr__(self):
         text = ""
         for r in self._registers:
@@ -194,6 +197,7 @@ class Registers(object):
         self._registers = {}
         for group in range(self._NUM_GROUPS):
             self._registers[group] = RegisterGroup(width=width)
+        self._current = 0
 
     @property
     def width(self):
@@ -219,6 +223,16 @@ class Registers(object):
 
     def __len__(self):
         return len(self._registers)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self._current >= self._NUM_GROUPS:
+            raise StopIteration
+        else:
+            self._current += 1
+            return self._registers[self._current - 1]
 
     def __repr__(self):
         text = ""
