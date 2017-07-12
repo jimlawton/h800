@@ -1496,7 +1496,7 @@ This card is a segment director of a special kind, used to introduce the first (
 
 ### Test Data Directors
 
-Test data belonging to a segment may appear anywhere within the input for that segment.  The _Program test System Manual_ should be consulted for a detailed description of the test data cards which are summarized here.
+Test data belonging to a segment may appear anywhere within the input for that segment.  The _Program Test System Manual_ should be consulted for a detailed description of the test data cards which are summarized here.
 
 #### `TESTDATA`
 
