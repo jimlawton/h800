@@ -138,7 +138,8 @@ OPCODES = {
     #
     #   Mnemonic  (Class, Unmasked Bits2-3, Masked Bit7, Bits8-12)
     #
-    # "*" in the mnemonic is used as an internal representation of masked instructions.
+    # "*" in the mnemonic is used as an internal representation of masked
+    # instructions.
 
     # General, masked or unmasked.
     "BA":   Opcode("BA", "BinaryAdd", 0b10, 0b1, 0o11, "maskable"),
@@ -296,7 +297,8 @@ def make_masked_opcode(mnemonic, sequence, mask):
 
 def make_unmasked_opcode(mnemonic, sequence, a, b, c):
     o = OPCODES[mnemonic]
-    return ((0o4000 * sequence) + (0o1000 * o.b23) + (0o400 * a) + (0o200 * b) + (0o100 * c) + o.op)
+    return ((0o4000 * sequence) + (0o1000 * o.b23) + (0o400 * a) +
+            (0o200 * b) + (0o100 * c) + o.op)
 
 
 def make_peripheral_opcode(mnemonic, paddr):
@@ -306,13 +308,15 @@ def make_peripheral_opcode(mnemonic, paddr):
 
 def make_print_opcode(mnemonic, sequence, a, b, c):
     o = OPCODES[mnemonic]
-    return ((0o4000 * sequence) + (0o400 * a) + (0o200 * b) + (0o100 * c) + (0o40 * o.b7) + o.op)
+    return ((0o4000 * sequence) + (0o400 * a) + (0o200 * b) + (0o100 * c) +
+            (0o40 * o.b7) + o.op)
 
 
 class NotImplementedException(Exception):
 
     def __init__(self):
-        super(NotImplementedException, self).__init__("This feature is not yet implemented!")
+        super(NotImplementedException, self).__init__(
+            "This feature is not yet implemented!")
 
 
 # General, masked or unmasked.
@@ -1043,13 +1047,15 @@ def print_instructions():
         if o.type == "maskable":
             for i in range(2):
                 for j in range(32):
-                    opcodes[mnemonic].append(make_masked_opcode(mnemonic, i, j))
+                    opcodes[mnemonic].append(
+                        make_masked_opcode(mnemonic, i, j))
         elif o.type == "unmasked":
             for i in range(2):
                 for j in range(2):
                     for k in range(2):
                         for l in range(2):
-                            opcodes[mnemonic].append(make_unmasked_opcode(mnemonic, i, j, k, l))
+                            opcodes[mnemonic].append(
+                                make_unmasked_opcode(mnemonic, i, j, k, l))
         elif o.type == "peripheral":
             for i in range(64):
                 opcodes[mnemonic].append(make_peripheral_opcode(mnemonic, i))
@@ -1061,7 +1067,8 @@ def print_instructions():
                     for j in range(2):
                         for k in range(2):
                             for l in range(2):
-                                opcodes[mnemonic].append(make_print_opcode(mnemonic, i, j, k, l))
+                                opcodes[mnemonic].append(
+                                    make_print_opcode(mnemonic, i, j, k, l))
         elif o.type == "simulator":
             opcodes[mnemonic].append(0o0007)
             opcodes[mnemonic].append(0o4007)
