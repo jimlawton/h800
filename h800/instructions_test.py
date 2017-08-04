@@ -60,7 +60,7 @@ def run_exception_tests(message, testdata):
             gotexc = True
         else:
             raise
-        assert gotexc == True, "Invalid value should have thrown an exception!"
+        assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 # ######## BA ########
