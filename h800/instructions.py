@@ -855,101 +855,101 @@ class FloatingNotEqualNormalized(instruction.Scientific):
 
 # Control Instructions.
 
-# Assign Tag to Complex Address
+# ASSIGN: Assign Tag to Complex Address
 class AssignTag(instruction.AssemblyControl):
     pass
 
 
-# Specify Information for Executive
+# END: Specify Information for Executive
 class End(instruction.AssemblyControl):
     pass
 
 
-# Assign Value to Tag
+# EQUALS: Assign Value to Tag
 class Equals(instruction.AssemblyControl):
     pass
 
 
-# Set Location Counter to Next Even Address
+# EVEN: Set Location Counter to Next Even Address
 class Even(instruction.AssemblyControl):
     pass
 
 
-# Assign Shift and Field Group Numbers
+# MASKGRP: Assign Shift and Field Group Numbers
 class MaskGroup(instruction.AssemblyControl):
     pass
 
 
-# Set Location Counter Modulo-N.
+# MODLOC: Set Location Counter Modulo-N.
 class SetLocationCounterModuloN(instruction.AssemblyControl):
     pass
 
 
-# Reserve N Words of Memory
+# RESERVE: Reserve N Words of Memory
 class Reserve(instruction.AssemblyControl):
     pass
 
 
-# Set Location Counter
+# SETLOC: Set Location Counter
 class SetLocationCounter(instruction.AssemblyControl):
     pass
 
 
-# Start of Simulator Routine
+# SIMULATE: Start of Simulator Routine
 class Simulate(instruction.AssemblyControl):
     pass
 
 
-# Temporarily Assign Tag to Complex Address
+# TAS: Temporarily Assign Tag to Complex Address
 class TemporarilyAssignTag(instruction.AssemblyControl):
     pass
 
 
 # Data Constants.
 
-# Alphanumeric Constant
+# ALF: Alphanumeric Constant
 class AlphanumericConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="ALF", data=data)
 
 
-# Fixed Decimal Constant
+# DEC: Fixed Decimal Constant
 class DecimalConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="DEC", data=data)
 
 
-# Extended Binary Constant
+# EBC: Extended Binary Constant
 class ExtendedBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="EBC", data=data)
 
 
-# Floating-Point Binary Constant
+# FLBIN: Floating-Point Binary Constant
 class FloatingBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="FLBIN", data=data)
 
 
-# Floating-Point Decimal Constant
+# FLDEC: Floating-Point Decimal Constant
 class FloatingDecimalConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="FLDEC", data=data)
 
 
-# Decimal to Fixed Binary Translation
+# FXBIN: Decimal to Fixed Binary Translation
 class FixedBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="FXBIN", data=data)
 
 
-# Octal Constant
+# OCT: Octal Constant
 class OctalConstant(instruction.Constant):
 
     def __init__(self, data):
@@ -958,63 +958,63 @@ class OctalConstant(instruction.Constant):
 
 # Control Constants.
 
-# Special Address Constant
+# SPEC: Special Address Constant
 class SpecialAddressConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="SPEC", data=data)
 
 
-# Complete Address Constant
+# CAC: Complete Address Constant
 class CompleteAddressConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="CAC", data=data)
 
 
-# Mask Base Address Constant
+# MASKBASE: Mask Base Address Constant
 class MaskBaseAddressConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="MASKBASE", data=data)
 
 
-# Program Control Constant
+# PCON: Program Control Constant
 class ProgramControlConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="CONTROL", data=data)
 
 
-# Mixed Constant
+# M: Mixed Constant
 class MixedConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="M", data=data)
 
 
-# Tape Address Constant
+# TAC: Tape Address Constant
 class TapeAddressConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="TAC", data=data)
 
 
-# Linkage Constant
+# LINK: Linkage Constant
 class LinkageConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="LINK", data=data)
 
 
-# Segment Name Constant
+# SEGNAME: Segment Name Constant
 class SegmentNameConstant(instruction.Constant):
 
     def __init__(self, data):
         instruction.Constant.__init__(self, mnemonic="SEGNAME", data=data)
 
 
-# Subroutine Call Constant
+# SUBCALL: Subroutine Call Constant
 class SubroutineCallConstant(instruction.Constant):
 
     def __init__(self, data):
