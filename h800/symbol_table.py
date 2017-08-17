@@ -7,17 +7,30 @@ import struct
 class SymbolTableEntry:
 
     def __init__(self, name, expression=None, value=None, type=None, file=None, line=0):
-        self.name = name                    # Symbol name.
-        self.expression = expression        # Symbolic expression.
-        self.value = value                  # Actual value.
-        self.recordIndex = None             # Index of the parser record containing the definition of this symbol.
-        self.references = []                # List of references.
-        self.type = type                    # Type of record the symbol refers to.
-        self.file = file
-        self.line = line
+        self._name = name                    # Symbol name.
+        self._expression = expression        # Symbolic expression.
+        self._absoluteValue = self._complexValue = None
+        if type == "absolute"
+            self._absoluteValue = value      # Absolute value.
+        else:
+            self._complexValue = value       # Complex value.
+        self._recordIndex = None             # Index of the parser record containing the definition of this symbol.
+        self._references = []                # List of references.
+        self._type = type                    # Type of record the symbol refers to.
+        self._file = file
+        self._line = line
 
-    def isComplete(self):
-        return (self.value != None)
+    def isValid(self):
+        return (self._absoluteValue != None or self._complexValue != None)
+
+    def isAbsolute(self):
+        return (self._absoluteValue != None)
+
+    def isComplex(self):
+        return (self._complexValue != None)
+
+    def isMultiple(self):
+        return self.isAbsolute() and self.isComplex()
 
     def addReference(self, ref):
         self.references.append(ref)
