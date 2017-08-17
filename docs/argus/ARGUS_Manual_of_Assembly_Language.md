@@ -402,7 +402,7 @@ A card containing only remarks may be included at any point in a program.  Such 
 
 ## Section IV: Tags
 
-A tag punched in the location field of a program word allows the programmer to that word elsewhere in his program without being aware of its absolute location in memory.  A word may also be tagged to denote its use as a mask or to direct its storage in a special register.  Three groups of words must include a tag punched in the location field:
+A tag punched in the location field of a program word allows the programmer to refer to that word elsewhere in his program without being aware of its absolute location in memory.  A word may also be tagged to denote its use as a mask or to direct its storage in a special register.  Three groups of words must include a tag punched in the location field:
 1. Certain of the words which are directly referenced in the address fields of other program words;
 2. All words which are to be placed in special registers at loading time; and
 3. All masks.
