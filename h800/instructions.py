@@ -221,52 +221,52 @@ OPCODES = {
 # The remaining instructions are pseudo-instructions of various types.
 
 CONTROL_INSTRUCTIONS = {
-    "ASSIGN":   None,                  # Assign Tag to Complex Address
-    "END":      None,                  # Specify Information for Executive
-    "EQUALS":   None,                  # Assign Value to Tag
-    "EVEN":     None,                  # Set Location Counter to Next Even Address
-    "MASKGRP":  None,                  # Assign Shift and Field Group Numbers
-    "MODLOC":   None,                  # Set Location Counter Modulo-N.
-    "RESERVE":  None,                  # Reserve N Words of Memory
-    "SETLOC":   None,                  # Set Location Counter
-    "SIMULATE": None,                  # Start of Simulator Routine
-    "TAS":      None                   # Temporarily Assign Tag to Complex Address
+    "ASSIGN":   None,   # Assign Tag to Complex Address
+    "END":      None,   # Specify Information for Executive
+    "EQUALS":   None,   # Assign Value to Tag
+    "EVEN":     None,   # Set Location Counter to Next Even Address
+    "MASKGRP":  None,   # Assign Shift and Field Group Numbers
+    "MODLOC":   None,   # Set Location Counter Modulo-N.
+    "RESERVE":  None,   # Reserve N Words of Memory
+    "SETLOC":   None,   # Set Location Counter
+    "SIMULATE": None,   # Start of Simulator Routine
+    "TAS":      None    # Temporarily Assign Tag to Complex Address
 }
 
 DATA_CONSTANTS = {
-    "ALF":   None,                     # Alphanumeric Constant
-    "DEC":   None,                     # Fixed Decimal Constant
-    "EBC":   None,                     # Extended Binary Constant
-    "FLBIN": None,                     # Floating-Point Binary Constant
-    "FLDEC": None,                     # Floating-Point Decimal Constant
-    "FXBIN": None,                     # Decimal to Fixed Binary Translation
-    "OCT":   None                      # Octal Constant
+    "ALF":   None,      # Alphanumeric Constant
+    "DEC":   None,      # Fixed Decimal Constant
+    "EBC":   None,      # Extended Binary Constant
+    "FLBIN": None,      # Floating-Point Binary Constant
+    "FLDEC": None,      # Floating-Point Decimal Constant
+    "FXBIN": None,      # Decimal to Fixed Binary Translation
+    "OCT":   None       # Octal Constant
 }
 
 CONTROL_CONSTANTS = {
-    "SPEC":     None,                  # Special Address Constant
-    "CAC":      None,                  # Complete Address Constant
-    "MASKBASE": None,                  # Mask Base Address Constant
-    "CONTROL":  None,                  # Program Control Constant
-    "M":        None,                  # Mixed Constant
-    "TAC":      None,                  # Tape Address Constant
-    "LINK":     None,                  # Linkage Constant
-    "SEGNAME":  None,                  # Segment Name Constant
-    "SUBCALL":  None                   # Subroutine Call Constant
+    "SPEC":     None,   # Special Address Constant
+    "CAC":      None,   # Complete Address Constant
+    "MASKBASE": None,   # Mask Base Address Constant
+    "CONTROL":  None,   # Program Control Constant
+    "M":        None,   # Mixed Constant
+    "TAC":      None,   # Tape Address Constant
+    "LINK":     None,   # Linkage Constant
+    "SEGNAME":  None,   # Segment Name Constant
+    "SUBCALL":  None    # Subroutine Call Constant
 }
 
 EXTENDED_INSTRUCTIONS = {
-    "CSCON": None,                     # Turn On Programs, Use Cosequence Counters
-    "DOFF":  None,                     # Turn Off Programs
-    "DON":   None,                     # Turn On Programs
-    "SCON":  None,                     # Turn On Programs, Use Sequence Counters
-    "SPCR":  None,                     # Save PCR
-    "STOP":  None                      # Stop Current Program
+    "CSCON": None,      # Turn On Programs, Use Cosequence Counters
+    "DOFF":  None,      # Turn Off Programs
+    "DON":   None,      # Turn On Programs
+    "SCON":  None,      # Turn On Programs, Use Sequence Counters
+    "SPCR":  None,      # Save PCR
+    "STOP":  None       # Stop Current Program
 }
 
 MISC_INSTRUCTIONS = {
-    "COREDUMP": None,                  # ?
-    "DUMP":     None                   # ?
+    "COREDUMP": None,   # ?
+    "DUMP":     None    # ?
 }
 
 ARGUS_INSTRUCTIONS = {
