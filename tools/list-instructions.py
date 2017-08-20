@@ -58,7 +58,7 @@ def main():
                     if opts.details:
                         print(card.filename, card.linenum, card.line)
                     else:
-                        print(card.line
+                        print(card.line)
 
 
 if __name__ == '__main__':
