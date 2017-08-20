@@ -269,25 +269,25 @@ MISC_INSTRUCTIONS = {
     "DUMP":     None    # ?
 }
 
+# These are not used by YUL, so not supported.
 ARGUS_INSTRUCTIONS = {
-    "ARGUS":    None,                  #
-    "U":        None,                  #
-    "MACRODEF": None,                  #
-    "FINIS":    None,                  #
-    "ELIMSEG":  None,                  #
-    "SEGMENT":  None,                  #
-    "PROGRAM":  None,                  #
-    "TESTDATA": None,                  #
-    "ELIMDATA": None,                  #
-    "ELIMDERL": None,                  #
-    "DELETE":   None,                  #
-    "ENDARGUS": None                   #
+    "ARGUS":    None,   # First card of every ARGUS input deck
+    "U":        None,   # Program Director
+    "MACRODEF": None,   # Define macro
+    "FINIS":    None,   # End of Macro definition
+    "ELIMSEG":  None,   # Eliminate segment from the new symbolic tape
+    "SEGMENT":  None,   # Start of a segment
+    "PROGRAM":  None,   # First segment of a program
+    "TESTDATA": None,   # Start of test data set
+    "ELIMDATA": None,   # Eliminate the specified set of test data from the SPT
+    "ELIMDERL": None,   # Eliminate a derail
+    "DELETE":   None,   # Delete lines from a segment on the symbolic program tape
+    "ENDARGUS": None    # End of the ARGUS input deck
 }
 
 INSTRUCTIONS = list(OPCODES.keys() + CONTROL_INSTRUCTIONS.keys() +
                     DATA_CONSTANTS.keys() + CONTROL_CONSTANTS.keys() +
-                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys() +
-                    ARGUS_INSTRUCTIONS.keys())
+                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys())
 
 
 def make_masked_opcode(mnemonic, sequence, mask):
