@@ -48,7 +48,7 @@ def main():
                 if card.record["column8"] == '*':
                     if opts.verbose:
                         print("Skipping card with * in column 8:")
-                        print(card.filename, card.linenum, card.line)
+                        print("%-48s %6d %s" % (card.filename, card.linenum, card.line))
                     continue
                 instruction = card.operation.strip().replace(' ', '')
                 if ',' in instruction and ',' not in opcode:
@@ -56,7 +56,7 @@ def main():
                 if instruction == opcode or (
                         opcode.endswith(',') and instruction.startswith(opcode)):
                     if opts.details:
-                        print(card.filename, card.linenum, card.line)
+                        print("%-48s %6d %s" % (card.filename, card.linenum, card.line))
                     else:
                         print(card.line)
 
