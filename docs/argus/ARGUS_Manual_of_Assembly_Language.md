@@ -521,7 +521,7 @@ Three types of direct memory location addresses are illustrated in the instructi
 The function of this instruction is to add decimally the contents of the memory location two after the location of the instruction itself to the contents of the memory location designated by the tag `INTEREST`, and to store the result in the location 10 before that tagged `AMTPAID`.  (since this instruction is not marked by an "`X,`" in the location field, the CLC contains the address of this instruction while the instruction is being processed.)
 
 
-The number of symbolic tags required to write a program can be greatly reduce by the use of address arithmetic.  The programmer decides how many and which words in a program to tag and which to reference by address arithmetic.
+The number of symbolic tags required to write a program can be greatly reduced by the use of address arithmetic.  The programmer decides how many and which words in a program to tag and which to reference by address arithmetic.
 
 ### Direct Special Register Address
 
