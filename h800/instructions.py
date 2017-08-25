@@ -287,7 +287,8 @@ ARGUS_INSTRUCTIONS = {
 
 INSTRUCTIONS = list(OPCODES.keys() + CONTROL_INSTRUCTIONS.keys() +
                     DATA_CONSTANTS.keys() + CONTROL_CONSTANTS.keys() +
-                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys())
+                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys() +
+                    ARGUS_INSTRUCTIONS.keys())
 
 
 def make_masked_opcode(mnemonic, sequence, mask):
