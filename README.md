@@ -1,5 +1,5 @@
 # h800
-Tools for the Honeywell H-800 and H-1800 mainframe family of computers.
+Tools for the Honeywell H-800 and H-1800 mainframe family of computers. Initially I am working on a cross-assembler, but eventually I hope to build a simulator also.
 
 The Honeywell H-800 (https://en.wikipedia.org/wiki/Honeywell_800) was a transistorized mainframe computer developed at the end of the 1950s. It was later followed by other more-powerful versions, the H-1800 and H-1800-II. 
 
