@@ -98,7 +98,7 @@
 
 from collections import namedtuple
 
-from . import instruction
+from h800 import instruction
 
 
 # A version of namedtuple that takes a list of default values and applies them.

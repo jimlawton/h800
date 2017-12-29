@@ -7,8 +7,7 @@
 # ARGUS-format punch-card support for the H800.
 
 
-
-from . import punchcard
+from h800 import punchcard
 
 
 _WIDTH = 120
