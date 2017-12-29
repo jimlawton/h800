@@ -3,7 +3,7 @@
 # H-800/H-1800 Registers
 # ======================
 
-from bitfield import BitField
+from .bitfield import BitField
 
 
 REGISTERS = {
@@ -48,7 +48,7 @@ ALIASES = {
     'DWAC': 31      # Distributed Write Address Counter
 }
 
-REGISTER_NAMES = REGISTERS.keys() + ALIASES.keys()
+REGISTER_NAMES = list(REGISTERS.keys()) + list(ALIASES.keys())
 
 
 def registerName(number):
@@ -179,7 +179,7 @@ class RegisterGroup(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._current >= len(REGISTERS):
             raise StopIteration
         else:
@@ -237,7 +237,7 @@ class Registers(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._current >= self._NUM_GROUPS:
             raise StopIteration
         else:

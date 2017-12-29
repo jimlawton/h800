@@ -23,7 +23,7 @@ def test_simple():
                         "operand1": 'S ZERO', "operand2": 'COMMON',
                         "operand3": 'SET UP GPB', "misc": 'C',
                         "remarks": 'COMMUNICATION FLAG FOR END.'}
-    print "PASS"
+    print("PASS")
 
     lines = """
 L      @XYZ TESTING 123

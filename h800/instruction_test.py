@@ -4,6 +4,6 @@ from h800.instruction import *
 
 def test_simple():
     # Tester goes here.
-    print "TEST: TBD."
+    print("TEST: TBD.")
     # TODO
-    print "PASS"
+    print("PASS")

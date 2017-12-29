@@ -72,7 +72,7 @@ class SymbolTable:
 
     def update(self, name, value=None, symtype=None):
         if name:
-            if name not in self.symbols.keys():
+            if name not in list(self.symbols.keys()):
                 self.context.error("symbol \"%s\" not defined!" % (name))
             else:
                 entry = self.symbols[name]
@@ -126,10 +126,10 @@ class SymbolTable:
         # self.printUndefs()
 
     def keys(self):
-        return self.symbols.keys()
+        return list(self.symbols.keys())
 
     def getNumSymbols(self):
-        return len(self.symbols.keys())
+        return len(list(self.symbols.keys()))
 
     def getNumUndefs(self):
         return len(self.undefs)
@@ -145,11 +145,11 @@ class SymbolTable:
             out = sys.stdout
         else:
             out = outfile
-        symbols = self.symbols.keys()
+        symbols = list(self.symbols.keys())
         symbols.sort()
         print("\nDefined symbols:\n", file=out)
         for symbol in symbols:
-            print("%s" % self.symbols[symbol], file=out)
+            print(self.symbols[symbol], file=out)
 
         if len(self.undefs) > 0:
             print("\nUndefined symbols:\n", file=out)

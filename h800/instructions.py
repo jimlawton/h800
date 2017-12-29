@@ -98,7 +98,7 @@
 
 from collections import namedtuple
 
-import instruction
+from . import instruction
 
 
 # A version of namedtuple that takes a list of default values and applies them.
@@ -407,10 +407,10 @@ ARGUS_INSTRUCTIONS = {
     "ENDARGUS": None    # End of the ARGUS input deck
 }
 
-INSTRUCTIONS = list(OPCODES.keys() + CONTROL_INSTRUCTIONS.keys() +
-                    DATA_CONSTANTS.keys() + CONTROL_CONSTANTS.keys() +
-                    EXTENDED_INSTRUCTIONS.keys() + MISC_INSTRUCTIONS.keys() +
-                    ARGUS_INSTRUCTIONS.keys())
+INSTRUCTIONS = list(list(OPCODES.keys()) + list(CONTROL_INSTRUCTIONS.keys()) +
+                    list(DATA_CONSTANTS.keys()) + list(CONTROL_CONSTANTS.keys()) +
+                    list(EXTENDED_INSTRUCTIONS.keys()) + list(MISC_INSTRUCTIONS.keys()) +
+                    list(ARGUS_INSTRUCTIONS.keys()))
 
 
 def make_masked_opcode(mnemonic, sequence, mask):
@@ -1203,7 +1203,7 @@ def print_instructions():
         for opval in opvals:
             opmap[opval] = mnemonic
     for opval in sorted(opmap):
-        print "0o%04o %s" % (opval, opmap[opval])
+        print("0o%04o %s" % (opval, opmap[opval]))
 
 
 if __name__ == "__main__":

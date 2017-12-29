@@ -33,7 +33,7 @@
 # | COMMAND        |   A ADDRESS    |   B ADDRESS    |   C ADDRESS    |
 # +----------------+----------------+----------------+----------------+
 
-from bitfield import BitField
+from .bitfield import BitField
 
 
 class Word(object):

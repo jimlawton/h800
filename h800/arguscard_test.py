@@ -6,7 +6,7 @@
 #
 # ARGUS-format punch-card support for the H800.
 
-from __future__ import print_function
+
 
 
 from h800.arguscard import Deck

@@ -2,7 +2,7 @@
 
 from collections import namedtuple
 
-from instructions import make_masked_opcode, make_unmasked_opcode, \
+from .instructions import make_masked_opcode, make_unmasked_opcode, \
     make_peripheral_opcode, make_print_opcode, \
     BinaryAdd, DecimalAdd, WordAdd, \
     BinarySubtract, DecimalSubtract, WordDifference, \
@@ -49,7 +49,7 @@ ConstantTestData = namedtuple('ConstantTestData', ['data'])
 
 
 def run_test(testdata):
-    print testdata
+    print(testdata)
     c = testdata[0]
     t = testdata[1]
     good = testdata[2]
@@ -77,13 +77,13 @@ def run_test(testdata):
 
 
 def run_tests(message, testdata):
-    print message
+    print(message)
     for t in testdata:
         run_test(t)
 
 
 def run_exception_tests(message, testdata):
-    print message
+    print(message)
     for t in testdata:
         gotexc = False
         try:
@@ -2555,7 +2555,7 @@ def test_OCT_args_range():
 
 
 def test_machine_instructions():
-    print "TEST: check for duplicate machine instructions"
+    print("TEST: check for duplicate machine instructions")
     # Generate all possible instruction codes and look for duplicates.
     opcodes = []
     for mnemonic in OPCODES:

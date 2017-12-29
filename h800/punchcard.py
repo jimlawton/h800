@@ -138,8 +138,8 @@ class Deck(object):
             for i, line in enumerate(self._lines):
                 if line.startswith('#'):
                     if self._verbose:
-                        print("Skipping meta-comment, file %s, line %d" %
-                              (file, i+1))
+                        print(("Skipping meta-comment, file %s, line %d" %
+                              (file, i+1)))
                     continue
                 self._cards.append(cardclass(line, width=width, fields=fields,
                                              filename=file, linenum=i+1,
@@ -181,13 +181,13 @@ class Deck(object):
         lines = []
         with open(filename, 'r') as f:
             if self._verbose:
-                print("Reading %s..." % filename)
+                print(("Reading %s..." % filename))
             lines = f.readlines()
         for i, line in enumerate(lines):
             if line.startswith('#'):
                 if self._verbose:
-                    print("Skipping meta-comment, file %s, line %d" %
-                          (filename, i+1))
+                    print(("Skipping meta-comment, file %s, line %d" %
+                          (filename, i+1)))
                 continue
             if line.startswith('$'):
                 incname = line[1:].split()[0]

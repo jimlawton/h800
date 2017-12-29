@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from memory import MemoryBank, MemoryModule, ExpansionMemoryModule
+from .memory import MemoryBank, MemoryModule, ExpansionMemoryModule
 
 
 def my_assert(value, good):
@@ -8,7 +8,7 @@ def my_assert(value, good):
 
 
 def test_memorybank_simple_defaults():
-    print "TEST: memory bank simple default cases."
+    print("TEST: memory bank simple default cases.")
     m = MemoryBank()
     for i in range(len(m)):
         my_assert(m[i], 0)
@@ -23,12 +23,12 @@ def test_memorybank_simple_defaults():
 
 
 def test_memorybank_invalid_args():
-    print "TEST: memory bank invalid args."
+    print("TEST: memory bank invalid args.")
     pass
 
 
 def test_memorymodule_simple_defaults():
-    print "TEST: memory module simple default cases."
+    print("TEST: memory module simple default cases.")
     m = MemoryModule()
     my_assert(m.size(), 8192)
     for i in range(len(m)):
@@ -46,7 +46,7 @@ def test_memorymodule_simple_defaults():
 
 
 def test_expansionmemorymodule_simple_defaults():
-    print "TEST: expansion memory module simple default cases."
+    print("TEST: expansion memory module simple default cases.")
     m = ExpansionMemoryModule()
     my_assert(m.size(), 16384)
     for i in range(len(m)):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from word import Word, InstructionWord
+from .word import Word, InstructionWord
 
 
 def my_assert(value, good):
@@ -8,7 +8,7 @@ def my_assert(value, good):
 
 
 def test_word_simple_defaults():
-    print "TEST: word simple default cases."
+    print("TEST: word simple default cases.")
     w = Word()
     my_assert(w.value, 0)
     w = Word(4095)
@@ -22,7 +22,7 @@ def test_word_simple_defaults():
 def test_word_invalid_args():
     gotexc = False
     try:
-        print "TEST: test negative value"
+        print("TEST: test negative value")
         w = Word(-1)
     except ValueError:
         gotexc = True
@@ -32,7 +32,7 @@ def test_word_invalid_args():
 
     gotexc = False
     try:
-        print "TEST: test too-large value"
+        print("TEST: test too-large value")
         w = Word(2 ** 48)
         assert w is not None
     except ValueError:
@@ -43,7 +43,7 @@ def test_word_invalid_args():
 
 
 def test_inst_simple_defaults():
-    print "TEST: inst simple default cases."
+    print("TEST: inst simple default cases.")
     w = InstructionWord()
     my_assert(w.value, 0)
     w = InstructionWord(0, 4095, 0, 4095)
@@ -55,7 +55,7 @@ def test_inst_simple_defaults():
 
 
 def test_inst_field_set_get():
-    print "TEST: inst test field set/get."
+    print("TEST: inst test field set/get.")
     w = InstructionWord()
     my_assert(w.value, 0)
 

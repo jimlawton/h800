@@ -3,7 +3,7 @@
 # H-800/H-1800 Memory
 # ===================
 
-from word import Word
+from .word import Word
 
 
 class MemoryBank(object):
@@ -68,7 +68,7 @@ class MemoryBank(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._current >= len(self._data):
             raise StopIteration
         else:

@@ -110,7 +110,7 @@ class BitField(object):
         self._width = width
         if width > self.MAX_WIDTH:
             raise ValueError("Width is greater than maximum allowed!")
-        self._maxval = 2L ** width - 1
+        self._maxval = 2 ** width - 1
         self._value = value
         if self._value > self._maxval:
             raise ValueError("Value is greater than maximum allowed by "
@@ -329,7 +329,7 @@ class BitField(object):
             shift = 0
         else:
             shift = self._shift(rend)
-        bitmask = (2L ** width - 1) << shift
+        bitmask = (2 ** width - 1) << shift
         # print("BM: %d:%d | %d:%d | S=%d | B=0x%x" %
         #       (start, end, rstart, rend, shift, bitmask))
         return bitmask
@@ -340,7 +340,7 @@ class BitField(object):
         shift = index
         # print("BIT: %d,%d | W=%d | S=%d | %d" %
         #       (index, value, width, shift, (value >> shift) & 1L))
-        return (value >> shift) & 1L
+        return (value >> shift) & 1
 
     def __getitem__(self, key):
         if isinstance(key, slice):
@@ -358,7 +358,7 @@ class BitField(object):
             index = key
             self._checkIndex(index)
             rindex = self._rindex(index)
-            bitmask = 1L
+            bitmask = 1
             shift = self._shift(rindex)
             # print("GET-INDEX: %d | B=0x%x | S=%d | v=0x%x->0x%x" %
             #       (index, bitmask, shift, self._value,
@@ -387,11 +387,11 @@ class BitField(object):
             self._checkValue(value, width=1)
             rindex = self._rindex(index)
             shift = self._shift(rindex)
-            bitmask = (1L) << shift
+            bitmask = (1) << shift
             if value == 1:
                 newvalue = self._value | (value << shift)
             else:
-                newvalue = self._value & (self.maxval - (1L << shift))
+                newvalue = self._value & (self.maxval - (1 << shift))
             # print("SET-INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" %
             #       (index, value, rindex, bitmask, shift, self._value,
             #        newvalue))

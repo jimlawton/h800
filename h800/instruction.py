@@ -62,16 +62,16 @@
 # |            PADDRESS         |  1 |         OPCODE         |
 # +----+----+----+----+----+----+----+----+----+----+----+----+
 
-from bitfield import BitField
-from word import Word
+from .bitfield import BitField
+from .word import Word
 
 
 class Instruction(object):
     """Base opcode class."""
     def __init__(self, opcode, sequence=None, mask=None, a=None, b=None,
                  c=None, paddr=None, pseudo=False):
-        print("opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" %
-              (opcode, sequence, mask, a, b, c, paddr))
+        print(("opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" %
+              (opcode, sequence, mask, a, b, c, paddr)))
         self._opcode = opcode               # Opcode object
         self._sequence = sequence           # Sequence/cosequence code
         self._mask = mask                   # Mask
@@ -89,44 +89,44 @@ class Instruction(object):
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
         self._check()
-        print "1 0o%04o" % self.data
+        print("1 0o%04o" % self.data)
         if self._sequence is not None:
-            print "*** setting sequence to %d" % self._sequence
+            print("*** setting sequence to %d" % self._sequence)
             self.data[1] = self._sequence
-        print "2 0o%04o" % self.data
+        print("2 0o%04o" % self.data)
         if self._type in ("maskable", "peripheral", "print"):
             if (self._type == "maskable" and self._mask is not None) or \
                     self._type != "maskable":
                 if self._bit7 is not None:
-                    print "*** setting bit7 to %d" % self._bit7
+                    print("*** setting bit7 to %d" % self._bit7)
                     self.data[7] = self._bit7
-        print "3 0o%04o" % self.data
+        print("3 0o%04o" % self.data)
         if self._mask is not None:
-            print "*** setting mask to 0o%05o" % self._mask
+            print("*** setting mask to 0o%05o" % self._mask)
             self.data[2:6] = self._mask
         else:
             if self._bits23 is not None:
-                print "*** setting bits 2,3 to %d" % self._bits23
+                print("*** setting bits 2,3 to %d" % self._bits23)
                 self.data[2:3] = self._bits23
-        print "4 0o%04o" % self.data
+        print("4 0o%04o" % self.data)
         if self._a is not None:
-            print "*** a: %d" % 1 if self._a else 0
+            print("*** a: %d" % 1 if self._a else 0)
             self.data[4] = 1 if self._a else 0
-        print "5 0o%04o" % self.data
+        print("5 0o%04o" % self.data)
         if b is not None:
-            print "*** b: %d" % 1 if self._b else 0
+            print("*** b: %d" % 1 if self._b else 0)
             self.data[5] = 1 if self._b else 0
-        print "6 0o%04o" % self.data
+        print("6 0o%04o" % self.data)
         if c is not None:
-            print "*** c: %d" % 1 if self._c else 0
+            print("*** c: %d" % 1 if self._c else 0)
             self.data[6] = 1 if self._c else 0
-        print "7 0o%04o" % self.data
+        print("7 0o%04o" % self.data)
         if paddr is not None:
             self.data[1:6] = self._paddr
-            print "*** paddr: %d" % self._paddr
-        print "8 0o%04o" % self.data
+            print("*** paddr: %d" % self._paddr)
+        print("8 0o%04o" % self.data)
         self.data[8:12] = self._op
-        print "9 0o%04o" % self.data
+        print("9 0o%04o" % self.data)
 
     def _check(self):
         "Check the instruction for correctness."
