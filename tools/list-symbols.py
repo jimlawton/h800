@@ -49,11 +49,15 @@ def main():
                     if card.operation != "ASSIGN" and card.operation != "TAS":
                         # ASSIGN and TAS can doubly-define symbols in some
                         # arcane way that I do not yet understand.
-                        print("\n*** ERROR: Symbol %s is multiply-defined!" % strLabel, file=sys.stderr)
-                        print(card.filename, card.linenum, card.lognum, file=sys.stderr)
+                        print("\n*** ERROR: Symbol %s is multiply-defined!" %
+                              strLabel, file=sys.stderr)
+                        print(card.filename, card.linenum, card.lognum,
+                              file=sys.stderr)
                         print(card.line, file=sys.stderr)
                         print("Previous definition:", file=sys.stderr)
-                        print(symtab[strLabel]["def-file"], symtab[strLabel]["def-line"], symtab[strLabel]["def-lognum"], file=sys.stderr)
+                        print(symtab[strLabel]["def-file"],
+                              symtab[strLabel]["def-line"],
+                              symtab[strLabel]["def-lognum"], file=sys.stderr)
                         print(symtab[strLabel]["def-source"], file=sys.stderr)
                         print("", file=sys.stderr)
                         file_errors += 1

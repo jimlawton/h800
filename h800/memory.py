@@ -3,7 +3,6 @@
 # H-800/H-1800 Memory
 # ===================
 
-from bitfield import BitField
 from word import Word
 
 

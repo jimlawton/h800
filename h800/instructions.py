@@ -142,80 +142,202 @@ OPCODES = {
     # instructions.
 
     # General, masked or unmasked.
-    "BA":   Opcode("BA", "BinaryAdd", 0b10, 0b1, 0o11, "maskable"),
-    "DA":   Opcode("DA", "DecimalAdd", 0b10, 0b1, 0o01, "maskable"),
-    "WA":   Opcode("WA", "WordAdd", 0b10, 0b1, 0o15, "maskable"),
-    "BS":   Opcode("BS", "BinarySubtract", 0b10, 0b1, 0o31, "maskable"),
-    "DS":   Opcode("DS", "DecimalSubtract", 0b10, 0b1, 0o21, "maskable"),
-    "WD":   Opcode("WD", "WordDifference", 0b10, 0b1, 0o35, "maskable"),
-    "NA":   Opcode("NA", "NotEqualAlphabetic", 0b10, 0b1, 0o14, "maskable"),
-    "NN":   Opcode("NN", "NotEqualNumeric", 0b10, 0b1, 0o10, "maskable"),
-    "LA":   Opcode("LA", "LessThanOrEqualAlphabetic", 0b10, 0b1, 0o34, "maskable"),
-    "LN":   Opcode("LN", "LessThanOrEqualNumeric", 0b10, 0b1, 0o30, "maskable"),
-    "TX":   Opcode("TX", "Transfer", 0b10, 0b1, 0o20, "maskable"),
-    "TS":   Opcode("TS", "TransferAndChangeSequence", 0b10, 0b1, 0o04, "maskable"),
-    "HA":   Opcode("HA", "HalfAdd", 0b10, 0b1, 0o25, "maskable"),
-    "SM":   Opcode("SM", "Superimpose", 0b10, 0b1, 0o05, "maskable"),
-    "CP":   Opcode("CP", "CheckParity", 0b10, 0b1, 0o24, "maskable"),
+    "BA":   Opcode("BA", "BinaryAdd",
+                   0b10, 0b1, 0o11, "maskable"),
+
+    "DA":   Opcode("DA", "DecimalAdd",
+                   0b10, 0b1, 0o01, "maskable"),
+
+    "WA":   Opcode("WA", "WordAdd",
+                   0b10, 0b1, 0o15, "maskable"),
+
+    "BS":   Opcode("BS", "BinarySubtract",
+                   0b10, 0b1, 0o31, "maskable"),
+
+    "DS":   Opcode("DS", "DecimalSubtract",
+                   0b10, 0b1, 0o21, "maskable"),
+
+    "WD":   Opcode("WD", "WordDifference",
+                   0b10, 0b1, 0o35, "maskable"),
+
+    "NA":   Opcode("NA", "NotEqualAlphabetic",
+                   0b10, 0b1, 0o14, "maskable"),
+
+    "NN":   Opcode("NN", "NotEqualNumeric",
+                   0b10, 0b1, 0o10, "maskable"),
+
+    "LA":   Opcode("LA", "LessThanOrEqualAlphabetic",
+                   0b10, 0b1, 0o34, "maskable"),
+
+    "LN":   Opcode("LN", "LessThanOrEqualNumeric",
+                   0b10, 0b1, 0o30, "maskable"),
+
+    "TX":   Opcode("TX", "Transfer",
+                   0b10, 0b1, 0o20, "maskable"),
+
+    "TS":   Opcode("TS", "TransferAndChangeSequence",
+                   0b10, 0b1, 0o04, "maskable"),
+
+    "HA":   Opcode("HA", "HalfAdd",
+                   0b10, 0b1, 0o25, "maskable"),
+
+    "SM":   Opcode("SM", "Superimpose",
+                   0b10, 0b1, 0o05, "maskable"),
+
+    "CP":   Opcode("CP", "CheckParity",
+                   0b10, 0b1, 0o24, "maskable"),
 
     # General, unmasked.
-    "BM":   Opcode("BM", "BinaryMultiply", 0b00, 0b0, 0o13),
-    "DM":   Opcode("DM", "DecimalMultiply", 0b00, 0b0, 0o03),
-    "BT":   Opcode("BT", "BinaryAccumulate", 0b10, 0b0, 0o13),
-    "DT":   Opcode("DT", "DecimalAccumulate", 0b10, 0b0, 0o03),
-    "MT":   Opcode("MT", "MultipleTransfer", 0b00, 0b0, 0o20),
-    "TN":   Opcode("TN", "TransferNWords", 0b01, 0b0, 0o20),
-    "CC":   Opcode("CC", "ComputeOrthocount", 0b01, 0b0, 0o10),
-    "IT":   Opcode("IT", "ItemTransfer", 0b01, 0b0, 0o30),
-    "EBA":  Opcode("EBA", "ExtendedBinaryAdd", 0b11, 0b0, 0o13),
-    "EBS":  Opcode("EBS", "ExtendedBinarySubtract", 0b11, 0b0, 0o33),
-    "RT":   Opcode("RT", "RecordTransfer", 0b11, 0b0, 0o30),
-    "MPC":  Opcode("MPC", "ControlProgram", 0b10, 0b0, 0o00),
-    "PR":   Opcode("PR", "Proceed", 0b00, 0b0, 0o00),
+    "BM":   Opcode("BM", "BinaryMultiply",
+                   0b00, 0b0, 0o13),
+
+    "DM":   Opcode("DM", "DecimalMultiply",
+                   0b00, 0b0, 0o03),
+
+    "BT":   Opcode("BT", "BinaryAccumulate",
+                   0b10, 0b0, 0o13),
+
+    "DT":   Opcode("DT", "DecimalAccumulate",
+                   0b10, 0b0, 0o03),
+
+    "MT":   Opcode("MT", "MultipleTransfer",
+                   0b00, 0b0, 0o20),
+
+    "TN":   Opcode("TN", "TransferNWords",
+                   0b01, 0b0, 0o20),
+
+    "CC":   Opcode("CC", "ComputeOrthocount",
+                   0b01, 0b0, 0o10),
+
+    "IT":   Opcode("IT", "ItemTransfer",
+                   0b01, 0b0, 0o30),
+
+    "EBA":  Opcode("EBA", "ExtendedBinaryAdd",
+                   0b11, 0b0, 0o13),
+
+    "EBS":  Opcode("EBS", "ExtendedBinarySubtract",
+                   0b11, 0b0, 0o33),
+
+    "RT":   Opcode("RT", "RecordTransfer",
+                   0b11, 0b0, 0o30),
+
+    "MPC":  Opcode("MPC", "ControlProgram",
+                   0b10, 0b0, 0o00),
+
+    "PR":   Opcode("PR", "Proceed",
+                   0b00, 0b0, 0o00),
 
     # Inherent mask.
-    "SWS":  Opcode("SWS", "ShiftWordAndSubstitute", 0b10, 0b0, 0o06),
-    "SPS":  Opcode("SPS", "ShiftPreservingSignAndSubstitute", 0b10, 0b0, 0o02),
-    "SWE":  Opcode("SWE", "ShiftWordAndExtract", 0b10, 0b0, 0o16),
-    "SPE":  Opcode("SPE", "ShiftPreservingSignAndExtract", 0b10, 0b0, 0o12),
-    "SSL":  Opcode("SSL", "ShiftAndSelect", 0b10, 0b0, 0o26),
-    "SS":   Opcode("SS", "Substitute", 0b00, 0b0, 0o06),
-    "EX":   Opcode("EX", "Extract", 0b00, 0b0, 0o16),
+    "SWS":  Opcode("SWS", "ShiftWordAndSubstitute",
+                   0b10, 0b0, 0o06),
+
+    "SPS":  Opcode("SPS", "ShiftPreservingSignAndSubstitute",
+                   0b10, 0b0, 0o02),
+
+    "SWE":  Opcode("SWE", "ShiftWordAndExtract",
+                   0b10, 0b0, 0o16),
+
+    "SPE":  Opcode("SPE", "ShiftPreservingSignAndExtract",
+                   0b10, 0b0, 0o12),
+
+    "SSL":  Opcode("SSL", "ShiftAndSelect",
+                   0b10, 0b0, 0o26),
+
+    "SS":   Opcode("SS", "Substitute",
+                   0b00, 0b0, 0o06),
+
+    "EX":   Opcode("EX", "Extract",
+                   0b00, 0b0, 0o16),
 
     # Peripheral and print.
-    "RF":   Opcode("RF", "ReadForward", None, 0b1, 0o32, "peripheral"),
-    "RB":   Opcode("RB", "ReadBackward", None, 0b1, 0o12, "peripheral"),
-    "WF":   Opcode("WF", "WriteForward", None, 0b1, 0o16, "peripheral"),
-    "RW":   Opcode("RW", "Rewind", None, 0b1, 0o02, "peripheral"),
-    "PRA":  Opcode("PRA", "PrintAlphabetic", None, 0b1, 0o06, "print"),
-    "PRD":  Opcode("PRD", "PrintDecimal", None, 0b1, 0o06, "print"),
-    "PRO":  Opcode("PRO", "PrintOctal", None, 0b1, 0o06, "print"),
+    "RF":   Opcode("RF", "ReadForward",
+                   None, 0b1, 0o32, "peripheral"),
+
+    "RB":   Opcode("RB", "ReadBackward",
+                   None, 0b1, 0o12, "peripheral"),
+
+    "WF":   Opcode("WF", "WriteForward",
+                   None, 0b1, 0o16, "peripheral"),
+
+    "RW":   Opcode("RW", "Rewind",
+                   None, 0b1, 0o02, "peripheral"),
+
+    "PRA":  Opcode("PRA", "PrintAlphabetic",
+                   None, 0b1, 0o06, "print"),
+
+    "PRD":  Opcode("PRD", "PrintDecimal",
+                   None, 0b1, 0o06, "print"),
+
+    "PRO":  Opcode("PRO", "PrintOctal",
+                   None, 0b1, 0o06, "print"),
 
     # Simulator.
-    "S":    Opcode("S", "Simulator", None, None, 0o07, "simulator"),
+    "S":    Opcode("S", "Simulator",
+                   None, None, 0o07, "simulator"),
 
     # Scientific.
-    "FBA":  Opcode("FBA", "FloatingBinaryAdd", 0b01, 0b0, 0o01),
-    "FDA":  Opcode("FDA", "FloatingDecimalAdd", 0b01, 0b0, 0o21),
-    "FBS":  Opcode("FBS", "FloatingBinarySubtract", 0b01, 0b0, 0o11),
-    "FDS":  Opcode("FDS", "FloatingDecimalSubtract", 0b01, 0b0, 0o31),
-    "FBD":  Opcode("FBD", "FloatingBinaryDivide", 0b01, 0b0, 0o05),
-    "FDD":  Opcode("FDD", "FloatingDecimalDivide", 0b01, 0b0, 0o25),
-    "FBAU": Opcode("FBAU", "FloatingBinaryAddUnnormalized", 0b11, 0b0, 0o01),
-    "FDAU": Opcode("FDAU", "FloatingDecimalAddUnnormalized", 0b11, 0b0, 0o21),
-    "FBSU": Opcode("FBSU", "FloatingBinarySubtractUnnormalized", 0b11, 0b0, 0o11),
-    "FDSU": Opcode("FDSU", "FloatingDecimalSubtractUnnormalized", 0b11, 0b0, 0o31),
-    "FBM":  Opcode("FBM", "FloatingBinaryMultiply", 0b11, 0b0, 0o05),
-    "FDM":  Opcode("FDM", "FloatingDecimalMultiply", 0b11, 0b0, 0o25),
-    "ULD":  Opcode("ULD", "MultipleUnload", 0b11, 0b0, 0o15),
-    "FBAE": Opcode("FBAE", "FloatingBinaryAddExtendedPrecision", 0b00, 0b0, 0o01),
-    "FBSE": Opcode("FBSE", "FloatingBinarySubtractExtendedPrecision", 0b00, 0b0, 0o11),
-    "BD":   Opcode("BD", "FixedBinaryDivide", 0b00, 0b0, 0o05),
-    "DD":   Opcode("DD", "FixedDecimalDivide", 0b00, 0b0, 0o25),
-    "FFN":  Opcode("FFN", "FixedToFloatingNormalize", 0b00, 0b0, 0o15),
-    "FCON": Opcode("FCON", "Conversion", 0b00, 0b0, 0o35),
-    "FLN":  Opcode("FLN", "FloatingLessThanNormalized", 0b00, 0b0, 0o30),
-    "FNN":  Opcode("FNN", "FloatingNotEqualNormalized", 0b10, 0b0, 0o14),
+    "FBA":  Opcode("FBA", "FloatingBinaryAdd",
+                   0b01, 0b0, 0o01),
+
+    "FDA":  Opcode("FDA", "FloatingDecimalAdd",
+                   0b01, 0b0, 0o21),
+
+    "FBS":  Opcode("FBS", "FloatingBinarySubtract",
+                   0b01, 0b0, 0o11),
+
+    "FDS":  Opcode("FDS", "FloatingDecimalSubtract",
+                   0b01, 0b0, 0o31),
+
+    "FBD":  Opcode("FBD", "FloatingBinaryDivide",
+                   0b01, 0b0, 0o05),
+
+    "FDD":  Opcode("FDD", "FloatingDecimalDivide",
+                   0b01, 0b0, 0o25),
+
+    "FBAU": Opcode("FBAU", "FloatingBinaryAddUnnormalized",
+                   0b11, 0b0, 0o01),
+
+    "FDAU": Opcode("FDAU", "FloatingDecimalAddUnnormalized",
+                   0b11, 0b0, 0o21),
+
+    "FBSU": Opcode("FBSU", "FloatingBinarySubtractUnnormalized",
+                   0b11, 0b0, 0o11),
+
+    "FDSU": Opcode("FDSU", "FloatingDecimalSubtractUnnormalized",
+                   0b11, 0b0, 0o31),
+
+    "FBM":  Opcode("FBM", "FloatingBinaryMultiply",
+                   0b11, 0b0, 0o05),
+
+    "FDM":  Opcode("FDM", "FloatingDecimalMultiply",
+                   0b11, 0b0, 0o25),
+
+    "ULD":  Opcode("ULD", "MultipleUnload",
+                   0b11, 0b0, 0o15),
+
+    "FBAE": Opcode("FBAE", "FloatingBinaryAddExtendedPrecision",
+                   0b00, 0b0, 0o01),
+
+    "FBSE": Opcode("FBSE", "FloatingBinarySubtractExtendedPrecision",
+                   0b00, 0b0, 0o11),
+
+    "BD":   Opcode("BD", "FixedBinaryDivide",
+                   0b00, 0b0, 0o05),
+
+    "DD":   Opcode("DD", "FixedDecimalDivide",
+                   0b00, 0b0, 0o25),
+
+    "FFN":  Opcode("FFN", "FixedToFloatingNormalize",
+                   0b00, 0b0, 0o15),
+
+    "FCON": Opcode("FCON", "Conversion",
+                   0b00, 0b0, 0o35),
+
+    "FLN":  Opcode("FLN", "FloatingLessThanNormalized",
+                   0b00, 0b0, 0o30),
+
+    "FNN":  Opcode("FNN", "FloatingNotEqualNormalized",
+                   0b10, 0b0, 0o14)
 }
 
 # The remaining instructions are pseudo-instructions of various types.
@@ -281,7 +403,7 @@ ARGUS_INSTRUCTIONS = {
     "TESTDATA": None,   # Start of test data set
     "ELIMDATA": None,   # Eliminate the specified set of test data from the SPT
     "ELIMDERL": None,   # Eliminate a derail
-    "DELETE":   None,   # Delete lines from a segment on the symbolic program tape
+    "DELETE":   None,   # Delete lines from a segment on symbolic program tape
     "ENDARGUS": None    # End of the ARGUS input deck
 }
 
@@ -380,9 +502,9 @@ class NotEqualAlphabetic(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["NA"],
-                                        sequence=sequence,
-                                        mask=mask,
-                                        a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class NotEqualNumeric(instruction.Instruction):
@@ -398,63 +520,63 @@ class LessThanOrEqualAlphabetic(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["LA"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class LessThanOrEqualNumeric(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["LN"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class Transfer(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["TX"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class TransferChangeSequence(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["TS"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class HalfAdd(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["HA"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class Superimpose(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["SM"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 class CheckParity(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
         instruction.Instruction.__init__(self, opcode=OPCODES["CP"],
-                                           sequence=sequence,
-                                           mask=mask,
-                                           a=a, b=b, c=c)
+                                         sequence=sequence,
+                                         mask=mask,
+                                         a=a, b=b, c=c)
 
 
 # General, unmasked.

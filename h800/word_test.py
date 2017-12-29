@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from word import *
+from word import Word, InstructionWord
 
 
 def my_assert(value, good):
@@ -28,17 +28,18 @@ def test_word_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         print "TEST: test too-large value"
         w = Word(2 ** 48)
+        assert w is not None
     except ValueError:
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_inst_simple_defaults():
@@ -93,4 +94,3 @@ def test_inst_field_set_get():
     my_assert(w.value, 4095)
     w.value = 0
     my_assert(w.value, 0)
-

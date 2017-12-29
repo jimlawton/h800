@@ -10,19 +10,20 @@
 # This is intended for debugging assembler development.
 
 from __future__ import print_function
-import sys
 from optparse import OptionParser
 
 import h800.arguscard
 
 
 def main():
-    parser = OptionParser("usage: %prog [options] symbol filename [filename]...")
+    parser = OptionParser("usage: %prog [options] symbol filename "
+                          "[filename]...")
     parser.add_option('-b', '--begin',
                       dest='begin',
                       action='store_true',
                       default=False,
-                      help="Match symbols that begin with the specified string.")
+                      help="Match symbols that begin with the specified "
+                      "string.")
     parser.add_option('-D', '--details',
                       dest='details',
                       action='store_true',
@@ -44,7 +45,8 @@ def main():
                       default=False,
                       help="Exact matching. Default is partial.")
     (opts, args) = parser.parse_args()
-    if opts.begin and opts.exact or opts.end and opts.exact or opts.begin and opts.end:
+    if opts.begin and opts.exact or opts.end and opts.exact or opts.begin and \
+            opts.end:
         parser.error("Conflicting options!")
     if len(args) < 2:
         parser.error("usage: %prog [options] symbol filename [filename]...")

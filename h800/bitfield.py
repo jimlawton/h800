@@ -113,7 +113,8 @@ class BitField(object):
         self._maxval = 2L ** width - 1
         self._value = value
         if self._value > self._maxval:
-            raise ValueError("Value is greater than maximum allowed by bit-field width!")
+            raise ValueError("Value is greater than maximum allowed by "
+                             "bit-field width!")
         self._numbering = numbering
         if numbering not in (self.BIT_SCHEME_LSB_0, self.BIT_SCHEME_LSB_1,
                              self.BIT_SCHEME_MSB_0, self.BIT_SCHEME_MSB_1):
@@ -251,7 +252,7 @@ class BitField(object):
         # position.
         # print "_shift: index=%d width=%d" % (index, self._width)
         if self._order == self.BIT_ORDER_MSB_LEFT:
-            #print "ML S:%d" % (self._width - index - 1)
+            # print "ML S:%d" % (self._width - index - 1)
             return self._width - index - 1
         else:
             # print "MR S:%d" % (index)
@@ -274,29 +275,36 @@ class BitField(object):
     def _checkIndex(self, index):
         rindex = self._rindex(index)
         if rindex < 0 or rindex >= self._width:
-            raise ValueError("Invalid index for %d-bit bit-field!" % self._width)
+            raise ValueError("Invalid index for %d-bit bit-field!" %
+                             self._width)
 
     def _checkRange(self, start, end):
         self._checkIndex(start)
         self._checkIndex(end)
         if self._order == self.BIT_ORDER_MSB_LEFT:
-            if self._numbering in (self.BIT_SCHEME_LSB_0, self.BIT_SCHEME_LSB_1):
+            if self._numbering in (self.BIT_SCHEME_LSB_0,
+                                   self.BIT_SCHEME_LSB_1):
                 # LSB low, right, e.g. [7:0].
                 if start < end:
-                    raise ValueError("Invalid bit range for MSB...LSB bit-field!")
+                    raise ValueError("Invalid bit range for "
+                                     "MSB...LSB bit-field!")
             else:
                 # MSB low, left, e.g. [0:7].
                 if start > end:
-                    raise ValueError("Invalid bit range for MSB...LSB bit-field!")
+                    raise ValueError("Invalid bit range for "
+                                     "MSB...LSB bit-field!")
         else:
-            if self._numbering in (self.BIT_SCHEME_LSB_0, self.BIT_SCHEME_LSB_1):
+            if self._numbering in (self.BIT_SCHEME_LSB_0,
+                                   self.BIT_SCHEME_LSB_1):
                 # LSB low, left, e.g. [0:7].
                 if start > end:
-                    raise ValueError("Invalid bit range for MSB...LSB bit-field!")
+                    raise ValueError("Invalid bit range for "
+                                     "MSB...LSB bit-field!")
             else:
                 # MSB low, right, e.g. [7:0].
                 if start < end:
-                    raise ValueError("Invalid bit range for MSB...LSB bit-field!")
+                    raise ValueError("Invalid bit range for "
+                                     "MSB...LSB bit-field!")
 
     def _getRange(self, start, end):
         self._checkRange(start, end)
@@ -310,7 +318,8 @@ class BitField(object):
         if width < 0 or width > self.maxval:
             raise ValueError("Illegal bit-field width %d!" % self.width)
         if value > 2 ** width:
-            raise ValueError("Value is greater than allowed for %d-bit field!" % width)
+            raise ValueError("Value is greater than allowed for %d-bit field!"
+                             % width)
 
     def _bitmask(self, start, end):
         self._checkRange(start, end)
@@ -321,14 +330,16 @@ class BitField(object):
         else:
             shift = self._shift(rend)
         bitmask = (2L ** width - 1) << shift
-        # print "BM: %d:%d | %d:%d | S=%d | B=0x%x" % (start, end, rstart, rend, shift, bitmask)
+        # print("BM: %d:%d | %d:%d | S=%d | B=0x%x" %
+        #       (start, end, rstart, rend, shift, bitmask))
         return bitmask
 
     def _getBitValue(self, index, value, width):
         "Get the value of the specified bit index in the supplied value."
         self._checkValue(value, width=width)
         shift = index
-        # print "BIT: %d,%d | W=%d | S=%d | %d" % (index, value, width, shift, (value >> shift) & 1L)
+        # print("BIT: %d,%d | W=%d | S=%d | %d" %
+        #       (index, value, width, shift, (value >> shift) & 1L))
         return (value >> shift) & 1L
 
     def __getitem__(self, key):
@@ -339,7 +350,9 @@ class BitField(object):
             rstart, rend = self._getRange(start, end)
             bitmask = self._bitmask(start, end)
             shift = self._shift(self._lsbIndex(rstart, rend))
-            # print "GET-SLICE: %d:%d | B=0x%x | S=%d | v=0x%x->0x%x" % (start, end, bitmask, shift, self._value, ((self._value & bitmask) >> shift))
+            # print("GET-SLICE: %d:%d | B=0x%x | S=%d | v=0x%x->0x%x" %
+            #       (start, end, bitmask, shift, self._value,
+            #        ((self._value & bitmask) >> shift)))
             return (self._value & bitmask) >> shift
         else:
             index = key
@@ -347,7 +360,9 @@ class BitField(object):
             rindex = self._rindex(index)
             bitmask = 1L
             shift = self._shift(rindex)
-            # print "GET-INDEX: %d | B=0x%x | S=%d | v=0x%x->0x%x" % (index, bitmask, shift, self._value, ((self._value >> shift) & bitmask))
+            # print("GET-INDEX: %d | B=0x%x | S=%d | v=0x%x->0x%x" %
+            #       (index, bitmask, shift, self._value,
+            #        ((self._value >> shift) & bitmask)))
             return (self._value >> shift) & bitmask
 
     def __setitem__(self, key, value):
@@ -360,9 +375,12 @@ class BitField(object):
             self._checkValue(value, width=width)
             bitmask = self._bitmask(start, end)
             shift = self._shift(self._lsbIndex(rstart, rend))
-            newvalue = (self._value & (self.maxval - bitmask)) | (value << shift)
-            # print "SET-SLICE: %d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | v=0x%x->0x%x" % \
-            #      (start, end, value, rstart, rend, bitmask, self.maxval - bitmask, shift, self._value, newvalue)
+            newvalue = (self._value & (self.maxval - bitmask)) | \
+                (value << shift)
+            # print("SET-SLICE: %d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | "
+            #       "v=0x%x->0x%x" %
+            #       (start, end, value, rstart, rend, bitmask,
+            #        self.maxval - bitmask, shift, self._value, newvalue))
         else:
             index = key
             self._checkIndex(index)
@@ -374,8 +392,9 @@ class BitField(object):
                 newvalue = self._value | (value << shift)
             else:
                 newvalue = self._value & (self.maxval - (1L << shift))
-            # print "SET-INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" % \
-            #     (index, value, rindex, bitmask, shift, self._value, newvalue)
+            # print("SET-INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" %
+            #       (index, value, rindex, bitmask, shift, self._value,
+            #        newvalue))
         self._value = newvalue
 
     def __len__(self):
@@ -388,7 +407,8 @@ class BitField(object):
         return self._value
 
     def __repr__(self):
-        return '{{:{0}>{1}}}'.format(0, self._width).format(bin(self._value)[2:])
+        return '{{:{0}>{1}}}'.format(0,
+                                     self._width).format(bin(self._value)[2:])
 
     def set(self, index=None):
         "Set the specified bit (or all bits if not specified) to 1."

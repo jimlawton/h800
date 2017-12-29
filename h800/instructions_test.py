@@ -2,7 +2,39 @@
 
 from collections import namedtuple
 
-from instructions import *
+from instructions import make_masked_opcode, make_unmasked_opcode, \
+    make_peripheral_opcode, make_print_opcode, \
+    BinaryAdd, DecimalAdd, WordAdd, \
+    BinarySubtract, DecimalSubtract, WordDifference, \
+    NotEqualAlphabetic, NotEqualNumeric, \
+    LessThanOrEqualAlphabetic, LessThanOrEqualNumeric, \
+    Transfer, TransferChangeSequence, \
+    HalfAdd, Superimpose, CheckParity, \
+    BinaryMultiply, DecimalMultiply, \
+    BinaryAccumulate, DecimalAccumulate, \
+    MultipleTransfer, TransferNWords, \
+    ComputeOrthocount, ItemTransfer, \
+    ExtendedBinaryAdd, ExtendedBinarySubtract, \
+    RecordTransfer, ControlProgram, Proceed, \
+    ShiftWordAndSubstitute, ShiftPreservingSignAndSubstitute, \
+    ShiftWordAndExtract, ShiftPreservingSignAndExtract, ShiftAndSelect, \
+    Substitute, Extract, \
+    ReadForward, ReadBackward, WriteForward, Rewind, \
+    PrintAlphabetic, PrintDecimal, PrintOctal, Simulator, \
+    FloatingBinaryAdd, FloatingDecimalAdd, \
+    FloatingBinarySubtract, FloatingDecimalSubtract, \
+    FloatingBinaryDivide, FloatingDecimalDivide, \
+    FloatingBinaryAddUnnormalized, FloatingDecimalAddUnnormalized, \
+    FloatingBinarySubtractUnnormalized, FloatingDecimalSubtractUnnormalized, \
+    FloatingBinaryMultiply, FloatingDecimalMultiply, MultipleUnload, \
+    FloatingBinaryAddExtendedPrecision, \
+    FloatingBinarySubtractExtendedPrecision, \
+    FixedBinaryDivide, FixedDecimalDivide, FixedToFloatingNormalize, \
+    Conversion, FloatingLessThanNormalized, FloatingNotEqualNormalized, \
+    AlphanumericConstant, DecimalConstant, ExtendedBinaryConstant, \
+    FloatingBinaryConstant, FloatingDecimalConstant, FixedBinaryConstant, \
+    OctalConstant, \
+    OPCODES
 
 
 def my_assert(value, good):
@@ -88,13 +120,15 @@ def test_BA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("BA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("BA", i, j)])
     run_tests("TEST: BA (masked): args range", testdata)
 
 
 def test_BA_unmasked_simple():
     c = BinaryAdd
-    testdata = [[c, UnmaskedTestData(0, 0, 0, 0), make_unmasked_opcode("BA", 0, 0, 0, 0)]]
+    testdata = [[c, UnmaskedTestData(0, 0, 0, 0),
+                 make_unmasked_opcode("BA", 0, 0, 0, 0)]]
     run_tests("TEST: BA (unmasked): simple", testdata)
 
 
@@ -115,7 +149,8 @@ def test_BA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("BA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("BA", i, j, k, l)])
     run_tests("TEST: BA (unmasked): args range", testdata)
 
 
@@ -141,7 +176,8 @@ def test_DA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("DA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("DA", i, j)])
     run_tests("TEST: DA (masked): args range", testdata)
 
 
@@ -168,7 +204,8 @@ def test_DA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("DA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("DA", i, j, k, l)])
     run_tests("TEST: DA (unmasked): args range", testdata)
 
 
@@ -194,7 +231,8 @@ def test_WA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("WA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("WA", i, j)])
     run_tests("TEST: WA (masked): args range", testdata)
 
 
@@ -221,7 +259,8 @@ def test_WA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("WA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("WA", i, j, k, l)])
     run_tests("TEST: WA (unmasked): args range", testdata)
 
 
@@ -247,7 +286,8 @@ def test_BS_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("BS", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("BS", i, j)])
     run_tests("TEST: BS (masked): args range", testdata)
 
 
@@ -274,7 +314,8 @@ def test_BS_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("BS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("BS", i, j, k, l)])
     run_tests("TEST: BS (unmasked): args range", testdata)
 
 
@@ -300,7 +341,8 @@ def test_DS_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("DS", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("DS", i, j)])
     run_tests("TEST: DS (masked): args range", testdata)
 
 
@@ -327,7 +369,8 @@ def test_DS_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("DS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("DS", i, j, k, l)])
     run_tests("TEST: DS (unmasked): args range", testdata)
 
 
@@ -353,7 +396,8 @@ def test_WD_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("WD", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("WD", i, j)])
     run_tests("TEST: WD (masked): args range", testdata)
 
 
@@ -380,7 +424,8 @@ def test_WD_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("WD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("WD", i, j, k, l)])
     run_tests("TEST: WD (unmasked): args range", testdata)
 
 
@@ -406,7 +451,8 @@ def test_NA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("NA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("NA", i, j)])
     run_tests("TEST: NA (masked): args range", testdata)
 
 
@@ -433,7 +479,8 @@ def test_NA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("NA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("NA", i, j, k, l)])
     run_tests("TEST: NA (unmasked): args range", testdata)
 
 
@@ -459,7 +506,8 @@ def test_NN_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("NN", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("NN", i, j)])
     run_tests("TEST: NN (masked): args range", testdata)
 
 
@@ -486,7 +534,8 @@ def test_NN_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("NN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("NN", i, j, k, l)])
     run_tests("TEST: NN (unmasked): args range", testdata)
 
 
@@ -512,7 +561,8 @@ def test_LA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("LA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("LA", i, j)])
     run_tests("TEST: LA (masked): args range", testdata)
 
 
@@ -539,7 +589,8 @@ def test_LA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("LA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("LA", i, j, k, l)])
     run_tests("TEST: LA (unmasked): args range", testdata)
 
 
@@ -565,7 +616,8 @@ def test_LN_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("LN", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("LN", i, j)])
     run_tests("TEST: LN (masked): args range", testdata)
 
 
@@ -592,7 +644,8 @@ def test_LN_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("LN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("LN", i, j, k, l)])
     run_tests("TEST: LN (unmasked): args range", testdata)
 
 
@@ -618,7 +671,8 @@ def test_TX_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("TX", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("TX", i, j)])
     run_tests("TEST: TX (masked): args range", testdata)
 
 
@@ -645,7 +699,8 @@ def test_TX_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("TX", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("TX", i, j, k, l)])
     run_tests("TEST: TX (unmasked): args range", testdata)
 
 
@@ -671,7 +726,8 @@ def test_TS_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("TS", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("TS", i, j)])
     run_tests("TEST: TS (masked): args range", testdata)
 
 
@@ -698,7 +754,8 @@ def test_TS_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("TS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("TS", i, j, k, l)])
     run_tests("TEST: TS (unmasked): args range", testdata)
 
 
@@ -724,7 +781,8 @@ def test_HA_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("HA", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("HA", i, j)])
     run_tests("TEST: HA (masked): args range", testdata)
 
 
@@ -751,7 +809,8 @@ def test_HA_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("HA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("HA", i, j, k, l)])
     run_tests("TEST: HA (unmasked): args range", testdata)
 
 
@@ -777,7 +836,8 @@ def test_SM_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("SM", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("SM", i, j)])
     run_tests("TEST: SM (masked): args range", testdata)
 
 
@@ -804,7 +864,8 @@ def test_SM_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SM", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SM", i, j, k, l)])
     run_tests("TEST: SM (unmasked): args range", testdata)
 
 
@@ -830,7 +891,8 @@ def test_CP_masked_args_range():
     testdata = []
     for i in range(2):
         for j in range(32):
-            testdata.append([c, MaskedTestData(i, j), make_masked_opcode("CP", i, j)])
+            testdata.append([c, MaskedTestData(i, j),
+                             make_masked_opcode("CP", i, j)])
     run_tests("TEST: CP (masked): args range", testdata)
 
 
@@ -857,7 +919,8 @@ def test_CP_unmasked_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("CP", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("CP", i, j, k, l)])
     run_tests("TEST: CP (unmasked): args range", testdata)
 
 
@@ -886,7 +949,8 @@ def test_BM_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("BM", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("BM", i, j, k, l)])
     run_tests("TEST: BM args range", testdata)
 
 
@@ -915,7 +979,8 @@ def test_DM_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("DM", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("DM", i, j, k, l)])
     run_tests("TEST: DM args range", testdata)
 
 
@@ -944,7 +1009,8 @@ def test_BT_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("BT", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("BT", i, j, k, l)])
     run_tests("TEST: BT args range", testdata)
 
 
@@ -973,7 +1039,8 @@ def test_DT_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("DT", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("DT", i, j, k, l)])
     run_tests("TEST: DT args range", testdata)
 
 
@@ -1002,7 +1069,8 @@ def test_MT_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("MT", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("MT", i, j, k, l)])
     run_tests("TEST: MT args range", testdata)
 
 
@@ -1031,7 +1099,8 @@ def test_TN_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("TN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("TN", i, j, k, l)])
     run_tests("TEST: TN args range", testdata)
 
 
@@ -1060,7 +1129,8 @@ def test_CC_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("CC", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("CC", i, j, k, l)])
     run_tests("TEST: CC args range", testdata)
 
 
@@ -1089,7 +1159,8 @@ def test_IT_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("IT", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("IT", i, j, k, l)])
     run_tests("TEST: IT args range", testdata)
 
 
@@ -1118,7 +1189,8 @@ def test_EBA_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("EBA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("EBA", i, j, k, l)])
     run_tests("TEST: EBA args range", testdata)
 
 
@@ -1147,7 +1219,8 @@ def test_EBS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("EBS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("EBS", i, j, k, l)])
     run_tests("TEST: EBS args range", testdata)
 
 
@@ -1176,7 +1249,8 @@ def test_RT_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("RT", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("RT", i, j, k, l)])
     run_tests("TEST: RT args range", testdata)
 
 
@@ -1205,7 +1279,8 @@ def test_MPC_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("MPC", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("MPC", i, j, k, l)])
     run_tests("TEST: MPC args range", testdata)
 
 
@@ -1242,7 +1317,8 @@ def test_SWS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SWS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SWS", i, j, k, l)])
     run_tests("TEST: SWS args range", testdata)
 
 
@@ -1271,7 +1347,8 @@ def test_SPS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SPS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SPS", i, j, k, l)])
     run_tests("TEST: SPS args range", testdata)
 
 
@@ -1300,7 +1377,8 @@ def test_SWE_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SWE", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SWE", i, j, k, l)])
     run_tests("TEST: SWE args range", testdata)
 
 
@@ -1329,7 +1407,8 @@ def test_SPE_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SPE", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SPE", i, j, k, l)])
     run_tests("TEST: SPE args range", testdata)
 
 
@@ -1358,7 +1437,8 @@ def test_SSL_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SSL", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SSL", i, j, k, l)])
     run_tests("TEST: SSL args range", testdata)
 
 
@@ -1387,7 +1467,8 @@ def test_SS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("SS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("SS", i, j, k, l)])
     run_tests("TEST: SS args range", testdata)
 
 
@@ -1416,7 +1497,8 @@ def test_EX_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("EX", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("EX", i, j, k, l)])
     run_tests("TEST: EX args range", testdata)
 
 
@@ -1441,7 +1523,8 @@ def test_RF_args_range():
     c = ReadForward
     testdata = []
     for p in range(64):
-        testdata.append([c, PeripheralTestData(p), make_peripheral_opcode("RF", p)])
+        testdata.append([c, PeripheralTestData(p),
+                         make_peripheral_opcode("RF", p)])
     run_tests("TEST: RF args range", testdata)
 
 
@@ -1466,7 +1549,8 @@ def test_RB_args_range():
     c = ReadBackward
     testdata = []
     for p in range(64):
-        testdata.append([c, PeripheralTestData(p), make_peripheral_opcode("RB", p)])
+        testdata.append([c, PeripheralTestData(p),
+                         make_peripheral_opcode("RB", p)])
     run_tests("TEST: RB args range", testdata)
 
 
@@ -1491,7 +1575,8 @@ def test_WF_args_range():
     c = WriteForward
     testdata = []
     for p in range(64):
-        testdata.append([c, PeripheralTestData(p), make_peripheral_opcode("WF", p)])
+        testdata.append([c, PeripheralTestData(p),
+                         make_peripheral_opcode("WF", p)])
     run_tests("TEST: WF args range", testdata)
 
 
@@ -1516,7 +1601,8 @@ def test_RW_args_range():
     c = Rewind
     testdata = []
     for p in range(64):
-        testdata.append([c, PeripheralTestData(p), make_peripheral_opcode("RW", p)])
+        testdata.append([c, PeripheralTestData(p),
+                         make_peripheral_opcode("RW", p)])
     run_tests("TEST: RW args range", testdata)
 
 
@@ -1545,7 +1631,8 @@ def test_PRA_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_print_opcode("PRA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_print_opcode("PRA", i, j, k, l)])
     run_tests("TEST: PRA args range", testdata)
 
 
@@ -1574,7 +1661,8 @@ def test_PRD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_print_opcode("PRD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_print_opcode("PRD", i, j, k, l)])
     run_tests("TEST: PRD args range", testdata)
 
 
@@ -1603,7 +1691,8 @@ def test_PRO_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_print_opcode("PRO", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_print_opcode("PRO", i, j, k, l)])
     run_tests("TEST: PRO args range", testdata)
 
 
@@ -1657,7 +1746,8 @@ def test_FBA_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBA", i, j, k, l)])
     run_tests("TEST: FBA args range", testdata)
 
 
@@ -1686,7 +1776,8 @@ def test_FDA_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDA", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDA", i, j, k, l)])
     run_tests("TEST: FDA args range", testdata)
 
 
@@ -1715,7 +1806,8 @@ def test_FBS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBS", i, j, k, l)])
     run_tests("TEST: FBS args range", testdata)
 
 
@@ -1744,7 +1836,8 @@ def test_FDS_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDS", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDS", i, j, k, l)])
     run_tests("TEST: FDS args range", testdata)
 
 
@@ -1773,7 +1866,8 @@ def test_FBD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBD", i, j, k, l)])
     run_tests("TEST: FBD args range", testdata)
 
 
@@ -1802,7 +1896,8 @@ def test_FDD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDD", i, j, k, l)])
     run_tests("TEST: FDD args range", testdata)
 
 
@@ -1831,7 +1926,8 @@ def test_FBAU_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBAU", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBAU", i, j, k, l)])
     run_tests("TEST: FBAU args range", testdata)
 
 
@@ -1860,7 +1956,8 @@ def test_FDAU_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDAU", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDAU", i, j, k, l)])
     run_tests("TEST: FDAU args range", testdata)
 
 
@@ -1889,7 +1986,8 @@ def test_FBSU_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBSU", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBSU", i, j, k, l)])
     run_tests("TEST: FBSU args range", testdata)
 
 
@@ -1918,7 +2016,8 @@ def test_FDSU_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDSU", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDSU", i, j, k, l)])
     run_tests("TEST: FDSU args range", testdata)
 
 
@@ -1947,7 +2046,8 @@ def test_FBM_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBM", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBM", i, j, k, l)])
     run_tests("TEST: FBM args range", testdata)
 
 
@@ -1976,7 +2076,8 @@ def test_FDM_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FDM", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FDM", i, j, k, l)])
     run_tests("TEST: FDM args range", testdata)
 
 
@@ -2005,7 +2106,8 @@ def test_ULD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("ULD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("ULD", i, j, k, l)])
     run_tests("TEST: ULD args range", testdata)
 
 
@@ -2034,7 +2136,8 @@ def test_FBAE_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBAE", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBAE", i, j, k, l)])
     run_tests("TEST: FBAE args range", testdata)
 
 
@@ -2063,7 +2166,8 @@ def test_FBSE_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FBSE", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FBSE", i, j, k, l)])
     run_tests("TEST: FBSE args range", testdata)
 
 
@@ -2092,7 +2196,8 @@ def test_BD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("BD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("BD", i, j, k, l)])
     run_tests("TEST: BD args range", testdata)
 
 
@@ -2121,7 +2226,8 @@ def test_DD_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("DD", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("DD", i, j, k, l)])
     run_tests("TEST: DD args range", testdata)
 
 
@@ -2150,7 +2256,8 @@ def test_FFN_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FFN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FFN", i, j, k, l)])
     run_tests("TEST: FFN args range", testdata)
 
 
@@ -2179,7 +2286,8 @@ def test_FCON_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FCON", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FCON", i, j, k, l)])
     run_tests("TEST: FCON args range", testdata)
 
 
@@ -2208,7 +2316,8 @@ def test_FLN_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FLN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FLN", i, j, k, l)])
     run_tests("TEST: FLN args range", testdata)
 
 
@@ -2237,7 +2346,8 @@ def test_FNN_args_range():
         for j in range(2):
             for k in range(2):
                 for l in range(2):
-                    testdata.append([c, UnmaskedTestData(i, j, k, l), make_unmasked_opcode("FNN", i, j, k, l)])
+                    testdata.append([c, UnmaskedTestData(i, j, k, l),
+                                     make_unmasked_opcode("FNN", i, j, k, l)])
     run_tests("TEST: FNN args range", testdata)
 
 
@@ -2477,7 +2587,8 @@ def test_machine_instructions():
                     for j in range(2):
                         for k in range(2):
                             for l in range(2):
-                                opcode = make_print_opcode(mnemonic, i, j, k, l)
+                                opcode = make_print_opcode(mnemonic,
+                                                           i, j, k, l)
                                 assert opcode not in opcodes
                                 opcodes.append(opcode)
         elif o.type == "simulator":

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
-from h800.punchcard import *
+from h800.punchcard import PunchCard, Deck
 
 
 def test_simple():
@@ -9,11 +9,20 @@ def test_simple():
     line = " 0981   BACKUP     TS           S ZERO        COMMON        SET UP GPB     C    COMMUNICATION FLAG FOR END."
     c = PunchCard(line)
     assert c.line == line
-    assert c.layout == [(1, 1), (2, 6), (8, 1), (9, 11), (20, 13), (33, 14), (47, 14), (61, 15), (76, 5), (81, 40)]
-    assert c.fields == [' ', '0981  ', ' ', 'BACKUP     ', 'TS           ', 'S ZERO        ', 'COMMON        ', 'SET UP GPB     ', 'C    ', 'COMMUNICATION FLAG FOR END.']
-    assert c.strippedFields == [None, '0981', None, 'BACKUP', 'TS', 'S ZERO', 'COMMON', 'SET UP GPB', 'C', 'COMMUNICATION FLAG FOR END.']
+    assert c.layout == [(1, 1), (2, 6), (8, 1), (9, 11), (20, 13), (33, 14),
+                        (47, 14), (61, 15), (76, 5), (81, 40)]
+    assert c.fields == [' ', '0981  ', ' ', 'BACKUP     ', 'TS           ',
+                        'S ZERO        ', 'COMMON        ', 'SET UP GPB     ',
+                        'C    ', 'COMMUNICATION FLAG FOR END.']
+    assert c.strippedFields == [None, '0981', None, 'BACKUP', 'TS', 'S ZERO',
+                                'COMMON', 'SET UP GPB', 'C',
+                                'COMMUNICATION FLAG FOR END.']
     assert len(c.record) == 10
-    assert c.record == {"column1": None, "lognum": '0981', "column8": None, "label": 'BACKUP', "operation": 'TS', "operand1": 'S ZERO', "operand2": 'COMMON', "operand3": 'SET UP GPB', "misc": 'C', "remarks": 'COMMUNICATION FLAG FOR END.'}
+    assert c.record == {"column1": None, "lognum": '0981', "column8": None,
+                        "label": 'BACKUP', "operation": 'TS',
+                        "operand1": 'S ZERO', "operand2": 'COMMON',
+                        "operand3": 'SET UP GPB', "misc": 'C',
+                        "remarks": 'COMMUNICATION FLAG FOR END.'}
     print "PASS"
 
     lines = """

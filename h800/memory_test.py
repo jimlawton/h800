@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from memory import *
+from memory import MemoryBank, MemoryModule, ExpansionMemoryModule
 
 
 def my_assert(value, good):
@@ -61,4 +61,3 @@ def test_expansionmemorymodule_simple_defaults():
     for i in range(len(m)):
         for j in range(len(m[i])):
             my_assert(m[i][j], 0)
-

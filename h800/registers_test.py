@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from registers import *
+from random import randrange
+
+from registers import Register, RegisterGroup, Registers, REGISTERS
 
 
 def my_assert(value, good):
@@ -28,16 +30,17 @@ def test_register_16bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         r = Register(2 ** 16)
+        assert r is not None
     except ValueError:
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_register_16bit_args_range():
@@ -92,16 +95,17 @@ def test_register_24bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         r = Register(2 ** 24, width=24)
+        assert r is not None
     except ValueError:
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_register_24bit_args_range():
@@ -142,16 +146,17 @@ def test_registergroup_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         r = RegisterGroup(25)
+        assert r is not None
     except ValueError:
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_registergroup_16bit_simple_defaults():
@@ -175,7 +180,7 @@ def test_registergroup_16bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
@@ -185,7 +190,7 @@ def test_registergroup_16bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
@@ -195,7 +200,7 @@ def test_registergroup_16bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_registergroup_16bit_args_range():
@@ -213,7 +218,7 @@ def test_registergroup_24bit_simple_defaults():
     for i in range(len(REGISTERS)):
         my_assert(r[i].value, 0)
     for i in range(len(REGISTERS)):
-        r[i].value = 2** 24 - 1
+        r[i].value = 2 ** 24 - 1
         my_assert(r[i].value, 2 ** 24 - 1)
 
 
@@ -228,7 +233,7 @@ def test_registergroup_24bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
@@ -238,7 +243,7 @@ def test_registergroup_24bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
@@ -248,7 +253,7 @@ def test_registergroup_24bit_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_registergroup_24bit_args_range():

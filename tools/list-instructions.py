@@ -9,9 +9,7 @@
 # This is intended for debugging assembler development.
 
 from __future__ import print_function
-import sys
 from optparse import OptionParser
-from collections import OrderedDict
 
 import h800.arguscard
 import h800.instructions
@@ -48,15 +46,18 @@ def main():
                 if card.record["column8"] == '*':
                     if opts.verbose:
                         print("Skipping card with * in column 8:")
-                        print("%-48s %6d %s" % (card.filename, card.linenum, card.line))
+                        print("%-48s %6d %s" % (card.filename, card.linenum,
+                                                card.line))
                     continue
                 instruction = card.operation.strip().replace(' ', '')
                 if ',' in instruction and ',' not in opcode:
                     instruction = instruction.split(',')[0]
                 if instruction == opcode or (
-                        opcode.endswith(',') and instruction.startswith(opcode)):
+                        opcode.endswith(',') and
+                        instruction.startswith(opcode)):
                     if opts.details:
-                        print("%-48s %6d %s" % (card.filename, card.linenum, card.line))
+                        print("%-48s %6d %s" % (card.filename, card.linenum,
+                                                card.line))
                     else:
                         print(card.line)
 

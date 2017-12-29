@@ -75,37 +75,48 @@ def main():
             if card.instruction:
                 instrcount += 1
                 if opts.printOpcodes:
-                    print(card.filename, card.linenum, card.line.replace('\n', ''))
+                    print(card.filename, card.linenum,
+                          card.line.replace('\n', ''))
                 if card.record["column8"] == '*':
                     if opts.verbose:
                         print("Skipping card with * in column 8:")
-                        print(card.filename, card.linenum, card.line.replace('\n', ''))
+                        print(card.filename, card.linenum,
+                              card.line.replace('\n', ''))
                     continue
                 if card.instruction not in instrtab.keys():
-                    print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
-                    print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
+                    print("*** ERROR: Invalid instruction \"%s\":" %
+                          card.instruction)
+                    print("File %s, line %d: %s" %
+                          (card.filename, card.linenum, card.line))
                     errcount += 1
                     continue
                 instrtab[card.instruction] += 1
                 if opts.invalid:
                     if card.instruction not in h800.instructions.INSTRUCTIONS:
-                        print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
-                        print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
+                        print("*** ERROR: Invalid instruction \"%s\":" %
+                              card.instruction)
+                        print("File %s, line %d: %s" %
+                              (card.filename, card.linenum, card.line))
                         errcount += 1
 
     if opts.count:
         print("\nSource lines: %d" % linecount)
         print("\nInstruction Frequencies:")
         print("%-8s %6d  %6.2f%%" % ("Total", instrcount, 100.0))
-        freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1], reverse=True))
+        freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1],
+                                     reverse=True))
         if opts.sort:
             for inst in freqtab.keys():
                 if opts.unused and freqtab[inst] != 0 or not opts.unused:
-                    print("%-8s %6d  %6.2f%%" % (inst, freqtab[inst], 100 * float(freqtab[inst])/float(instrcount)))
+                    print("%-8s %6d  %6.2f%%" %
+                          (inst, freqtab[inst],
+                           100 * float(freqtab[inst])/float(instrcount)))
         else:
             for inst in sorted(instrtab.keys()):
                 if opts.unused and instrtab[inst] != 0 or not opts.unused:
-                    print("%-8s %6d  %6.2f%%" % (inst, instrtab[inst], 100 * float(freqtab[inst])/float(instrcount)))
+                    print("%-8s %6d  %6.2f%%" %
+                          (inst, instrtab[inst],
+                           100 * float(freqtab[inst])/float(instrcount)))
 
     if opts.unused:
         print("\nUnused Instructions:")

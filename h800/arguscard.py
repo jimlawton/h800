@@ -7,20 +7,34 @@
 # ARGUS-format punch-card support for the H800.
 
 from __future__ import print_function
-import sys
 
 import punchcard
 
 
 _WIDTH = 120
 _FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
-_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "operand1", "operand2", "operand3", "misc", "remarks"]
+_FIELDNAMES = [
+    "column1",
+    "lognum",
+    "column8",
+    "label",
+    "operation",
+    "operand1",
+    "operand2",
+    "operand3",
+    "misc",
+    "remarks"
+]
 
 
 class Card(punchcard.PunchCard):
     """A simple class to represent an ARGUS punch card."""
-    def __init__(self, line, width=_WIDTH, fields=_FIELDS, fieldnames=_FIELDNAMES, filename=None, linenum=0, verbose=False):
-        super(Card, self).__init__(line, width=width, fields=fields, fieldnames=fieldnames, filename=filename, linenum=linenum, verbose=verbose)
+    def __init__(self, line, width=_WIDTH, fields=_FIELDS,
+                 fieldnames=_FIELDNAMES, filename=None, linenum=0,
+                 verbose=False):
+        super(Card, self).__init__(line, width=width, fields=fields,
+                                   fieldnames=fieldnames, filename=filename,
+                                   linenum=linenum, verbose=verbose)
         if self.column1 == 'P' or self.column1 == 'R' or self.column1 == 'L':
             self._record["label"] = None
             self._record["operation"] = None
@@ -33,7 +47,8 @@ class Card(punchcard.PunchCard):
             self._record["remarks"] = self._line[9:].strip()
         self._record["instruction"] = self._record["operation"]
         if self._record["operation"] and ',' in self._record["operation"]:
-            self._record["instruction"] = self._record["operation"].split(',')[0].strip()
+            self._record["instruction"] = \
+                self._record["operation"].split(',')[0].strip()
 
     @property
     def column1(self):
@@ -104,8 +119,11 @@ class Card(punchcard.PunchCard):
 
 class Deck(punchcard.Deck):
     """A simple class to represent a deck of ARGUS punch-cards."""
-    def __init__(self, lines=None, file=None, width=_WIDTH, fields=_FIELDS, cardclass=Card, verbose=False):
-        super(Deck, self).__init__(lines=lines, file=file, width=width, fields=fields, cardclass=cardclass, verbose=verbose)
+    def __init__(self, lines=None, file=None, width=_WIDTH, fields=_FIELDS,
+                 cardclass=Card, verbose=False):
+        super(Deck, self).__init__(lines=lines, file=file, width=width,
+                                   fields=fields, cardclass=cardclass,
+                                   verbose=verbose)
         self._logSection = None
         self._logSectionCol8 = None
         for card in self._cards:

@@ -88,10 +88,11 @@ class Register(object):
         if name and name not in REGISTER_NAMES:
             raise ValueError("Invalid register name %s!" % name)
         if width != 16 and width != 24:
-            raise ValueError("Invalid register width %d, must be 16 or 24!" % width)
+            raise ValueError("Invalid register width %d, must be 16 or 24!" %
+                             width)
         self._data = BitField(0, width=width,
-                             numbering=BitField.BIT_SCHEME_MSB_1,
-                             order=BitField.BIT_ORDER_MSB_LEFT)
+                              numbering=BitField.BIT_SCHEME_MSB_1,
+                              order=BitField.BIT_ORDER_MSB_LEFT)
         self._data[1:width] = data
         self._name = name
         self._width = width
@@ -103,7 +104,8 @@ class Register(object):
     @value.setter
     def value(self, value):
         if value < 0 or value > (2 ** self._width - 1):
-            raise ValueError("Invalid value for %d-bit register!" % self._width)
+            raise ValueError("Invalid value for %d-bit register!" %
+                             self._width)
         self._data[1:self._width] = value
 
     @property
@@ -143,7 +145,8 @@ class RegisterGroup(object):
         self._width = width
         self._registers = {}
         for regname in REGISTERS:
-            self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
+            self._registers[REGISTERS[regname]] = \
+                Register(name=regname, width=width)
         self._current = 0
 
     @property
@@ -250,4 +253,3 @@ class Registers(object):
     def clear(self):
         for group in self:
             group.clear()
-

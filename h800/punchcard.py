@@ -31,12 +31,25 @@ import os.path
 
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
-_DEFAULT_FIELDNAMES = ["column1", "lognum", "column8", "label", "operation", "operand1", "operand2", "operand3", "misc", "remarks"]
+_DEFAULT_FIELDNAMES = [
+    "column1",
+    "lognum",
+    "column8",
+    "label",
+    "operation",
+    "operand1",
+    "operand2",
+    "operand3",
+    "misc",
+    "remarks"
+]
 
 
 class PunchCard(object):
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0, verbose=False):
+    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS,
+                 fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0,
+                 verbose=False):
         self._line = line.replace('\n', '')
         self._layout = []
         self._filename = filename
@@ -108,7 +121,8 @@ class PunchCard(object):
 
 class Deck(object):
     """A simple class to represent a deck of punch-cards."""
-    def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS, cardclass=PunchCard, verbose=False):
+    def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH,
+                 fields=_DEFAULT_FIELDS, cardclass=PunchCard, verbose=False):
         self._width = width
         self._fields = fields
         self._cardclass = cardclass
@@ -124,9 +138,12 @@ class Deck(object):
             for i, line in enumerate(self._lines):
                 if line.startswith('#'):
                     if self._verbose:
-                        print("Skipping meta-comment, file %s, line %d" % (file, i+1))
+                        print("Skipping meta-comment, file %s, line %d" %
+                              (file, i+1))
                     continue
-                self._cards.append(cardclass(line, width=width, fields=fields, filename=file, linenum=i+1, verbose=verbose))
+                self._cards.append(cardclass(line, width=width, fields=fields,
+                                             filename=file, linenum=i+1,
+                                             verbose=verbose))
         self._fields = []
         self._strippedFields = []
         self._records = []
@@ -169,7 +186,8 @@ class Deck(object):
         for i, line in enumerate(lines):
             if line.startswith('#'):
                 if self._verbose:
-                    print("Skipping meta-comment, file %s, line %d" % (filename, i+1))
+                    print("Skipping meta-comment, file %s, line %d" %
+                          (filename, i+1))
                 continue
             if line.startswith('$'):
                 incname = line[1:].split()[0]
@@ -179,7 +197,15 @@ class Deck(object):
                     icards = self._readSource(incname)
                     cards.extend(icards)
                 else:
-                    cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1, verbose=self._verbose))
+                    cards.append(self._cardclass(line, width=self._width,
+                                                 fields=self._fields,
+                                                 filename=filename,
+                                                 linenum=i+1,
+                                                 verbose=self._verbose))
             else:
-                cards.append(self._cardclass(line, width=self._width, fields=self._fields, filename=filename, linenum=i+1, verbose=self._verbose))
+                cards.append(self._cardclass(line, width=self._width,
+                                             fields=self._fields,
+                                             filename=filename,
+                                             linenum=i+1,
+                                             verbose=self._verbose))
         return cards

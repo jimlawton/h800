@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from h800.bitfield import *
+from h800.bitfield import BitField
 
 
 def my_assert(value, good):
@@ -164,17 +164,18 @@ def test_invalid_args():
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         print "TEST: test invalid initial value for width"
         b = BitField(256, width=8, order=BitField.BIT_ORDER_MSB_RIGHT)
+        assert b is not None
     except ValueError:
         gotexc = True
     else:
         raise
-    assert gotexc == True, "Invalid value should have thrown an exception!"
+    assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_msb_left_msb1_48bit():

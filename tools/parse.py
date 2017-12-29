@@ -11,7 +11,6 @@
 from __future__ import print_function
 import sys
 from optparse import OptionParser
-from collections import OrderedDict
 
 import h800.arguscard
 import h800.instructions
@@ -49,15 +48,19 @@ def main():
             if card.instruction:
                 instrcount += 1
                 if opts.debug:
-                    print(card.filename, card.linenum, card.line.replace('\n', ''))
+                    print(card.filename, card.linenum,
+                          card.line.replace('\n', ''))
                 if card.record["column8"] == '*':
                     if opts.verbose:
                         print("Skipping card with * in column 8:")
-                        print(card.filename, card.linenum, card.line.replace('\n', ''))
+                        print(card.filename, card.linenum,
+                              card.line.replace('\n', ''))
                     continue
                 if card.instruction not in h800.instructions.INSTRUCTIONS:
-                    print("*** ERROR: Invalid instruction \"%s\":" % card.instruction)
-                    print("File %s, line %d: %s" % (card.filename, card.linenum, card.line))
+                    print("*** ERROR: Invalid instruction \"%s\":" %
+                          card.instruction)
+                    print("File %s, line %d: %s" % (card.filename,
+                                                    card.linenum, card.line))
                     errcount += 1
                     continue
                 card.parse()

@@ -104,4 +104,3 @@ class InstructionWord(Word):
     @c.setter
     def c(self, value):
         self._c = self.data[37:48] = value
-

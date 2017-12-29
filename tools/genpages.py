@@ -39,7 +39,7 @@ def main():
     logsectioncol8 = d.log_section_col8
 
     for line in inlines:
-        if logsection == None:
+        if logsection is None:
             if line.startswith("# Filename: "):
                 infilename = line.split()[2].strip()
                 if '.' in infilename:
@@ -54,7 +54,7 @@ def main():
             else:
                 start = end = int(pageRange)
 
-    if logsection == None:
+    if logsection is None:
         parser.error("Cannot determine log section!")
         sys.exit(1)
 
@@ -70,7 +70,9 @@ def main():
     for pagenum in range(start, end+1):
         outlines.append("\n")
         outlines.append("# Page %d\n" % pagenum)
-        outlines.append("#      %s%-72s USER'S OWN PAGE NO.%4s        PAGE%4s\n" % (logsectioncol8, logsection, pagenum-start+1, pagenum-start+1))
+        outlines.append("#      %s%-72s USER'S OWN PAGE NO.%4s        PAGE%4s"
+                        "\n" % (logsectioncol8, logsection, pagenum-start+1,
+                                pagenum-start+1))
         outlines.append("\n")
 
     with open(filename, 'a') as f:

@@ -68,21 +68,23 @@ from word import Word
 
 class Instruction(object):
     """Base opcode class."""
-    def __init__(self, opcode, sequence=None, mask=None, a=None, b=None, c=None, paddr=None, pseudo=False):
-        print "opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" % (opcode, sequence, mask, a, b, c, paddr)
-        self._opcode = opcode               # Opcode object.
-        self._sequence = sequence           # Sequence/cosequence code.
-        self._mask = mask                   # Mask.
-        self._a = a                         # A register active.
-        self._b = b                         # B register active.
-        self._c = c                         # C register active.
-        self._paddr = paddr                 # Peripheral address (6 bits).
-        self._pseudo = pseudo               # Pseudo-instructions generate no code.
-        self._mnemonic = opcode.m           # Mnemonic string.
-        self._bits23 = opcode.b23           # Bits 2,3.
-        self._bit7 = opcode.b7              # Bit 7 (1 for masked, 0 for unmasked).
-        self._op = opcode.op                # Opcode binary.
-        self._type = opcode.type            # Instruction type.
+    def __init__(self, opcode, sequence=None, mask=None, a=None, b=None,
+                 c=None, paddr=None, pseudo=False):
+        print("opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" %
+              (opcode, sequence, mask, a, b, c, paddr))
+        self._opcode = opcode               # Opcode object
+        self._sequence = sequence           # Sequence/cosequence code
+        self._mask = mask                   # Mask
+        self._a = a                         # A register active
+        self._b = b                         # B register active
+        self._c = c                         # C register active
+        self._paddr = paddr                 # Peripheral address (6 bits)
+        self._pseudo = pseudo               # Generate no binary code
+        self._mnemonic = opcode.m           # Mnemonic string
+        self._bits23 = opcode.b23           # Bits 2,3
+        self._bit7 = opcode.b7              # Bit 7 (1 masked, 0 unmasked)
+        self._op = opcode.op                # Opcode binary
+        self._type = opcode.type            # Instruction type
         self.data = BitField(0, width=12,
                              numbering=BitField.BIT_SCHEME_MSB_1,
                              order=BitField.BIT_ORDER_MSB_LEFT)
@@ -130,14 +132,18 @@ class Instruction(object):
         "Check the instruction for correctness."
         if self._sequence is not None:
             if self._paddr:
-                raise ValueError("Cannot specify sequence and peripheral address!")
+                raise ValueError("Cannot specify sequence and peripheral "
+                                 "address!")
             if self._sequence not in (0, 1, True, False):
                 raise ValueError("Sequence must be boolean!")
         if self._mask is not None:
             if self._type != "maskable":
-                raise ValueError("Mask supplied to an instruction that is not maskable!")
-            if self._a is not None or self._b is not None or self._c is not None or self._paddr is not None:
-                raise ValueError("Cannot specify A, B, C, or peripheral address with mask!")
+                raise ValueError("Mask supplied to an instruction that is not "
+                                 "maskable!")
+            if self._a is not None or self._b is not None or \
+                    self._c is not None or self._paddr is not None:
+                raise ValueError("Cannot specify A, B, C, or peripheral "
+                                 "address with mask!")
             if self._mask < 0 or self._mask > 31:
                 raise ValueError("Mask must be in the range 0..31!")
         if self._a is not None:
@@ -150,10 +156,14 @@ class Instruction(object):
             if self._c not in (0, 1, True, False):
                 raise ValueError("C must be boolean!")
         if self._paddr is not None:
-            if self._sequence is not None or self._mask is not None or self._a is not None or self._b is not None or self._c is not None:
-                raise ValueError("Cannot specify sequence, mask, A, B, or C with peripheral address!")
+            if self._sequence is not None or self._mask is not None or \
+                    self._a is not None or self._b is not None or \
+                    self._c is not None:
+                raise ValueError("Cannot specify sequence, mask, A, B, or C "
+                                 "with peripheral address!")
             if self._paddr < 0 or self._paddr > 63:
-                raise ValueError("Peripheral address must be in the range 0..63!")
+                raise ValueError("Peripheral address must be in the range "
+                                 "0..63!")
         if self._bit7 is not None:
             if self._bit7 < 0 or self._bit7 > 1:
                 raise ValueError("Bit 7 must be in the range 0..1!")
@@ -174,10 +184,12 @@ class GeneralMasked(Instruction):
     def __init__(self, opcode, sequence, mask):
         Instruction.__init__(self, opcode=opcode, sequence=sequence, mask=mask)
 
+
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
     def __init__(self, opcode, sequence, a, b, c):
-        Instruction.__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
+        Instruction.__init__(self, opcode=opcode, sequence=sequence,
+                             a=a, b=b, c=c)
 
 
 class Peripheral(Instruction):
@@ -195,21 +207,24 @@ class Simulator(Instruction):
 class Scientific(Instruction):
     """Scientific instruction class."""
     def __init__(self, opcode, sequence, a, b, c):
-        Instruction.__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
+        Instruction.__init__(self, opcode=opcode, sequence=sequence,
+                             a=a, b=b, c=c)
 
 
 class Constant(Word):
     """Constant instruction class."""
     def __init__(self, mnemonic, data):
         if data < 0 or data > 2 ** 48 - 1:
-            raise ValueError("Opcode must be in the range 0..%d!" % (2 ** 48 - 1))
+            raise ValueError("Opcode must be in the range 0..%d!" %
+                             (2 ** 48 - 1))
         Word.__init__(self, data=data)
 
 
 class PseudoInstruction(Instruction):
     """Pseudo-instruction class. No code is generated."""
     def __init__(self, mnemonic, a, b, c):
-        Instruction.__init__(self, mnemonic=mnemonic, a=a, b=b, c=c, pseudo=True)
+        Instruction.__init__(self, mnemonic=mnemonic,
+                             a=a, b=b, c=c, pseudo=True)
 
 
 class AssemblyControl(PseudoInstruction):

@@ -33,7 +33,6 @@ def main():
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
 
         errcount = 0
-
         fnamelen = 0
         for card in d.cards:
             if len(card.filename) > fnamelen:
@@ -43,7 +42,8 @@ def main():
         with open(listfile, 'w') as f:
             for card in d.cards:
                 line = card.line.replace('\n', '')
-                print("%-64s %-06d %s" % (card.filename, card.linenum, line), file=f)
+                print("%-64s %-06d %s" % (card.filename, card.linenum, line),
+                      file=f)
 
         if opts.verbose:
             print("Wrote listing file to %s" % listfile)
