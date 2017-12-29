@@ -8,7 +8,7 @@
 #
 # This is intended for debugging assembler development.
 
-from __future__ import print_function
+
 import sys
 from optparse import OptionParser
 
@@ -62,7 +62,7 @@ def main():
                     print("Current definition: %s" % symtabEntry)
                     errcount += 1
                     continue
-                if strLabel not in symtab.keys():
+                if strLabel not in list(symtab.keys()):
                     symtab[strLabel] = symtabEntry
                 else:
                     if opts.multiple:

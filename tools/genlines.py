@@ -70,10 +70,10 @@ def main():
         endcol = int(args[4])
 
     for i in range(start, end+step, step):
-        print "%s%s%s" % ((startcol - 1) * ' ',
+        print("%s%s%s" % ((startcol - 1) * ' ',
                           "{num:{fill}{width}}".format(num=i, fill='0',
                                                        width=width),
-                          (endcol + 2 - startcol - width) * ' ')
+                          (endcol + 2 - startcol - width) * ' '))
 
 
 if __name__ == "__main__":

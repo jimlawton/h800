@@ -8,7 +8,7 @@
 #
 # This is intended for debugging assembler development.
 
-from __future__ import print_function
+
 import sys
 from optparse import OptionParser
 
@@ -38,7 +38,7 @@ def main():
         for card in d.cards:
             if card.label:
                 strLabel = card.label.strip().replace(' ', '')
-                if strLabel not in symtab.keys():
+                if strLabel not in list(symtab.keys()):
                     symtab[strLabel] = {
                         "def-file": card.filename,
                         "def-line": card.linenum,

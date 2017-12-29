@@ -8,7 +8,7 @@
 #
 # This is intended for debugging assembler development.
 
-from __future__ import print_function
+
 import sys
 from optparse import OptionParser
 from collections import OrderedDict
@@ -83,7 +83,7 @@ def main():
                         print(card.filename, card.linenum,
                               card.line.replace('\n', ''))
                     continue
-                if card.instruction not in instrtab.keys():
+                if card.instruction not in list(instrtab.keys()):
                     print("*** ERROR: Invalid instruction \"%s\":" %
                           card.instruction)
                     print("File %s, line %d: %s" %
@@ -103,10 +103,10 @@ def main():
         print("\nSource lines: %d" % linecount)
         print("\nInstruction Frequencies:")
         print("%-8s %6d  %6.2f%%" % ("Total", instrcount, 100.0))
-        freqtab = OrderedDict(sorted(instrtab.items(), key=lambda t: t[1],
+        freqtab = OrderedDict(sorted(list(instrtab.items()), key=lambda t: t[1],
                                      reverse=True))
         if opts.sort:
-            for inst in freqtab.keys():
+            for inst in list(freqtab.keys()):
                 if opts.unused and freqtab[inst] != 0 or not opts.unused:
                     print("%-8s %6d  %6.2f%%" %
                           (inst, freqtab[inst],
