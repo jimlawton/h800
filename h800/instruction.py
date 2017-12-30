@@ -180,31 +180,31 @@ class Instruction:
 class GeneralMasked(Instruction):
     """General masked instruction class."""
     def __init__(self, opcode, sequence, mask):
-        super().__init__(self, opcode=opcode, sequence=sequence, mask=mask)
+        super().__init__(opcode=opcode, sequence=sequence, mask=mask)
 
 
 class GeneralUnmasked(Instruction):
     """General unmasked instruction class."""
     def __init__(self, opcode, sequence, a, b, c):
-        super().__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
+        super().__init__(opcode=opcode, sequence=sequence, a=a, b=b, c=c)
 
 
 class Peripheral(Instruction):
     """Peripheral instruction class."""
     def __init__(self, opcode, paddr):
-        super().__init__(self, opcode=opcode, paddr=paddr)
+        super().__init__(opcode=opcode, paddr=paddr)
 
 
 class Simulator(Instruction):
     """Simulator instruction class."""
     def __init__(self, opcode, sequence):
-        super().__init__(self, opcode=opcode, sequence=sequence)
+        super().__init__(opcode=opcode, sequence=sequence)
 
 
 class Scientific(Instruction):
     """Scientific instruction class."""
     def __init__(self, opcode, sequence, a, b, c):
-        super().__init__(self, opcode=opcode, sequence=sequence, a=a, b=b, c=c)
+        super().__init__(opcode=opcode, sequence=sequence, a=a, b=b, c=c)
 
 
 class Constant(Word):
@@ -213,16 +213,16 @@ class Constant(Word):
         if data < 0 or data > 2 ** 48 - 1:
             raise ValueError("Opcode must be in the range 0..%d!" %
                              (2 ** 48 - 1))
-        super().__init__(self, data=data)
+        super().__init__(data=data)
 
 
 class PseudoInstruction(Instruction):
     """Pseudo-instruction class. No code is generated."""
     def __init__(self, mnemonic, a, b, c):
-        super().__init__(self, mnemonic=mnemonic, a=a, b=b, c=c, pseudo=True)
+        super().__init__(mnemonic=mnemonic, a=a, b=b, c=c, pseudo=True)
 
 
 class AssemblyControl(PseudoInstruction):
     """Assembly control instruction class."""
     def __init__(self, mnemonic, a, b, c):
-        super().__init__(self, mnemonic=mnemonic, a=a, b=b, c=c)
+        super().__init__(mnemonic=mnemonic, a=a, b=b, c=c)
