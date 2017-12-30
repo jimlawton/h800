@@ -407,9 +407,12 @@ ARGUS_INSTRUCTIONS = {
     "ENDARGUS": None    # End of the ARGUS input deck
 }
 
-INSTRUCTIONS = list(list(OPCODES.keys()) + list(CONTROL_INSTRUCTIONS.keys()) +
-                    list(DATA_CONSTANTS.keys()) + list(CONTROL_CONSTANTS.keys()) +
-                    list(EXTENDED_INSTRUCTIONS.keys()) + list(MISC_INSTRUCTIONS.keys()) +
+INSTRUCTIONS = list(list(OPCODES.keys()) +
+                    list(CONTROL_INSTRUCTIONS.keys()) +
+                    list(DATA_CONSTANTS.keys()) +
+                    list(CONTROL_CONSTANTS.keys()) +
+                    list(EXTENDED_INSTRUCTIONS.keys()) +
+                    list(MISC_INSTRUCTIONS.keys()) +
                     list(ARGUS_INSTRUCTIONS.keys()))
 
 
