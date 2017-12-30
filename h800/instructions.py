@@ -135,10 +135,9 @@ OPCODES = {
 
     # Table format:
     #
-    #   Mnemonic  (Class, Unmasked Bits2-3, Masked Bit7, Bits8-12)
-    #
-    # "*" in the mnemonic is used as an internal representation of masked
-    # instructions.
+    #   Mnemonic:  Opcode(Mnemonic, Class,
+    #                     Unmasked bits 2-3, Masked bit 7, bits 8-12,
+    #                     "maskable" / "peripheral" / "print" / "simulator")
 
     # General, masked or unmasked.
     "BA":   Opcode("BA", "BinaryAdd",
