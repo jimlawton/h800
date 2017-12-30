@@ -84,7 +84,7 @@ class MemoryBank:
             self._data[addr].value = 0
 
 
-class MemoryModule(object):
+class MemoryModule:
     """H-x800 memory module class."""
 
     NUM_BANKS = 4
@@ -111,7 +111,7 @@ class MemoryModule(object):
         return self.NUM_BANKS * len(self._data[0])
 
 
-class ExpansionMemoryModule(object):
+class ExpansionMemoryModule:
     """H-1800 expansion memory module class."""
 
     NUM_BANKS = 8

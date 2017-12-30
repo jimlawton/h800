@@ -64,7 +64,7 @@ from .bitfield import BitField
 from .word import Word
 
 
-class Instruction(object):
+class Instruction:
     """Base opcode class."""
     def __init__(self, opcode, sequence=None, mask=None, a=None, b=None,
                  c=None, paddr=None, pseudo=False):

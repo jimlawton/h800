@@ -44,7 +44,7 @@ _DEFAULT_FIELDNAMES = [
 ]
 
 
-class PunchCard(object):
+class PunchCard:
     """A simple class to represent a punch card."""
     def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS,
                  fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0,
@@ -118,7 +118,7 @@ class PunchCard(object):
             return None
 
 
-class Deck(object):
+class Deck:
     """A simple class to represent a deck of punch-cards."""
     def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH,
                  fields=_DEFAULT_FIELDS, cardclass=PunchCard, verbose=False):

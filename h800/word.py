@@ -31,10 +31,10 @@
 # | COMMAND        |   A ADDRESS    |   B ADDRESS    |   C ADDRESS    |
 # +----------------+----------------+----------------+----------------+
 
-from .bitfield import BitField
+from h800.bitfield import BitField
 
 
-class Word(object):
+class Word:
     """H-x800 word class."""
     def __init__(self, data=0):
         if data < 0 or data > (2 ** 48 - 1):

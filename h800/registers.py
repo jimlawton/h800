@@ -77,7 +77,7 @@ def registerNumber(name):
     raise ValueError("Invalid register name %s!" % name)
 
 
-class Register(object):
+class Register:
     """H-x800 register class."""
 
     def __init__(self, data=0, name=None, width=16):
@@ -136,7 +136,7 @@ class Register(object):
         self._data.clear()
 
 
-class RegisterGroup(object):
+class RegisterGroup:
     """H-x800 register group class."""
 
     def __init__(self, width=16):
@@ -195,7 +195,7 @@ class RegisterGroup(object):
             register.clear()
 
 
-class Registers(object):
+class Registers:
     """H-x800 registers class."""
 
     _NUM_GROUPS = 8

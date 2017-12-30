@@ -81,7 +81,7 @@
 #    0    1    2                                           N-1
 
 
-class BitField(object):
+class BitField:
 
     DEFAULT_WIDTH = 8
     # TODO: what is max value allowed for size?
