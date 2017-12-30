@@ -27,11 +27,6 @@
         ]
     },
     "default": {
-        "h800": {
-            "editable": true,
-            "git": "https://github.com/jimlawton/h800",
-            "ref": "39fd0763571bc95a46b4bb56cb17a2305ce10790"
-        },
         "h800-master": {
             "editable": true,
             "git": "https://github.com/jimlawton/h800"
@@ -42,11 +37,6 @@
                 "sha256:ca18943e28235417756316bfada6cd96b23ce60dd532642690dcfdaba988a76d"
             ],
             "version": "==1.5.2"
-        },
-        "pylog": {
-            "editable": true,
-            "git": "https://github.com/jimlawton/pylog",
-            "ref": "f813c8b849035edae866510d6a36b98b4f0cea4f"
         },
         "pylog-master": {
             "editable": true,
