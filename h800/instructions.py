@@ -440,8 +440,7 @@ def make_print_opcode(mnemonic, sequence, a, b, c):
 class NotImplementedException(Exception):
 
     def __init__(self):
-        super(NotImplementedException, self).__init__(
-            "This feature is not yet implemented!")
+        super().__init__("This feature is not yet implemented!")
 
 
 # General, masked or unmasked.
@@ -449,136 +448,106 @@ class NotImplementedException(Exception):
 class BinaryAdd(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["BA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["BA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class DecimalAdd(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["DA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["DA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class WordAdd(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["WA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["WA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class BinarySubtract(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["BS"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["BS"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class DecimalSubtract(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["DS"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["DS"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class WordDifference(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["WD"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["WD"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class NotEqualAlphabetic(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["NA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["NA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class NotEqualNumeric(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["NN"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["NN"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class LessThanOrEqualAlphabetic(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["LA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["LA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class LessThanOrEqualNumeric(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["LN"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["LN"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class Transfer(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["TX"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["TX"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class TransferChangeSequence(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["TS"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["TS"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class HalfAdd(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["HA"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["HA"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class Superimpose(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["SM"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SM"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 class CheckParity(instruction.Instruction):
 
     def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        instruction.Instruction.__init__(self, opcode=OPCODES["CP"],
-                                         sequence=sequence,
-                                         mask=mask,
-                                         a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["CP"], sequence=sequence,
+                         mask=mask, a=a, b=b, c=c)
 
 
 # General, unmasked.
@@ -586,105 +555,91 @@ class CheckParity(instruction.Instruction):
 class BinaryMultiply(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["BM"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["BM"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class DecimalMultiply(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["DM"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["DM"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class BinaryAccumulate(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["BT"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["BT"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class DecimalAccumulate(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["DT"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["DT"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class MultipleTransfer(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["MT"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["MT"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class TransferNWords(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["TN"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["TN"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ComputeOrthocount(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["CC"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["CC"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ItemTransfer(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["IT"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["IT"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ExtendedBinaryAdd(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["EBA"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["EBA"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ExtendedBinarySubtract(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["EBS"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["EBS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class RecordTransfer(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["RT"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["RT"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ControlProgram(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["MPC"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["MPC"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class Proceed(instruction.GeneralUnmasked):
 
     def __init__(self):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["PR"],
-                                             sequence=0,
-                                             a=0, b=0, c=0)
+        super().__init__(self, opcode=OPCODES["PR"], sequence=0, a=0, b=0, c=0)
 
 
 # # Inherent mask.
@@ -692,57 +647,50 @@ class Proceed(instruction.GeneralUnmasked):
 class ShiftWordAndSubstitute(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SWS"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SWS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ShiftPreservingSignAndSubstitute(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SPS"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SPS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ShiftWordAndExtract(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SWE"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SWE"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ShiftPreservingSignAndExtract(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SPE"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SPE"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class ShiftAndSelect(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SSL"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SSL"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class Substitute(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["SS"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["SS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class Extract(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["EX"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["EX"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 # Peripheral and print.
@@ -750,53 +698,46 @@ class Extract(instruction.GeneralUnmasked):
 class ReadForward(instruction.Peripheral):
 
     def __init__(self, paddr):
-        instruction.Peripheral.__init__(self, opcode=OPCODES["RF"],
-                                        paddr=paddr)
+        super().__init__(self, opcode=OPCODES["RF"], paddr=paddr)
 
 
 class ReadBackward(instruction.Peripheral):
 
     def __init__(self, paddr):
-        instruction.Peripheral.__init__(self, opcode=OPCODES["RB"],
-                                        paddr=paddr)
+        super().__init__(self, opcode=OPCODES["RB"], paddr=paddr)
 
 
 class WriteForward(instruction.Peripheral):
 
     def __init__(self, paddr):
-        instruction.Peripheral.__init__(self, opcode=OPCODES["WF"],
-                                        paddr=paddr)
+        super().__init__(self, opcode=OPCODES["WF"], paddr=paddr)
 
 
 class Rewind(instruction.Peripheral):
 
     def __init__(self, paddr):
-        instruction.Peripheral.__init__(self, opcode=OPCODES["RW"],
-                                        paddr=paddr)
+        super().__init__(self, opcode=OPCODES["RW"], paddr=paddr)
 
 
 class PrintAlphabetic(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["PRA"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["PRA"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class PrintDecimal(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["PRD"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["PRD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class PrintOctal(instruction.GeneralUnmasked):
 
     def __init__(self, sequence, a, b, c):
-        instruction.GeneralUnmasked.__init__(self, opcode=OPCODES["PRO"],
-                                             sequence=sequence,
-                                             a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["PRO"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 # Simulator.
@@ -804,8 +745,7 @@ class PrintOctal(instruction.GeneralUnmasked):
 class Simulator(instruction.Simulator):
 
     def __init__(self, sequence):
-        instruction.Simulator.__init__(self, opcode=OPCODES["S"],
-                                       sequence=sequence)
+        super().__init__(self, opcode=OPCODES["S"], sequence=sequence)
 
 
 # Scientific.
@@ -813,169 +753,148 @@ class Simulator(instruction.Simulator):
 class FloatingBinaryAdd(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBA"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBA"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalAdd(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDA"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDA"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinarySubtract(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBS"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalSubtract(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDS"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDS"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinaryDivide(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBD"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalDivide(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDD"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinaryAddUnnormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBAU"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBAU"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalAddUnnormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDAU"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDAU"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinarySubtractUnnormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBSU"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBSU"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalSubtractUnnormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDSU"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDSU"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinaryMultiply(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBM"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBM"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingDecimalMultiply(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FDM"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FDM"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class MultipleUnload(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["ULD"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["ULD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinaryAddExtendedPrecision(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBAE"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBAE"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingBinarySubtractExtendedPrecision(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FBSE"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FBSE"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FixedBinaryDivide(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["BD"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["BD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FixedDecimalDivide(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["DD"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["DD"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FixedToFloatingNormalize(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FFN"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FFN"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class Conversion(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FCON"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FCON"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingLessThanNormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FLN"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FLN"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 class FloatingNotEqualNormalized(instruction.Scientific):
 
     def __init__(self, sequence, a, b, c):
-        instruction.Scientific.__init__(self, opcode=OPCODES["FNN"],
-                                        sequence=sequence,
-                                        a=a, b=b, c=c)
+        super().__init__(self, opcode=OPCODES["FNN"], sequence=sequence,
+                         a=a, b=b, c=c)
 
 
 # Control Instructions.
@@ -1036,49 +955,49 @@ class TemporarilyAssignTag(instruction.AssemblyControl):
 class AlphanumericConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="ALF", data=data)
+        super().__init__(self, mnemonic="ALF", data=data)
 
 
 # DEC: Fixed Decimal Constant
 class DecimalConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="DEC", data=data)
+        super().__init__(self, mnemonic="DEC", data=data)
 
 
 # EBC: Extended Binary Constant
 class ExtendedBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="EBC", data=data)
+        super().__init__(self, mnemonic="EBC", data=data)
 
 
 # FLBIN: Floating-Point Binary Constant
 class FloatingBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="FLBIN", data=data)
+        super().__init__(self, mnemonic="FLBIN", data=data)
 
 
 # FLDEC: Floating-Point Decimal Constant
 class FloatingDecimalConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="FLDEC", data=data)
+        super().__init__(self, mnemonic="FLDEC", data=data)
 
 
 # FXBIN: Decimal to Fixed Binary Translation
 class FixedBinaryConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="FXBIN", data=data)
+        super().__init__(self, mnemonic="FXBIN", data=data)
 
 
 # OCT: Octal Constant
 class OctalConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="OCT", data=data)
+        super().__init__(self, mnemonic="OCT", data=data)
 
 
 # Control Constants.
@@ -1087,63 +1006,63 @@ class OctalConstant(instruction.Constant):
 class SpecialAddressConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="SPEC", data=data)
+        super().__init__(self, mnemonic="SPEC", data=data)
 
 
 # CAC: Complete Address Constant
 class CompleteAddressConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="CAC", data=data)
+        super().__init__(self, mnemonic="CAC", data=data)
 
 
 # MASKBASE: Mask Base Address Constant
 class MaskBaseAddressConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="MASKBASE", data=data)
+        super().__init__(self, mnemonic="MASKBASE", data=data)
 
 
 # PCON: Program Control Constant
 class ProgramControlConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="CONTROL", data=data)
+        super().__init__(self, mnemonic="CONTROL", data=data)
 
 
 # M: Mixed Constant
 class MixedConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="M", data=data)
+        super().__init__(self, mnemonic="M", data=data)
 
 
 # TAC: Tape Address Constant
 class TapeAddressConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="TAC", data=data)
+        super().__init__(self, mnemonic="TAC", data=data)
 
 
 # LINK: Linkage Constant
 class LinkageConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="LINK", data=data)
+        super().__init__(self, mnemonic="LINK", data=data)
 
 
 # SEGNAME: Segment Name Constant
 class SegmentNameConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="SEGNAME", data=data)
+        super().__init__(self, mnemonic="SEGNAME", data=data)
 
 
 # SUBCALL: Subroutine Call Constant
 class SubroutineCallConstant(instruction.Constant):
 
     def __init__(self, data):
-        instruction.Constant.__init__(self, mnemonic="SUBCALL", data=data)
+        super().__init__(self, mnemonic="SUBCALL", data=data)
 
 
 # Extended Instructions.

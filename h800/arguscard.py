@@ -31,9 +31,9 @@ class Card(punchcard.PunchCard):
     def __init__(self, line, width=_WIDTH, fields=_FIELDS,
                  fieldnames=_FIELDNAMES, filename=None, linenum=0,
                  verbose=False):
-        super(Card, self).__init__(line, width=width, fields=fields,
-                                   fieldnames=fieldnames, filename=filename,
-                                   linenum=linenum, verbose=verbose)
+        super().__init__(line, width=width, fields=fields,
+                         fieldnames=fieldnames, filename=filename,
+                         linenum=linenum, verbose=verbose)
         if self.column1 == 'P' or self.column1 == 'R' or self.column1 == 'L':
             self._record["label"] = None
             self._record["operation"] = None
@@ -120,9 +120,8 @@ class Deck(punchcard.Deck):
     """A simple class to represent a deck of ARGUS punch-cards."""
     def __init__(self, lines=None, file=None, width=_WIDTH, fields=_FIELDS,
                  cardclass=Card, verbose=False):
-        super(Deck, self).__init__(lines=lines, file=file, width=width,
-                                   fields=fields, cardclass=cardclass,
-                                   verbose=verbose)
+        super().__init__(lines=lines, file=file, width=width, fields=fields,
+                         cardclass=cardclass, verbose=verbose)
         self._logSection = None
         self._logSectionCol8 = None
         for card in self._cards:
