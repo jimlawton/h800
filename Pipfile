@@ -9,13 +9,13 @@ name = "pypi"
 
 py = "*"
 pyparsing = "*"
-pytest = "*"
-"h800-master" = {git = "https://github.com/jimlawton/h800", editable = true}
+h800-master = {git = "https://github.com/jimlawton/h800", editable = true}
 pylog-master = {git = "https://github.com/jimlawton/pylog", editable = true}
 
 
 [dev-packages]
 
+pytest = "*"
 
 
 [requires]
