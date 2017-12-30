@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-from .memory import MemoryBank, MemoryModule, ExpansionMemoryModule
+from h800.memory import MemoryBank, MemoryModule, ExpansionMemoryModule
 
 
 def my_assert(value, good):
