@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-from .word import Word, InstructionWord
+from h800.word import Word, InstructionWord
 
 
 def my_assert(value, good):

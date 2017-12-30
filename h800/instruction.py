@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # H-800/H-1800 Instruction Format
 # ===============================
 #

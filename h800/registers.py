@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-
 # H-800/H-1800 Registers
 # ======================
 
-from .bitfield import BitField
+from h800.bitfield import BitField
 
 
 REGISTERS = {

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Instructions
 # ============
 #
@@ -95,6 +93,7 @@
 # FCON          | s 00 abc 0 11101 | 00 011 101 | 0 35
 # FLN           | s 00 abc 0 11000 | 00 011 000 | 0 30
 # FNN           | s 10 abc 0 01100 | 10 001 100 | 2 14
+
 
 from collections import namedtuple
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from collections import namedtuple
 
 from .instructions import make_masked_opcode, make_unmasked_opcode, \

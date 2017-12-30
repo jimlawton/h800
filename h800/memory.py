@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 # H-800/H-1800 Memory
 # ===================
 
-from .word import Word
+from h800.word import Word
 
 
-class MemoryBank(object):
+class MemoryBank:
     """H-x800 memory bank class."""
 
     MEMORY_WIDTH = 48       # 48 data, 6 parity.

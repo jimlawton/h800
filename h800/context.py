@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2010 Jim Lawton <jim dot lawton at gmail dot com>
 #
 # This file is part of h800.
@@ -23,6 +21,7 @@
 #from opcodes import OPCODES
 #from symbol_table import SymbolTable
 #from record_type import RecordType
+
 
 class Context:
     def __init__(self, listfile, binfile, options, logLevel=0, logfile=None):

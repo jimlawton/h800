@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Generic bit-field class.
 #
 # This implements a class for representing generalized bit-fields:

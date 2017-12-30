@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
 # ARGUS Punch-Card Classes

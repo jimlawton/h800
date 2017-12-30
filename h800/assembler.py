@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import time
 
 from pylog import info, debug, critical

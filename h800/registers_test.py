@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from random import randrange
 
 from .registers import Register, RegisterGroup, Registers, REGISTERS
