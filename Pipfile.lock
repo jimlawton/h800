@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "53a523cbc070c1502cd1df7337a562fd9bb33741e984d4cc6127a2008822537c"
+            "sha256": "b5518add46821f2406eb9efa1b8b5f885061a3ce6a1e43d33d148e85cb82ccdc"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -27,22 +27,14 @@
         ]
     },
     "default": {
-        "attrs": {
-            "hashes": [
-                "sha256:e7d51b70f19a4da5fe6b3c9938983e0af3b91e230edc504bd73c443d98037063",
-                "sha256:c78f53e32d7cf36d8597c8a2c7e3c0ad210f97b9509e152e4c37fa80869f823c"
-            ],
-            "version": "==17.3.0"
+        "h800": {
+            "editable": true,
+            "git": "https://github.com/jimlawton/h800",
+            "ref": "39fd0763571bc95a46b4bb56cb17a2305ce10790"
         },
         "h800-master": {
             "editable": true,
             "git": "https://github.com/jimlawton/h800"
-        },
-        "pluggy": {
-            "hashes": [
-                "sha256:7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff"
-            ],
-            "version": "==0.6.0"
         },
         "py": {
             "hashes": [
@@ -50,6 +42,11 @@
                 "sha256:ca18943e28235417756316bfada6cd96b23ce60dd532642690dcfdaba988a76d"
             ],
             "version": "==1.5.2"
+        },
+        "pylog": {
+            "editable": true,
+            "git": "https://github.com/jimlawton/pylog",
+            "ref": "f813c8b849035edae866510d6a36b98b4f0cea4f"
         },
         "pylog-master": {
             "editable": true,
@@ -66,6 +63,28 @@
                 "sha256:e4d45427c6e20a59bf4f88c639dcc03ce30d193112047f94012102f235853a58"
             ],
             "version": "==2.2.0"
+        }
+    },
+    "develop": {
+        "attrs": {
+            "hashes": [
+                "sha256:a17a9573a6f475c99b551c0e0a812707ddda1ec9653bed04c13841404ed6f450",
+                "sha256:1c7960ccfd6a005cd9f7ba884e6316b5e430a3f1a6c37c5f87d8b43f83b54ec9"
+            ],
+            "version": "==17.4.0"
+        },
+        "pluggy": {
+            "hashes": [
+                "sha256:7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff"
+            ],
+            "version": "==0.6.0"
+        },
+        "py": {
+            "hashes": [
+                "sha256:8cca5c229d225f8c1e3085be4fcf306090b00850fefad892f9d96c7b6e2f310f",
+                "sha256:ca18943e28235417756316bfada6cd96b23ce60dd532642690dcfdaba988a76d"
+            ],
+            "version": "==1.5.2"
         },
         "pytest": {
             "hashes": [
@@ -81,6 +100,5 @@
             ],
             "version": "==1.11.0"
         }
-    },
-    "develop": {}
+    }
 }
