@@ -68,8 +68,8 @@ class Instruction:
     """Base opcode class."""
     def __init__(self, opcode, sequence=None, mask=None, a=None, b=None,
                  c=None, paddr=None, pseudo=False):
-        print(("opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" %
-              (opcode, sequence, mask, a, b, c, paddr)))
+        print("opcode:%s sequence:%s mask:%s a=%s b=%s c=%s paddr=%s" %
+              (opcode, sequence, mask, a, b, c, paddr))
         self._opcode = opcode               # Opcode object
         self._sequence = sequence           # Sequence/cosequence code
         self._mask = mask                   # Mask
