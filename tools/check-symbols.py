@@ -40,8 +40,8 @@ def main():
         opts.bad = True
 
     toterrs = 0
-    subsegs = []
-    subseg = None
+    subsegments = []    # List of subsegments.
+    subsegment = "1"    # Current subsegment, default is 1 (no starting SETLOC)
     for filename in args:
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         errcount = 0
@@ -52,12 +52,12 @@ def main():
             command = card.operation
             if command and command.startswith("SETLOC"):
                 if ',' in command:
-                    subseg = command.split(',')[1].strip()
+                    subsegment = command.split(',')[1].strip()
                 else:
-                    subseg = "0"
-                subsegs.append(subseg)
-                # print("Subsegment: %s" % subseg)
-                symtab[subseg] = {}
+                    subsegment = "0"
+                subsegments.append(subsegment)
+                print("Subsegment: %s" % subsegment)
+                symtab[subsegment] = {}
             if card.label:
                 strLabel = card.label.strip().replace(' ', '')
                 symtabEntry = {
@@ -66,12 +66,6 @@ def main():
                     "lognum": card.lognum,
                     "card": card
                 }
-                if subseg is None:
-                    print("*** ERROR: Symbol %s defined outside a segment!" %
-                          strLabel)
-                    print("Current definition: %s" % symtabEntry)
-                    errcount += 1
-                    continue
                 if opts.bad and strLabel.upper() != strLabel:
                     print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
                     print("Current definition: %s" % symtabEntry)
@@ -90,13 +84,13 @@ def main():
                     symtype = "complex"
                 else:
                     symtype = "simple"
-                if strLabel not in list(symtab[subseg].keys()):
-                    symtab[subseg][strLabel] = {}
-                    symtab[subseg][strLabel][symtype] = symtabEntry
+                if strLabel not in list(symtab[subsegment].keys()):
+                    symtab[subsegment][strLabel] = {}
+                    symtab[subsegment][strLabel][symtype] = symtabEntry
                 else:
-                    prevdef = symtab[subseg][strLabel]
+                    prevdef = symtab[subsegment][strLabel]
                     if symtype not in prevdef.keys():
-                        symtab[subseg][strLabel][symtype] = symtabEntry
+                        symtab[subsegment][strLabel][symtype] = symtabEntry
                     else:
                         if command == "EQUALS":
                             prevcard = prevdef[symtype]["card"]
@@ -109,7 +103,7 @@ def main():
                         print("*** ERROR: Symbol %s is multiply-defined!" %
                               strLabel)
                         print("Previous definitions: %s" %
-                              symtab[subseg][strLabel])
+                              symtab[subsegment][strLabel])
                         print("Current definition: %s" % symtabEntry)
                         print("command: %s" % command)
                         errcount += 1
