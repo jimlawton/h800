@@ -27,11 +27,6 @@ def main():
                       action='store_true',
                       default=False,
                       help="Check for bad symbol names.")
-    parser.add_option('-m', '--multiple',
-                      dest='multiple',
-                      action='store_true',
-                      default=False,
-                      help="Check for multiply-defined symbols.")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -42,7 +37,7 @@ def main():
         parser.error("usage: %prog filename")
         sys.exit(1)
     if opts.all:
-        opts.bad = opts.multiple = True
+        opts.bad = True
 
     toterrs = 0
     for filename in args:
@@ -62,18 +57,33 @@ def main():
                     print("Current definition: %s" % symtabEntry)
                     errcount += 1
                     continue
-                if strLabel not in list(symtab.keys()):
-                    symtab[strLabel] = symtabEntry
+                # Check the command code field. Depending on the command code
+                # field operation, multiple declarations might be allowed,
+                # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
+                # storage, but ASSIGN doesn't.
+                command = card.operation
+                if command is None:
+                    print("*** ERROR: Symbol %s has no operation!" % strLabel)
+                    print("Current definition: %s" % symtabEntry)
+                    errcount += 1
+                    continue
+                if command == "ASSIGN":
+                    symtype = "complex"
                 else:
-                    if opts.multiple:
-                        # TODO: check the command code field. Depending on the
-                        # command code field operation, multiple declarations
-                        # might be allowed, e.g. RESERVE, EQUALS, ALF, SPEC,
-                        # CAC, etc all reserve storage, but ASSIGN doesn't.
+                    symtype = "simple"
+                if strLabel not in list(symtab.keys()):
+                    symtab[strLabel] = {}
+                    symtab[strLabel][symtype] = symtabEntry
+                else:
+                    prevdef = symtab[strLabel]
+                    if symtype not in prevdef.keys():
+                        symtab[strLabel][symtype] = symtabEntry
+                    else:
                         print("*** ERROR: Symbol %s is multiply-defined!" %
                               strLabel)
-                        print("Previous definition: %s" % symtab[strLabel])
+                        print("Previous definitions: %s" % symtab[strLabel])
                         print("Current definition: %s" % symtabEntry)
+                        print("command: %s" % command)
                         errcount += 1
         print("%s: %d errors encountered." % (filename, errcount))
         toterrs += errcount
