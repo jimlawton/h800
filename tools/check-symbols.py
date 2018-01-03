@@ -40,18 +40,38 @@ def main():
         opts.bad = True
 
     toterrs = 0
+    subsegs = []
+    subseg = None
     for filename in args:
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         errcount = 0
         symtab = {}
         for card in d.cards:
+            if card.column8 == "*":
+                continue
+            command = card.operation
+            if command and command.startswith("SETLOC"):
+                if ',' in command:
+                    subseg = command.split(',')[1].strip()
+                else:
+                    subseg = "0"
+                subsegs.append(subseg)
+                # print("Subsegment: %s" % subseg)
+                symtab[subseg] = {}
             if card.label:
                 strLabel = card.label.strip().replace(' ', '')
                 symtabEntry = {
-                    "def-file": card.filename,
-                    "def-line": card.linenum,
-                    "def-lognum": card.lognum
+                    "file": card.filename,
+                    "line": card.linenum,
+                    "lognum": card.lognum,
+                    "card": card
                 }
+                if subseg is None:
+                    print("*** ERROR: Symbol %s defined outside a segment!" %
+                          strLabel)
+                    print("Current definition: %s" % symtabEntry)
+                    errcount += 1
+                    continue
                 if opts.bad and strLabel.upper() != strLabel:
                     print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
                     print("Current definition: %s" % symtabEntry)
@@ -61,7 +81,6 @@ def main():
                 # field operation, multiple declarations might be allowed,
                 # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
                 # storage, but ASSIGN doesn't.
-                command = card.operation
                 if command is None:
                     print("*** ERROR: Symbol %s has no operation!" % strLabel)
                     print("Current definition: %s" % symtabEntry)
@@ -71,17 +90,26 @@ def main():
                     symtype = "complex"
                 else:
                     symtype = "simple"
-                if strLabel not in list(symtab.keys()):
-                    symtab[strLabel] = {}
-                    symtab[strLabel][symtype] = symtabEntry
+                if strLabel not in list(symtab[subseg].keys()):
+                    symtab[subseg][strLabel] = {}
+                    symtab[subseg][strLabel][symtype] = symtabEntry
                 else:
-                    prevdef = symtab[strLabel]
+                    prevdef = symtab[subseg][strLabel]
                     if symtype not in prevdef.keys():
-                        symtab[strLabel][symtype] = symtabEntry
+                        symtab[subseg][strLabel][symtype] = symtabEntry
                     else:
+                        if command == "EQUALS":
+                            prevcard = prevdef[symtype]["card"]
+                            if prevcard.operation == "EQUALS":
+                                if card.addressa == prevcard.addressa and \
+                                        card.addressb == prevcard.addressb \
+                                        and card.addressc == prevcard.addressc:
+                                    # Equivalent assignment, ignore.
+                                    continue
                         print("*** ERROR: Symbol %s is multiply-defined!" %
                               strLabel)
-                        print("Previous definitions: %s" % symtab[strLabel])
+                        print("Previous definitions: %s" %
+                              symtab[subseg][strLabel])
                         print("Current definition: %s" % symtabEntry)
                         print("command: %s" % command)
                         errcount += 1
