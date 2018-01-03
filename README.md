@@ -13,3 +13,7 @@ https://github.com/jimlawton/h800/blob/master/docs/prm/Honeywell-1800-PRM.md
 The _ARGUS Manual of Assembly Language_ has been transcribed to Markdown here:
 https://github.com/jimlawton/h800/blob/master/docs/argus/ARGUS_Manual_of_Assembly_Language.md
 (there are 2 pages missing in the original document scan)
+
+## Caveats
+ - No support for segments, only subsegments. YUL does not use segments. All
+   code is assumed to be in the same segment.
