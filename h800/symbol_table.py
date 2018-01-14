@@ -3,20 +3,17 @@ import sys
 
 class SymbolTableEntry:
 
-    def __init__(self, name, expression=None, value=None, type=None,
-                 file=None, line=0):
+    def __init__(self, name, value=None, symtype=None, file=None, line=0):
         self._name = name                    # Symbol name
-        self._expression = expression        # Symbolic expression
         self._absoluteValue = self._complexValue = None
-        if type == "absolute":
+        self._symtype = symtype                    # Type of record
+        if symtype == "absolute":
             self._absoluteValue = value      # Absolute value
         else:
             self._complexValue = value       # Complex value
-        self._recordIndex = None             # Parser record containing defn
-        self._references = []                # List of references
-        self._type = type                    # Type of record
         self._file = file
         self._line = line
+        self._references = []
 
     def isValid(self):
         return (self._absoluteValue is not None or
@@ -36,14 +33,6 @@ class SymbolTableEntry:
 
     def getReferences(self):
         return self.references
-
-    def __str__(self):
-        text = "%-8s " % (self.name)
-        if self.value is None:
-            text += "%-20s" % "******"
-        else:
-            text += "%-10s" % self.value
-        return text
 
 
 class SymbolTable:
