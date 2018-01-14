@@ -37,23 +37,18 @@ class SymbolTableEntry:
 
 class SymbolTable:
 
-    def __init__(self, context):
+    def __init__(self):
         self.symbols = {}
         self.undefs = []
-        self.context = context
 
-    def add(self, name, srcfile, linenum, expression=None, value=None,
+    def add(self, name, srcfile, linenum, value=None,
             symtype=None):
         if name:
             if name in self.symbols:
                 print("ERROR: Symbol \"%s\" already defined!" % (name))
             else:
-                self.symbols[name] = SymbolTableEntry(self.context, name,
-                                                      expression, value,
-                                                      symtype, srcfile,
-                                                      linenum)
-                self.symbols[name].recordIndex = \
-                    self.context.global_linenum - 1
+                self.symbols[name] = SymbolTableEntry(name, value, symtype,
+                                                      srcfile, linenum)
                 if value is None:
                     self.undefs.append(name)
 
@@ -75,13 +70,8 @@ class SymbolTable:
                 print("All symbols resolved!")
                 break
             for symbol in self.undefs:
-                print("Attempting to resolve symbol \"%s\" (%d)" %
-                      (symbol, self.symbols[symbol].recordIndex))
-                if not self.symbols[symbol].isComplete():
-                    idx = self.symbols[symbol].recordIndex
-                    self.context.assembler.parseRecord(idx)
-                    if self.symbols[symbol].isComplete():
-                        self.context.records[idx].complete = True
+                print("Attempting to resolve symbol \"%s\"" % (symbol))
+                # TODO
             self.pruneUndefines()
             nUndefs = len(self.undefs)
             if nUndefs == nPrevUndefs:
@@ -89,31 +79,18 @@ class SymbolTable:
                       "symbols" % nUndefs)
                 break
             nPrevUndefs = nUndefs
-        if self.context.debug and nUndefs == 0:
-            for symbol in self.symbols:
-                entry = self.symbols[symbol]
-                if entry.type is None:
-                    entry.type = self.context.records[entry.recordIndex].type
-                    self.symbols[symbol] = entry
 
     def pruneUndefines(self):
         # Prune the undefs list.
         numUndefs = len(self.undefs)
         print("Pruning undefined symbols list (%d undefs)" % numUndefs)
-        tmpUndefs = []
-        for symbol in self.undefs:
+        for i, symbol in enumerate(self.undefs):
             entry = self.symbols[symbol]
-            if not entry.isComplete():
-                tmpUndefs.append(symbol)
-            else:
+            if entry.isValid():
                 print("Removing %s from undefined symbols list" % (symbol))
-        self.undefs = tmpUndefs
+                del self.undefs[i]
         print("Removed %d symbols from undef list" %
               (numUndefs - len(self.undefs)))
-        # self.printUndefs()
-
-    def keys(self):
-        return list(self.symbols.keys())
 
     def getNumSymbols(self):
         return len(list(self.symbols.keys()))
