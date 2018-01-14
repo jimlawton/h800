@@ -3,7 +3,8 @@ import sys
 
 class SymbolTableEntry:
 
-    def __init__(self, name, value=None, symtype=None, file=None, line=0):
+    def __init__(self, name, value=None, symtype=None, file=None, line=0,
+                 segment=None, subsegment=None):
         self._name = name                    # Symbol name
         self._absoluteValue = self._complexValue = None
         self._symtype = symtype                    # Type of record
@@ -13,7 +14,37 @@ class SymbolTableEntry:
             self._complexValue = value       # Complex value
         self._file = file
         self._line = line
+        self._segment = segment
+        self._subsegment = subsegment
         self._references = []
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def value(self):
+        return self._value
+
+    @property
+    def references(self):
+        return self._references
+
+    @property
+    def segment(self):
+        return self._segment
+
+    @property
+    def subsegment(self):
+        return self._subsegment
+
+    @property
+    def file(self):
+        return self._file
+
+    @property
+    def line(self):
+        return self._line
 
     def isValid(self):
         return (self._absoluteValue is not None or
