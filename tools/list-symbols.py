@@ -33,7 +33,7 @@ def main():
     symtab = {}
     for filename in args:
         symtab, file_errors = buildSymbolTable(filename, symtab,
-                                               verbose=opts.verbose, bad=True)
+                                               verbose=opts.verbose)
         errors += file_errors
 
     for sym in sorted(symtab.keys()):
