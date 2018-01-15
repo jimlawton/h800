@@ -178,7 +178,7 @@ def buildSymbolTable(filename, verbose=False, bad=False):
     errcount = 0
     symtab = {}
     symtab[seg] = {}
-    print("Segment: %s" % seg)
+    # print("Segment: %s" % seg)
     for card in d.cards:
         if card.column8 == "*":
             continue
@@ -189,7 +189,7 @@ def buildSymbolTable(filename, verbose=False, bad=False):
             else:
                 subseg = "0"
             subsegs.append(subseg)
-            print("Subsegment: %s" % subseg)
+            # print("Subsegment: %s" % subseg)
             symtab[seg][subseg] = {}
         if card.label:
             strLabel = card.label.strip().replace(' ', '')
@@ -200,8 +200,9 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                 "card": card
             }
             if bad and strLabel.upper() != strLabel:
-                print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
-                print("Current definition: %s" % symtabEntry)
+                print("*** ERROR: Symbol %s is ill-formed!" % strLabel,
+                      file=sys.stderr)
+                print("Current definition: %s" % symtabEntry, file=sys.stderr)
                 errcount += 1
                 continue
             # Check the command code field. Depending on the command code
@@ -209,8 +210,9 @@ def buildSymbolTable(filename, verbose=False, bad=False):
             # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
             # storage, but ASSIGN doesn't.
             if command is None:
-                print("*** ERROR: Symbol %s has no operation!" % strLabel)
-                print("Current definition: %s" % symtabEntry)
+                print("*** ERROR: Symbol %s has no operation!" % strLabel,
+                      file=sys.stderr)
+                print("Current definition: %s" % symtabEntry, file=sys.stderr)
                 errcount += 1
                 continue
             if command == "ASSIGN":
@@ -234,10 +236,11 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                                 # Equivalent assignment, ignore.
                                 continue
                     print("*** ERROR: Symbol %s is multiply-defined!" %
-                          strLabel)
+                          strLabel, file=sys.stderr)
                     print("Previous definitions: %s" %
-                          symtab[seg][subseg][strLabel])
-                    print("Current definition: %s" % symtabEntry)
-                    print("command: %s" % command)
+                          symtab[seg][subseg][strLabel], file=sys.stderr)
+                    print("Current definition: %s" % symtabEntry,
+                          file=sys.stderr)
+                    print("command: %s" % command, file=sys.stderr)
                     errcount += 1
     return symtab, errcount
