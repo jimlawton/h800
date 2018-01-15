@@ -246,12 +246,15 @@ def buildSymbolTable(filename, symtab, verbose=False, bad=False):
 def checkSymbolTable(symtab, verbose=False):
     errSyms = []
     for symbol in sorted(symtab.keys()):
+        foundDefine = False
         for seg in sorted(symtab[symbol].keys()):
             for subseg in sorted(symtab[symbol][seg].keys()):
-                if "complex" in symtab[symbol][seg][subseg].keys() and \
-                        "simple" not in symtab[symbol][seg][subseg].keys():
-                    print("ERROR: symbol \"%s\" has a complex assignment, "
-                          "but no absolute assignment!" % symbol,
-                          file=sys.stderr)
-                    errSyms.append(symbol)
+                if "simple" in symtab[symbol][seg][subseg].keys():
+                    foundDefine = True
+        if not foundDefine:
+            errSyms.append(symbol)
+    for symbol in errSyms:
+        print("ERROR: symbol \"%s\" has a complex assignment, "
+              "but no absolute assignment!" % symbol,
+              file=sys.stderr)
     return sorted(errSyms)
