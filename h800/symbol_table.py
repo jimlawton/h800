@@ -244,3 +244,19 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                     print("command: %s" % command, file=sys.stderr)
                     errcount += 1
     return symtab, errcount
+
+
+def checkSymbolTable(symtab, verbose=False):
+    errors = 0
+    errSyms = []
+    for symbol in sorted(symtab.keys()):
+        for seg in sorted(symtab[symbol].keys()):
+            for subseg in sorted(symtab[symbol][seg].keys()):
+                if "complex" in symtab[symbol][seg][subseg].keys() and \
+                        "simple" not in symtab[symbol][seg][subseg].keys():
+                    print("ERROR: symbol \"%s\" has a complex assignment, "
+                          "but no absolute assignment!" % symbol,
+                          file=sys.stderr)
+                    errors += 1
+                    errSyms.append(symbol)
+    return errors, sorted(errSyms)
