@@ -60,10 +60,7 @@ class SymbolTableEntry:
         return self.isAbsolute() and self.isComplex()
 
     def addReference(self, ref):
-        self.references.append(ref)
-
-    def getReferences(self):
-        return self.references
+        self._references.append(ref)
 
 
 class SymbolTable:
