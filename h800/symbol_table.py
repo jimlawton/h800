@@ -187,7 +187,6 @@ def buildSymbolTable(filename, symtab, verbose=False, bad=False):
                 subseg = "0"
             subsegs.append(subseg)
             # print("Subsegment: %s" % subseg)
-            symtab[seg][subseg] = {}
         if card.label:
             strLabel = card.label.strip().replace(' ', '')
             symtabEntry = {
@@ -217,6 +216,8 @@ def buildSymbolTable(filename, symtab, verbose=False, bad=False):
             else:
                 symtype = "simple"
             if strLabel not in list(symtab.keys()):
+                symtab[strLabel] = {}
+                symtab[strLabel][seg] = {}
                 symtab[strLabel][seg][subseg] = {}
                 symtab[strLabel][seg][subseg][symtype] = symtabEntry
             else:
