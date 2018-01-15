@@ -66,42 +66,50 @@ class SymbolTableEntry:
 class SymbolTable:
 
     def __init__(self):
-        self.symbols = {}
-        self.undefs = []
+        self._symbols = {}
+        self._undefs = []
+
+    @property
+    def symbols(self):
+        return self._symbols
+
+    @property
+    def undefines(self):
+        return self._undefs
 
     def add(self, name, srcfile, linenum, value=None,
             symtype=None):
         if name:
-            if name in self.symbols:
+            if name in self._symbols:
                 print("ERROR: Symbol \"%s\" already defined!" % (name))
             else:
-                self.symbols[name] = SymbolTableEntry(name, value, symtype,
+                self._symbols[name] = SymbolTableEntry(name, value, symtype,
                                                       srcfile, linenum)
                 if value is None:
-                    self.undefs.append(name)
+                    self._undefs.append(name)
 
     def update(self, name, value=None, symtype=None):
         if name:
-            if name not in list(self.symbols.keys()):
+            if name not in list(self._symbols.keys()):
                 self.context.error("symbol \"%s\" not defined!" % (name))
             else:
-                entry = self.symbols[name]
+                entry = self._symbols[name]
                 entry.value = value
                 entry.type = symtype
-                self.symbols[name] = entry
+                self._symbols[name] = entry
 
     def resolve(self, maxPasses=10):
-        nPrevUndefs = nUndefs = len(self.undefs)
+        nPrevUndefs = nUndefs = len(self._undefs)
         for i in range(maxPasses):
             print("Symbol pass %d: %d undefined symbols" % (i, nUndefs))
             if nUndefs == 0:
                 print("All symbols resolved!")
                 break
-            for symbol in self.undefs:
+            for symbol in self._undefs:
                 print("Attempting to resolve symbol \"%s\"" % (symbol))
                 # TODO
             self.pruneUndefines()
-            nUndefs = len(self.undefs)
+            nUndefs = len(self._undefs)
             if nUndefs == nPrevUndefs:
                 print("ERROR: No progress resolving symbols, %d undefined "
                       "symbols" % nUndefs)
@@ -110,26 +118,26 @@ class SymbolTable:
 
     def pruneUndefines(self):
         # Prune the undefs list.
-        numUndefs = len(self.undefs)
+        numUndefs = len(self._undefs)
         print("Pruning undefined symbols list (%d undefs)" % numUndefs)
-        for i, symbol in enumerate(self.undefs):
-            entry = self.symbols[symbol]
+        for i, symbol in enumerate(self._undefs):
+            entry = self._symbols[symbol]
             if entry.isValid():
                 print("Removing %s from undefined symbols list" % (symbol))
-                del self.undefs[i]
+                del self._undefs[i]
         print("Removed %d symbols from undef list" %
-              (numUndefs - len(self.undefs)))
+              (numUndefs - len(self._undefs)))
 
     def getNumSymbols(self):
-        return len(list(self.symbols.keys()))
+        return len(list(self._symbols.keys()))
 
     def getNumUndefs(self):
-        return len(self.undefs)
+        return len(self._undefs)
 
     def lookup(self, name):
         entry = None
-        if name in self.symbols:
-            entry = self.symbols[name]
+        if name in self._symbols:
+            entry = self._symbols[name]
         return entry
 
     def printTable(self, outfile=None):
@@ -137,22 +145,22 @@ class SymbolTable:
             out = sys.stdout
         else:
             out = outfile
-        symbols = list(self.symbols.keys())
+        symbols = list(self._symbols.keys())
         symbols.sort()
         print("\nDefined symbols:\n", file=out)
         for symbol in symbols:
-            print(self.symbols[symbol], file=out)
+            print(self._symbols[symbol], file=out)
 
-        if len(self.undefs) > 0:
+        if len(self._undefs) > 0:
             print("\nUndefined symbols:\n", file=out)
-            for symbol in self.undefs:
-                print(self.symbols[symbol], file=out)
+            for symbol in self._undefs:
+                print(self._symbols[symbol], file=out)
 
     def printUndefs(self, outfile=None):
         if outfile is None:
             out = sys.stdout
         else:
             out = outfile
-        print("\nUndefined symbols: %d\n" % (len(self.undefs)), file=out)
-        for symbol in self.undefs:
-            print(self.symbols[symbol], file=out)
+        print("\nUndefined symbols: %d\n" % (len(self._undefs)), file=out)
+        for symbol in self._undefs:
+            print(self._symbols[symbol], file=out)
