@@ -178,6 +178,7 @@ def buildSymbolTable(filename, verbose=False, bad=False):
     errcount = 0
     symtab = {}
     symtab[seg] = {}
+    print("Segment: %s" % seg)
     for card in d.cards:
         if card.column8 == "*":
             continue
