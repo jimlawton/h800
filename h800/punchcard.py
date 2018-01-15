@@ -117,6 +117,9 @@ class PunchCard:
         else:
             return None
 
+    def __str__(self):
+        return str(self._line)
+
 
 class Deck:
     """A simple class to represent a deck of punch-cards."""
@@ -170,6 +173,12 @@ class Deck:
     @property
     def records(self):
         return self._records
+
+    def __str__(self):
+        lines = []
+        for card in self._cards:
+            lines.append(str(card))
+        return '\n'.join(lines)
 
     def _readSource(self, filename, recurse=True):
         """Read an ARGUS source file. If the file includes $ directives,
