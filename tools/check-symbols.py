@@ -51,13 +51,12 @@ def main():
     errSyms = checkSymbolTable(symtab, verbose=opts.verbose)
     toterrs += len(errSyms)
     if len(errSyms) > 0:
-        print("%s: %d errors checking symbol table." % (filename,
-                                                        len(errSyms)),
-              file=sys.stderr)
+        print("", file=sys.stderr)
         print("Undefined symbols:", file=sys.stderr)
         for symbol in errSyms:
             print("  %s" % symbol, file=sys.stderr)
-    print("", file=sys.stderr)
+        print("%d errors checking symbol table." % len(errSyms),
+              file=sys.stderr)
 
     if len(args) > 1:
         print("Total: %d errors encountered." % toterrs, file=sys.stderr)
