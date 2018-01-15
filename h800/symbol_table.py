@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 
 
@@ -78,13 +79,14 @@ class SymbolTable:
         return self._undefs
 
     def add(self, name, srcfile, linenum, value=None,
-            symtype=None):
+            symtype=None, segment=None, subsegment=None):
         if name:
             if name in self._symbols:
                 print("ERROR: Symbol \"%s\" already defined!" % (name))
             else:
                 self._symbols[name] = SymbolTableEntry(name, value, symtype,
-                                                       srcfile, linenum)
+                                                       srcfile, linenum,
+                                                       segment, subsegment)
                 if value is None:
                     self._undefs.append(name)
 
