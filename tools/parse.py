@@ -41,6 +41,13 @@ def main():
     loc = 0
     coloc = 0
 
+    symtab = {}
+    for filename in args:
+        symtab, errcount = buildSymbolTable(filename, symtab,
+                                            verbose=opts.verbose)
+        print("%s: %d errors encountered building symbol table." %
+              (filename, errcount), file=sys.stderr)
+
     for filename in args:
         d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
         for card in d.cards:
