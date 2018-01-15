@@ -12,7 +12,6 @@
 import sys
 from optparse import OptionParser
 
-import h800.arguscard
 from h800.symbol_table import buildSymbolTable
 
 
