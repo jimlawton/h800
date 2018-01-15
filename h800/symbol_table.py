@@ -1,7 +1,7 @@
 from __future__ import print_function
 import sys
 
-import h800
+from h800.arguscard import Deck
 
 
 class SymbolTableEntry:
@@ -174,7 +174,7 @@ def buildSymbolTable(filename, verbose=False, bad=False):
     seg = filename.split('.')[0]  # Default: name of the first file.
     subsegs = []        # List of subsegments.
     subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
-    d = h800.arguscard.Deck(file=filename, verbose=verbose)
+    d = Deck(file=filename, verbose=verbose)
     errcount = 0
     symtab = {}
     symtab[seg] = {}
