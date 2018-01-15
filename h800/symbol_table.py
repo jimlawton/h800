@@ -239,5 +239,4 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                     print("Current definition: %s" % symtabEntry)
                     print("command: %s" % command)
                     errcount += 1
-    print("%s: %d errors encountered." % (filename, errcount))
     return symtab, errcount
