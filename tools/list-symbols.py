@@ -11,6 +11,7 @@
 
 import sys
 from optparse import OptionParser
+import pprint
 
 from h800.symbol_table import buildSymbolTable
 
@@ -34,8 +35,12 @@ def main():
                                                bad=True)
         errors += file_errors
 
-        for sym in sorted(symtab.keys()):
-            print("%-9s %s" % (sym, symtab[sym]))
+        for seg in sorted(symtab.keys()):
+            print("Segment: %s" % seg)
+            for subseg in sorted(symtab[seg].keys()):
+                print("Subsegment: %s" % subseg)
+                for sym in sorted(symtab[seg][subseg].keys()):
+                    pprint.pprint("%-9s %s" % (sym, symtab[seg][subseg][sym]))
 
     if errors > 0:
         print("%d errors found" % errors, file=sys.stderr)
