@@ -247,7 +247,6 @@ def buildSymbolTable(filename, verbose=False, bad=False):
 
 
 def checkSymbolTable(symtab, verbose=False):
-    errors = 0
     errSyms = []
     for seg in sorted(symtab.keys()):
         for subseg in sorted(symtab[seg].keys()):
@@ -257,6 +256,5 @@ def checkSymbolTable(symtab, verbose=False):
                     print("ERROR: symbol \"%s\" has a complex assignment, "
                           "but no absolute assignment!" % symbol,
                           file=sys.stderr)
-                    errors += 1
                     errSyms.append(symbol)
-    return errors, sorted(errSyms)
+    return sorted(errSyms)
