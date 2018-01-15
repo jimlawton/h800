@@ -37,7 +37,18 @@ def main():
         errors += file_errors
 
     for sym in sorted(symtab.keys()):
-        pprint.pprint("%-9s %s" % (sym, symtab[sym]))
+        print(sym)
+        for seg in sorted(symtab[sym].keys()):
+            print("  Segment: %s" % seg)
+            for subseg in sorted(symtab[sym][seg].keys()):
+                print("    Subsegment: %s" % subseg)
+                for symtype in sorted(symtab[sym][seg][subseg].keys()):
+                    symdata = symtab[sym][seg][subseg][symtype]
+                    print("        %-9s: %-38s      %s" %
+                          ("<%s>" % symtype,
+                           "%s:%s" % (symdata["file"].split('.')[0],
+                                      symdata["line"]),
+                           symdata["card"]))
 
     if errors > 0:
         print("%d errors found" % errors, file=sys.stderr)
