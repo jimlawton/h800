@@ -1,6 +1,8 @@
 from __future__ import print_function
 import sys
 
+import h800
+
 
 class SymbolTableEntry:
 
@@ -166,3 +168,74 @@ class SymbolTable:
         print("\nUndefined symbols: %d\n" % (len(self._undefs)), file=out)
         for symbol in self._undefs:
             print(self._symbols[symbol], file=out)
+
+
+def buildSymbolTable(filename, verbose=False, bad=False):
+    subsegments = []    # List of subsegments.
+    subsegment = "1"    # Current subsegment, default is 1 (no starting SETLOC)
+    d = h800.arguscard.Deck(file=filename, verbose=verbose)
+    errcount = 0
+    symtab = {}
+    for card in d.cards:
+        if card.column8 == "*":
+            continue
+        command = card.operation
+        if command and command.startswith("SETLOC"):
+            if ',' in command:
+                subsegment = command.split(',')[1].strip()
+            else:
+                subsegment = "0"
+            subsegments.append(subsegment)
+            print("Subsegment: %s" % subsegment)
+            symtab[subsegment] = {}
+        if card.label:
+            strLabel = card.label.strip().replace(' ', '')
+            symtabEntry = {
+                "file": card.filename,
+                "line": card.linenum,
+                "lognum": card.lognum,
+                "card": card
+            }
+            if bad and strLabel.upper() != strLabel:
+                print("*** ERROR: Symbol %s is ill-formed!" % strLabel)
+                print("Current definition: %s" % symtabEntry)
+                errcount += 1
+                continue
+            # Check the command code field. Depending on the command code
+            # field operation, multiple declarations might be allowed,
+            # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
+            # storage, but ASSIGN doesn't.
+            if command is None:
+                print("*** ERROR: Symbol %s has no operation!" % strLabel)
+                print("Current definition: %s" % symtabEntry)
+                errcount += 1
+                continue
+            if command == "ASSIGN":
+                symtype = "complex"
+            else:
+                symtype = "simple"
+            if strLabel not in list(symtab[subsegment].keys()):
+                symtab[subsegment][strLabel] = {}
+                symtab[subsegment][strLabel][symtype] = symtabEntry
+            else:
+                prevdef = symtab[subsegment][strLabel]
+                if symtype not in prevdef.keys():
+                    symtab[subsegment][strLabel][symtype] = symtabEntry
+                else:
+                    if command == "EQUALS":
+                        prevcard = prevdef[symtype]["card"]
+                        if prevcard.operation == "EQUALS":
+                            if card.addressa == prevcard.addressa and \
+                                    card.addressb == prevcard.addressb \
+                                    and card.addressc == prevcard.addressc:
+                                # Equivalent assignment, ignore.
+                                continue
+                    print("*** ERROR: Symbol %s is multiply-defined!" %
+                          strLabel)
+                    print("Previous definitions: %s" %
+                          symtab[subsegment][strLabel])
+                    print("Current definition: %s" % symtabEntry)
+                    print("command: %s" % command)
+                    errcount += 1
+    print("%s: %d errors encountered." % (filename, errcount))
+    return symtab
