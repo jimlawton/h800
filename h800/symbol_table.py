@@ -84,7 +84,7 @@ class SymbolTable:
                 print("ERROR: Symbol \"%s\" already defined!" % (name))
             else:
                 self._symbols[name] = SymbolTableEntry(name, value, symtype,
-                                                      srcfile, linenum)
+                                                       srcfile, linenum)
                 if value is None:
                     self._undefs.append(name)
 
