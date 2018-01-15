@@ -170,13 +170,12 @@ class SymbolTable:
             print(self._symbols[symbol], file=out)
 
 
-def buildSymbolTable(filename, verbose=False, bad=False):
+def buildSymbolTable(filename, symtab, verbose=False, bad=False):
     seg = filename.split('.')[0]  # Default: name of the first file.
     subsegs = []        # List of subsegments.
     subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
     d = Deck(file=filename, verbose=verbose)
     errcount = 0
-    symtab = {}
     for card in d.cards:
         if card.column8 == "*":
             continue
