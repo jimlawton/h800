@@ -220,8 +220,15 @@ def buildSymbolTable(filename, symtab, verbose=False, bad=False):
                 symtab[strLabel][seg] = {}
                 symtab[strLabel][seg][subseg] = {}
                 symtab[strLabel][seg][subseg][symtype] = symtabEntry
+            elif seg not in symtab[strLabel].keys():
+                symtab[strLabel][seg] = {}
+                symtab[strLabel][seg][subseg] = {}
+                symtab[strLabel][seg][subseg][symtype] = symtabEntry
+            elif subseg not in symtab[strLabel][seg].keys():
+                symtab[strLabel][seg][subseg] = {}
+                symtab[strLabel][seg][subseg][symtype] = symtabEntry
             else:
-                prevdef = symtab[strLabel][seg][subseg]
+                prevdef = symtab[strLabel]
                 if symtype not in prevdef.keys():
                     symtab[strLabel][seg][subseg][symtype] = symtabEntry
                 else:
