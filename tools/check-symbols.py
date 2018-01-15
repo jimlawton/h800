@@ -12,7 +12,7 @@
 import sys
 from optparse import OptionParser
 
-from h800.symbol_table import buildSymbolTable
+from h800.symbol_table import buildSymbolTable, checkSymbolTable
 
 
 def main():
@@ -43,11 +43,20 @@ def main():
     for filename in args:
         symtab, errcount = buildSymbolTable(filename, verbose=opts.verbose,
                                             bad=opts.bad)
-        print("%s: %d errors encountered." % (filename, errcount))
         toterrs += errcount
-
+        print("%s: %d errors encountered building symbol table." %
+              (filename, errcount), file=sys.stderr)
+        errSyms = checkSymbolTable(symtab, verbose=opts.verbose)
+        toterrs += len(errSyms)
+        if len(errSyms) > 0:
+            print("%s: %d errors checking symbol table." % (filename,
+                                                            len(errSyms)),
+                  file=sys.stderr)
+            print("Undefined symbols:", file=sys.stderr)
+            for symbol in errSyms:
+                print("  %s" % symbol, file=sys.stderr)
     if len(args) > 1:
-        print("Total: %d errors encountered." % toterrs)
+        print("Total: %d errors encountered." % toterrs, file=sys.stderr)
 
 
 if __name__ == '__main__':
