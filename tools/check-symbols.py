@@ -17,16 +17,6 @@ from h800.symbol_table import buildSymbolTable, checkSymbolTable
 
 def main():
     parser = OptionParser("usage: %prog filename [filename]...")
-    parser.add_option('-a', '--all',
-                      dest='all',
-                      action='store_true',
-                      default=False,
-                      help="Check for all errors.")
-    parser.add_option('-b', '--bad',
-                      dest='bad',
-                      action='store_true',
-                      default=False,
-                      help="Check for bad symbol names.")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
@@ -36,14 +26,12 @@ def main():
     if len(args) < 1:
         parser.error("usage: %prog filename")
         sys.exit(1)
-    if opts.all:
-        opts.bad = True
 
     toterrs = 0
     symtab = {}
     for filename in args:
         symtab, errcount = buildSymbolTable(filename, symtab,
-                                            verbose=opts.verbose, bad=opts.bad)
+                                            verbose=opts.verbose)
         toterrs += errcount
         print("%s: %d errors encountered building symbol table." %
               (filename, errcount), file=sys.stderr)
