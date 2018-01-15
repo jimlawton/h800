@@ -171,23 +171,25 @@ class SymbolTable:
 
 
 def buildSymbolTable(filename, verbose=False, bad=False):
-    subsegments = []    # List of subsegments.
-    subsegment = "1"    # Current subsegment, default is 1 (no starting SETLOC)
+    seg = filename.split('.')[0]  # Default: name of the first file.
+    subsegs = []        # List of subsegments.
+    subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
     d = h800.arguscard.Deck(file=filename, verbose=verbose)
     errcount = 0
     symtab = {}
+    symtab[seg] = {}
     for card in d.cards:
         if card.column8 == "*":
             continue
         command = card.operation
         if command and command.startswith("SETLOC"):
             if ',' in command:
-                subsegment = command.split(',')[1].strip()
+                subseg = command.split(',')[1].strip()
             else:
-                subsegment = "0"
-            subsegments.append(subsegment)
-            print("Subsegment: %s" % subsegment)
-            symtab[subsegment] = {}
+                subseg = "0"
+            subsegs.append(subseg)
+            print("Subsegment: %s" % subseg)
+            symtab[seg][subseg] = {}
         if card.label:
             strLabel = card.label.strip().replace(' ', '')
             symtabEntry = {
@@ -214,13 +216,13 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                 symtype = "complex"
             else:
                 symtype = "simple"
-            if strLabel not in list(symtab[subsegment].keys()):
-                symtab[subsegment][strLabel] = {}
-                symtab[subsegment][strLabel][symtype] = symtabEntry
+            if strLabel not in list(symtab[seg][subseg].keys()):
+                symtab[seg][subseg][strLabel] = {}
+                symtab[seg][subseg][strLabel][symtype] = symtabEntry
             else:
-                prevdef = symtab[subsegment][strLabel]
+                prevdef = symtab[seg][subseg][strLabel]
                 if symtype not in prevdef.keys():
-                    symtab[subsegment][strLabel][symtype] = symtabEntry
+                    symtab[seg][subseg][strLabel][symtype] = symtabEntry
                 else:
                     if command == "EQUALS":
                         prevcard = prevdef[symtype]["card"]
@@ -233,9 +235,9 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                     print("*** ERROR: Symbol %s is multiply-defined!" %
                           strLabel)
                     print("Previous definitions: %s" %
-                          symtab[subsegment][strLabel])
+                          symtab[seg][subseg][strLabel])
                     print("Current definition: %s" % symtabEntry)
                     print("command: %s" % command)
                     errcount += 1
     print("%s: %d errors encountered." % (filename, errcount))
-    return symtab
+    return symtab, errcount
