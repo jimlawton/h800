@@ -177,8 +177,6 @@ def buildSymbolTable(filename, verbose=False, bad=False):
     d = Deck(file=filename, verbose=verbose)
     errcount = 0
     symtab = {}
-    symtab[seg] = {}
-    # print("Segment: %s" % seg)
     for card in d.cards:
         if card.column8 == "*":
             continue
@@ -219,13 +217,13 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                 symtype = "complex"
             else:
                 symtype = "simple"
-            if strLabel not in list(symtab[seg][subseg].keys()):
-                symtab[seg][subseg][strLabel] = {}
-                symtab[seg][subseg][strLabel][symtype] = symtabEntry
+            if strLabel not in list(symtab.keys()):
+                symtab[strLabel][seg][subseg] = {}
+                symtab[strLabel][seg][subseg][symtype] = symtabEntry
             else:
-                prevdef = symtab[seg][subseg][strLabel]
+                prevdef = symtab[strLabel][seg][subseg]
                 if symtype not in prevdef.keys():
-                    symtab[seg][subseg][strLabel][symtype] = symtabEntry
+                    symtab[strLabel][seg][subseg][symtype] = symtabEntry
                 else:
                     if command == "EQUALS":
                         prevcard = prevdef[symtype]["card"]
@@ -238,7 +236,7 @@ def buildSymbolTable(filename, verbose=False, bad=False):
                     print("*** ERROR: Symbol %s is multiply-defined!" %
                           strLabel, file=sys.stderr)
                     print("Previous definitions: %s" %
-                          symtab[seg][subseg][strLabel], file=sys.stderr)
+                          symtab[strLabel][seg][subseg], file=sys.stderr)
                     print("Current definition: %s" % symtabEntry,
                           file=sys.stderr)
                     print("command: %s" % command, file=sys.stderr)
@@ -248,11 +246,11 @@ def buildSymbolTable(filename, verbose=False, bad=False):
 
 def checkSymbolTable(symtab, verbose=False):
     errSyms = []
-    for seg in sorted(symtab.keys()):
-        for subseg in sorted(symtab[seg].keys()):
-            for symbol in sorted(symtab[seg][subseg].keys()):
-                if "complex" in symtab[seg][subseg][symbol].keys() and \
-                        "simple" not in symtab[seg][subseg][symbol].keys():
+    for symbol in sorted(symtab.keys()):
+        for seg in sorted(symtab[symbol].keys()):
+            for subseg in sorted(symtab[symbol][seg].keys()):
+                if "complex" in symtab[symbol][seg][subseg].keys() and \
+                        "simple" not in symtab[symbol][seg][subseg].keys():
                     print("ERROR: symbol \"%s\" has a complex assignment, "
                           "but no absolute assignment!" % symbol,
                           file=sys.stderr)
