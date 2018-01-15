@@ -40,22 +40,24 @@ def main():
         opts.bad = True
 
     toterrs = 0
+    symtab = {}
     for filename in args:
-        symtab, errcount = buildSymbolTable(filename, verbose=opts.verbose,
-                                            bad=opts.bad)
+        symtab, errcount = buildSymbolTable(filename, symtab,
+                                            verbose=opts.verbose, bad=opts.bad)
         toterrs += errcount
         print("%s: %d errors encountered building symbol table." %
               (filename, errcount), file=sys.stderr)
-        errSyms = checkSymbolTable(symtab, verbose=opts.verbose)
-        toterrs += len(errSyms)
-        if len(errSyms) > 0:
-            print("%s: %d errors checking symbol table." % (filename,
-                                                            len(errSyms)),
-                  file=sys.stderr)
-            print("Undefined symbols:", file=sys.stderr)
-            for symbol in errSyms:
-                print("  %s" % symbol, file=sys.stderr)
-        print("", file=sys.stderr)
+
+    errSyms = checkSymbolTable(symtab, verbose=opts.verbose)
+    toterrs += len(errSyms)
+    if len(errSyms) > 0:
+        print("%s: %d errors checking symbol table." % (filename,
+                                                        len(errSyms)),
+              file=sys.stderr)
+        print("Undefined symbols:", file=sys.stderr)
+        for symbol in errSyms:
+            print("  %s" % symbol, file=sys.stderr)
+    print("", file=sys.stderr)
 
     if len(args) > 1:
         print("Total: %d errors encountered." % toterrs, file=sys.stderr)

@@ -30,17 +30,14 @@ def main():
 
     errors = 0
 
+    symtab = {}
     for filename in args:
-        symtab, file_errors = buildSymbolTable(filename, verbose=opts.verbose,
-                                               bad=True)
+        symtab, file_errors = buildSymbolTable(filename, symtab,
+                                               verbose=opts.verbose, bad=True)
         errors += file_errors
 
-        for seg in sorted(symtab.keys()):
-            print("Segment: %s" % seg)
-            for subseg in sorted(symtab[seg].keys()):
-                print("Subsegment: %s" % subseg)
-                for sym in sorted(symtab[seg][subseg].keys()):
-                    pprint.pprint("%-9s %s" % (sym, symtab[seg][subseg][sym]))
+    for sym in sorted(symtab.keys()):
+        pprint.pprint("%-9s %s" % (sym, symtab[sym]))
 
     if errors > 0:
         print("%d errors found" % errors, file=sys.stderr)
