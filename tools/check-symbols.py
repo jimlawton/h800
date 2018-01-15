@@ -55,9 +55,10 @@ def main():
             print("Undefined symbols:", file=sys.stderr)
             for symbol in errSyms:
                 print("  %s" % symbol, file=sys.stderr)
+        print("", file=sys.stderr)
+
     if len(args) > 1:
         print("Total: %d errors encountered." % toterrs, file=sys.stderr)
-        print("", file=sys.stderr)
 
 
 if __name__ == '__main__':
