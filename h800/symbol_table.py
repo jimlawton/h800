@@ -170,7 +170,7 @@ class SymbolTable:
             print(self._symbols[symbol], file=out)
 
 
-def buildSymbolTable(filename, symtab, verbose=False, bad=False):
+def buildSymbolTable(filename, symtab, verbose=False):
     seg = filename.split('.')[0]  # Default: name of the first file.
     subsegs = []        # List of subsegments.
     subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
@@ -195,7 +195,7 @@ def buildSymbolTable(filename, symtab, verbose=False, bad=False):
                 "lognum": card.lognum,
                 "card": card
             }
-            if bad and strLabel.upper() != strLabel:
+            if strLabel.upper() != strLabel:
                 print("*** ERROR: Symbol %s is ill-formed!" % strLabel,
                       file=sys.stderr)
                 print("Current definition: %s" % symtabEntry, file=sys.stderr)
