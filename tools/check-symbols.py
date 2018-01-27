@@ -8,7 +8,7 @@
 #
 # This is intended for debugging assembler development.
 
-
+from __future__ import print_function
 import sys
 from optparse import OptionParser
 
