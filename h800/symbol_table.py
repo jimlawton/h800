@@ -191,19 +191,62 @@ def buildSymbolTable(filename, symtab, verbose=False):
             subsegs.append(subseg)
             # print("Subsegment: %s" % subseg)
         if card.label:
-            strLabel = card.label.strip().replace(' ', '')
             symtabEntry = {
                 "file": card.filename,
                 "line": card.linenum,
                 "lognum": card.lognum,
+                "tagtype": None,
                 "card": card
             }
+            strLabel = card.label.strip().replace(' ', '')
             if strLabel.upper() != strLabel:
-                print("*** ERROR: Symbol %s is ill-formed!" % strLabel,
+                print("*** ERROR: Symbol %s is ill-formed (case)!" % strLabel,
                       file=sys.stderr)
                 print("Current definition: %s" % symtabEntry, file=sys.stderr)
                 errcount += 1
                 continue
+            tagName = strLabel
+            symtabEntry["tagtype"] = ' '
+            if ',' in strLabel:
+                if strLabel.count(',') > 1:
+                    print("*** ERROR: Symbol %s is illegal, too many commas!"
+                          % strLabel, file=sys.stderr)
+                    print("Current definition: %s" % symtabEntry,
+                          file=sys.stderr)
+                    errcount += 1
+                    continue
+                tagPrefix = strLabel.split(',')[0]
+                tagName = strLabel.split(',')[1]
+                if tagPrefix not in TAG_PREFIXES:
+                    print("*** ERROR: Symbol %s is ill-formed (tag prefix)!"
+                          % strLabel, file=sys.stderr)
+                    print("Current definition: %s" % symtabEntry,
+                          file=sys.stderr)
+                    errcount += 1
+                    continue
+                if tagPrefix in ('L', 'X'):
+                    print("*** ERROR: Symbol %s has unsupported tag prefix!"
+                          % strLabel, file=sys.stderr)
+                    print("Current definition: %s" % symtabEntry,
+                          file=sys.stderr)
+                    errcount += 1
+                    continue
+                symtabEntry["tagtype"] = tagPrefix
+                if tagPrefix == 'B':
+                    # Mask tag for BOTH field and shift instructions.
+                    pass
+                elif tagPrefix == 'F':
+                    # Mask tag for field instructions only.
+                    pass
+                elif tagPrefix == 'S':
+                    # Mask tag for shift instructions only.
+                    pass
+                elif tagPrefix == 'Z':
+                    # Special register tag.
+                    # TODO: check register tag symbolic name is valid, or
+                    # absolute value is valid.
+                    pass
+
             # Check the command code field. Depending on the command code
             # field operation, multiple declarations might be allowed,
             # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
@@ -218,22 +261,22 @@ def buildSymbolTable(filename, symtab, verbose=False):
                 symtype = "complex"
             else:
                 symtype = "simple"
-            if strLabel not in list(symtab.keys()):
-                symtab[strLabel] = {}
-                symtab[strLabel][seg] = {}
-                symtab[strLabel][seg][subseg] = {}
-                symtab[strLabel][seg][subseg][symtype] = symtabEntry
-            elif seg not in symtab[strLabel].keys():
-                symtab[strLabel][seg] = {}
-                symtab[strLabel][seg][subseg] = {}
-                symtab[strLabel][seg][subseg][symtype] = symtabEntry
-            elif subseg not in symtab[strLabel][seg].keys():
-                symtab[strLabel][seg][subseg] = {}
-                symtab[strLabel][seg][subseg][symtype] = symtabEntry
+            if tagName not in list(symtab.keys()):
+                symtab[tagName] = {}
+                symtab[tagName][seg] = {}
+                symtab[tagName][seg][subseg] = {}
+                symtab[tagName][seg][subseg][symtype] = symtabEntry
+            elif seg not in symtab[tagName].keys():
+                symtab[tagName][seg] = {}
+                symtab[tagName][seg][subseg] = {}
+                symtab[tagName][seg][subseg][symtype] = symtabEntry
+            elif subseg not in symtab[tagName][seg].keys():
+                symtab[tagName][seg][subseg] = {}
+                symtab[tagName][seg][subseg][symtype] = symtabEntry
             else:
-                prevdef = symtab[strLabel]
+                prevdef = symtab[tagName]
                 if symtype not in prevdef.keys():
-                    symtab[strLabel][seg][subseg][symtype] = symtabEntry
+                    symtab[tagName][seg][subseg][symtype] = symtabEntry
                 else:
                     if command == "EQUALS":
                         prevcard = prevdef[symtype]["card"]
@@ -244,9 +287,9 @@ def buildSymbolTable(filename, symtab, verbose=False):
                                 # Equivalent assignment, ignore.
                                 continue
                     print("*** ERROR: Symbol %s is multiply-defined!" %
-                          strLabel, file=sys.stderr)
+                          tagName, file=sys.stderr)
                     print("Previous definitions: %s" %
-                          symtab[strLabel][seg][subseg], file=sys.stderr)
+                          symtab[tagName][seg][subseg], file=sys.stderr)
                     print("Current definition: %s" % symtabEntry,
                           file=sys.stderr)
                     print("command: %s" % command, file=sys.stderr)
