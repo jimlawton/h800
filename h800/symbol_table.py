@@ -4,6 +4,9 @@ import sys
 from h800.arguscard import Deck
 
 
+TAG_PREFIXES = ('B', 'F', 'L', 'S', 'X', 'Z')
+
+
 class SymbolTableEntry:
 
     def __init__(self, name, value=None, symtype=None, file=None, line=0,
