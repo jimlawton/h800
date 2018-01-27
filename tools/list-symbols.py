@@ -43,8 +43,9 @@ def main():
                 print("    Subsegment: %s" % subseg)
                 for symtype in sorted(symtab[sym][seg][subseg].keys()):
                     symdata = symtab[sym][seg][subseg][symtype]
-                    print("        %-9s: %-38s      %s" %
+                    print("        %-9s %1s %-38s      %s" %
                           ("<%s>" % symtype,
+                           symdata["tagtype"],
                            "%s:%s" % (symdata["file"].split('.')[0],
                                       symdata["line"]),
                            symdata["card"]))
