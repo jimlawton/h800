@@ -8,12 +8,13 @@
 #
 # This is intended for debugging assembler development.
 
-
+from __future__ import print_function
 import sys
 from optparse import OptionParser
 
 import h800.arguscard
 import h800.instructions
+from h800.symbol_table import buildSymbolTable
 
 
 def main():
