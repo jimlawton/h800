@@ -318,30 +318,57 @@ def checkSymbolTable(symtab, verbose=False):
     return sorted(errSyms)
 
 
-def findSymbolDef(symtab, name, symtype=None, fuzzy=False, verbose=False):
-    if name in symtab.keys():
-        if symtype is None:
-            return symtab[name]
-        else:
-            for seg in sorted(symtab[name].keys()):
-                for subseg in sorted(symtab[name][seg].keys()):
-                    if symtype in symtab[name][seg][subseg].keys():
-                        return symtab[name]
-    if symtype is None:
+def getAbsoluteSymbols(symtab):
+    """Return a list of the symbols that have absolute definitions."""
+    syms = []
+    found = False
+    for symbol in sorted(symtab.keys()):
+        for seg in sorted(symtab[symbol].keys()):
+            for subseg in sorted(symtab[symbol][seg].keys()):
+                if "simple" in symtab[symbol][seg][subseg].keys():
+                    syms.append(symbol)
+                    found = True
+                    break
+            if found:
+                break
+    return syms
+
+
+def findSymbolDef(symtab, name, symtype=None, begin=False, end=False,
+                  fuzzy=False, verbose=False):
+    """Find the definition location(s) of the specified symbol."""
+    exact = not begin and not end and not fuzzy
+    symNames = sorted(symtab.keys())
+    if exact:
+        if name in symNames:
+            if symtype is None:
+                return symtab[name]
+            else:
+                for seg in sorted(symtab[name].keys()):
+                    for subseg in sorted(symtab[name][seg].keys()):
+                        if symtype in symtab[name][seg][subseg].keys():
+                            return symtab[name]
         print("ERROR: Undefined symbol \"%s\"!" % name, file=sys.stderr)
     else:
-        print("ERROR: symbol \"%s\" has no assignment of type \"%s\"!" % name,
-              file=sys.stderr)
-    if fuzzy:
-        print("Searching for matches...")
-        # Try fuzzy finder.
-        matches = process.extract(name, sorted(symtab.keys()), limit=10)
-        print(matches)
-        if len(matches) > 0:
-            print("Possible matches:")
-            for match in matches:
-                print("  %s %d" % (match[0], match[1]))
+        matches = []
+        if begin or end:
+            for sym in symNames:
+                if begin and sym.startswith(name):
+                    matches.append(sym)
+                if end and sym.endswith(name):
+                    matches.append(sym)
             return matches
-        else:
-            print("No possible matches!")
+        if fuzzy:
+            # Try fuzzy finder.
+            absSyms = getAbsoluteSymbols(symtab)
+            matches = process.extract(name, absSyms, limit=10)
+            if len(matches) > 0:
+                print("    Possible matches:")
+                matchList = []
+                for match in matches:
+                    matchList.append(match[0])
+                print("    " + ' '.join(matchList))
+                return matchList
+            else:
+                print("    No possible matches!")
     return None
