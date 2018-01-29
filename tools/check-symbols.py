@@ -12,7 +12,7 @@ from __future__ import print_function
 import sys
 from optparse import OptionParser
 
-from h800.symbol_table import buildSymbolTable, checkSymbolTable
+from h800.symbol_table import buildSymbolTable, checkSymbolTable, findSymbolDef
 
 
 def main():
@@ -43,6 +43,7 @@ def main():
         print("Undefined symbols:", file=sys.stderr)
         for symbol in errSyms:
             print("  %s" % symbol, file=sys.stderr)
+            findSymbolDef(symtab, symbol, fuzzy=True)
         print("%d errors checking symbol table." % len(errSyms),
               file=sys.stderr)
 
