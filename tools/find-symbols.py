@@ -36,6 +36,11 @@ def main():
                       action='store_true',
                       default=False,
                       help="Match symbols that end with the specified string.")
+    parser.add_option('-f', '--fuzzy',
+                      dest='fuzzy',
+                      action='store_true',
+                      default=False,
+                      help="Fuzzy match symbols with the specified string.")
     parser.add_option('-v', '--verbose',
                       dest='verbose',
                       action='store_true',
