@@ -9,8 +9,9 @@ name = "pypi"
 
 py = "*"
 pyparsing = "*"
-"h800-master" = {git = "https://github.com/jimlawton/h800", editable = true}
+h800-master = {git = "https://github.com/jimlawton/h800", editable = true}
 pylog-master = {git = "https://github.com/jimlawton/pylog", editable = true}
+fuzzywuzzy = "*"
 
 
 [dev-packages]
