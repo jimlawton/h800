@@ -363,11 +363,10 @@ def findSymbolDef(symtab, name, symtype=None, begin=False, end=False,
             absSyms = getAbsoluteSymbols(symtab)
             matches = process.extract(name, absSyms, limit=10)
             if len(matches) > 0:
-                print("    Possible matches:")
                 matchList = []
                 for match in matches:
                     matchList.append(match[0])
-                print("    " + ' '.join(matchList))
+                print("    Possible matches:" + ' '.join(matchList))
                 return matchList
             else:
                 print("    No possible matches!")
