@@ -1,5 +1,7 @@
 from __future__ import print_function
 import sys
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 from h800.arguscard import Deck
 
@@ -312,3 +314,25 @@ def checkSymbolTable(symtab, verbose=False):
               "but no absolute assignment!" % symbol,
               file=sys.stderr)
     return sorted(errSyms)
+
+
+def findSymbolDef(symtab, name, symtype=None, fuzzy=False, verbose=False):
+    if name in symtab.keys():
+        if symtype is None:
+            return symtab[name]
+        else:
+            for seg in sorted(symtab[name].keys()):
+                for subseg in sorted(symtab[name][seg].keys()):
+                    if symtype in symtab[name][seg][subseg].keys():
+                        return symtab[name]
+    else:
+        print("ERROR: Undefined symbol \"%s\"!" % name, file=sys.stderr)
+        if fuzzy:
+            # Try fuzzy finder.
+            matches = process.extract(name, sorted(symtab.keys()), limit=10)
+            if len(matches) > 0:
+                print("Possible matches:")
+                for match in matches:
+                    print("  %s %d" % (match[0], match[1]))
+                return matches
+    return None
