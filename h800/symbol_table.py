@@ -366,8 +366,7 @@ def findSymbolDef(symtab, name, symtype=None, begin=False, end=False,
                 matchList = []
                 for match in matches:
                     matchList.append(match[0])
-                print("    Possible matches:" + ' '.join(matchList))
                 return matchList
             else:
-                print("    No possible matches!")
+                return []
     return None
