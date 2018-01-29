@@ -52,37 +52,27 @@ def main():
                       default=False,
                       help="Exact matching. Default is partial.")
     (opts, args) = parser.parse_args()
-    if opts.begin and opts.exact or opts.end and opts.exact or opts.begin and \
-            opts.end:
+    if (opts.begin and opts.exact) or (opts.end and opts.exact) or \
+            (opts.begin and opts.end) or \
+            (opts.fuzzy and (opts.begin or opts.end or opts.exact)):
         parser.error("Conflicting options!")
     if len(args) < 2:
         parser.error("usage: %prog [options] symbol filename [filename]...")
     symbol = args[0]
 
+    toterrs = 0
+    symtab = {}
     for filename in args[1:]:
-        d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
-        for card in d.cards:
-            if card.label is None:
-                continue
-            strLabel = card.label.strip().replace(' ', '')
-            match = False
-            if strLabel == symbol:
-                match = True
-            else:
-                if opts.exact:
-                    continue
-                if opts.begin and strLabel.startswith(symbol) or \
-                        opts.end and strLabel.endswith(symbol):
-                    match = True
-                elif not opts.begin and not opts.end and symbol in strLabel:
-                    match = True
-                else:
-                    continue
-                if match:
-                    if opts.details:
-                        print(card.filename, card.linenum, card.line)
-                    else:
-                        print(card.line)
+        symtab, errcount = buildSymbolTable(filename, symtab,
+                                            verbose=opts.verbose)
+        toterrs += errcount
+        print("%s: %d errors encountered building symbol table." %
+              (filename, errcount), file=sys.stderr)
+
+    entry = findSymbolDef(symtab, symbol, begin=opts.begin, end=opts.end,
+                          fuzzy=opts.fuzzy)
+    if entry:
+        print(entry)
 
 
 if __name__ == '__main__':
