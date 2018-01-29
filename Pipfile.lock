@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2a249ed22fb8c6ce36b3b21b85b0a091e0f84f91247f9a8f2d67e9b781c3bdee"
+            "sha256": "c9a63cfe2ae51253dacac08df71918543e173e540d685c1b214d086076c07e7b"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -9,9 +9,9 @@
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "17.3.0",
+            "platform_release": "17.4.0",
             "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-4570.31.3~1/RELEASE_X86_64",
+            "platform_version": "Darwin Kernel Version 17.4.0: Sun Dec 17 09:19:54 PST 2017; root:xnu-4570.41.2~1/RELEASE_X86_64",
             "python_full_version": "3.6.4",
             "python_version": "3.6",
             "sys_platform": "darwin"
@@ -29,10 +29,12 @@
         ]
     },
     "default": {
-        "h800": {
-            "editable": true,
-            "git": "https://github.com/jimlawton/h800",
-            "ref": "5f8f2b03e12d61277c8629611ad1e5c6f1f9abac"
+        "fuzzywuzzy": {
+            "hashes": [
+                "sha256:ecf490216fb4d76b558a03042ff8f45a8782f17326caca1384d834cbaa2c7e6f",
+                "sha256:d40c22d2744dff84885b30bbfc07fab7875f641d070374331777a4d1808b8d4e"
+            ],
+            "version": "==0.16.0"
         },
         "h800-master": {
             "editable": true,
@@ -44,11 +46,6 @@
                 "sha256:ca18943e28235417756316bfada6cd96b23ce60dd532642690dcfdaba988a76d"
             ],
             "version": "==1.5.2"
-        },
-        "pylog": {
-            "editable": true,
-            "git": "https://github.com/jimlawton/pylog",
-            "ref": "f813c8b849035edae866510d6a36b98b4f0cea4f"
         },
         "pylog-master": {
             "editable": true,
