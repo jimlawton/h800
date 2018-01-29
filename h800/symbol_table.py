@@ -325,14 +325,21 @@ def findSymbolDef(symtab, name, symtype=None, fuzzy=False, verbose=False):
                 for subseg in sorted(symtab[name][seg].keys()):
                     if symtype in symtab[name][seg][subseg].keys():
                         return symtab[name]
-    else:
+    if symtype is None:
         print("ERROR: Undefined symbol \"%s\"!" % name, file=sys.stderr)
-        if fuzzy:
-            # Try fuzzy finder.
-            matches = process.extract(name, sorted(symtab.keys()), limit=10)
-            if len(matches) > 0:
-                print("Possible matches:")
-                for match in matches:
-                    print("  %s %d" % (match[0], match[1]))
-                return matches
+    else:
+        print("ERROR: symbol \"%s\" has no assignment of type \"%s\"!" % name,
+              file=sys.stderr)
+    if fuzzy:
+        print("Searching for matches...")
+        # Try fuzzy finder.
+        matches = process.extract(name, sorted(symtab.keys()), limit=10)
+        print(matches)
+        if len(matches) > 0:
+            print("Possible matches:")
+            for match in matches:
+                print("  %s %d" % (match[0], match[1]))
+            return matches
+        else:
+            print("No possible matches!")
     return None
