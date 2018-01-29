@@ -176,6 +176,7 @@ class SymbolTable:
 
 
 def buildSymbolTable(filename, symtab, verbose=False):
+    """Build the symbol table."""
     seg = filename.split('.')[0]  # Default: name of the first file.
     subsegs = []        # List of subsegments.
     subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
@@ -300,6 +301,7 @@ def buildSymbolTable(filename, symtab, verbose=False):
 
 
 def checkSymbolTable(symtab, verbose=False):
+    """Check the symbol table."""
     errSyms = []
     for symbol in sorted(symtab.keys()):
         foundDefine = False
