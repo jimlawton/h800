@@ -42,8 +42,12 @@ def main():
         print("", file=sys.stderr)
         print("Undefined symbols:", file=sys.stderr)
         for symbol in errSyms:
-            print("  %s" % symbol, file=sys.stderr)
-            findSymbolDef(symtab, symbol, fuzzy=True)
+            matches = findSymbolDef(symtab, symbol, fuzzy=True)
+            print(matches)
+            if matches is None or matches == []:
+                print("  %s - No matches!" % symbol, file=sys.stderr)
+            else:
+                print("  %s - Possible matches: " % symbol + ' '.join(matches))
         print("%d errors checking symbol table." % len(errSyms),
               file=sys.stderr)
 
