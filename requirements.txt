@@ -1,6 +1,18 @@
+atomicwrites==1.3.0
+attrs==19.1.0
+certifi==2019.3.9
 fuzzywuzzy==0.16.0
 -e git+https://github.com/jimlawton/h800#egg=h800-master
+more-itertools==7.0.0
+pipenv==2018.11.26
+pluggy==0.9.0
+more-itertools==7.0.0
+pipenv==2018.11.26
+pluggy==0.9.0
 py==1.5.2
 -e git+https://github.com/jimlawton/pylog#egg=pylog-master
 pyparsing==2.2.0
+pytest==4.4.1
 six==1.11.0
+virtualenv==16.5.0
+virtualenv-clone==0.5.3
