@@ -304,12 +304,14 @@ def checkSymbolTable(symtab, verbose=False):
     """Check the symbol table."""
     errSyms = []
     for symbol in sorted(symtab.keys()):
-        foundDefine = False
+        foundSimple = foundComplex = False
         for seg in sorted(symtab[symbol].keys()):
             for subseg in sorted(symtab[symbol][seg].keys()):
                 if "simple" in symtab[symbol][seg][subseg].keys():
-                    foundDefine = True
-        if not foundDefine:
+                    foundSimple = True
+                if "complex" in symtab[symbol][seg][subseg].keys():
+                    foundComplex = True
+        if not foundSimple and not foundComplex:
             errSyms.append(symbol)
     for symbol in errSyms:
         print("ERROR: symbol \"%s\" has a complex assignment, "
