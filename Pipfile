@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 py = "*"
 pyparsing = "*"
-h800-master = {git = "https://github.com/jimlawton/h800",editable = true}
-pylog-master = {git = "https://github.com/jimlawton/pylog",editable = true}
+h800 = {git = "https://github.com/jimlawton/h800", editable = true}
+pylog = {git = "https://github.com/jimlawton/pylog", editable = true}
 fuzzywuzzy = "*"
 python-levenshtein = "*"
 
