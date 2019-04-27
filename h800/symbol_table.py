@@ -300,7 +300,7 @@ def buildSymbolTable(filename, symtab, verbose=False):
     return symtab, errcount
 
 
-def checkSymbolTable(symtab, verbose=False):
+def checkSymbolTable(symtab, verbose=False, complexOnlyError=False):
     """Check the symbol table."""
     errSyms = []
     for symbol in sorted(symtab.keys()):
@@ -311,7 +311,7 @@ def checkSymbolTable(symtab, verbose=False):
                     foundSimple = True
                 if "complex" in symtab[symbol][seg][subseg].keys():
                     foundComplex = True
-        if not foundSimple and not foundComplex:
+        if not foundSimple and (complexOnlyError is True and  not foundComplex):
             errSyms.append(symbol)
     for symbol in errSyms:
         print("ERROR: symbol \"%s\" has a complex assignment, "

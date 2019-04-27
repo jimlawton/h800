@@ -22,6 +22,11 @@ def main():
                       action='store_true',
                       default=False,
                       help="Enable verbose output.")
+    parser.add_option('-c', '--complex',
+                      dest='complex',
+                      action='store_true',
+                      default=False,
+                      help="Print errors for any complex-only definitions.")
     (opts, args) = parser.parse_args()
     if len(args) < 1:
         parser.error("usage: %prog filename")
@@ -36,7 +41,8 @@ def main():
         print("%s: %d errors encountered building symbol table." %
               (filename, errcount), file=sys.stderr)
 
-    errSyms = checkSymbolTable(symtab, verbose=opts.verbose)
+    errSyms = checkSymbolTable(symtab, verbose=opts.verbose,
+                               complexOnlyError=opts.complex)
     toterrs += len(errSyms)
     if len(errSyms) > 0:
         print("", file=sys.stderr)
