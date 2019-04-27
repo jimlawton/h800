@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 py = "*"
 pyparsing = "*"
-h800 = {git = "https://github.com/jimlawton/h800", editable = true}
-pylog = {git = "https://github.com/jimlawton/pylog", editable = true}
+h800 = {git = "https://github.com/jimlawton/h800",editable = true}
+pylog = {git = "https://github.com/jimlawton/pylog",editable = true}
 fuzzywuzzy = "*"
 python-levenshtein = "*"
+gnureadline = "*"
 
 [dev-packages]
 pytest = "*"

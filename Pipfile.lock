@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1ef85fcc1cdca0c1c84525dec62470e53344d97d3d3ab5301d811ea81a9acbd7"
+            "sha256": "8c082883b9ef370a4e6486eeede9c4e6d2d798553aa07bad4c658ec81c7847f5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -24,10 +24,27 @@
             "index": "pypi",
             "version": "==0.17.0"
         },
+        "gnureadline": {
+            "hashes": [
+                "sha256:10da0e30e1e014cc5879f63e987e28dd84f7dc6c36bc2e3b170355f9c18ad4e0",
+                "sha256:12a38c189020fd60914da7d0d39a98237a6c372d83a229e3166fc259413c4621",
+                "sha256:27e0a87edb5c049ac6516a9f2dd55c16fa9e2db95be5e147175c83a9af368df0",
+                "sha256:41c53183e57f02a8683b9e72ca8d42141e4a377893612e6aa022f6c969f2143a",
+                "sha256:4bf883a08ac02f9bcd3a1991633a774ce8692c4c5855f2e7c557e242c3266353",
+                "sha256:58e208ed34a53456ecf58bc11eacbe332c50d322b329457e2c645bd15192b035",
+                "sha256:7acd5bafcbfd8d3ad34d35b8aa478513185e6b39ea549991c99b64a0482534e5",
+                "sha256:8f4de3f730f99ab01db35caf83b251159b5fe7427cc89630276f664292b4f398",
+                "sha256:9e6589f3119c27808630118d2345b601a865d699495bf2929d87401e980b43e6",
+                "sha256:cc293089fc76dd7f068db2d8c8d23238ea0181a31feacd11d674e4a20038448d",
+                "sha256:faa92b9ea4a64dc8403cf2a0c9dfa839745cfff50e1f04c39dbec908d35e250b"
+            ],
+            "index": "pypi",
+            "version": "==6.3.8"
+        },
         "h800": {
             "editable": true,
             "git": "https://github.com/jimlawton/h800",
-            "ref": "da2a1ba2b94dc080af96ba669562bc39c1ea5377"
+            "ref": "bfb2230a70f7f03a3efb38cc2bcb83590ec056aa"
         },
         "py": {
             "hashes": [
