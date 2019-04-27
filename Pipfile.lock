@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c822bc833e5b8df396a34986c056bc4b3da999bea657acadd5b65a0556b8d50c"
+            "sha256": "1ef85fcc1cdca0c1c84525dec62470e53344d97d3d3ab5301d811ea81a9acbd7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -24,10 +24,10 @@
             "index": "pypi",
             "version": "==0.17.0"
         },
-        "h800-master": {
+        "h800": {
             "editable": true,
             "git": "https://github.com/jimlawton/h800",
-            "ref": "c65c360b6d5a8bcf926c3a29ff2eb701e65e6897"
+            "ref": "da2a1ba2b94dc080af96ba669562bc39c1ea5377"
         },
         "py": {
             "hashes": [
@@ -37,7 +37,7 @@
             "index": "pypi",
             "version": "==1.8.0"
         },
-        "pylog-master": {
+        "pylog": {
             "editable": true,
             "git": "https://github.com/jimlawton/pylog",
             "ref": "f813c8b849035edae866510d6a36b98b4f0cea4f"
@@ -52,8 +52,7 @@
         },
         "python-levenshtein": {
             "hashes": [
-                "sha256:033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1",
-                "sha256:228f37d792cc75b3cf1ead18bda4d3e475ee7673ba1fe62f3bac65e41c1df4f8"
+                "sha256:033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1"
             ],
             "index": "pypi",
             "version": "==0.12.0"
