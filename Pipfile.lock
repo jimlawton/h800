@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "70af77266f5f77cfdca0a0757138084ae2f29cc76ec57c1da7ec42adfbdda68e"
+            "sha256": "c822bc833e5b8df396a34986c056bc4b3da999bea657acadd5b65a0556b8d50c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -27,7 +27,7 @@
         "h800-master": {
             "editable": true,
             "git": "https://github.com/jimlawton/h800",
-            "ref": "636e79306add4bcae20693dea749bcf81181c14b"
+            "ref": "c65c360b6d5a8bcf926c3a29ff2eb701e65e6897"
         },
         "py": {
             "hashes": [
@@ -49,6 +49,14 @@
             ],
             "index": "pypi",
             "version": "==2.4.0"
+        },
+        "python-levenshtein": {
+            "hashes": [
+                "sha256:033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1",
+                "sha256:228f37d792cc75b3cf1ead18bda4d3e475ee7673ba1fe62f3bac65e41c1df4f8"
+            ],
+            "index": "pypi",
+            "version": "==0.12.0"
         }
     },
     "develop": {
