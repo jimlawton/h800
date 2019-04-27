@@ -311,11 +311,11 @@ def checkSymbolTable(symtab, verbose=False, complexOnlyError=False):
                     foundSimple = True
                 if "complex" in symtab[symbol][seg][subseg].keys():
                     foundComplex = True
-        if not foundSimple and (complexOnlyError is True and  not foundComplex):
+        if not foundSimple and (complexOnlyError and foundComplex):
             errSyms.append(symbol)
     for symbol in errSyms:
         print("ERROR: symbol \"%s\" has a complex assignment, "
-              "but no absolute assignment!" % symbol,
+              "but no simple assignment!" % symbol,
               file=sys.stderr)
     return sorted(errSyms)
 
