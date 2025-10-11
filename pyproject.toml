@@ -29,28 +29,25 @@ classifiers = [
   "Topic :: Software Development :: Assemblers",
   "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Operating System :: POSIX :: Linux",
   "Environment :: Console"
 ]
 
-# Core runtime dependencies (mirrors previous Pipfile / requirements content).
-# Pin versions where they were pinned in Pipfile.lock; allow newer minor for others if unpinned historically.
+# Core runtime dependencies.
 dependencies = [
-  "py",
+  "py>=1.11.0,<2.0.0",
   "pyparsing",
   "fuzzywuzzy",
   "python-Levenshtein",
-  "gnureadline",
   "pylog @ git+https://github.com/jimlawton/pylog",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "pytest",
+  "pytest>=8.2,<9.0",
+  "pytest-cov>=4.1,<5.0",
+  "coverage>=7.5,<8.0",
 ]
 
 [project.urls]
