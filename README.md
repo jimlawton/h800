@@ -69,6 +69,25 @@ uv run h800 ...
 ### Notes
 - Dependency management migrated from Pipenv / requirements.txt to uv.
 - To regenerate the lock file after changes: `uv lock` then `uv sync`.
+
+## Modernization (Python 3.13 Upgrade)
+
+The project has been bumped to require Python 3.13. The following cleanup / enhancement tasks align the codebase with modern Python best practices:
+
+- Remove any lingering Python 2 compatibility imports (`from __future__ import print_function`) and legacy patterns.
+- Replace use of `optparse` in tools with `argparse` (richer API, maintained).
+- Audit encoding headers (e.g. `# -*- coding: iso-8859-15 -*-`); convert source to UTF-8 unless non-ASCII content requires otherwise.
+- Add type hints progressively (start with public functions/classes) to improve maintainability.
+- Consider introducing `ruff` (lint/format) and `mypy` (type checking) in the `dev` dependency group.
+- Evaluate replacing `fuzzywuzzy` with `python-Levenshtein` or `rapidfuzz` directly for performance (if fuzzy matching is performance-critical).
+- Ensure tests cover edge cases (banked registers, symbol resolution) and add property-based tests where appropriate.
+- Add a CLI entry point via `[project.scripts]` in `pyproject.toml` (e.g. `h800-asm = h800.__main__:main`) if a command-line interface is desired.
+- Consider adopting `dataclasses` for structured records (e.g. parser records, instruction representations) to reduce boilerplate.
+- Replace any deprecated APIs and confirm all dependencies are at their latest compatible versions.
+- Add continuous integration (GitHub Actions) using `uv sync --frozen` to enforce lockfile reproducibility.
+- Optional: Introduce `pyproject.toml` tool sections (`[tool.coverage]`, `[tool.ruff]`, etc.) for centralized configuration.
+
+These items can be tackled incrementally; none (except removing obsolete compatibility code) are strictly required for Python 3.13 functionality but will modernize the project overall.
 - Runtime and development dependencies now declared under `[project]` and `[project.optional-dependencies]` in `pyproject.toml`.
 - `uv.lock` provides a deterministic, reproducible lock; regenerate with `uv lock`.
 - Common commands:

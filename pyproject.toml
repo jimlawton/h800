@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,7 @@ name = "h800"
 version = "0.9"
 description = "Tools (assembler, future simulator) for the Honeywell H-800 / H-1800 mainframe family."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 license = { text = "GPL-2.0-only" }
 authors = [
   { name = "Jim Lawton", email = "jim.lawton@gmail.com" }
@@ -28,15 +28,14 @@ classifiers = [
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Assemblers",
   "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.13",
   "Operating System :: POSIX :: Linux",
   "Environment :: Console"
 ]
 
 # Core runtime dependencies.
 dependencies = [
-  "py>=1.11.0,<2.0.0",
+  "py",
   "pyparsing",
   "fuzzywuzzy",
   "python-Levenshtein",
@@ -45,9 +44,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.2,<9.0",
-  "pytest-cov>=4.1,<5.0",
-  "coverage>=7.5,<8.0",
+  "pytest",
+  "pytest-cov",
+  "coverage",
 ]
 
 [project.urls]
