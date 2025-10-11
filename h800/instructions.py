@@ -113,7 +113,20 @@ def namedtuple_defaults(typename, field_names, default_values=()):
 # value of bit 7 (0 for unmasked, or 1 for masked), and bits 2-3 for unmasked
 # instructions.
 
-
+# Represents the fields making up a complete opcode:
+#
+#   m: mnemonic
+#   c: class
+#   b23: bits 2-3 (00 - 11)
+#   b7: bit 7 (0, 1)
+#   op: bits 8-12 (00000 - 11111)
+#   type: the instruction type, one of
+#     None: general unmasked or scientific instructions.
+#     "maskable": maskable instructions.
+#     "peripheral": peripheral instructions.
+#     "print": print instructions.
+#     "simulator": simulator instruction.
+#
 Opcode = namedtuple_defaults(
     "Opcode", ["m", "c", "b23", "b7", "op", "type"], (None, None, None, None, None, "unmasked")
 )
