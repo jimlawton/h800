@@ -70,7 +70,8 @@ def parse_int(token: str) -> int:
     if token.startswith(("0b", "0B")):
         return int(token, 2)
     # Raw octal heuristic: all digits in 0-7 and length <= 4
-    if all(c in "01234567" for c in token) and len(token) <= 4:
+    RAW_OCTAL_MAX_LEN = 4  # Extracted constant (was magic value 4)
+    if all(c in "01234567" for c in token) and len(token) <= RAW_OCTAL_MAX_LEN:
         try:
             return int(token, 8)
         except ValueError:
@@ -273,7 +274,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         else:
             buckets[t].append(m)
 
-    for t, mm in buckets.items():
+    for _t, mm in buckets.items():
         mm.sort()
 
     for t, mm in buckets.items():

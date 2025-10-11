@@ -73,16 +73,16 @@ class PunchCard:
             self._fields = []
             for s, w in self._layout:
                 self._fields.append(line[s - 1 : s - 1 + w])
-            self._strippedFields = []
+            self._stripped_fields = []
             self._record = {}
             if linenum != 0:
                 self._record["linenum"] = linenum
             for i, field in enumerate(self._fields):
                 if field.strip() == "":
-                    self._strippedFields.append(None)
+                    self._stripped_fields.append(None)
                     self._record[fieldnames[i]] = None
                 else:
-                    self._strippedFields.append(field.strip())
+                    self._stripped_fields.append(field.strip())
                     self._record[fieldnames[i]] = field.strip()
 
     @property
@@ -99,7 +99,7 @@ class PunchCard:
 
     @property
     def stripped_fields(self):
-        return self._strippedFields
+        return self._stripped_fields
 
     @property
     def record(self):
@@ -119,7 +119,7 @@ class PunchCard:
 
     @property
     def comment(self):
-        if self.isComment:
+        if self.is_comment:
             return self._line
         else:
             return None
@@ -168,11 +168,11 @@ class Deck:
                     )
                 )
         self._fields = []
-        self._strippedFields = []
+        self._stripped_fields = []
         self._records = []
         for card in self._cards:
             self._fields.append(card.fields)
-            self._strippedFields.append(card.strippedFields)
+            self._stripped_fields.append(card.stripped_fields)
             self._records.append(card.record)
 
     @property
@@ -189,7 +189,7 @@ class Deck:
 
     @property
     def stripped_fields(self):
-        return self._strippedFields
+        return self._stripped_fields
 
     @property
     def records(self):

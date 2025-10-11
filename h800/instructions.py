@@ -113,20 +113,7 @@ def namedtuple_defaults(typename, field_names, default_values=()):
 # value of bit 7 (0 for unmasked, or 1 for masked), and bits 2-3 for unmasked
 # instructions.
 
-# Represents the fields making up a complete opcode:
-#
-#   m: mnemonic
-#   c: class
-#   b23: bits 2-3 (00 - 11)
-#   b7: bit 7 (0, 1)
-#   op: bits 8-12 (00000 - 11111)
-#   type: the instruction type, one of
-#     None: general unmasked or scientific instructions.
-#     "maskable": maskable instructions.
-#     "peripheral": peripheral instructions.
-#     "print": print instructions.
-#     "simulator": simulator instruction.
-#
+
 Opcode = namedtuple_defaults(
     "Opcode", ["m", "c", "b23", "b7", "op", "type"], (None, None, None, None, None, "unmasked")
 )
@@ -632,48 +619,68 @@ def print_instructions():
     Emit all valid 12-bit instruction opcode values (octal) mapped to mnemonics.
     For print instructions (PRA/PRD/PRO) only PRA space is enumerated (they overlap).
     Constants are excluded (they are raw 48-bit data, not 12-bit opcodes).
+    Branching reduced by using per-type generator functions.
     """
+
+    def gen_maskable(mnemonic, meta):
+        for sequence in (0, 1):
+            for mask in range(32):
+                yield make_masked_opcode(mnemonic, sequence, mask)
+        # Unmasked variant for same mnemonic (bit7=0)
+        for sequence in (0, 1):
+            for a in (0, 1):
+                for b in (0, 1):
+                    for c in (0, 1):
+                        yield make_unmasked_opcode(mnemonic, sequence, a, b, c)
+
+    def gen_unmasked(mnemonic, meta):
+        for sequence in (0, 1):
+            for a in (0, 1):
+                for b in (0, 1):
+                    for c in (0, 1):
+                        yield make_unmasked_opcode(mnemonic, sequence, a, b, c)
+
+    def gen_peripheral(mnemonic, meta):
+        for paddr in range(64):
+            yield make_peripheral_opcode(mnemonic, paddr)
+
+    def gen_print(mnemonic, meta):
+        # Only enumerate PRA space (shared with PRD/PRO)
+        if mnemonic != "PRA":
+            return
+        for sequence in (0, 1):
+            for a in (0, 1):
+                for b in (0, 1):
+                    for c in (0, 1):
+                        yield make_print_opcode(mnemonic, sequence, a, b, c)
+
+    def gen_simulator(mnemonic, meta):
+        yield from (0o0007, 0o4007)
+
+    generators = {
+        "maskable": gen_maskable,
+        "unmasked": gen_unmasked,
+        "peripheral": gen_peripheral,
+        "print": gen_print,
+        "simulator": gen_simulator,
+    }
+
     opcodes = {}
     for mnemonic, meta in OPCODES.items():
-        codes = []
-        t = meta.type
-        if t == "maskable":
-            for sequence in (0, 1):
-                for mask in range(32):
-                    codes.append(make_masked_opcode(mnemonic, sequence, mask))
-        elif t == "unmasked":
-            for sequence in (0, 1):
-                for a in (0, 1):
-                    for b in (0, 1):
-                        for c in (0, 1):
-                            codes.append(make_unmasked_opcode(mnemonic, sequence, a, b, c))
-        elif t == "peripheral":
-            for paddr in range(64):
-                codes.append(make_peripheral_opcode(mnemonic, paddr))
-        elif t == "print":
-            if mnemonic == "PRA":
-                for sequence in (0, 1):
-                    for a in (0, 1):
-                        for b in (0, 1):
-                            for c in (0, 1):
-                                codes.append(make_print_opcode(mnemonic, sequence, a, b, c))
-        elif t == "simulator":
-            codes.extend([0o0007, 0o4007])
-        else:
-            # Unknown type; skip (pseudo / constants handled elsewhere).
+        gen = generators.get(meta.type)
+        if gen is None:
             continue
-        opcodes[mnemonic] = sorted(set(codes))
+        codes = sorted(set(gen(mnemonic, meta)))
+        if codes:
+            opcodes[mnemonic] = codes
 
-    # Invert mapping to detect collisions
     inverse = {}
     for mnemonic, codes in opcodes.items():
         for code in codes:
             inverse.setdefault(code, []).append(mnemonic)
 
-    # Emit
     for code in sorted(inverse):
-        mlist = ",".join(inverse[code])
-        print(f"0o{code:04o} {mlist}")
+        print(f"0o{code:04o} {','.join(inverse[code])}")
 
 
 __all__ = [
