@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "h800"
+version = "0.9"
+description = "Tools (assembler, future simulator) for the Honeywell H-800 / H-1800 mainframe family."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "GPL-2.0-only" }
+authors = [
+  { name = "Jim Lawton", email = "jim.lawton@gmail.com" }
+]
+
+keywords = [
+  "h800",
+  "h1800",
+  "assembler",
+  "mainframe",
+  "retro-computing",
+  "apollo",
+  "cross-assembler"
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Assemblers",
+  "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Operating System :: POSIX :: Linux",
+  "Environment :: Console"
+]
+
+# Core runtime dependencies (mirrors previous Pipfile / requirements content).
+# Pin versions where they were pinned in Pipfile.lock; allow newer minor for others if unpinned historically.
+dependencies = [
+  "py",
+  "pyparsing",
+  "fuzzywuzzy",
+  "python-Levenshtein",
+  "gnureadline",
+  "pylog @ git+https://github.com/jimlawton/pylog",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/jimlawton/h800"
+Repository = "https://github.com/jimlawton/h800"
+Issues = "https://github.com/jimlawton/h800/issues"
+Documentation = "https://github.com/jimlawton/h800/tree/master/docs"
+
+[tool.setuptools.packages.find]
+include = ["h800*"]
+
+[tool.uv]
+# You can customize uv behavior here if needed.
+
+[tool.uv.sources]
+# Example of declaring a source if you later add a private index.
+# pypi = { url = "https://pypi.org/simple" }

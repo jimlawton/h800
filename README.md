@@ -17,3 +17,63 @@ https://github.com/jimlawton/h800/blob/master/docs/argus/ARGUS_Manual_of_Assembl
 ## Caveats
  - No support for segments, only subsegments. YUL does not use segments. All
    code is assumed to be in the same segment.
+
+## Installation and Development (uv)
+
+This project now uses a modern `pyproject.toml` with the [uv](https://github.com/astral-sh/uv) Python package manager / resolver instead of Pipenv.
+
+### 1. Install uv
+On macOS/Linux:
+curl -Ls https://astral.sh/uv/install.sh | sh
+
+(See uv docs for other platforms.)
+
+### 2. Create and activate a virtual environment
+uv venv
+source .venv/bin/activate
+
+(uv will default to a Python it finds; specify one with `uv venv --python 3.11` if desired.)
+
+### 3. Install dependencies
+uv sync
+This reads `pyproject.toml` and `uv.lock` (if present) and installs everything reproducibly.
+
+### 4. Editable development
+The package is included automatically (via setuptools). If you need explicit editable mode:
+uv pip install -e .
+
+### 5. Run tests
+uv run pytest
+
+### 6. Add or upgrade dependencies
+Add a new runtime dependency:
+uv add <package>
+
+Add a dev-only dependency:
+uv add --group dev <package>
+
+Upgrade existing dependencies (respecting version constraints):
+uv lock --upgrade
+uv sync
+
+### 7. Build a distribution
+uv build
+Artifacts will appear under `dist/`.
+
+### 8. Run the assembler (example)
+uv run python -c "import h800; print('h800 imported')"
+
+Or if/when an entry point script is added you can:
+uv run h800 ...
+
+### Notes
+- Dependency management migrated from Pipenv / requirements.txt to uv.
+- To regenerate the lock file after changes: `uv lock` then `uv sync`.
+- Runtime and development dependencies now declared under `[project]` and `[project.optional-dependencies]` in `pyproject.toml`.
+- `uv.lock` provides a deterministic, reproducible lock; regenerate with `uv lock`.
+- Common commands:
+  - `uv venv` / `source .venv/bin/activate` to create & activate the environment.
+  - `uv sync` to install according to the lock file.
+  - `uv add <package>` or `uv add --group dev <package>` to add dependencies.
+  - `uv lock --upgrade` followed by `uv sync` to update installed versions within constraints.
+  - `uv run pytest` to execute tests.

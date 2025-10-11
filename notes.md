@@ -552,4 +552,3 @@ SIMULATION
  - Is there any free space in the instruction space to add special instructions for simulation use? 
  - Dedicate a special memory address as a write-only buffer for debug output.
  - Some kind of assert would be very useful in order to write code to test the instruction set of the simulator.
-
