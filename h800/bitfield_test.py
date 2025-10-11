@@ -1,3 +1,5 @@
+import pytest
+
 from h800.bitfield import BitField
 
 
@@ -141,8 +143,6 @@ def test_msb_right_8bit():
 
 
 def test_invalid_args():
-    import pytest
-
     print("TEST: test invalid width")
     with pytest.raises(ValueError):
         BitField(256, width=65, order=BitField.BIT_ORDER_MSB_RIGHT)
