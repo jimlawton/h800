@@ -1,15 +1,10 @@
 
-TESTS = punchcard_test.py arguscard_test.py bitfield_test.py word_test.py instruction_test.py instructions_test.py
+# h800 module Makefile (simplified)
+# Delegates testing to the top-level Makefile located at ../Makefile.
+# Use `make -C .. test` or run `make unit` from the project root.
+# Legacy per-module test invocation removed.
 
-default: tests
+.PHONY: tests unit
 
-tests: $(TESTS)
-	pytest -x punchcard_test.py 
-	pytest -x arguscard_test.py 
-	pytest -x bitfield_test.py 
-	pytest -x word_test.py 
-	pytest -x registers_test.py 
-	pytest -x memory_test.py 
-	pytest -x instruction_test.py 
-	pytest -x instructions_test.py
-
+tests unit:
+	$(MAKE) -C .. unit
