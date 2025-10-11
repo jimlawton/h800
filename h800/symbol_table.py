@@ -111,7 +111,7 @@ class SymbolTable:
     def update(self, name, value=None, symtype=None):
         if name:
             if name not in list(self._symbols.keys()):
-                self.context.error('symbol "%s" not defined!' % (name))
+                self.context.error(f'symbol "{name}" not defined!')
             else:
                 entry = self._symbols[name]
                 entry.value = value
@@ -126,12 +126,12 @@ class SymbolTable:
                 print("All symbols resolved!")
                 break
             for symbol in self._undefs:
-                print('Attempting to resolve symbol "%s"' % (symbol))
+                print(f'Attempting to resolve symbol "{symbol}"')
                 # TODO
             self.pruneUndefines()
             nUndefs = len(self._undefs)
             if nUndefs == nPrevUndefs:
-                print("ERROR: No progress resolving symbols, %d undefined symbols" % nUndefs)
+                print(f"ERROR: No progress resolving symbols, {nUndefs} undefined symbols")
                 break
             nPrevUndefs = nUndefs
 

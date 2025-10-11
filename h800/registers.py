@@ -4,92 +4,91 @@
 from h800.bitfield import BitField
 
 REGISTERS = {
-    'AU1':   0,     # AU-CU Counter No. 1
-    'AU2':   1,     # AU-CU Counter No. 2
-    'SC':    2,     # Sequence Counter
-    'CSC':   3,     # Cosequence Counter
-    'SH':    4,     # Sequence History Register
-    'CSH':   5,     # Cosequence History Register
-    'UTR':   6,     # Unprogrammed Transfer Register
-    'MXR':   7,     # Mask Index Register
-    'X0':    8,     # Index Register 0
-    'X1':    9,     # Index Register 1
-    'X2':   10,     # Index Register 2
-    'X3':   11,     # Index Register 3
-    'X4':   12,     # Index Register 4
-    'X5':   13,     # Index Register 5
-    'X6':   14,     # Index Register 6
-    'X7':   15,     # Index Register 7
-    'R0':   16,     # General Purpose Register
-    'R1':   17,     # General Purpose Register
-    'R2':   18,     # General Purpose Register
-    'R3':   19,     # General Purpose Register
-    'R4':   20,     # General Purpose Register
-    'R5':   21,     # General Purpose Register
-    'R6':   22,     # General Purpose Register
-    'R7':   23,     # General Purpose Register
-    'S0':   24,     # General Purpose Register
-    'S1':   25,     # General Purpose Register
-    'S2':   26,     # General Purpose Register
-    'S3':   27,     # General Purpose Register
-    'S4':   28,     # General Purpose Register
-    'S5':   29,     # General Purpose Register
-    'S6':   30,     # General Purpose Register
-    'S7':   31      # General Purpose Register
+    "AU1": 0,  # AU-CU Counter No. 1
+    "AU2": 1,  # AU-CU Counter No. 2
+    "SC": 2,  # Sequence Counter
+    "CSC": 3,  # Cosequence Counter
+    "SH": 4,  # Sequence History Register
+    "CSH": 5,  # Cosequence History Register
+    "UTR": 6,  # Unprogrammed Transfer Register
+    "MXR": 7,  # Mask Index Register
+    "X0": 8,  # Index Register 0
+    "X1": 9,  # Index Register 1
+    "X2": 10,  # Index Register 2
+    "X3": 11,  # Index Register 3
+    "X4": 12,  # Index Register 4
+    "X5": 13,  # Index Register 5
+    "X6": 14,  # Index Register 6
+    "X7": 15,  # Index Register 7
+    "R0": 16,  # General Purpose Register
+    "R1": 17,  # General Purpose Register
+    "R2": 18,  # General Purpose Register
+    "R3": 19,  # General Purpose Register
+    "R4": 20,  # General Purpose Register
+    "R5": 21,  # General Purpose Register
+    "R6": 22,  # General Purpose Register
+    "R7": 23,  # General Purpose Register
+    "S0": 24,  # General Purpose Register
+    "S1": 25,  # General Purpose Register
+    "S2": 26,  # General Purpose Register
+    "S3": 27,  # General Purpose Register
+    "S4": 28,  # General Purpose Register
+    "S5": 29,  # General Purpose Register
+    "S6": 30,  # General Purpose Register
+    "S7": 31,  # General Purpose Register
 }
 
 ALIASES = {
-    'RAC':  28,     # Read Address Counter
-    'DRAC': 29,     # Distributed Read Address Counter
-    'WAC':  30,     # Write Address Counter
-    'DWAC': 31      # Distributed Write Address Counter
+    "RAC": 28,  # Read Address Counter
+    "DRAC": 29,  # Distributed Read Address Counter
+    "WAC": 30,  # Write Address Counter
+    "DWAC": 31,  # Distributed Write Address Counter
 }
 
 REGISTER_NAMES = list(REGISTERS.keys()) + list(ALIASES.keys())
 
 
-def registerName(number):
+def register_name(number):
     "Return the register name for the specified number."
-    for name in REGISTERS:
-        if REGISTERS[name] == number:
+    for name, value in REGISTERS.items():
+        if value == number:
             return name
-    raise ValueError("Invalid register number %d!" % number)
+    raise ValueError(f"Invalid register number {number}!")
 
 
-def registerAlias(number):
+def register_alias(number):
     "Return the register alias for the specified number."
-    for name in ALIASES:
-        if ALIASES[name] == number:
+    for name, value in ALIASES.items():
+        if value == number:
             return name
-    for name in REGISTERS:
-        if REGISTERS[name] == number:
+    for name, value in REGISTERS.items():
+        if value == number:
             return name
-    raise ValueError("Invalid register number %d!" % number)
+    raise ValueError(f"Invalid register number {number}!")
 
 
-def registerNumber(name):
+def register_number(name):
     "Return the register number for the specified name."
     if name in REGISTERS:
         return REGISTERS[name]
     if name in ALIASES:
         return ALIASES[name]
-    raise ValueError("Invalid register name %s!" % name)
+    raise ValueError(f"Invalid register name {name}!")
 
 
 class Register:
     """H-x800 register class."""
 
     def __init__(self, data=0, name=None, width=16):
-        if data < 0 or data > (2 ** width - 1):
+        if data < 0 or data > (2**width - 1):
             raise ValueError("Invalid value for %d-bit register!" % width)
         if name and name not in REGISTER_NAMES:
             raise ValueError("Invalid register name %s!" % name)
         if width != 16 and width != 24:
-            raise ValueError("Invalid register width %d, must be 16 or 24!" %
-                             width)
-        self._data = BitField(0, width=width,
-                              numbering=BitField.BIT_SCHEME_MSB_1,
-                              order=BitField.BIT_ORDER_MSB_LEFT)
+            raise ValueError("Invalid register width %d, must be 16 or 24!" % width)
+        self._data = BitField(
+            0, width=width, numbering=BitField.BIT_SCHEME_MSB_1, order=BitField.BIT_ORDER_MSB_LEFT
+        )
         self._data[1:width] = data
         self._name = name
         self._width = width
@@ -100,10 +99,9 @@ class Register:
 
     @value.setter
     def value(self, value):
-        if value < 0 or value > (2 ** self._width - 1):
-            raise ValueError("Invalid value for %d-bit register!" %
-                             self._width)
-        self._data[1:self._width] = value
+        if value < 0 or value > (2**self._width - 1):
+            raise ValueError("Invalid value for %d-bit register!" % self._width)
+        self._data[1 : self._width] = value
 
     @property
     def name(self):
@@ -115,13 +113,13 @@ class Register:
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            return self._data[key.start:key.stop]
+            return self._data[key.start : key.stop]
         else:
             return self._data[key]
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
-            self._data[key.start:key.stop] = value
+            self._data[key.start : key.stop] = value
         else:
             self._data[key] = value
 
@@ -142,8 +140,7 @@ class RegisterGroup:
         self._width = width
         self._registers = {}
         for regname in REGISTERS:
-            self._registers[REGISTERS[regname]] = \
-                Register(name=regname, width=width)
+            self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
         self._current = 0
 
     @property
@@ -244,7 +241,7 @@ class Registers:
     def __repr__(self):
         text = ""
         for group in self._registers:
-            text += "[%d] %s\n" % (group, self._registers[group])
+            text += f"[{group}] {self._registers[group]}\n"
         return text
 
     def clear(self):

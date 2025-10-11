@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from typing import Protocol, TypedDict
 
 from .bitfield import BitField
+from .instructions import OPCODES
 
 # ---------------------------------------------------------------------------
 # Validation constants
@@ -35,6 +36,8 @@ PADDR_MAX = 63  # 6-bit peripheral address (0..63)
 BITS23_MAX = 3  # Bits 2-3 variant (00..11)
 OPCODE_MAX = 31  # Bits 8-12 opcode field (00000..11111)
 WORD_48_MAX = 2**48 - 1  # Maximum 48-bit constant value
+MAGIC_OPERAND_COUNT = 3  # Number of operand flags (a,b,c)
+MAX_INSTRUCTION_WORD = 0o7777  # 12-bit instruction word max (octal)
 
 # ---------------------------------------------------------------------------
 # Opcode metadata typing
@@ -116,9 +119,10 @@ class Instruction:
                 c_val = self.operands.get("c")
             else:
                 seq = list(self.operands)
-                while len(seq) < 3:
-                    seq.append(None)
-                a_val, b_val, c_val = seq[:3]
+                # Pad operand iterable to MAGIC_OPERAND_COUNT length.
+                if len(seq) < MAGIC_OPERAND_COUNT:
+                    seq.extend([None] * (MAGIC_OPERAND_COUNT - len(seq)))
+                a_val, b_val, c_val = seq[:MAGIC_OPERAND_COUNT]
         else:
             a_val, b_val, c_val = self.a, self.b, self.c
         self._operands = {"a": a_val, "b": b_val, "c": c_val}
@@ -319,8 +323,6 @@ def get_instruction(mnemonic: str, **kwargs) -> Instruction:
         KeyError: Unknown mnemonic.
         ValueError: Validation errors from Instruction.
     """
-    # Local import to avoid circular dependency at module import time.
-    from .instructions import OPCODES  # type: ignore
 
     meta = OPCODES[mnemonic]
     return Instruction(opcode_meta=meta, **kwargs)
@@ -341,7 +343,7 @@ def decode_instruction(word: int, opcodes: Mapping[str, OpcodeMeta]) -> dict[str
         'fields': dict of extracted fields (only those relevant for candidates)
         'types': list of candidate types
     """
-    if not (0 <= word <= 0o7777):  # 12 bits
+    if not (0 <= word <= MAX_INSTRUCTION_WORD):  # 12 bits
         raise ValueError("Word must be a 12-bit integer (0..0o7777).")
 
     bf = BitField(

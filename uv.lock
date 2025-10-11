@@ -74,7 +74,7 @@ wheels = [
 
 [[package]]
 name = "h800"
-version = "0.9"
+version = "0.10"
 source = { editable = "." }
 dependencies = [
     { name = "py" },

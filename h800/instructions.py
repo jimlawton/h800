@@ -307,7 +307,7 @@ def make_print_opcode(mnemonic, sequence, a, b, c):
     return (0o4000 * sequence) + (0o400 * a) + (0o200 * b) + (0o100 * c) + (0o40 * o.b7) + o.op
 
 
-class NotImplementedException(Exception):
+class NotImplementedError(Exception):
     def __init__(self):
         super().__init__("This feature is not yet implemented!")
 

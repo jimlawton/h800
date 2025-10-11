@@ -37,6 +37,7 @@ NOTE:
 
 from __future__ import annotations
 
+import argparse
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -182,8 +183,6 @@ def build_markdown(include_samples: bool = True, sample_limit: int | None = 5) -
 
 
 def parse_args(argv: Sequence[str] | None = None):
-    import argparse
-
     p = argparse.ArgumentParser(
         prog="h800.gen_opcodes_md",
         description="Generate Markdown opcode table for Honeywell H-800/H-1800.",

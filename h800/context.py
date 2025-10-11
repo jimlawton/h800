@@ -45,7 +45,7 @@ class Context:
         self.listfile = listfile
         self.binfile = binfile
         self.srcfile = None
-        # self.opcodes = OPCODES.get(getattr(self, 'arch', None), {})  # Legacy placeholder
+
         self.symtab = SymbolTable() if SymbolTable else {}
         self.coloc = 0
         self.linenum = 0
@@ -76,9 +76,6 @@ class Context:
         self.bank = 0  # Current bank.
 
         self.bankloc = {}  # Saved current location for each bank.
-
-        # for bank in range(len(self.memmap.banks[MemoryType.ERASABLE])):
-        #     self.ebankloc[bank] = 0
 
         self.errors = 0
         self.warnings = 0

@@ -273,8 +273,8 @@ def cmd_list(args: argparse.Namespace) -> int:
         else:
             buckets[t].append(m)
 
-    for t in buckets:
-        buckets[t].sort()
+    for t, mm in buckets.items():
+        mm.sort()
 
     for t, mm in buckets.items():
         if not mm:
@@ -355,7 +355,6 @@ def build_parser() -> argparse.ArgumentParser:
     sp_coll.add_argument("word", help="Word to check (same parsing rules as decode).")
     sp_coll.set_defaults(func=cmd_collisions)
 
-    # disassemble (stream)
     sp_dis = sub.add_parser(
         "disassemble",
         help="Disassemble a stream of 12-bit words from stdin (one per line; supports 0o/0x/0b prefixes).",

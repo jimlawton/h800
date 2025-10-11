@@ -39,32 +39,40 @@ _DEFAULT_FIELDNAMES = [
     "operand2",
     "operand3",
     "misc",
-    "remarks"
+    "remarks",
 ]
 
 
 class PunchCard:
     """A simple class to represent a punch card."""
-    def __init__(self, line, width=_DEFAULT_WIDTH, fields=_DEFAULT_FIELDS,
-                 fieldnames=_DEFAULT_FIELDNAMES, filename=None, linenum=0,
-                 verbose=False):
-        self._line = line.replace('\n', '')
+
+    def __init__(
+        self,
+        line,
+        width=_DEFAULT_WIDTH,
+        fields=_DEFAULT_FIELDS,
+        fieldnames=_DEFAULT_FIELDNAMES,
+        filename=None,
+        linenum=0,
+        verbose=False,
+    ):
+        self._line = line.replace("\n", "")
         self._layout = []
         self._filename = filename
         self._linenum = linenum
         self._verbose = verbose
-        self._comment = line.startswith('#')
+        self._comment = line.startswith("#")
         if not self._comment:
             for i, col in enumerate(fields):
                 fstart = col
                 if i == len(fields) - 1:
                     fwidth = width - col + 1
                 else:
-                    fwidth = fields[i+1] - col
+                    fwidth = fields[i + 1] - col
                 self._layout.append((fstart, fwidth))
             self._fields = []
             for s, w in self._layout:
-                self._fields.append(line[s-1:s-1+w])
+                self._fields.append(line[s - 1 : s - 1 + w])
             self._strippedFields = []
             self._record = {}
             if linenum != 0:
@@ -90,7 +98,7 @@ class PunchCard:
         return self._fields
 
     @property
-    def strippedFields(self):
+    def stripped_fields(self):
         return self._strippedFields
 
     @property
@@ -106,7 +114,7 @@ class PunchCard:
         return self._linenum
 
     @property
-    def isComment(self):
+    def is_comment(self):
         return self._comment
 
     @property
@@ -122,8 +130,16 @@ class PunchCard:
 
 class Deck:
     """A simple class to represent a deck of punch-cards."""
-    def __init__(self, lines=None, file=None, width=_DEFAULT_WIDTH,
-                 fields=_DEFAULT_FIELDS, cardclass=PunchCard, verbose=False):
+
+    def __init__(
+        self,
+        lines=None,
+        file=None,
+        width=_DEFAULT_WIDTH,
+        fields=_DEFAULT_FIELDS,
+        cardclass=PunchCard,
+        verbose=False,
+    ):
         self._width = width
         self._fields = fields
         self._cardclass = cardclass
@@ -137,14 +153,20 @@ class Deck:
         else:
             self._lines = lines
             for i, line in enumerate(self._lines):
-                if line.startswith('#'):
+                if line.startswith("#"):
                     if self._verbose:
-                        print("Skipping meta-comment, file %s, line %d" %
-                              (file, i+1))
+                        print(f"Skipping meta-comment, file {file}, line {i + 1}")
                     continue
-                self._cards.append(cardclass(line, width=width, fields=fields,
-                                             filename=file, linenum=i+1,
-                                             verbose=verbose))
+                self._cards.append(
+                    cardclass(
+                        line,
+                        width=width,
+                        fields=fields,
+                        filename=file,
+                        linenum=i + 1,
+                        verbose=verbose,
+                    )
+                )
         self._fields = []
         self._strippedFields = []
         self._records = []
@@ -166,7 +188,7 @@ class Deck:
         return self._fields
 
     @property
-    def strippedFields(self):
+    def stripped_fields(self):
         return self._strippedFields
 
     @property
@@ -177,42 +199,51 @@ class Deck:
         lines = []
         for card in self._cards:
             lines.append(str(card))
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def _readSource(self, filename, recurse=True):
         """Read an ARGUS source file. If the file includes $ directives,
-           include those files recursively into the deck."""
+        include those files recursively into the deck."""
         cards = []
         if not os.path.isfile(filename):
-            sys.exit("ERROR: File \"%s\" does not exist!" % filename)
+            sys.exit(f'ERROR: File "{filename}" does not exist!')
         lines = []
         with open(filename) as f:
             if self._verbose:
-                print("Reading %s..." % filename)
+                print(f"Reading {filename}...")
             lines = f.readlines()
         for i, line in enumerate(lines):
-            if line.startswith('#'):
+            if line.startswith("#"):
                 if self._verbose:
-                    print("Skipping meta-comment, file %s, line %d" %
-                          (filename, i+1))
+                    print(f"Skipping meta-comment, file {filename}, line {i + 1}")
                 continue
-            if line.startswith('$'):
+            if line.startswith("$"):
                 incname = line[1:].split()[0]
                 if not os.path.isfile(incname):
-                    sys.exit("File \"%s\" does not exist" % incname)
+                    sys.exit(f'File "{incname}" does not exist')
                 if recurse:
                     icards = self._readSource(incname)
                     cards.extend(icards)
                 else:
-                    cards.append(self._cardclass(line, width=self._width,
-                                                 fields=self._fields,
-                                                 filename=filename,
-                                                 linenum=i+1,
-                                                 verbose=self._verbose))
+                    cards.append(
+                        self._cardclass(
+                            line,
+                            width=self._width,
+                            fields=self._fields,
+                            filename=filename,
+                            linenum=i + 1,
+                            verbose=self._verbose,
+                        )
+                    )
             else:
-                cards.append(self._cardclass(line, width=self._width,
-                                             fields=self._fields,
-                                             filename=filename,
-                                             linenum=i+1,
-                                             verbose=self._verbose))
+                cards.append(
+                    self._cardclass(
+                        line,
+                        width=self._width,
+                        fields=self._fields,
+                        filename=filename,
+                        linenum=i + 1,
+                        verbose=self._verbose,
+                    )
+                )
         return cards

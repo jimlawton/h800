@@ -66,48 +66,42 @@ from .instructions import (
     print_instructions,
 )
 
-__version__ = "0.9"
+__version__ = "0.10"
 
+# Sorted export list (RUF022 compliant)
 __all__ = [
-    # Version
-    "__version__",
-    # Instruction core
-    "Instruction",
+    "ARGUS_INSTRUCTIONS",
+    "CONTROL_CONSTANTS",
+    "CONTROL_INSTRUCTIONS",
+    "DATA_CONSTANTS",
+    "EXTENDED_INSTRUCTIONS",
+    "INSTRUCTIONS",
+    "MISC_INSTRUCTIONS",
+    "OPCODES",
     "Constant",
-    "OpcodeMeta",
+    "EncodedVariant",
+    "Instruction",
     "OpcodeDict",
-    # Factories
-    "get_instruction",
+    "OpcodeMeta",
+    "__version__",
+    "build_constant",
     "build_masked",
-    "build_unmasked",
+    "build_parser",
     "build_peripheral",
     "build_print",
     "build_simulator",
-    "build_constant",
-    # Reverse / enumeration
+    "build_unmasked",
+    "cli_main",
     "decode_instruction",
     "enumerate_encodings",
-    "EncodedVariant",
-    # Opcode metadata tables
-    "OPCODES",
-    "INSTRUCTIONS",
-    "CONTROL_INSTRUCTIONS",
-    "DATA_CONSTANTS",
-    "CONTROL_CONSTANTS",
-    "EXTENDED_INSTRUCTIONS",
-    "MISC_INSTRUCTIONS",
-    "ARGUS_INSTRUCTIONS",
-    # Numeric helpers
-    "make_masked_opcode",
-    "make_unmasked_opcode",
-    "make_peripheral_opcode",
-    "make_print_opcode",
-    "print_instructions",
-    # CLI helpers
-    "cli_main",
-    "build_parser",
-    "parse_int",
-    "fmt_octal",
     "fmt_binary",
     "fmt_hex",
+    "fmt_octal",
+    "get_instruction",
+    "make_masked_opcode",
+    "make_peripheral_opcode",
+    "make_print_opcode",
+    "make_unmasked_opcode",
+    "parse_int",
+    "print_instructions",
 ]
