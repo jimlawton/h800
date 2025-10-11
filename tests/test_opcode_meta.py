@@ -279,7 +279,7 @@ def test_simulator_sequence_variants():
 def test_opcode_uniqueness_collision_check_subset():
     """
     Basic uniqueness sanity: collect a subset of generated codes (not exhaustive, full coverage
-    handled in instructions_test.py) to ensure no immediate collisions in sampled space.
+    handled in test_instructions.py) to ensure no immediate collisions in sampled space.
     """
     seen = set()
     sample_maskable = [m for m, meta in OPCODES.items() if meta.type == "maskable"][:2]

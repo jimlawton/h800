@@ -91,7 +91,7 @@ ignore = [
 # PLR0913 / PLR0911 / PLR1714: allow current argument/count complexity in legacy modules
 # ERA001: temporarily allow commented-out code fragments in legacy modules (will be cleaned later)
 [tool.ruff.lint.per-file-ignores]
-"h800/*_test.py" = ["S101"]
+"h800/tests/test_*.py" = ["S101"]
 "h800/bitfield.py" = ["PLR0911"]
 "h800/arguscard.py" = ["PLR0913", "PLR1714"]
 "h800/assembler.py" = ["ERA001"]
@@ -126,5 +126,5 @@ exclude = [
 ]
 
 [tool.mypy.overrides]
-module_glob = "h800.*_test"
+module_glob = "h800.tests.test_*"
 disallow_untyped_defs = false
