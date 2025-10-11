@@ -312,342 +312,191 @@ class NotImplementedException(Exception):
         super().__init__("This feature is not yet implemented!")
 
 
-# General, masked or unmasked.
+# General instruction facades (single class per mnemonic supporting both masked and unmasked forms).
+# Each facade accepts either a mask (for maskable form) OR operand flags (a,b,c) for unmasked usage.
 
 
-class BinaryAdd(instruction.Instruction):
-    def __init__(self, sequence=None, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["BA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade classes removed; use get_instruction('DA', sequence=..., mask=... or a/b/c...) instead.
 
 
-class DecimalAdd(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["DA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('WA', ...)
 
 
-class WordAdd(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["WA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('BS', ...)
 
 
-class BinarySubtract(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["BS"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('DS', ...)
 
 
-class DecimalSubtract(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["DS"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('TX', ...)
 
 
-class WordDifference(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["WD"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('TS', ...)
 
 
-class NotEqualAlphabetic(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["NA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('HA', ...)
 
 
-class NotEqualNumeric(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["NN"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('SM', ...)
 
 
-class LessThanOrEqualAlphabetic(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["LA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class LessThanOrEqualNumeric(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["LN"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class Transfer(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["TX"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class TransferChangeSequence(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["TS"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class HalfAdd(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["HA"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class Superimpose(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["SM"], sequence=sequence, mask=mask, a=a, b=b, c=c)
-
-
-class CheckParity(instruction.Instruction):
-    def __init__(self, sequence, mask=None, a=None, b=None, c=None):
-        super().__init__(opcode=OPCODES["CP"], sequence=sequence, mask=mask, a=a, b=b, c=c)
+# Facade removed: get_instruction('CP', ...)
 
 
 # General, unmasked.
 
 
-class BinaryMultiply(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["BM"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('BM', sequence=..., a=..., b=..., c=...)
 
 
-class DecimalMultiply(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["DM"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('DM', ...)
 
 
-class BinaryAccumulate(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["BT"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('BT', ...)
 
 
-class DecimalAccumulate(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["DT"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('DT', ...)
 
 
-class MultipleTransfer(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["MT"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('MT', ...)
 
 
-class TransferNWords(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["TN"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('TN', ...)
 
 
-class ComputeOrthocount(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["CC"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('CC', ...)
 
 
-class ItemTransfer(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["IT"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('IT', ...)
 
 
-class ExtendedBinaryAdd(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["EBA"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('EBS', ...)
 
 
-class ExtendedBinarySubtract(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["EBS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('RT', ...)
 
 
-class RecordTransfer(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["RT"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('MPC', ...)
 
 
-class ControlProgram(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["MPC"], sequence=sequence, a=a, b=b, c=c)
-
-
-class Proceed(instruction.GeneralUnmasked):
-    def __init__(self):
-        super().__init__(opcode=OPCODES["PR"], sequence=0, a=0, b=0, c=0)
+# Facade removed: get_instruction('PR', sequence=0, a=0, b=0, c=0)
 
 
 # # Inherent mask.
 
 
-class ShiftWordAndSubstitute(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SWS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SWS', ...)
 
 
-class ShiftPreservingSignAndSubstitute(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SPS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SPS', ...)
 
 
-class ShiftWordAndExtract(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SWE"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SWE', ...)
 
 
-class ShiftPreservingSignAndExtract(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SPE"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SPE', ...)
 
 
-class ShiftAndSelect(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SSL"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SSL', ...)
 
 
-class Substitute(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["SS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('SS', ...)
 
 
-class Extract(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["EX"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('EX', ...)
 
 
 # Peripheral and print.
 
 
-class ReadForward(instruction.Peripheral):
-    def __init__(self, paddr):
-        super().__init__(opcode=OPCODES["RF"], paddr=paddr)
+# Facade removed: get_instruction('RF', paddr=...)
 
 
-class ReadBackward(instruction.Peripheral):
-    def __init__(self, paddr):
-        super().__init__(opcode=OPCODES["RB"], paddr=paddr)
+# Facade removed: get_instruction('RB', paddr=...)
 
 
-class WriteForward(instruction.Peripheral):
-    def __init__(self, paddr):
-        super().__init__(opcode=OPCODES["WF"], paddr=paddr)
+# Facade removed: get_instruction('WF', paddr=...)
 
 
-class Rewind(instruction.Peripheral):
-    def __init__(self, paddr):
-        super().__init__(opcode=OPCODES["RW"], paddr=paddr)
+# Facade removed: get_instruction('RW', paddr=...)
 
 
-class PrintAlphabetic(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["PRA"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('PRA', sequence=..., a=..., b=..., c=...)
 
 
-class PrintDecimal(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["PRD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('PRD', ...)
 
 
-class PrintOctal(instruction.GeneralUnmasked):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["PRO"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('PRO', ...)
 
 
 # Simulator.
 
 
-class Simulator(instruction.Simulator):
-    def __init__(self, sequence):
-        super().__init__(opcode=OPCODES["S"], sequence=sequence)
+# Facade removed: get_instruction('S', sequence=...)
 
 
 # Scientific.
 
 
-class FloatingBinaryAdd(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBA"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDA', ...)
 
 
-class FloatingDecimalAdd(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDA"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBS', ...)
 
 
-class FloatingBinarySubtract(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDS', ...)
 
 
-class FloatingDecimalSubtract(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDS"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBD', ...)
 
 
-class FloatingBinaryDivide(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDD', ...)
 
 
-class FloatingDecimalDivide(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBAU', ...)
 
 
-class FloatingBinaryAddUnnormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBAU"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDAU', ...)
 
 
-class FloatingDecimalAddUnnormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDAU"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBSU', ...)
 
 
-class FloatingBinarySubtractUnnormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBSU"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDSU', ...)
 
 
-class FloatingDecimalSubtractUnnormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDSU"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBM', ...)
 
 
-class FloatingBinaryMultiply(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBM"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FDM', ...)
 
 
-class FloatingDecimalMultiply(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FDM"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('ULD', ...)
 
 
-class MultipleUnload(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["ULD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBAE', ...)
 
 
-class FloatingBinaryAddExtendedPrecision(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBAE"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FBSE', ...)
 
 
-class FloatingBinarySubtractExtendedPrecision(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FBSE"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('BD', ...)
 
 
-class FixedBinaryDivide(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["BD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('DD', ...)
 
 
-class FixedDecimalDivide(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["DD"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FFN', ...)
 
 
-class FixedToFloatingNormalize(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FFN"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FCON', ...)
 
 
-class Conversion(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FCON"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FLN', ...)
 
 
-class FloatingLessThanNormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FLN"], sequence=sequence, a=a, b=b, c=c)
-
-
-class FloatingNotEqualNormalized(instruction.Scientific):
-    def __init__(self, sequence, a, b, c):
-        super().__init__(opcode=OPCODES["FNN"], sequence=sequence, a=a, b=b, c=c)
+# Facade removed: get_instruction('FNN', ...)
 
 
 # Control Instructions.
@@ -707,117 +556,142 @@ class TemporarilyAssignTag(instruction.AssemblyControl):
 
 
 # ALF: Alphanumeric Constant
-class AlphanumericConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="ALF", data=data)
+def build_constant(mnemonic: str, value: int):
+    """Unified constant factory replacing individual constant facade classes."""
+    return instruction.Constant(mnemonic=mnemonic, value=value)
+
+
+# Removed facade class: use build_constant("ALF", value)
 
 
 # DEC: Fixed Decimal Constant
-class DecimalConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="DEC", data=data)
+# Removed facade class: use build_constant("DEC", value)
 
 
 # EBC: Extended Binary Constant
-class ExtendedBinaryConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="EBC", data=data)
+# Removed facade class: use build_constant("EBC", value)
 
 
 # FLBIN: Floating-Point Binary Constant
-class FloatingBinaryConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="FLBIN", data=data)
+# Removed facade class: use build_constant("FLBIN", value)
 
 
 # FLDEC: Floating-Point Decimal Constant
-class FloatingDecimalConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="FLDEC", data=data)
+# Removed facade class: use build_constant("FLDEC", value)
 
 
 # FXBIN: Decimal to Fixed Binary Translation
-class FixedBinaryConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="FXBIN", data=data)
+# Removed facade class: use build_constant("FXBIN", value)
 
 
 # OCT: Octal Constant
-class OctalConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="OCT", data=data)
+# Removed facade class: use build_constant("OCT", value)
 
 
 # Control Constants.
 
 
 # SPEC: Special Address Constant
-class SpecialAddressConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="SPEC", data=data)
+# Removed facade class: use build_constant("SPEC", value)
 
 
 # CAC: Complete Address Constant
-class CompleteAddressConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="CAC", data=data)
+# Removed facade class: use build_constant("CAC", value)
 
 
 # MASKBASE: Mask Base Address Constant
-class MaskBaseAddressConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="MASKBASE", data=data)
+# Removed facade class: use build_constant("MASKBASE", value)
 
 
 # PCON: Program Control Constant
-class ProgramControlConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="CONTROL", data=data)
+# Removed facade class: use build_constant("CONTROL", value)
 
 
 # M: Mixed Constant
-class MixedConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="M", data=data)
+# Removed facade class: use build_constant("M", value)
 
 
 # TAC: Tape Address Constant
-class TapeAddressConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="TAC", data=data)
+# Removed facade class: use build_constant("TAC", value)
 
 
 # LINK: Linkage Constant
-class LinkageConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="LINK", data=data)
+# Removed facade class: use build_constant("LINK", value)
 
 
 # SEGNAME: Segment Name Constant
-class SegmentNameConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="SEGNAME", data=data)
+# Removed facade class: use build_constant("SEGNAME", value)
 
 
 # SUBCALL: Subroutine Call Constant
-class SubroutineCallConstant(instruction.Constant):
-    def __init__(self, data):
-        super().__init__(mnemonic="SUBCALL", data=data)
+# Removed facade class: use build_constant("SUBCALL", value)
 
-        # Extended Instructions.
 
-        # "CSCON": 0,                     # Turn On Programs, Use Cosequence Counters
-        # "DOFF":  0,                     # Turn Off Programs
-        # "DON":   0,                     # Turn On Programs
-        # "PRA":   0o06,                  # Print Alphanumeric
-        # "PRD":   0o06,                  # Print Decimal
-        # "PRO":   0o06,                  # Print Octal
-        # "SCON":  0,                     # Turn On Programs, Use Sequence Counters
-        # "SPCR":  0,                     # Save PCR
-        # "STOP":  0,                     # Stop Current Program
+def print_instructions():
+    """
+    Emit all valid 12-bit instruction opcode values (octal) mapped to mnemonics.
+    For print instructions (PRA/PRD/PRO) only PRA space is enumerated (they overlap).
+    Constants are excluded (they are raw 48-bit data, not 12-bit opcodes).
+    """
+    opcodes = {}
+    for mnemonic, meta in OPCODES.items():
+        codes = []
+        t = meta.type
+        if t == "maskable":
+            for sequence in (0, 1):
+                for mask in range(32):
+                    codes.append(make_masked_opcode(mnemonic, sequence, mask))
+        elif t == "unmasked":
+            for sequence in (0, 1):
+                for a in (0, 1):
+                    for b in (0, 1):
+                        for c in (0, 1):
+                            codes.append(make_unmasked_opcode(mnemonic, sequence, a, b, c))
+        elif t == "peripheral":
+            for paddr in range(64):
+                codes.append(make_peripheral_opcode(mnemonic, paddr))
+        elif t == "print":
+            if mnemonic == "PRA":
+                for sequence in (0, 1):
+                    for a in (0, 1):
+                        for b in (0, 1):
+                            for c in (0, 1):
+                                codes.append(make_print_opcode(mnemonic, sequence, a, b, c))
+        elif t == "simulator":
+            codes.extend([0o0007, 0o4007])
+        else:
+            # Unknown type; skip (pseudo / constants handled elsewhere).
+            continue
+        opcodes[mnemonic] = sorted(set(codes))
 
-        print("0o%04o %s" % (opval, opmap[opval]))
+    # Invert mapping to detect collisions
+    inverse = {}
+    for mnemonic, codes in opcodes.items():
+        for code in codes:
+            inverse.setdefault(code, []).append(mnemonic)
 
+    # Emit
+    for code in sorted(inverse):
+        mlist = ",".join(inverse[code])
+        print(f"0o{code:04o} {mlist}")
+
+
+__all__ = [
+    "ARGUS_INSTRUCTIONS",
+    "CONTROL_CONSTANTS",
+    "CONTROL_INSTRUCTIONS",
+    "DATA_CONSTANTS",
+    "EXTENDED_INSTRUCTIONS",
+    "INSTRUCTIONS",
+    "MISC_INSTRUCTIONS",
+    "OPCODES",
+    "build_constant",
+    "make_masked_opcode",
+    "make_peripheral_opcode",
+    "make_print_opcode",
+    "make_unmasked_opcode",
+    "print_instructions",
+]
 
 if __name__ == "__main__":
     print_instructions()

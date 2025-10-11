@@ -42,6 +42,10 @@ dependencies = [
   "pylog @ git+https://github.com/jimlawton/pylog",
 ]
 
+[project.scripts]
+h800-cli = "h800.cli:main"
+h800-disasm = "h800.cli:main"
+
 [project.optional-dependencies]
 dev = [
   "pytest",
@@ -91,6 +95,7 @@ ignore = [
 "h800/bitfield.py" = ["PLR0911"]
 "h800/arguscard.py" = ["PLR0913", "PLR1714"]
 "h800/assembler.py" = ["ERA001"]
+"h800/cli.py" = ["PLR0912", "PLR0913"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -119,3 +124,7 @@ exclude = [
   "h800.egg-info",
   ".venv",
 ]
+
+[tool.mypy.overrides]
+module_glob = "h800.*_test"
+disallow_untyped_defs = false
