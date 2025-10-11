@@ -8,29 +8,33 @@
 # to generate annotation comments with page numbers to ease the transcription
 # process.
 
-import sys
+import argparse
 import os
 import os.path
-from optparse import OptionParser
+import sys
 
 import h800.arguscard
 
 
 def main():
-    parser = OptionParser("usage: %prog filename")
-    (options, args) = parser.parse_args()
-    if len(args) < 1:
-        parser.error("usage: %prog filename")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        prog="genpages",
+        description="Generate annotated page number cards for ARGUS assembly sources.",
+    )
+    parser.add_argument(
+        "filename",
+        help="ARGUS source file to annotate with page header/page number cards.",
+    )
+    args = parser.parse_args()
 
-    filename = args[0]
+    filename = args.filename
 
     if not os.path.exists(filename):
         parser.error("Filename %s does not exist!" % filename)
         sys.exit(1)
 
     inlines = []
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         inlines = f.readlines()
 
     d = h800.arguscard.Deck(inlines)
@@ -42,15 +46,15 @@ def main():
         if logsection is None:
             if line.startswith("# Filename: "):
                 infilename = line.split()[2].strip()
-                if '.' in infilename:
-                    infilename = infilename[:infilename.index('.')]
-                logsection = infilename.replace('_', ' ')
-                logsectioncol8 = '@'
+                if "." in infilename:
+                    infilename = infilename[: infilename.index(".")]
+                logsection = infilename.replace("_", " ")
+                logsectioncol8 = "@"
         if line.startswith("# Pages: "):
             pageRange = line.split()[2].strip()
-            if '-' in pageRange:
-                start = int(pageRange.split('-')[0])
-                end = int(pageRange.split('-')[1])
+            if "-" in pageRange:
+                start = int(pageRange.split("-")[0])
+                end = int(pageRange.split("-")[1])
             else:
                 start = end = int(pageRange)
 
@@ -67,15 +71,17 @@ def main():
     outlines = []
     outlines.append("\n")
     outlines.append("L      %s%s\n" % (logsectioncol8, logsection))
-    for pagenum in range(start, end+1):
+    for pagenum in range(start, end + 1):
         outlines.append("\n")
         outlines.append("# Page %d\n" % pagenum)
-        outlines.append("#      %s%-72s USER'S OWN PAGE NO.%4s        PAGE%4s"
-                        "\n" % (logsectioncol8, logsection, pagenum-start+1,
-                                pagenum-start+1))
+        outlines.append(
+            "#      %s%-72s USER'S OWN PAGE NO.%4s        PAGE%4s"
+            "\n"
+            % (logsectioncol8, logsection, pagenum - start + 1, pagenum - start + 1)
+        )
         outlines.append("\n")
 
-    with open(filename, 'a') as f:
+    with open(filename, "a") as f:
         f.writelines(outlines)
 
 

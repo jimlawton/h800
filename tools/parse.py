@@ -1,85 +1,204 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
+"""
+parse.py
 
-# Parse ARGUS source.
-#
-# A script that uses the arguscard classes to read ARGUS assembly format source
-# and parse instructions.
-#
-# This is intended for debugging assembler development.
+Parse ARGUS assembly source files (H-800/H-1800) and perform basic validation:
+  - Build a combined symbol table across all input files.
+  - Iterate over all cards, counting total source lines and instruction lines.
+  - Validate instruction mnemonics against h800.instructions.INSTRUCTIONS.
+  - Optionally emit per-line debug output.
+  - Report summary statistics and error counts.
 
-from __future__ import print_function
+Python 3.13+ only; legacy Python 2 compatibility has been removed.
+
+Exit codes:
+  0 - Success (no invalid instructions)
+  1 - Errors encountered (invalid instructions or symbol table build errors)
+  2 - Usage / argument error
+
+Examples:
+  parse.py file1.argus
+  parse.py -v -d file1.argus file2.argus
+  parse.py --strict file1.argus
+"""
+
+from __future__ import annotations
+
+import argparse
 import sys
-from optparse import OptionParser
+from typing import Iterable, List
 
 import h800.arguscard
 import h800.instructions
 from h800.symbol_table import buildSymbolTable
 
 
-def main():
-    parser = OptionParser("usage: %prog filename [filename]...")
-    parser.add_option('-d', '--debug',
-                      dest='debug',
-                      action='store_true',
-                      default=False,
-                      help="Enable debug output.")
-    parser.add_option('-v', '--verbose',
-                      dest='verbose',
-                      action='store_true',
-                      default=False,
-                      help="Enable verbose output.")
-    (opts, args) = parser.parse_args()
-    if len(args) < 1:
-        parser.error("usage: %prog filename")
-        sys.exit(1)
+def parse_args(argv: Iterable[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="parse",
+        description="Parse ARGUS assembly source files and validate instructions.",
+    )
+    parser.add_argument(
+        "filenames",
+        metavar="filename",
+        nargs="+",
+        help="ARGUS assembly source file(s) to parse",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose output (extra status).",
+    )
+    parser.add_argument(
+        "-d", "--debug", action="store_true", help="Print each parsed instruction line."
+    )
+    parser.add_argument(
+        "-s",
+        "--strict",
+        action="store_true",
+        help="Return a non‑zero exit code if any invalid instructions are found.",
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="Suppress normal summary output (only errors and final counts).",
+    )
+    return parser.parse_args(list(argv))
 
-    errcount = 0
-    linecount = 0
-    instrcount = 0
 
+class ParseStats:
+    def __init__(self) -> None:
+        self.source_lines: int = 0
+        self.instruction_lines: int = 0
+        self.invalid_instructions: int = 0
+        self.symbol_errors: int = 0
+
+    @property
+    def total_errors(self) -> int:
+        return self.invalid_instructions + self.symbol_errors
+
+
+def build_symbols(filenames: List[str], verbose: bool) -> int:
+    """
+    Build symbol table across all files.
+    Returns total number of errors encountered while building.
+    """
     symtab = {}
-    loc = 0
-    coloc = 0
+    total_errors = 0
+    for filename in filenames:
+        symtab, errcount = buildSymbolTable(filename, symtab, verbose=verbose)
+        total_errors += errcount
+        if verbose:
+            print(
+                f"{filename}: {errcount} errors encountered building symbol table.",
+                file=sys.stderr,
+            )
+    return total_errors
 
-    symtab = {}
-    for filename in args:
-        symtab, errcount = buildSymbolTable(filename, symtab,
-                                            verbose=opts.verbose)
-        print("%s: %d errors encountered building symbol table." %
-              (filename, errcount), file=sys.stderr)
 
-    for filename in args:
-        d = h800.arguscard.Deck(file=filename, verbose=opts.verbose)
-        for card in d.cards:
-            linecount += 1
-            if card.instruction:
-                instrcount += 1
-                if opts.debug:
-                    print(card.filename, card.linenum,
-                          card.line.replace('\n', ''))
-                if card.record["column8"] == '*':
-                    if opts.verbose:
-                        print("Skipping card with * in column 8:")
-                        print(card.filename, card.linenum,
-                              card.line.replace('\n', ''))
-                    continue
-                if card.instruction not in h800.instructions.INSTRUCTIONS:
-                    print("*** ERROR: Invalid instruction \"%s\":" %
-                          card.instruction)
-                    print("File %s, line %d: %s" % (card.filename,
-                                                    card.linenum, card.line))
-                    errcount += 1
-                    continue
+def process_files(
+    filenames: List[str], stats: ParseStats, args: argparse.Namespace
+) -> None:
+    """
+    Iterate through cards in each file, updating stats and performing validation.
+    """
+    for filename in filenames:
+        deck = h800.arguscard.Deck(file=filename, verbose=args.verbose)
+        for card in deck.cards:
+            stats.source_lines += 1
+
+            if not card.instruction:
+                continue
+
+            stats.instruction_lines += 1
+
+            # Debug output before any filtering.
+            if args.debug:
+                print(
+                    f"{card.filename}:{card.linenum:06d} {card.line.rstrip()}",
+                )
+
+            # Skip cards explicitly marked with '*' in column 8 (comment / annotation).
+            if card.record.get("column8") == "*":
+                if args.verbose and args.debug:
+                    print(
+                        f"Skipping card with '*' in column 8: {card.filename}:{card.linenum}",
+                        file=sys.stderr,
+                    )
+                continue
+
+            # Instruction validation.
+            instruction = card.instruction
+            if instruction not in h800.instructions.INSTRUCTIONS:
+                stats.invalid_instructions += 1
+                print(
+                    f"*** ERROR: Invalid instruction '{instruction}'\n"
+                    f"    File {card.filename}, line {card.linenum}: {card.line.rstrip()}",
+                    file=sys.stderr,
+                )
+                continue
+
+            # Perform the card-level parse (may populate internal fields).
+            try:
                 card.parse()
+            except Exception as exc:  # Broad catch; parsing is experimental.
+                stats.invalid_instructions += 1
+                print(
+                    f"*** ERROR: Exception parsing instruction '{instruction}': {exc}\n"
+                    f"    File {card.filename}, line {card.linenum}: {card.line.rstrip()}",
+                    file=sys.stderr,
+                )
 
-    print("\nSource lines: %d" % linecount)
 
-    if errcount == 1:
-        print("1 error encountered.")
-    else:
-        print("%d errors encountered." % errcount)
+def print_summary(stats: ParseStats, args: argparse.Namespace) -> None:
+    if args.quiet:
+        return
+
+    print()
+    print(f"Source lines:      {stats.source_lines}")
+    print(f"Instruction lines: {stats.instruction_lines}")
+    print(f"Invalid instructions: {stats.invalid_instructions}")
+    print(f"Symbol table errors:  {stats.symbol_errors}")
+    print(f"Total errors:         {stats.total_errors}")
+
+    if stats.invalid_instructions == 1:
+        print("1 invalid instruction encountered.")
+    elif stats.invalid_instructions > 1:
+        print(f"{stats.invalid_instructions} invalid instructions encountered.")
+
+    if stats.symbol_errors == 1:
+        print("1 symbol table error encountered.")
+    elif stats.symbol_errors > 1:
+        print(f"{stats.symbol_errors} symbol table errors encountered.")
 
 
-if __name__ == '__main__':
-    main()
+def main(argv: Iterable[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+    args = parse_args(argv)
+
+    stats = ParseStats()
+
+    # Build symbol table first (may surface symbol definition issues).
+    stats.symbol_errors = build_symbols(args.filenames, verbose=args.verbose)
+
+    # Parse and validate instructions.
+    process_files(args.filenames, stats, args)
+
+    # Output summary.
+    print_summary(stats, args)
+
+    # Determine exit code.
+    if args.strict and stats.total_errors > 0:
+        return 1
+    if stats.invalid_instructions > 0 or stats.symbol_errors > 0:
+        # Non-strict mode: still indicate issues with non-zero exit.
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

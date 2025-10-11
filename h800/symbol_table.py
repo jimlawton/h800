@@ -1,25 +1,30 @@
-from __future__ import print_function
 import sys
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
+
+from rapidfuzz import process
 
 from h800.arguscard import Deck
 
-
-TAG_PREFIXES = ('B', 'F', 'L', 'S', 'X', 'Z')
+TAG_PREFIXES = ("B", "F", "L", "S", "X", "Z")
 
 
 class SymbolTableEntry:
-
-    def __init__(self, name, value=None, symtype=None, file=None, line=0,
-                 segment=None, subsegment=None):
-        self._name = name                    # Symbol name
+    def __init__(
+        self,
+        name,
+        value=None,
+        symtype=None,
+        file=None,
+        line=0,
+        segment=None,
+        subsegment=None,
+    ):
+        self._name = name  # Symbol name
         self._absoluteValue = self._complexValue = None
-        self._symtype = symtype                    # Type of record
+        self._symtype = symtype  # Type of record
         if symtype == "absolute":
-            self._absoluteValue = value      # Absolute value
+            self._absoluteValue = value  # Absolute value
         else:
-            self._complexValue = value       # Complex value
+            self._complexValue = value  # Complex value
         self._file = file
         self._line = line
         self._segment = segment
@@ -55,14 +60,13 @@ class SymbolTableEntry:
         return self._line
 
     def isValid(self):
-        return (self._absoluteValue is not None or
-                self._complexValue is not None)
+        return self._absoluteValue is not None or self._complexValue is not None
 
     def isAbsolute(self):
-        return (self._absoluteValue is not None)
+        return self._absoluteValue is not None
 
     def isComplex(self):
-        return (self._complexValue is not None)
+        return self._complexValue is not None
 
     def isMultiple(self):
         return self.isAbsolute() and self.isComplex()
@@ -72,7 +76,6 @@ class SymbolTableEntry:
 
 
 class SymbolTable:
-
     def __init__(self):
         self._symbols = {}
         self._undefs = []
@@ -85,22 +88,30 @@ class SymbolTable:
     def undefines(self):
         return self._undefs
 
-    def add(self, name, srcfile, linenum, value=None,
-            symtype=None, segment=None, subsegment=None):
+    def add(
+        self,
+        name,
+        srcfile,
+        linenum,
+        value=None,
+        symtype=None,
+        segment=None,
+        subsegment=None,
+    ):
         if name:
             if name in self._symbols:
-                print("ERROR: Symbol \"%s\" already defined!" % (name))
+                print('ERROR: Symbol "%s" already defined!' % (name))
             else:
-                self._symbols[name] = SymbolTableEntry(name, value, symtype,
-                                                       srcfile, linenum,
-                                                       segment, subsegment)
+                self._symbols[name] = SymbolTableEntry(
+                    name, value, symtype, srcfile, linenum, segment, subsegment
+                )
                 if value is None:
                     self._undefs.append(name)
 
     def update(self, name, value=None, symtype=None):
         if name:
             if name not in list(self._symbols.keys()):
-                self.context.error("symbol \"%s\" not defined!" % (name))
+                self.context.error('symbol "%s" not defined!' % (name))
             else:
                 entry = self._symbols[name]
                 entry.value = value
@@ -115,13 +126,15 @@ class SymbolTable:
                 print("All symbols resolved!")
                 break
             for symbol in self._undefs:
-                print("Attempting to resolve symbol \"%s\"" % (symbol))
+                print('Attempting to resolve symbol "%s"' % (symbol))
                 # TODO
             self.pruneUndefines()
             nUndefs = len(self._undefs)
             if nUndefs == nPrevUndefs:
-                print("ERROR: No progress resolving symbols, %d undefined "
-                      "symbols" % nUndefs)
+                print(
+                    "ERROR: No progress resolving symbols, %d undefined "
+                    "symbols" % nUndefs
+                )
                 break
             nPrevUndefs = nUndefs
 
@@ -134,8 +147,7 @@ class SymbolTable:
             if entry.isValid():
                 print("Removing %s from undefined symbols list" % (symbol))
                 del self._undefs[i]
-        print("Removed %d symbols from undef list" %
-              (numUndefs - len(self._undefs)))
+        print("Removed %d symbols from undef list" % (numUndefs - len(self._undefs)))
 
     def getNumSymbols(self):
         return len(list(self._symbols.keys()))
@@ -177,9 +189,9 @@ class SymbolTable:
 
 def buildSymbolTable(filename, symtab, verbose=False):
     """Build the symbol table."""
-    seg = filename.split('.')[0]  # Default: name of the first file.
-    subsegs = []        # List of subsegments.
-    subseg = "1"        # Current subsegment, default is 1 (no starting SETLOC)
+    seg = filename.split(".")[0]  # Default: name of the first file.
+    subsegs = []  # List of subsegments.
+    subseg = "1"  # Current subsegment, default is 1 (no starting SETLOC)
     d = Deck(file=filename, verbose=verbose)
     errcount = 0
     for card in d.cards:
@@ -187,8 +199,8 @@ def buildSymbolTable(filename, symtab, verbose=False):
             continue
         command = card.operation
         if command and command.startswith("SETLOC"):
-            if ',' in command:
-                subseg = command.split(',')[1].strip()
+            if "," in command:
+                subseg = command.split(",")[1].strip()
             else:
                 subseg = "0"
             subsegs.append(subseg)
@@ -199,52 +211,57 @@ def buildSymbolTable(filename, symtab, verbose=False):
                 "line": card.linenum,
                 "lognum": card.lognum,
                 "tagtype": None,
-                "card": card
+                "card": card,
             }
-            strLabel = card.label.strip().replace(' ', '')
+            strLabel = card.label.strip().replace(" ", "")
             if strLabel.upper() != strLabel:
-                print("*** ERROR: Symbol %s is ill-formed (case)!" % strLabel,
-                      file=sys.stderr)
+                print(
+                    "*** ERROR: Symbol %s is ill-formed (case)!" % strLabel,
+                    file=sys.stderr,
+                )
                 print("Current definition: %s" % symtabEntry, file=sys.stderr)
                 errcount += 1
                 continue
             tagName = strLabel
-            symtabEntry["tagtype"] = ' '
-            if ',' in strLabel:
-                if strLabel.count(',') > 1:
-                    print("*** ERROR: Symbol %s is illegal, too many commas!"
-                          % strLabel, file=sys.stderr)
-                    print("Current definition: %s" % symtabEntry,
-                          file=sys.stderr)
+            symtabEntry["tagtype"] = " "
+            if "," in strLabel:
+                if strLabel.count(",") > 1:
+                    print(
+                        "*** ERROR: Symbol %s is illegal, too many commas!" % strLabel,
+                        file=sys.stderr,
+                    )
+                    print("Current definition: %s" % symtabEntry, file=sys.stderr)
                     errcount += 1
                     continue
-                tagPrefix = strLabel.split(',')[0]
-                tagName = strLabel.split(',')[1]
+                tagPrefix = strLabel.split(",")[0]
+                tagName = strLabel.split(",")[1]
                 if tagPrefix not in TAG_PREFIXES:
-                    print("*** ERROR: Symbol %s is ill-formed (tag prefix)!"
-                          % strLabel, file=sys.stderr)
-                    print("Current definition: %s" % symtabEntry,
-                          file=sys.stderr)
+                    print(
+                        "*** ERROR: Symbol %s is ill-formed (tag prefix)!" % strLabel,
+                        file=sys.stderr,
+                    )
+                    print("Current definition: %s" % symtabEntry, file=sys.stderr)
                     errcount += 1
                     continue
-                if tagPrefix in ('L', 'X'):
-                    print("*** ERROR: Symbol %s has unsupported tag prefix!"
-                          % strLabel, file=sys.stderr)
-                    print("Current definition: %s" % symtabEntry,
-                          file=sys.stderr)
+                if tagPrefix in ("L", "X"):
+                    print(
+                        "*** ERROR: Symbol %s has unsupported tag prefix!" % strLabel,
+                        file=sys.stderr,
+                    )
+                    print("Current definition: %s" % symtabEntry, file=sys.stderr)
                     errcount += 1
                     continue
                 symtabEntry["tagtype"] = tagPrefix
-                if tagPrefix == 'B':
+                if tagPrefix == "B":
                     # Mask tag for BOTH field and shift instructions.
                     pass
-                elif tagPrefix == 'F':
+                elif tagPrefix == "F":
                     # Mask tag for field instructions only.
                     pass
-                elif tagPrefix == 'S':
+                elif tagPrefix == "S":
                     # Mask tag for shift instructions only.
                     pass
-                elif tagPrefix == 'Z':
+                elif tagPrefix == "Z":
                     # Special register tag.
                     # TODO: check register tag symbolic name is valid, or
                     # absolute value is valid.
@@ -255,8 +272,9 @@ def buildSymbolTable(filename, symtab, verbose=False):
             # e.g. RESERVE, EQUALS, ALF, SPEC, CAC, etc., all reserve
             # storage, but ASSIGN doesn't.
             if command is None:
-                print("*** ERROR: Symbol %s has no operation!" % strLabel,
-                      file=sys.stderr)
+                print(
+                    "*** ERROR: Symbol %s has no operation!" % strLabel, file=sys.stderr
+                )
                 print("Current definition: %s" % symtabEntry, file=sys.stderr)
                 errcount += 1
                 continue
@@ -284,17 +302,22 @@ def buildSymbolTable(filename, symtab, verbose=False):
                     if command == "EQUALS":
                         prevcard = prevdef[symtype]["card"]
                         if prevcard.operation == "EQUALS":
-                            if card.addressa == prevcard.addressa and \
-                                    card.addressb == prevcard.addressb \
-                                    and card.addressc == prevcard.addressc:
+                            if (
+                                card.addressa == prevcard.addressa
+                                and card.addressb == prevcard.addressb
+                                and card.addressc == prevcard.addressc
+                            ):
                                 # Equivalent assignment, ignore.
                                 continue
-                    print("*** ERROR: Symbol %s is multiply-defined!" %
-                          tagName, file=sys.stderr)
-                    print("Previous definitions: %s" %
-                          symtab[tagName][seg][subseg], file=sys.stderr)
-                    print("Current definition: %s" % symtabEntry,
-                          file=sys.stderr)
+                    print(
+                        "*** ERROR: Symbol %s is multiply-defined!" % tagName,
+                        file=sys.stderr,
+                    )
+                    print(
+                        "Previous definitions: %s" % symtab[tagName][seg][subseg],
+                        file=sys.stderr,
+                    )
+                    print("Current definition: %s" % symtabEntry, file=sys.stderr)
                     print("command: %s" % command, file=sys.stderr)
                     errcount += 1
     return symtab, errcount
@@ -314,9 +337,11 @@ def checkSymbolTable(symtab, verbose=False, complexOnlyError=False):
         if not foundSimple and (complexOnlyError and foundComplex):
             errSyms.append(symbol)
     for symbol in errSyms:
-        print("ERROR: symbol \"%s\" has a complex assignment, "
-              "but no simple assignment!" % symbol,
-              file=sys.stderr)
+        print(
+            'ERROR: symbol "%s" has a complex assignment, '
+            "but no simple assignment!" % symbol,
+            file=sys.stderr,
+        )
     return sorted(errSyms)
 
 
@@ -336,8 +361,9 @@ def getAbsoluteSymbols(symtab):
     return syms
 
 
-def findSymbolDef(symtab, name, symtype=None, begin=False, end=False,
-                  fuzzy=False, verbose=False):
+def findSymbolDef(
+    symtab, name, symtype=None, begin=False, end=False, fuzzy=False, verbose=False
+):
     """Find the definition location(s) of the specified symbol."""
     exact = not begin and not end and not fuzzy
     symNames = sorted(symtab.keys())
@@ -350,7 +376,7 @@ def findSymbolDef(symtab, name, symtype=None, begin=False, end=False,
                     for subseg in sorted(symtab[name][seg].keys()):
                         if symtype in symtab[name][seg][subseg].keys():
                             return symtab[name]
-        print("ERROR: Undefined symbol \"%s\"!" % name, file=sys.stderr)
+        print('ERROR: Undefined symbol "%s"!' % name, file=sys.stderr)
     else:
         matches = []
         if begin or end:

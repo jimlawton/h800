@@ -8,41 +8,51 @@
 #
 # This is intended for debugging assembler development.
 
-from __future__ import print_function
+
+import argparse
 import sys
-from optparse import OptionParser
 
 from h800.symbol_table import buildSymbolTable, checkSymbolTable, findSymbolDef
 
 
 def main():
-    parser = OptionParser("usage: %prog filename [filename]...")
-    parser.add_option('-v', '--verbose',
-                      dest='verbose',
-                      action='store_true',
-                      default=False,
-                      help="Enable verbose output.")
-    parser.add_option('-c', '--complex',
-                      dest='complex',
-                      action='store_true',
-                      default=False,
-                      help="Print errors for any complex-only definitions.")
-    (opts, args) = parser.parse_args()
-    if len(args) < 1:
-        parser.error("usage: %prog filename")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        prog="check-symbols",
+        description="Check symbols in ARGUS assembly source for validity and report undefined or complex-only definitions.",
+    )
+    parser.add_argument(
+        "filenames",
+        metavar="filename",
+        nargs="+",
+        help="ARGUS assembly source file(s) to analyze",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose output.",
+    )
+    parser.add_argument(
+        "-c",
+        "--complex",
+        action="store_true",
+        help="Report symbols that have only complex assignments.",
+    )
+    args = parser.parse_args()
 
     toterrs = 0
     symtab = {}
-    for filename in args:
-        symtab, errcount = buildSymbolTable(filename, symtab,
-                                            verbose=opts.verbose)
+    for filename in args.filenames:
+        symtab, errcount = buildSymbolTable(filename, symtab, verbose=args.verbose)
         toterrs += errcount
-        print("%s: %d errors encountered building symbol table." %
-              (filename, errcount), file=sys.stderr)
+        print(
+            "%s: %d errors encountered building symbol table." % (filename, errcount),
+            file=sys.stderr,
+        )
 
-    errSyms = checkSymbolTable(symtab, verbose=opts.verbose,
-                               complexOnlyError=opts.complex)
+    errSyms = checkSymbolTable(
+        symtab, verbose=args.verbose, complexOnlyError=args.complex
+    )
     toterrs += len(errSyms)
     if len(errSyms) > 0:
         print("", file=sys.stderr)
@@ -53,13 +63,12 @@ def main():
             if matches is None or matches == []:
                 print("  %s - No matches!" % symbol, file=sys.stderr)
             else:
-                print("  %s - Possible matches: " % symbol + ' '.join(matches))
-        print("%d errors checking symbol table." % len(errSyms),
-              file=sys.stderr)
+                print("  %s - Possible matches: " % symbol + " ".join(matches))
+        print("%d errors checking symbol table." % len(errSyms), file=sys.stderr)
 
-    if len(args) > 1:
+    if len(args.filenames) > 1:
         print("Total: %d errors encountered." % toterrs, file=sys.stderr)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

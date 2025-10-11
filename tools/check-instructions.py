@@ -10,31 +10,14 @@
 
 
 import sys
-from optparse import OptionParser
+import argparse
 from collections import OrderedDict
 
 import h800.arguscard
 import h800.instructions
 
 
-def main():
-    parser = OptionParser("usage: %prog filename [filename]...")
-    parser.add_option('-a', '--all',
-                      dest='all',
-                      action='store_true',
-                      default=False,
-                      help="Check for all errors.")
-    parser.add_option('-c', '--count',
-                      dest='count',
-                      action='store_true',
-                      default=False,
-                      help="Print opcode frequency count.")
-    parser.add_option('-i', '--invalid',
-                      dest='invalid',
-                      action='store_true',
-                      default=False,
-                      help="Check for invalid opcodes.")
-    parser.add_option('-p', '--print-opcodes',
+
                       dest='printOpcodes',
                       action='store_true',
                       default=False,
