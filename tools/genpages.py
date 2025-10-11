@@ -34,7 +34,7 @@ def main():
         sys.exit(1)
 
     inlines = []
-    with open(filename, "r") as f:
+    with open(filename) as f:
         inlines = f.readlines()
 
     d = h800.arguscard.Deck(inlines)

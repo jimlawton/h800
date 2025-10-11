@@ -1,4 +1,4 @@
-from h800.memory import MemoryBank, MemoryModule, ExpansionMemoryModule
+from h800.memory import ExpansionMemoryModule, MemoryBank, MemoryModule
 
 
 def my_assert(value, good):

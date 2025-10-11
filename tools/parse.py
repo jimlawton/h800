@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 parse.py
 
@@ -27,7 +26,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Iterable, List
+from collections.abc import Iterable
 
 import h800.arguscard
 import h800.instructions
@@ -81,7 +80,7 @@ class ParseStats:
         return self.invalid_instructions + self.symbol_errors
 
 
-def build_symbols(filenames: List[str], verbose: bool) -> int:
+def build_symbols(filenames: list[str], verbose: bool) -> int:
     """
     Build symbol table across all files.
     Returns total number of errors encountered while building.
@@ -100,7 +99,7 @@ def build_symbols(filenames: List[str], verbose: bool) -> int:
 
 
 def process_files(
-    filenames: List[str], stats: ParseStats, args: argparse.Namespace
+    filenames: list[str], stats: ParseStats, args: argparse.Namespace
 ) -> None:
     """
     Iterate through cards in each file, updating stats and performing validation.

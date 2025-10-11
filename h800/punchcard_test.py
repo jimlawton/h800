@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
-from h800.punchcard import PunchCard, Deck
+from h800.punchcard import Deck, PunchCard
 
 
 def test_simple():

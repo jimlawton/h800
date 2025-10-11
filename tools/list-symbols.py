@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 list-symbols.py
 
@@ -41,20 +40,21 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from typing import Any, Dict, Iterable, List, Sequence, Tuple
+from collections.abc import Iterable, Sequence
+from typing import Any
 
 from h800.symbol_table import buildSymbolTable
 
 
 def build_combined_symbol_table(
     filenames: Sequence[str], verbose: bool
-) -> Tuple[Dict[str, Any], int]:
+) -> tuple[dict[str, Any], int]:
     """
     Build a combined symbol table from all input filenames.
 
     Returns (symtab, total_errors).
     """
-    symtab: Dict[str, Any] = {}
+    symtab: dict[str, Any] = {}
     total_errors = 0
     for filename in filenames:
         symtab, file_errors = buildSymbolTable(filename, symtab, verbose=verbose)
@@ -69,7 +69,7 @@ def build_combined_symbol_table(
     return symtab, total_errors
 
 
-def filter_symbols(symtab: Dict[str, Any], names: Iterable[str]) -> Dict[str, Any]:
+def filter_symbols(symtab: dict[str, Any], names: Iterable[str]) -> dict[str, Any]:
     """
     Return a new symbol table containing only the symbols named in 'names'.
     Symbols not present are ignored (warned to stderr).
@@ -77,7 +77,7 @@ def filter_symbols(symtab: Dict[str, Any], names: Iterable[str]) -> Dict[str, An
     wanted = set(n for n in names if n)
     if not wanted:
         return symtab
-    filtered: Dict[str, Any] = {}
+    filtered: dict[str, Any] = {}
     for name in wanted:
         if name in symtab:
             filtered[name] = symtab[name]
@@ -86,11 +86,11 @@ def filter_symbols(symtab: Dict[str, Any], names: Iterable[str]) -> Dict[str, An
     return filtered
 
 
-def symbol_table_to_json(symtab: Dict[str, Any]) -> str:
+def symbol_table_to_json(symtab: dict[str, Any]) -> str:
     """
     Convert the symbol table to a JSON string. The Card objects are reduced to line text.
     """
-    json_ready: Dict[str, Any] = {}
+    json_ready: dict[str, Any] = {}
     for sym, segs in symtab.items():
         json_ready[sym] = {}
         for seg, subseg_map in segs.items():
@@ -110,11 +110,11 @@ def symbol_table_to_json(symtab: Dict[str, Any]) -> str:
     return json.dumps(json_ready, indent=2, sort_keys=True)
 
 
-def format_symbol_entry(sym: str, entry: Dict[str, Any]) -> str:
+def format_symbol_entry(sym: str, entry: dict[str, Any]) -> str:
     """
     Produce human-readable text for one symbol's definitions.
     """
-    lines: List[str] = [sym]
+    lines: list[str] = [sym]
     for seg in sorted(entry.keys()):
         lines.append(f"  Segment: {seg}")
         for subseg in sorted(entry[seg].keys()):
@@ -134,7 +134,7 @@ def format_symbol_entry(sym: str, entry: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def output_text(symtab: Dict[str, Any]) -> None:
+def output_text(symtab: dict[str, Any]) -> None:
     """
     Print the symbol table in text form.
     """

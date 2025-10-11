@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 listing.py
 
@@ -49,7 +48,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from typing import Iterable, List, Optional
+from collections.abc import Iterable
 
 import h800.arguscard
 
@@ -115,7 +114,7 @@ def parse_args(argv: Iterable[str]) -> argparse.Namespace:
     return parser.parse_args(list(argv))
 
 
-def ensure_output_dir(path: Optional[str], verbose: bool, quiet: bool) -> None:
+def ensure_output_dir(path: str | None, verbose: bool, quiet: bool) -> None:
     if not path:
         return
     if not os.path.exists(path):
@@ -137,7 +136,7 @@ def ensure_output_dir(path: Optional[str], verbose: bool, quiet: bool) -> None:
         raise SystemExit(1)
 
 
-def listing_filename(src: str, suffix: str, outdir: Optional[str]) -> str:
+def listing_filename(src: str, suffix: str, outdir: str | None) -> str:
     base = os.path.basename(src)
     stem, _sep, _ext = base.partition(".")
     # If no dot present, stem == base; that's fine.
@@ -149,10 +148,10 @@ def listing_filename(src: str, suffix: str, outdir: Optional[str]) -> str:
 
 def write_listing_file(
     source_filename: str,
-    cards: List,
+    cards: list,
     outfile: str,
     include_star: bool,
-    max_width: Optional[int],
+    max_width: int | None,
     verbose: bool,
     quiet: bool,
     force: bool,
@@ -199,9 +198,9 @@ def write_listing_file(
 
 
 def combined_listing_to_stdout(
-    all_cards: List,
+    all_cards: list,
     include_star: bool,
-    max_width: Optional[int],
+    max_width: int | None,
     verbose: bool,
     quiet: bool,
 ) -> None:
@@ -246,7 +245,7 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     ensure_output_dir(args.output_dir, args.verbose, args.quiet)
 
-    all_cards: List = []
+    all_cards: list = []
     for src in args.filenames:
         deck = load_deck(src, args.verbose, args.quiet)
         if args.stdout:

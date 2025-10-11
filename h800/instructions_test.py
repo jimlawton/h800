@@ -1,38 +1,83 @@
 from collections import namedtuple
 
-from .instructions import make_masked_opcode, make_unmasked_opcode, \
-    make_peripheral_opcode, make_print_opcode, \
-    BinaryAdd, DecimalAdd, WordAdd, \
-    BinarySubtract, DecimalSubtract, WordDifference, \
-    NotEqualAlphabetic, NotEqualNumeric, \
-    LessThanOrEqualAlphabetic, LessThanOrEqualNumeric, \
-    Transfer, TransferChangeSequence, \
-    HalfAdd, Superimpose, CheckParity, \
-    BinaryMultiply, DecimalMultiply, \
-    BinaryAccumulate, DecimalAccumulate, \
-    MultipleTransfer, TransferNWords, \
-    ComputeOrthocount, ItemTransfer, \
-    ExtendedBinaryAdd, ExtendedBinarySubtract, \
-    RecordTransfer, ControlProgram, Proceed, \
-    ShiftWordAndSubstitute, ShiftPreservingSignAndSubstitute, \
-    ShiftWordAndExtract, ShiftPreservingSignAndExtract, ShiftAndSelect, \
-    Substitute, Extract, \
-    ReadForward, ReadBackward, WriteForward, Rewind, \
-    PrintAlphabetic, PrintDecimal, PrintOctal, Simulator, \
-    FloatingBinaryAdd, FloatingDecimalAdd, \
-    FloatingBinarySubtract, FloatingDecimalSubtract, \
-    FloatingBinaryDivide, FloatingDecimalDivide, \
-    FloatingBinaryAddUnnormalized, FloatingDecimalAddUnnormalized, \
-    FloatingBinarySubtractUnnormalized, FloatingDecimalSubtractUnnormalized, \
-    FloatingBinaryMultiply, FloatingDecimalMultiply, MultipleUnload, \
-    FloatingBinaryAddExtendedPrecision, \
-    FloatingBinarySubtractExtendedPrecision, \
-    FixedBinaryDivide, FixedDecimalDivide, FixedToFloatingNormalize, \
-    Conversion, FloatingLessThanNormalized, FloatingNotEqualNormalized, \
-    AlphanumericConstant, DecimalConstant, ExtendedBinaryConstant, \
-    FloatingBinaryConstant, FloatingDecimalConstant, FixedBinaryConstant, \
-    OctalConstant, \
-    OPCODES
+from .instructions import (
+    OPCODES,
+    AlphanumericConstant,
+    BinaryAccumulate,
+    BinaryAdd,
+    BinaryMultiply,
+    BinarySubtract,
+    CheckParity,
+    ComputeOrthocount,
+    ControlProgram,
+    Conversion,
+    DecimalAccumulate,
+    DecimalAdd,
+    DecimalConstant,
+    DecimalMultiply,
+    DecimalSubtract,
+    ExtendedBinaryAdd,
+    ExtendedBinaryConstant,
+    ExtendedBinarySubtract,
+    Extract,
+    FixedBinaryConstant,
+    FixedBinaryDivide,
+    FixedDecimalDivide,
+    FixedToFloatingNormalize,
+    FloatingBinaryAdd,
+    FloatingBinaryAddExtendedPrecision,
+    FloatingBinaryAddUnnormalized,
+    FloatingBinaryConstant,
+    FloatingBinaryDivide,
+    FloatingBinaryMultiply,
+    FloatingBinarySubtract,
+    FloatingBinarySubtractExtendedPrecision,
+    FloatingBinarySubtractUnnormalized,
+    FloatingDecimalAdd,
+    FloatingDecimalAddUnnormalized,
+    FloatingDecimalConstant,
+    FloatingDecimalDivide,
+    FloatingDecimalMultiply,
+    FloatingDecimalSubtract,
+    FloatingDecimalSubtractUnnormalized,
+    FloatingLessThanNormalized,
+    FloatingNotEqualNormalized,
+    HalfAdd,
+    ItemTransfer,
+    LessThanOrEqualAlphabetic,
+    LessThanOrEqualNumeric,
+    MultipleTransfer,
+    MultipleUnload,
+    NotEqualAlphabetic,
+    NotEqualNumeric,
+    OctalConstant,
+    PrintAlphabetic,
+    PrintDecimal,
+    PrintOctal,
+    Proceed,
+    ReadBackward,
+    ReadForward,
+    RecordTransfer,
+    Rewind,
+    ShiftAndSelect,
+    ShiftPreservingSignAndExtract,
+    ShiftPreservingSignAndSubstitute,
+    ShiftWordAndExtract,
+    ShiftWordAndSubstitute,
+    Simulator,
+    Substitute,
+    Superimpose,
+    Transfer,
+    TransferChangeSequence,
+    TransferNWords,
+    WordAdd,
+    WordDifference,
+    WriteForward,
+    make_masked_opcode,
+    make_peripheral_opcode,
+    make_print_opcode,
+    make_unmasked_opcode,
+)
 
 
 def my_assert(value, good):

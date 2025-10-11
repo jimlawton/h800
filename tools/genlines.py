@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 genlines.py
 
@@ -44,7 +43,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Iterable
+from collections.abc import Iterable
 
 MAX_WIDTH = 6
 DEFAULT_MIN_WIDTH = 4

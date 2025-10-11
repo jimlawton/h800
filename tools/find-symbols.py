@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 find-symbols.py
 
@@ -33,16 +32,17 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Any, Dict, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 from h800.symbol_table import buildSymbolTable, findSymbolDef
 
 
 def build_combined_symbol_table(
     filenames: Iterable[str], verbose: bool
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a combined symbol table from multiple source files."""
-    symtab: Dict[str, Any] = {}
+    symtab: dict[str, Any] = {}
     total_errors = 0
     for filename in filenames:
         symtab, file_errors = buildSymbolTable(filename, symtab, verbose=verbose)
@@ -57,7 +57,7 @@ def build_combined_symbol_table(
     return symtab
 
 
-def format_symbol_definition(symbol: str, sym_entry: Dict[str, Any]) -> str:
+def format_symbol_definition(symbol: str, sym_entry: dict[str, Any]) -> str:
     """
     Produce a human-readable multi-line string describing a symbol's definitions.
 
@@ -87,7 +87,7 @@ def format_symbol_definition(symbol: str, sym_entry: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def print_symbol_details(symbol: str, symtab: Dict[str, Any]) -> None:
+def print_symbol_details(symbol: str, symtab: dict[str, Any]) -> None:
     """Print detailed definition info for one symbol if present."""
     if symbol not in symtab:
         print(f"{symbol} (no exact definition found)", file=sys.stderr)
@@ -96,7 +96,7 @@ def print_symbol_details(symbol: str, symtab: Dict[str, Any]) -> None:
 
 
 def resolve_and_display(
-    symtab: Dict[str, Any],
+    symtab: dict[str, Any],
     symbol: str,
     *,
     begin: bool,

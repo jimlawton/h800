@@ -3,7 +3,6 @@
 
 from h800.bitfield import BitField
 
-
 REGISTERS = {
     'AU1':   0,     # AU-CU Counter No. 1
     'AU2':   1,     # AU-CU Counter No. 2

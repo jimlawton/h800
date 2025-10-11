@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 list-instructions.py
 
@@ -40,7 +39,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from typing import Iterable, List
+from collections.abc import Iterable
 
 import h800.arguscard
 import h800.instructions
@@ -123,7 +122,7 @@ def process_file(
     requested_opcode: str,
     details: bool,
     verbose: bool,
-    matches: List[str],
+    matches: list[str],
 ) -> None:
     """Process a single ARGUS source file, appending formatted matches to matches list."""
     deck = h800.arguscard.Deck(file=filename, verbose=verbose)
@@ -177,7 +176,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(f"ERROR: file not found '{fname}'", file=sys.stderr)
             return 1
 
-    matches: List[str] = []
+    matches: list[str] = []
     for fname in args.filenames:
         try:
             process_file(

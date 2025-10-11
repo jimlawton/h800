@@ -1,4 +1,4 @@
-from h800.word import Word, InstructionWord
+from h800.word import InstructionWord, Word
 
 
 def my_assert(value, good):

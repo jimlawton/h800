@@ -102,10 +102,9 @@ class Instruction:
         if self._mask is not None:
             # print("*** setting mask to 0o%05o" % self._mask)
             self.data[2:6] = self._mask
-        else:
-            if self._bits23 is not None:
-                # print("*** setting bits 2,3 to %d" % self._bits23)
-                self.data[2:3] = self._bits23
+        elif self._bits23 is not None:
+            # print("*** setting bits 2,3 to %d" % self._bits23)
+            self.data[2:3] = self._bits23
         # print("4 0o%04o" % self.data)
         if self._a is not None:
             # print("*** a: %d" % 1 if self._a else 0)

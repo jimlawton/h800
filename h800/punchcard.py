@@ -23,10 +23,9 @@
 # These classes take input in the form of strings representing lines of text
 # and split it into fields, as defined by the layout.
 
-import sys
 import os
 import os.path
-
+import sys
 
 _DEFAULT_WIDTH = 120
 _DEFAULT_FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
@@ -140,8 +139,8 @@ class Deck:
             for i, line in enumerate(self._lines):
                 if line.startswith('#'):
                     if self._verbose:
-                        print(("Skipping meta-comment, file %s, line %d" %
-                              (file, i+1)))
+                        print("Skipping meta-comment, file %s, line %d" %
+                              (file, i+1))
                     continue
                 self._cards.append(cardclass(line, width=width, fields=fields,
                                              filename=file, linenum=i+1,
@@ -187,15 +186,15 @@ class Deck:
         if not os.path.isfile(filename):
             sys.exit("ERROR: File \"%s\" does not exist!" % filename)
         lines = []
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             if self._verbose:
-                print(("Reading %s..." % filename))
+                print("Reading %s..." % filename)
             lines = f.readlines()
         for i, line in enumerate(lines):
             if line.startswith('#'):
                 if self._verbose:
-                    print(("Skipping meta-comment, file %s, line %d" %
-                          (filename, i+1)))
+                    print("Skipping meta-comment, file %s, line %d" %
+                          (filename, i+1))
                 continue
             if line.startswith('$'):
                 incname = line[1:].split()[0]
