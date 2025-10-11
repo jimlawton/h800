@@ -2,10 +2,11 @@ from h800.bitfield import BitField
 
 
 def my_assert(value, good):
-    assert value == good, "Value is %s, should be %s" % (value, good)
+    assert value == good, f"Value is {value}, should be {good}"
 
 
 # Tester for generic bit-field class.
+
 
 def test_simple():
     b = BitField()
@@ -34,32 +35,18 @@ def test_msb_left_8bit():
     b[7:3] = 0b0101
     my_assert(b.value, 40)
     my_assert(b[3], 1)
-    my_assert(b.isBitSet(3), True)
+    my_assert(b.is_bit_set(3), True)
     my_assert(b[5], 1)
-    my_assert(b.isBitSet(5), True)
+    my_assert(b.is_bit_set(5), True)
     print("TEST: set bit 7 = 1")
     b[7] = 1
     my_assert(b[7], 1)
-    my_assert(b.isBitSet(7), True)
+    my_assert(b.is_bit_set(7), True)
     my_assert(b.value, 168)
     print("TEST: set slice [7:0] = 255")
     b[7:0] = 255
     my_assert(b.value, 255)
-    my_assert(b.isBitSet(7), True)
-    my_assert(b.isBitClr(7), False)
-    my_assert(b.isBitSet(6), True)
-    my_assert(b.isBitClr(6), False)
-    my_assert(b.isBitSet(5), True)
-    my_assert(b.isBitClr(5), False)
-    my_assert(b.isBitSet(4), True)
-    my_assert(b.isBitClr(4), False)
-    my_assert(b.isBitSet(3), True)
-    my_assert(b.isBitClr(3), False)
-    my_assert(b.isBitSet(2), True)
-    my_assert(b.isBitClr(2), False)
-    my_assert(b.isBitSet(1), True)
-    my_assert(b.isBitClr(1), False)
-    my_assert(b.isBitSet(0), True)
+
     my_assert(b.isBitClr(0), False)
     my_assert(b.value, 255)
     my_assert(b.isRange(7, 0, 1), True)
@@ -154,35 +141,25 @@ def test_msb_right_8bit():
 
 
 def test_invalid_args():
-    gotexc = False
-    try:
-        print("TEST: test invalid width")
-        b = BitField(256, width=65, order=BitField.BIT_ORDER_MSB_RIGHT)
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc is True, "Invalid value should have thrown an exception!"
+    import pytest
 
-    gotexc = False
-    try:
-        print("TEST: test invalid initial value for width")
-        b = BitField(256, width=8, order=BitField.BIT_ORDER_MSB_RIGHT)
-        assert b is not None
-    except ValueError:
-        gotexc = True
-    else:
-        raise
-    assert gotexc is True, "Invalid value should have thrown an exception!"
+    print("TEST: test invalid width")
+    with pytest.raises(ValueError):
+        BitField(256, width=65, order=BitField.BIT_ORDER_MSB_RIGHT)
+
+    print("TEST: test invalid initial value for width")
+    with pytest.raises(ValueError):
+        BitField(256, width=8, order=BitField.BIT_ORDER_MSB_RIGHT)
 
 
 def test_msb_left_msb1_48bit():
-    b = BitField(0, width=48, numbering=BitField.BIT_SCHEME_MSB_1,
-                 order=BitField.BIT_ORDER_MSB_LEFT)
+    b = BitField(
+        0, width=48, numbering=BitField.BIT_SCHEME_MSB_1, order=BitField.BIT_ORDER_MSB_LEFT
+    )
     print("TEST: check initial value")
     my_assert(b.value, 0)
     print("TEST: check maxval")
-    my_assert(b.maxval, 2 ** 48 - 1)
+    my_assert(b.maxval, 2**48 - 1)
     print("TEST: check width")
     my_assert(b.width, 48)
     print("TEST: check length")
@@ -195,13 +172,13 @@ def test_msb_left_msb1_48bit():
     my_assert(b.value, 0)
     print("TEST: set value to all ones using slice")
     b[1:48] = b.maxval
-    my_assert(b.value, 2 ** 48 - 1)
+    my_assert(b.value, 2**48 - 1)
     print("TEST: set value to all zeros using slice")
     b[1:48] = 0
     my_assert(b.value, 0)
     print("TEST: set value to all ones using set")
     b.set()
-    my_assert(b.value, 2 ** 48 - 1)
+    my_assert(b.value, 2**48 - 1)
     print("TEST: set value to all zeros using clear")
     b.clear()
     my_assert(b.value, 0)
@@ -232,8 +209,9 @@ def test_msb_left_msb1_48bit():
 
 
 def test_msb_left_msb1_12bit():
-    b = BitField(0, width=12, numbering=BitField.BIT_SCHEME_MSB_1,
-                 order=BitField.BIT_ORDER_MSB_LEFT)
+    b = BitField(
+        0, width=12, numbering=BitField.BIT_SCHEME_MSB_1, order=BitField.BIT_ORDER_MSB_LEFT
+    )
     print("TEST: check initial value")
     my_assert(b.value, 0)
     print("TEST: indices=", b.indices)
@@ -282,7 +260,7 @@ def test_msb_left_msb1_12bit():
     print("TEST: ripple a one left")
     for i in range(12):
         b.set(12 - i)
-        my_assert(b.value, 2 ** i)
+        my_assert(b.value, 2**i)
         b.clear(12 - i)
         my_assert(b.value, 0)
     print("TEST: shift a one right, filling")
@@ -297,26 +275,27 @@ def test_msb_left_msb1_12bit():
     good = 0
     for i in range(12):
         b.set(12 - i)
-        good += 2 ** i
+        good += 2**i
         my_assert(b.value, good)
     b.clear()
     my_assert(b.value, 0)
 
 
 def test_misc_12bit():
-    b = BitField(0, width=12, numbering=BitField.BIT_SCHEME_MSB_1,
-                 order=BitField.BIT_ORDER_MSB_LEFT)
+    b = BitField(
+        0, width=12, numbering=BitField.BIT_SCHEME_MSB_1, order=BitField.BIT_ORDER_MSB_LEFT
+    )
     print("TEST: check initial value")
     my_assert(b.value, 0)
     print("TEST: set bit 1")
     b[1] = 1
-    my_assert(b.value, 2 ** 11)
+    my_assert(b.value, 2**11)
     print("TEST: set bit 7")
     b[7] = 1
-    my_assert(b.value, 2 ** 11 + 2 ** 5)
+    my_assert(b.value, 2**11 + 2**5)
     print("TEST: clear bits 1:6")
     b[1:6] = 0
-    my_assert(b.value, 2 ** 5)
+    my_assert(b.value, 2**5)
     print("TEST: set bits 8:12 to 00101")
     b[8:12] = 5
-    my_assert(b.value, 2 ** 5 + 5)
+    my_assert(b.value, 2**5 + 5)

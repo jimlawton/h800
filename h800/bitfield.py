@@ -1,116 +1,62 @@
-# Generic bit-field class.
+# Copyright 2010 Jim Lawton <jim dot lawton at gmail dot com>
 #
-# This implements a class for representing generalized bit-fields:
-#  - bit-fields can be of arbitrary width
-#  - support either left-to-right or right-to-left bit ordering
-#  - support both 0- and 1-based bit numbering schemes
+# Modernized 2025: helper names converted to snake_case with backward-compatible
+# wrappers; string formatting migrated to f-strings; added type hints.
 #
-# NOTE: BitField indices are inclusive, unlike Python slices.
-# E.g.:
-#   [7:3] of an 8-bit MSB-left field means bits 7,6,5,4,3.
-#   [4:6] of an 8-bit MSB-right field means bits 4,5,6.
-# Think logic circuit bit notation.
-#
-# The combinations of the supported ordering and numbering schemes are shown
-# below, along with the actual Python element index for each bit.:
-#
-# The bit-field width is N.
-#
-# BIT_ORDER_MSB_LEFT, BIT_SCHEME_LSB_0:
-#
-#  MSB                                                     LSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# | N-1| N-2| N-3|                                  |  1 |  0 |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_MSB_LEFT, BIT_SCHEME_LSB_1:
-#
-#  MSB                                                     LSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# | N  | N-1| N-2|                                  |  2 |  1 |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_MSB_LEFT, BIT_SCHEME_MSB_0:
-#
-#  MSB                                                     LSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# |  0 |  1 |  2 |                                  | N-2| N-1|
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_MSB_LEFT, BIT_SCHEME_MSB_1:
-#
-#  MSB                                                     LSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# |  1 |  2 |  3 |                                  | N-1| N  |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_LSB_LEFT, BIT_SCHEME_LSB_0:
-#
-#  LSB                                                     MSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# |  0 |  1 |  2 |                                  | N-2| N-1|
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_LSB_LEFT, BIT_SCHEME_LSB_1:
-#
-#  LSB                                                     MSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# |  1 |  2 |  3 |                                  | N-1| N  |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_LSB_LEFT, BIT_SCHEME_MSB_0:
-#
-#  LSB                                                     MSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# | N-1| N-2| N-3|                                  |  1 |  0 |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
-#
-# BIT_ORDER_LSB_LEFT, BIT_SCHEME_MSB_1:
-#
-#  LSB                                                     MSB
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-# | N  | N-1| N-2|                                  |  2 |  1 |
-# +----+----+----+----+----+----+----+----+----+----+----+----+
-#    0    1    2                                           N-1
+# This file is part of h800 (GPL-2.0-only).
+
+from __future__ import annotations
 
 
 class BitField:
+    """Generic bit-field utility supporting multiple numbering and ordering schemes.
+
+    Numbering schemes:
+        LSB_0:   Bit 0 is least significant
+        LSB_1:   Bit 1 is least significant (shifts all virtual indices by +1)
+        MSB_0:   Bit 0 is most significant
+        MSB_1:   Bit 1 is most significant (shifts all virtual indices by +1)
+
+    Ordering:
+        BIT_ORDER_MSB_LEFT  (value rendered left→right, MSB appears left)
+        BIT_ORDER_MSB_RIGHT (alias: BIT_ORDER_LSB_LEFT) (LSB appears left)
+
+    Public API (legacy camelCase preserved via wrappers):
+        width, maxval, numbering, order, value
+        set(), clear()
+        isBit(), isBitSet(), isBitClr(), isRange(), isRangeSet(), isRangeClr()
+
+    New preferred snake_case API mirrors the above:
+        is_bit(), is_bit_set(), is_bit_clr(), is_range(), is_range_set(), is_range_clr()
+    """
+
     DEFAULT_WIDTH = 8
-    # TODO: what is max value allowed for size?
-    MAX_WIDTH = 64
+    MAX_WIDTH = 64  # Internal safety cap (adjust as needed).
 
-    # The bit numbering scheme (0/1..N or N..1/0).
-    #  - LSB 0
-    #  - LSB 1
-    #  - MSB 0
-    #  - MSB 1
-    BIT_SCHEME_LSB_0 = 0  # Bit 0 is LSB.
-    BIT_SCHEME_LSB_1 = 1  # Bit 1 is LSB.
-    BIT_SCHEME_MSB_0 = 2  # Bit 0 is MSB.
-    BIT_SCHEME_MSB_1 = 3  # Bit 1 is MSB.
+    # Numbering schemes.
+    BIT_SCHEME_LSB_0 = 0
+    BIT_SCHEME_LSB_1 = 1
+    BIT_SCHEME_MSB_0 = 2
+    BIT_SCHEME_MSB_1 = 3
 
-    # Bit ordering.
-    BIT_ORDER_MSB_LEFT = BIT_ORDER_LSB_RIGHT = 0  # MSB ... LSB
-    BIT_ORDER_LSB_LEFT = BIT_ORDER_MSB_RIGHT = 1  # LSB ... MSB
+    # Ordering.
+    BIT_ORDER_MSB_LEFT = BIT_ORDER_LSB_RIGHT = 0  # MSB ... LSB visually left→right
+    BIT_ORDER_LSB_LEFT = BIT_ORDER_MSB_RIGHT = 1  # LSB ... MSB visually left→right
 
     def __init__(
-        self, value=0, width=DEFAULT_WIDTH, numbering=BIT_SCHEME_LSB_0, order=BIT_ORDER_MSB_RIGHT
-    ):
-        """Class constructor."""
+        self,
+        value: int = 0,
+        width: int = DEFAULT_WIDTH,
+        numbering: int = BIT_SCHEME_LSB_0,
+        order: int = BIT_ORDER_MSB_RIGHT,
+    ) -> None:
         self._width = width
-        if width > self.MAX_WIDTH:
-            raise ValueError("Width is greater than maximum allowed!")
-        self._maxval = 2**width - 1
-        self._value = value
-        if self._value > self._maxval:
-            raise ValueError("Value is greater than maximum allowed by bit-field width!")
+        if width > self.MAX_WIDTH or width <= 0:
+            raise ValueError("Width is greater than maximum allowed or non-positive!")
+        self._maxval = (1 << width) - 1
+        self._value = int(value)
+        if self._value > self._maxval or self._value < 0:
+            raise ValueError("Value is outside the allowable range for this bit-field width!")
         self._numbering = numbering
         if numbering not in (
             self.BIT_SCHEME_LSB_0,
@@ -121,66 +67,57 @@ class BitField:
             raise ValueError("Invalid bit numbering scheme!")
         self._order = order
         if order not in (self.BIT_ORDER_MSB_LEFT, self.BIT_ORDER_MSB_RIGHT):
-            raise ValueError("Invalid bit order, must be left or right!")
+            raise ValueError("Invalid bit order!")
+
+    # -------------------------------------------------------------------------
+    # Properties
+    # -------------------------------------------------------------------------
 
     @property
-    def width(self):
-        "Return the width of the bit-field (in bits)."
+    def width(self) -> int:
         return self._width
 
     @property
-    def maxval(self):
-        "Return the maximum integer value supported by this bit-field."
+    def maxval(self) -> int:
         return self._maxval
 
     @property
-    def numbering(self):
-        "Return the bit numbering scheme (LSB 0, LSB 1, MSB 0, MSB 1)."
+    def numbering(self) -> int:
         return self._numbering
 
     @property
-    def order(self):
-        "Return the bit order (left-to-right or right-to-left)."
+    def order(self) -> int:
         return self._order
 
     @property
-    def value(self):
-        "Return the current integer value of the bit-field."
+    def value(self) -> int:
         return int(self._value)
 
     @value.setter
-    def value(self, value):
-        "Set the bit-field to the specified integer value."
-        self._checkValue(value)
+    def value(self, value: int) -> None:
+        self._check_value(value)
         self._value = int(value)
 
     @property
-    def indices(self):
-        "Return a list of the bit indices of the bit-field."
-        indices = []
-        for i in range(0, self._width):
-            indices.append(self._vindex(i))
-        return indices
+    def indices(self) -> list[int]:
+        return [self._vindex(i) for i in range(self._width)]
 
     @property
-    def lsb(self):
-        "Return the index of the LSB in the bit-field."
-        if self._order == self.BIT_ORDER_LSB_LEFT:
-            return self.indices[0]
-        return self.indices[-1]
+    def lsb(self) -> int:
+        return self.indices[0] if self._order == self.BIT_ORDER_LSB_LEFT else self.indices[-1]
 
     @property
-    def msb(self):
-        "Return the index of the MSB in the bit-field."
-        if self._order == self.BIT_ORDER_MSB_LEFT:
-            return self.indices[0]
-        return self.indices[-1]
+    def msb(self) -> int:
+        return self.indices[0] if self._order == self.BIT_ORDER_MSB_LEFT else self.indices[-1]
 
-    def _rindex(self, index, width=None):
-        """Return real (Python) index from virtual index."""
+    # -------------------------------------------------------------------------
+    # Internal index conversions
+    # -------------------------------------------------------------------------
+
+    def _rindex(self, index: int, width: int | None = None) -> int:
+        """Map virtual index to real (python) index."""
         if width is None:
             width = self._width
-        # MSB-left ordering
         if self._order == self.BIT_ORDER_MSB_LEFT:
             if self._numbering == self.BIT_SCHEME_LSB_0:
                 return width - (index + 1)
@@ -201,236 +138,231 @@ class BitField:
                 return width - index
         raise ValueError("Invalid numbering/order combination in _rindex")
 
-    # Calculate virtual index from supplied real index.
-    # This is the inverse of the _rindex method above.
-    # ("R" is the supplied real index, "W" is the width)
-    #
-    # Order                 Scheme              Virtual Index
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_0    V = W - (R + 1)
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_LSB_1    V = W - R
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_0    V = R
-    # BIT_ORDER_MSB_LEFT    BIT_SCHEME_MSB_1    V = R + 1
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_0    V = R
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_LSB_1    V = R + 1
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_0    V = W - (R + 1)
-    # BIT_ORDER_LSB_LEFT    BIT_SCHEME_MSB_1    V = W - R
-    def _vindex(self, index, width=None):
+    def _vindex(self, index: int, width: int | None = None) -> int:
+        """Inverse mapping: real index → virtual index."""
         if width is None:
             width = self._width
         if self._order == self.BIT_ORDER_MSB_LEFT:
             if self._numbering == self.BIT_SCHEME_LSB_0:
                 return width - (index + 1)
-            elif self._numbering == self.BIT_SCHEME_LSB_1:
+            if self._numbering == self.BIT_SCHEME_LSB_1:
                 return width - index
-            elif self._numbering == self.BIT_SCHEME_MSB_0:
+            if self._numbering == self.BIT_SCHEME_MSB_0:
                 return index
-            elif self._numbering == self.BIT_SCHEME_MSB_1:
+            if self._numbering == self.BIT_SCHEME_MSB_1:
                 return index + 1
-        elif self._numbering == self.BIT_SCHEME_LSB_0:
-            return index
-        elif self._numbering == self.BIT_SCHEME_LSB_1:
-            return index + 1
-        elif self._numbering == self.BIT_SCHEME_MSB_0:
-            return width - (index + 1)
-        elif self._numbering == self.BIT_SCHEME_MSB_1:
-            return width - index
+        else:  # LSB-left
+            if self._numbering == self.BIT_SCHEME_LSB_0:
+                return index
+            if self._numbering == self.BIT_SCHEME_LSB_1:
+                return index + 1
+            if self._numbering == self.BIT_SCHEME_MSB_0:
+                return width - (index + 1)
+            if self._numbering == self.BIT_SCHEME_MSB_1:
+                return width - index
+        raise ValueError("Invalid numbering/order combination in _vindex")
 
-    def _shift(self, index):
-        # Given a bit index, return the shift required to get it to the zeroth
-        # position.
-        # print "_shift: index=%d width=%d" % (index, self._width)
+    def _shift(self, index: int) -> int:
+        """Return left-shift needed to align bit at 'index' to bit 0."""
         if self._order == self.BIT_ORDER_MSB_LEFT:
-            # print "ML S:%d" % (self._width - index - 1)
             return self._width - index - 1
-        else:
-            # print "MR S:%d" % (index)
-            return index
+        return index
 
-    def _lsbIndex(self, start, end):
-        # Given a bit range, return the index of the LSB of the range.
-        if self._order == self.BIT_ORDER_MSB_LEFT:
-            return max(start, end)
-        else:
-            return min(start, end)
+    # -------------------------------------------------------------------------
+    # Modern snake_case helpers + legacy wrappers
+    # -------------------------------------------------------------------------
 
-    def _msbIndex(self, start, end):
-        # Given a bit range, return the index of the MSB of the range.
-        if self._order == self.BIT_ORDER_MSB_LEFT:
-            return min(start, end)
-        else:
-            return max(start, end)
+    def _lsb_index(self, start: int, end: int) -> int:
+        return max(start, end) if self._order == self.BIT_ORDER_MSB_LEFT else min(start, end)
 
-    def _checkIndex(self, index):
+    def _msb_index(self, start: int, end: int) -> int:
+        return min(start, end) if self._order == self.BIT_ORDER_MSB_LEFT else max(start, end)
+
+    def _check_index(self, index: int) -> None:
         rindex = self._rindex(index)
         if rindex < 0 or rindex >= self._width:
-            raise ValueError("Invalid index for %d-bit bit-field!" % self._width)
+            raise ValueError(f"Invalid index for {self._width}-bit bit-field!")
 
-    def _checkRange(self, start, end):
-        self._checkIndex(start)
-        self._checkIndex(end)
+    def _check_range(self, start: int, end: int) -> None:
+        self._check_index(start)
+        self._check_index(end)
         if self._order == self.BIT_ORDER_MSB_LEFT:
             if self._numbering in (self.BIT_SCHEME_LSB_0, self.BIT_SCHEME_LSB_1):
-                # LSB low, right, e.g. [7:0].
                 if start < end:
                     raise ValueError("Invalid bit range for MSB...LSB bit-field!")
-            # MSB low, left, e.g. [0:7].
             elif start > end:
                 raise ValueError("Invalid bit range for MSB...LSB bit-field!")
         elif self._numbering in (self.BIT_SCHEME_LSB_0, self.BIT_SCHEME_LSB_1):
-            # LSB low, left, e.g. [0:7].
             if start > end:
                 raise ValueError("Invalid bit range for MSB...LSB bit-field!")
-        # MSB low, right, e.g. [7:0].
         elif start < end:
             raise ValueError("Invalid bit range for MSB...LSB bit-field!")
 
-    def _getRange(self, start, end):
-        self._checkRange(start, end)
-        rstart = self._rindex(start)
-        rend = self._rindex(end)
-        return (rstart, rend)
+    def _get_range(self, start: int, end: int) -> tuple[int, int]:
+        self._check_range(start, end)
+        return self._rindex(start), self._rindex(end)
 
-    def _checkValue(self, value, width=None):
+    def _check_value(self, value: int, width: int | None = None) -> None:
         if width is None:
-            width = self.width
-        if width < 0 or width > self.maxval:
-            raise ValueError("Illegal bit-field width %d!" % self.width)
-        if value > 2**width:
-            raise ValueError("Value is greater than allowed for %d-bit field!" % width)
+            width = self._width
+        if width < 0 or width > self._width:
+            raise ValueError(f"Illegal bit-field width {width}!")
+        if value < 0 or value > (1 << width):
+            raise ValueError(f"Value is greater than allowed for {width}-bit field!")
 
-    def _bitmask(self, start, end):
-        self._checkRange(start, end)
-        rstart, rend = self._getRange(start, end)
-        width = rend - rstart + 1
-        if width == self._width:
-            shift = 0
-        else:
-            shift = self._shift(rend)
-        bitmask = (2**width - 1) << shift
-        # print("BM: %d:%d | %d:%d | S=%d | B=0x%x" %
-        #       (start, end, rstart, rend, shift, bitmask))
-        return bitmask
+    def _bitmask(self, start: int, end: int) -> int:
+        self._check_range(start, end)
+        rstart, rend = self._get_range(start, end)
+        slice_width = rend - rstart + 1
+        shift = 0 if slice_width == self._width else self._shift(rend)
+        return ((1 << slice_width) - 1) << shift
 
-    def _getBitValue(self, index, value, width):
-        "Get the value of the specified bit index in the supplied value."
-        self._checkValue(value, width=width)
-        shift = index
-        # print("BIT: %d,%d | W=%d | S=%d | %d" %
-        #       (index, value, width, shift, (value >> shift) & 1L))
-        return (value >> shift) & 1
+    def _get_bit_value(self, index: int, value: int, width: int) -> int:
+        """Return value of a single bit at index within provided value."""
+        self._check_value(value, width=width)
+        return (value >> index) & 0x1
 
-    def __getitem__(self, key):
+    # Legacy camelCase wrappers (to be deprecated)
+    def _lsbIndex(self, start, end):  # noqa: N802
+        return self._lsb_index(start, end)
+
+    def _msbIndex(self, start, end):  # noqa: N802
+        return self._msb_index(start, end)
+
+    def _checkIndex(self, index):  # noqa: N802
+        self._check_index(index)
+
+    def _checkRange(self, start, end):  # noqa: N802
+        self._check_range(start, end)
+
+    def _getRange(self, start, end):  # noqa: N802
+        return self._get_range(start, end)
+
+    def _checkValue(self, value, width=None):  # noqa: N802
+        self._check_value(value, width)
+
+    def _getBitValue(self, index, value, width):  # noqa: N802
+        return self._get_bit_value(index, value, width)
+
+    # -------------------------------------------------------------------------
+    # Element access
+    # -------------------------------------------------------------------------
+
+    def __getitem__(self, key) -> int:
         if isinstance(key, slice):
-            start = key.start
-            end = key.stop
-            self._checkRange(start, end)
-            rstart, rend = self._getRange(start, end)
+            start, end = key.start, key.stop
+            self._check_range(start, end)
+            rstart, rend = self._get_range(start, end)
             bitmask = self._bitmask(start, end)
-            shift = self._shift(self._lsbIndex(rstart, rend))
-            # print("GET-SLICE: %d:%d | B=0x%x | S=%d | v=0x%x->0x%x" %
-            #       (start, end, bitmask, shift, self._value,
-            #        ((self._value & bitmask) >> shift)))
+            shift = self._shift(self._lsb_index(rstart, rend))
             return (self._value & bitmask) >> shift
-        else:
-            index = key
-            self._checkIndex(index)
-            rindex = self._rindex(index)
-            bitmask = 1
-            shift = self._shift(rindex)
-            # print("GET-INDEX: %d | B=0x%x | S=%d | v=0x%x->0x%x" %
-            #       (index, bitmask, shift, self._value,
-            #        ((self._value >> shift) & bitmask)))
-            return (self._value >> shift) & bitmask
+        index = key
+        self._check_index(index)
+        rindex = self._rindex(index)
+        shift = self._shift(rindex)
+        return (self._value >> shift) & 1
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value: int) -> None:
         if isinstance(key, slice):
-            start = key.start
-            end = key.stop
-            self._checkRange(start, end)
-            rstart, rend = self._getRange(start, end)
-            width = rend - rstart + 1
-            self._checkValue(value, width=width)
+            start, end = key.start, key.stop
+            self._check_range(start, end)
+            rstart, rend = self._get_range(start, end)
+            slice_width = rend - rstart + 1
+            self._check_value(value, width=slice_width)
             bitmask = self._bitmask(start, end)
-            shift = self._shift(self._lsbIndex(rstart, rend))
-            newvalue = (self._value & (self.maxval - bitmask)) | (value << shift)
-            # print("SET-SLICE: %d:%d,%d | %d:%d | B=0x%x (0x%x) | S=%d | "
-            #       "v=0x%x->0x%x" %
-            #       (start, end, value, rstart, rend, bitmask,
-            #        self.maxval - bitmask, shift, self._value, newvalue))
+            shift = self._shift(self._lsb_index(rstart, rend))
+            newvalue = (self._value & (self._maxval - bitmask)) | (value << shift)
         else:
             index = key
-            self._checkIndex(index)
-            self._checkValue(value, width=1)
+            self._check_index(index)
+            self._check_value(value, width=1)
             rindex = self._rindex(index)
             shift = self._shift(rindex)
-            bitmask = (1) << shift
+            bitmask = 1 << shift
             if value == 1:
-                newvalue = self._value | (value << shift)
+                newvalue = self._value | bitmask
             else:
-                newvalue = self._value & (self.maxval - (1 << shift))
-            # print("SET-INDEX: %d,%d | %d | B=%d | S=%d | v=0x%x->0x%x" %
-            #       (index, value, rindex, bitmask, shift, self._value,
-            #        newvalue))
+                newvalue = self._value & (self._maxval ^ bitmask)
         self._value = newvalue
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._width
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self._value
 
-    def __index__(self):
+    def __index__(self) -> int:
         return self._value
 
-    def __repr__(self):
-        return f"{{:{0}>{self._width}}}".format(bin(self._value)[2:])
+    def __repr__(self) -> str:
+        return f"{self._value:0{self._width}b}"
 
-    def set(self, index=None):
-        "Set the specified bit (or all bits if not specified) to 1."
-        if index:
-            self._checkIndex(index)
-            self.__setitem__(index, 1)
+    # -------------------------------------------------------------------------
+    # Bulk operations
+    # -------------------------------------------------------------------------
+
+    def set(self, index: int | None = None) -> None:
+        """Set all bits (or a specific bit) to 1."""
+        if index is not None:
+            self._check_index(index)
+            self[index] = 1
         else:
             self._value = self._maxval
 
-    def clear(self, index=None):
-        "Set the specified bit (or all bits if not specified) to 0."
-        if index:
-            self._checkIndex(index)
-            self.__setitem__(index, 0)
+    def clear(self, index: int | None = None) -> None:
+        """Clear all bits (or a specific bit) to 0."""
+        if index is not None:
+            self._check_index(index)
+            self[index] = 0
         else:
             self._value = 0
 
-    def isBit(self, index, value):
-        "Return True if the specified bit has the specified value."
-        self._checkIndex(index)
-        return self.__getitem__(index) == value
+    # -------------------------------------------------------------------------
+    # Predicate operations (snake_case + legacy)
+    # -------------------------------------------------------------------------
 
-    def isBitSet(self, index):
-        "Return True if the specified bit is 1."
-        return self.isBit(index, 1)
-
-    def isBitClr(self, index):
-        "Return True if the specified bit is 0."
-        return not self.isBitSet(index)
-
-    def isRange(self, start, end, value):
-        "Return True if the specified range of bits has the specified value."
-        self._checkRange(start, end)
+    def is_bit(self, index: int, value: int) -> bool:
+        self._check_index(index)
         if value not in (0, 1):
-            raise ValueError("Bit-field Value must be 0 or 1!")
-        subfield = self.__getitem__(slice(start, end))
+            raise ValueError("Bit value must be 0 or 1.")
+        return self[index] == value
+
+    def isBit(self, index, value):  # noqa: N802
+        return self.is_bit(index, value)
+
+    def is_bit_set(self, index: int) -> bool:
+        return self.is_bit(index, 1)
+
+    def isBitSet(self, index):  # noqa: N802
+        return self.is_bit_set(index)
+
+    def is_bit_clr(self, index: int) -> bool:
+        return not self.is_bit_set(index)
+
+    def isBitClr(self, index):  # noqa: N802
+        return self.is_bit_clr(index)
+
+    def is_range(self, start: int, end: int, value: int) -> bool:
+        self._check_range(start, end)
+        if value not in (0, 1):
+            raise ValueError("Bit-field value must be 0 or 1!")
+        subfield = self[slice(start, end)]
         bitmask = self._bitmask(start, end)
         if value == 0:
-            return True if subfield == 0 else False
-        else:
-            setval = int(bitmask)
-            return True if subfield == setval else False
+            return subfield == 0
+        return subfield == bitmask
 
-    def isRangeSet(self, start, end):
-        "Return True if the specified range of bits are all 1."
-        return self.isRange(start, end, 1)
+    def isRange(self, start, end, value):  # noqa: N802
+        return self.is_range(start, end, value)
 
-    def isRangeClr(self, start, end):
-        "Return True if the specified range of bits are all 0."
-        return not self.isRangeSet(start, end)
+    def is_range_set(self, start: int, end: int) -> bool:
+        return self.is_range(start, end, 1)
+
+    def isRangeSet(self, start, end):  # noqa: N802
+        return self.is_range_set(start, end)
+
+    def is_range_clr(self, start: int, end: int) -> bool:
+        return not self.is_range_set(start, end)
+
+    def isRangeClr(self, start, end):  # noqa: N802
+        return self.is_range_clr(start, end)

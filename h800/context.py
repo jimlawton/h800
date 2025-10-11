@@ -16,15 +16,27 @@
 # along with this software; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#from memory import MemoryMap, MemoryType
-#from opcode import OpcodeType
-#from opcodes import OPCODES
-#from symbol_table import SymbolTable
-#from record_type import RecordType
+
+try:
+    from h800.memory import MemoryMap, MemoryType
+except ImportError:
+    MemoryMap = MemoryType = None
+
+try:
+    from h800.opcodes import OPCODES
+except ImportError:
+    OPCODES = {}
+
+try:
+    from h800.record_type import RecordType
+except ImportError:
+    RecordType = None
+
+from h800.symbol_table import SymbolTable
 
 
 class Context:
-    def __init__(self, listfile, binfile, options, logLevel=0, logfile=None):
+    def __init__(self, listfile, binfile, options, log_level=0, logfile=None):
         self.options = options
         self.verbose = options.verbose
         self.debug = options.debug
@@ -33,8 +45,9 @@ class Context:
         self.listfile = listfile
         self.binfile = binfile
         self.srcfile = None
-        # self.opcodes = OPCODES[self.arch]
-        self.symtab = SymbolTable(self)
+        # self.opcodes = OPCODES.get(getattr(self, 'arch', None), {})  # Legacy placeholder
+        self.symtab = SymbolTable() if SymbolTable else {}
+        self.coloc = 0
         self.linenum = 0
         self.global_linenum = 0
         self.code = []
@@ -57,12 +70,12 @@ class Context:
         #  6 - Symbol information, address conversion.
         #  7 - Parser operation.
         #  8 - Symbol resolution.
-        self.logLevel = logLevel
+        self.log_level = log_level
 
-        self.loc = 0        # Assembler PC..
-        self.bank = 0       # Current bank.
+        self.loc = 0  # Assembler PC..
+        self.bank = 0  # Current bank.
 
-        self.bankloc = {}   # Saved current location for each bank.
+        self.bankloc = {}  # Saved current location for each bank.
 
         # for bank in range(len(self.memmap.banks[MemoryType.ERASABLE])):
         #     self.ebankloc[bank] = 0
@@ -71,31 +84,41 @@ class Context:
         self.warnings = 0
 
     def __str__(self):
-        text = ""
-        text += "options: %s\n" % self.options
-        text += "logfile: %s" % self.logfile
-        # text += "arch=%d\n" % self.arch
-        text += "listfile: %s\n" % self.listfile
-        text += "binfile: %s\n" % self.binfile
-        text += "srcfile: %s\n" % self.srcfile
-        text += "linenum=%d\n" % self.linenum
-        text += "global_linenum=%d\n" % self.global_linenum
-        text += "code: %s\n" % self.code
-        text += "srcline: %s\n" % self.srcline
-        text += "currentRecord: %s\n" % self.currentRecord
-        text += "currentRecord.type:  %s (%d)\n" % (RecordType.toString(self.currentRecord.type), self.currentRecord.type)
-        text += "previousRecord: %s\n" % self.previousRecord
-        text += "previousRecord.type: %s (%d)\n" % (RecordType.toString(self.previousRecord.type), self.previousRecord.type)
-        text += "addSymbol=%s\n" % self.addSymbol
-        text += "reparse=%s\n" % self.reparse
-        text += "passnum=%d\n" % self.passnum
-        text += "logLevel=%d\n" % self.logLevel
-        text += "loc=%06o\n" % self.loc
-        text += "bank=%02o\n" % self.bank
-        text += "bankloc: %s\n" % self.bankloc
-        text += "errors=%d\n" % self.errors
-        text += "warnings=%d\n" % self.warnings
-        return text
+        parts = [
+            f"options: {self.options}",
+            f"logfile: {self.logfile}",
+            f"listfile: {self.listfile}",
+            f"binfile: {self.binfile}",
+            f"srcfile: {self.srcfile}",
+            f"linenum={self.linenum}",
+            f"global_linenum={self.global_linenum}",
+            f"code: {self.code}",
+            f"srcline: {self.srcline}",
+            f"currentRecord: {self.currentRecord}",
+        ]
+        if RecordType and self.currentRecord and hasattr(self.currentRecord, "type"):
+            parts.append(
+                f"currentRecord.type: {RecordType.toString(self.currentRecord.type)} ({self.currentRecord.type})"
+            )
+        parts.append(f"previousRecord: {self.previousRecord}")
+        if RecordType and self.previousRecord and hasattr(self.previousRecord, "type"):
+            parts.append(
+                f"previousRecord.type: {RecordType.toString(self.previousRecord.type)} ({self.previousRecord.type})"
+            )
+        parts.extend(
+            [
+                f"addSymbol={self.addSymbol}",
+                f"reparse={self.reparse}",
+                f"passnum={self.passnum}",
+                f"log_level={self.log_level}",
+                f"loc={self.loc:06o}",
+                f"bank={self.bank:02o}",
+                f"bankloc: {self.bankloc}",
+                f"errors={self.errors}",
+                f"warnings={self.warnings}",
+            ]
+        )
+        return "\n".join(parts)
 
     def reset(self):
         self.linenum = 0
@@ -131,16 +154,27 @@ class Context:
         record.errorMsg = self.errorMsg
         record.warningMsg = self.warningMsg
 
-    def setLoc(self, address):
-        if not self.memmap.isValid(address):
-            self.error("trying to set loc to an invalid address (%06o)" % address)
+    def set_loc(self, address):
+        """Set the primary location (program counter). Legacy wrapper: setLoc()."""
+        if hasattr(self, "memmap") and self.memmap and not self.memmap.isValid(address):
+            self.error(f"trying to set loc to an invalid address ({address:06o})")
+            return
         if not self.reparse:
-            self.log(5, "changing loc from %06o to %06o" % (self.loc, address))
+            self.log(5, f"changing loc from {self.loc:06o} to {address:06o}")
             self.loc = address
 
-    def setCoLoc(self, address):
-        if not self.memmap.isValid(address):
-            self.error("trying to set loc to an invalid address (%06o)" % address)
+    def set_coloc(self, address):
+        """Set the co-location (secondary program counter). Legacy wrapper: setCoLoc()."""
+        if hasattr(self, "memmap") and self.memmap and not self.memmap.isValid(address):
+            self.error(f"trying to set coloc to an invalid address ({address:06o})")
+            return
         if not self.reparse:
-            self.log(5, "changing loc from %06o to %06o" % (self.coloc, address))
+            self.log(5, f"changing coloc from {self.coloc:06o} to {address:06o}")
             self.coloc = address
+
+    # Legacy camelCase wrappers (deprecated)
+    def setLoc(self, address):  # noqa: N802
+        self.set_loc(address)
+
+    def setCoLoc(self, address):  # noqa: N802
+        self.set_coloc(address)

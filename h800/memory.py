@@ -7,7 +7,7 @@ from h800.word import Word
 class MemoryBank:
     """H-x800 memory bank class."""
 
-    MEMORY_WIDTH = 48       # 48 data, 6 parity.
+    MEMORY_WIDTH = 48  # 48 data, 6 parity.
     BANK_SIZE = 2048
 
     def __init__(self):
@@ -17,41 +17,33 @@ class MemoryBank:
         self._width = self.MEMORY_WIDTH
         self._current = 0
 
-    def _checkValue(self, value):
-        if value < 0 or value > (2 ** self._width - 1):
-            raise ValueError("Invalid value for %d-bit word!" % self._width)
+    def _check_value(self, value: int) -> None:
+        if value < 0 or value > (1 << self._width) - 1:
+            raise ValueError(f"Invalid value for {self._width}-bit word!")
 
-    def _checkAddress(self, address):
-        if address < 0 or address > 2047:
+    def _check_address(self, address: int) -> None:
+        if address < 0 or address >= self.BANK_SIZE:
             raise ValueError("Invalid value for address!")
-
-    @property
-    def value(self, address, parity=False):
-        # TODO: support parity.
-        self._checkAddress(address)
-        return int(self._data[address])
-
-    @value.setter
-    def value(self, address, value, parity=False):
-        # TODO: support parity.
-        self._checkAddress(address)
-        self._checkValue(value)
-        if value < 0 or value > (2 ** self._width - 1):
-            raise ValueError("Invalid value for %d-bit word!" % self._width)
-        self._data[address][1:self._width] = value
-
-    @property
-    def width(self):
-        return int(self._width)
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            values = []
-            for i in range(key.start, key.stop):
-                values.append(self._data[i].value)
-            return values
-        else:
-            return self._data[key].value
+            return [self._data[i].value for i in range(key.start, key.stop)]
+        return self._data[key].value
+
+    @property
+    def width(self) -> int:
+        return self._width
+
+    def read(self, address: int, parity: bool = False) -> int:
+        # TODO: add parity handling
+        self._check_address(address)
+        return int(self._data[address])
+
+    def write(self, address: int, value: int, parity: bool = False) -> None:
+        # TODO: add parity handling
+        self._check_address(address)
+        self._check_value(value)
+        self._data[address][1 : self._width] = value
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
@@ -76,7 +68,7 @@ class MemoryBank:
     def __repr__(self):
         text = ""
         for addr in self._data:
-            text += "0o%016o " % self._data[addr].value
+            text += f"0o{self._data[addr].value:016o} "
         return text
 
     def clear(self):
@@ -136,4 +128,3 @@ class ExpansionMemoryModule:
 
     def size(self):
         return self.NUM_BANKS * len(self._data[0])
-
