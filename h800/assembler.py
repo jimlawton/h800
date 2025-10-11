@@ -1,94 +1,183 @@
-import time
+"""
+Assembler module for the h800 project.
 
-from pylog import info, debug, critical
-from parser_record import ParserRecord
+Provides the Assembler class responsible for building a symbol table,
+orchestrating basic multi-pass resolution of parser records, and offering
+extension points for future code generation.
+
+The original version of this file contained placeholder methods referencing
+an external context object that was not implemented. This refactored version
+introduces a minimal internal ParserRecord dataclass so that the resolve()
+workflow can execute without external dependencies.
+
+NOTE:
+- Real parsing / code generation logic has not yet been implemented.
+- The symbol table builder (buildSymbolTable) is reused.
+- Logging uses pylog's info / debug / critical functions.
+- All naming follows Python / ruff conventions (snake_case).
+"""
+
+from __future__ import annotations
+
+import time
+from dataclasses import dataclass, field
+
+from pylog import critical, debug, info
 
 from h800.symbol_table import buildSymbolTable
 
 
-class Assembler:
-    """H-x800 Assembler class."""
+@dataclass
+class ParserRecord:
+    """Represents a single parsed source line (ARGUS card)."""
 
-    def __init__(self, verbose=False):
+    srcline: str
+    label: str | None = None
+    opcode: str | None = None
+    operands: list[str] = field(default_factory=list)
+    complete: bool = False
+    errors: list[str] = field(default_factory=list)
+
+    def is_parseable(self) -> bool:
+        return self.opcode is not None
+
+    def is_complete(self) -> bool:
+        return self.complete
+
+    def mark_complete(self) -> None:
+        self.complete = True
+
+    def error(self, message: str) -> None:
+        self.errors.append(message)
+        self.complete = False
+
+    def __repr__(self) -> str:  # pragma: no cover - debug helper
+        return (
+            f"ParserRecord(label={self.label!r}, opcode={self.opcode!r}, "
+            f"operands={self.operands!r}, complete={self.complete}, "
+            f"errors={self.errors})"
+        )
+
+
+class Assembler:
+    """H-x800 Assembler class (refactored).
+
+    High-level workflow:
+        1. build symbol table via create_symbol_table()
+        2. read source in assemble() -> populate self._records
+        3. multi-pass resolution via resolve()
+
+    Methods parse() and parse_record() are placeholders for future
+    semantic parsing and code word emission.
+    """
+
+    def __init__(self, verbose: bool = False) -> None:
         self._verbose = verbose
         self._symtab = {}
+        self._records: list[ParserRecord] = []
+        self._errors = 0
+        self._passnum = 0
 
-    def createSymbolTable(self, srcfile):
-        info("Processing %s" % srcfile)
-        self._symtab, errcount = buildSymbolTable(srcfile, self._symtab,
-                                                  verbose=self._verbose)
+    @property
+    def symbol_table(self):
+        return self._symtab
 
-    def assemble(self, srcfile):
-        info("Assembling %s" % srcfile)
-        self._srcfile = srcfile
-        self._linenum = 0
-        with open(srcfile, 'r') as f:
-            lines = f.readlines()
-        debug("assemble: file %s, lines %d" % (srcfile, len(lines)))
+    @property
+    def records(self) -> list[ParserRecord]:
+        return self._records
 
-        for line in lines:
-            # Parse lines.
-            pass
+    def create_symbol_table(self, src_file: str) -> None:
+        """Populate (or extend) the internal symbol table from src_file."""
+        info(f"Processing {src_file}")
+        self._symtab, _errcount = buildSymbolTable(src_file, self._symtab, verbose=self._verbose)
 
-    def parse(self, label, opcode, operands):
+    def assemble(self, src_file: str) -> None:
+        """Load source lines and create ParserRecord placeholders."""
+        info(f"Assembling {src_file}")
+        self._records.clear()
         try:
-            info(7, "parse: label='%s' opcode='%s' operands=%s" %
-                 (label, opcode, operands))
-            # TODO: parse operation here.
+            with open(src_file) as f:
+                lines = f.readlines()
+        except OSError as exc:
+            critical(f"Failed to read {src_file}: {exc}")
+            raise
+        debug(f"assemble: file {src_file}, lines {len(lines)}")
+        for line in lines:
+            stripped = line.rstrip("\n")
+            # Extremely naive tokenization; real grammar TBD.
+            # Format assumption: LABEL: OPCODE OPERAND...
+            parts = stripped.split()
+            label = None
+            opcode = None
+            operands: list[str] = []
+            if parts:
+                if parts[0].endswith(":"):
+                    label = parts[0][:-1]
+                    if len(parts) > 1:
+                        opcode = parts[1]
+                        operands = parts[2:]
+                else:
+                    opcode = parts[0]
+                    operands = parts[1:]
+            record = ParserRecord(
+                srcline=stripped,
+                label=label,
+                opcode=opcode,
+                operands=operands,
+            )
+            self._records.append(record)
+
+    def parse(self, label: str | None, opcode: str | None, operands: list[str]) -> None:
+        """Parse a single line's components (placeholder)."""
+        try:
+            info(f"parse: label={label!r} opcode={opcode!r} operands={operands!r}")
+            # TODO: implement actual parsing and mark completion conditions.
         except Exception:
-            critical("Exception processing line:")
+            critical("Exception during parse")
             raise
 
-    def parseRecord(self, recordIndex):
-        """
-        Parse a ParserRecord, without affecting assembler state.
-        Return the generated code words, if any.
-        """
-        pass
+    def parse_record(self, record: ParserRecord) -> None:
+        """Parse a ParserRecord without affecting assembler global state."""
+        if record.opcode:
+            self.parse(record.label, record.opcode, record.operands)
+            # Mark complete immediately for now.
+            record.mark_complete()
 
-    def resolve(self, maxPasses=10):
-        "Resolve a symbol."
-        startTime = time.time()
-        # self.context.symtab.resolve(maxPasses)
-        endTime = time.time()
-        delta = endTime - startTime
-        debug("Symbol resolution: %3.2f seconds" % delta)
-
-        startTime = time.time()
-        numRecords = len(self.context.records)
-        debug("Updating %d parser records..." % (numRecords))
-        nUndefs = nPrevUndefs = 0
-        for i in range(maxPasses):
+    def resolve(self, max_passes: int = 10) -> None:
+        """Multi-pass resolution loop to finalize records."""
+        start_time = time.time()
+        num_records = len(self._records)
+        debug(f"Starting resolution: {num_records} parser records")
+        n_undefs = n_prev_undefs = 0
+        for i in range(max_passes):
             self._passnum = i + 1
-            # self.reset()
-            nPrevUndefs = nUndefs
-            nUndefs = 0
-            undefRecords = []
-            for j in range(numRecords):
-                record = self._records[j]
-                if record.isParseable():
-                    self._currentRecord = record
-                    self._previousRecord = self.context.records[j-1]
-                    # self.load(record)
-                    debug("resolve: %s" % (record.srcline))
-                    # self.parse(record.label, record.opcode, record.operands)
-                    self._records[j] = self.context.currentRecord
-                    if not record.isComplete():
-                        nUndefs += 1
-                        undefRecords.append(record)
-            info("%d incomplete parser records" % (nUndefs))
-            if nUndefs == 0:
+            n_prev_undefs = n_undefs
+            n_undefs = 0
+            undef_records: list[ParserRecord] = []
+            for record in self._records:
+                if record.is_parseable():
+                    debug(f"resolve pass {self._passnum}: {record.srcline}")
+                    self.parse_record(record)
+                    if not record.is_complete():
+                        n_undefs += 1
+                        undef_records.append(record)
+            info(f"{n_undefs} incomplete parser records")
+            if n_undefs == 0:
                 info("All parser records complete")
                 break
-            if nUndefs == nPrevUndefs:
-                for urec in undefRecords:
+            if n_undefs == n_prev_undefs:
+                for urec in undef_records:
                     urec.error("undefined symbol")
                     self._errors += 1
-                self.context.error("no progress resolving parser records, "
-                                   "%d undefined records" % nUndefs,
-                                   source=False, count=False)
+                info(f"No progress resolving parser records, {n_undefs} undefined records")
                 break
         if self._verbose:
-            endTime = time.time()
-            delta = endTime - startTime
-            print("Pass 2: %3.2f seconds" % delta)
+            delta = time.time() - start_time
+            info(f"Resolution elapsed: {delta:0.2f}s")
+
+    @property
+    def errors(self) -> int:
+        return self._errors
+
+
+__all__ = ["Assembler", "ParserRecord"]

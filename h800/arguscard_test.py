@@ -6,7 +6,7 @@
 # ARGUS-format punch-card support for the H800.
 
 
-
+import pprint
 
 from h800.arguscard import Deck
 
@@ -108,7 +108,8 @@ R0979   TO EACH.  WHEN THE LISTING IS FINISHED, GROUP B HOISTS A FLAG AND EXPIRE
 """.splitlines()
 
     d = Deck(lines)
-    import pprint
     pprint.pprint(d.records)
-    assert d.log_section == "XYZ TESTING 123"
-    assert d.log_section_col8 == "@"
+    if d.log_section != "XYZ TESTING 123":
+        raise AssertionError(f"Unexpected log_section: {d.log_section!r}")
+    if d.log_section_col8 != "@":
+        raise AssertionError(f"Unexpected log_section_col8: {d.log_section_col8!r}")

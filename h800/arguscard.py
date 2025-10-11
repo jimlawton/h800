@@ -9,7 +9,6 @@
 
 from h800 import punchcard
 
-
 _WIDTH = 120
 _FIELDS = [1, 2, 8, 9, 20, 33, 47, 61, 76, 81]
 _FIELDNAMES = [
@@ -22,19 +21,33 @@ _FIELDNAMES = [
     "operand2",
     "operand3",
     "misc",
-    "remarks"
+    "remarks",
 ]
 
 
 class Card(punchcard.PunchCard):
     """A simple class to represent an ARGUS punch card."""
-    def __init__(self, line, width=_WIDTH, fields=_FIELDS,
-                 fieldnames=_FIELDNAMES, filename=None, linenum=0,
-                 verbose=False):
-        super().__init__(line, width=width, fields=fields,
-                         fieldnames=fieldnames, filename=filename,
-                         linenum=linenum, verbose=verbose)
-        if self.column1 == 'P' or self.column1 == 'R' or self.column1 == 'L':
+
+    def __init__(
+        self,
+        line,
+        width=_WIDTH,
+        fields=_FIELDS,
+        fieldnames=_FIELDNAMES,
+        filename=None,
+        linenum=0,
+        verbose=False,
+    ):
+        super().__init__(
+            line,
+            width=width,
+            fields=fields,
+            fieldnames=fieldnames,
+            filename=filename,
+            linenum=linenum,
+            verbose=verbose,
+        )
+        if self.column1 in {"P", "R", "L"}:
             self._record["label"] = None
             self._record["operation"] = None
             self._record["operand1"] = None
@@ -42,12 +55,11 @@ class Card(punchcard.PunchCard):
             self._record["operand3"] = None
             self._record["misc"] = None
             self._record["remarks"] = self._line[9:].strip()
-        if self.column1 == 'L':
+        if self.column1 == "L":
             self._record["remarks"] = self._line[9:].strip()
         self._record["instruction"] = self._record["operation"]
-        if self._record["operation"] and ',' in self._record["operation"]:
-            self._record["instruction"] = \
-                self._record["operation"].split(',')[0].strip()
+        if self._record["operation"] and "," in self._record["operation"]:
+            self._record["instruction"] = self._record["operation"].split(",")[0].strip()
 
     @property
     def column1(self):
@@ -118,23 +130,26 @@ class Card(punchcard.PunchCard):
 
 class Deck(punchcard.Deck):
     """A simple class to represent a deck of ARGUS punch-cards."""
-    def __init__(self, lines=None, file=None, width=_WIDTH, fields=_FIELDS,
-                 cardclass=Card, verbose=False):
-        super().__init__(lines=lines, file=file, width=width, fields=fields,
-                         cardclass=cardclass, verbose=verbose)
-        self._logSection = None
-        self._logSectionCol8 = None
+
+    def __init__(
+        self, lines=None, file=None, width=_WIDTH, fields=_FIELDS, cardclass=Card, verbose=False
+    ):
+        super().__init__(
+            lines=lines, file=file, width=width, fields=fields, cardclass=cardclass, verbose=verbose
+        )
+        self._log_section = None
+        self._log_section_col8 = None
         for card in self._cards:
-            if card.record["column1"] == 'L':
+            if card.record["column1"] == "L":
                 # This will only recognise the first log section in a deck.
-                self._logSection = card.line[8:81].strip()
-                self._logSectionCol8 = card.record["column8"]
+                self._log_section = card.line[8:81].strip()
+                self._log_section_col8 = card.record["column8"]
                 break
 
     @property
     def log_section(self):
-        return self._logSection
+        return self._log_section
 
     @property
     def log_section_col8(self):
-        return self._logSectionCol8
+        return self._log_section_col8

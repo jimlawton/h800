@@ -71,14 +71,26 @@ include = ["h800*"]
 target-version = "py313"
 line-length = 100
 indent-width = 4
-select = ["E", "F", "W", "I", "B", "UP", "N", "S", "C4", "ERA", "PL", "RUF"]
-ignore = [
-  "E501",  # Allow long lines in legacy code / docs
-]
 exclude = [
   "h800.egg-info",
   ".venv",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "S", "C4", "ERA", "PL", "RUF"]
+ignore = [
+  "E501",  # Allow long lines in legacy code / docs
+]
+
+# Per-file rule suppressions for legacy/testing patterns.
+# S101: allow assert statements in tests (pytest idiom)
+# PLR0913 / PLR0911 / PLR1714: allow current argument/count complexity in legacy modules
+# ERA001: temporarily allow commented-out code fragments in legacy modules (will be cleaned later)
+[tool.ruff.lint.per-file-ignores]
+"h800/h800/*_test.py" = ["S101"]
+"h800/h800/bitfield.py" = ["PLR0911"]
+"h800/h800/arguscard.py" = ["PLR0913", "PLR1714"]
+"h800/h800/assembler.py" = ["ERA001"]
 
 [tool.ruff.format]
 quote-style = "double"
