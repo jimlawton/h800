@@ -39,6 +39,7 @@ from collections import OrderedDict
 from collections.abc import Iterable
 
 import h800.arguscard
+from h800.opcodes import INSTRUCTIONS
 
 
 def parse_args(argv: Iterable[str]) -> argparse.Namespace:
@@ -86,7 +87,7 @@ def parse_args(argv: Iterable[str]) -> argparse.Namespace:
 
 
 def initialize_frequency_table() -> dict[str, int]:
-    return dict.fromkeys(h800.instructions.INSTRUCTIONS, 0)
+    return dict.fromkeys(INSTRUCTIONS, 0)
 
 
 def process_files(
