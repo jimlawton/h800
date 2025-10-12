@@ -1,6 +1,6 @@
 from random import randrange
 
-from .registers import REGISTERS, Register, RegisterGroup, Registers
+from h800.registers import REGISTERS, Register, RegisterGroup, Registers
 
 
 def my_assert(value, good):

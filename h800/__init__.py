@@ -50,6 +50,12 @@ from .instruction import (
 
 # Opcode metadata & numeric helpers
 from .instructions import (
+    build_constant,
+    print_instructions,
+)
+
+# Opcode metadata & numeric helpers
+from .opcodes import (
     ARGUS_INSTRUCTIONS,
     CONTROL_CONSTANTS,
     CONTROL_INSTRUCTIONS,
@@ -58,12 +64,10 @@ from .instructions import (
     INSTRUCTIONS,
     MISC_INSTRUCTIONS,
     OPCODES,
-    build_constant,
     make_masked_opcode,
     make_peripheral_opcode,
     make_print_opcode,
     make_unmasked_opcode,
-    print_instructions,
 )
 
 __version__ = "0.10"

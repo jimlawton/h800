@@ -23,7 +23,7 @@ from h800.instruction import (
     build_simulator,
     build_unmasked,
 )
-from h800.instructions import (
+from h800.opcodes import (
     OPCODES,
     make_masked_opcode,
     make_peripheral_opcode,

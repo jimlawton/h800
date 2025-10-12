@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from typing import Protocol, TypedDict
 
 from .bitfield import BitField
-from .instructions import OPCODES
+from .opcodes import OPCODES
 
 # ---------------------------------------------------------------------------
 # Validation constants
@@ -279,55 +279,6 @@ class Constant:
 #         super().__init__(data=data)
 
 
-class GeneralMasked(Instruction):
-    """General masked instruction class."""
-
-    def __init__(self, opcode, sequence, mask):
-        super().__init__(opcode=opcode, sequence=sequence, mask=mask)
-
-
-class GeneralUnmasked(Instruction):
-    """General unmasked instruction class."""
-
-    def __init__(self, opcode, sequence, a, b, c):
-        super().__init__(opcode=opcode, sequence=sequence, a=a, b=b, c=c)
-
-
-class Peripheral(Instruction):
-    """Peripheral instruction class."""
-
-    def __init__(self, opcode, paddr):
-        super().__init__(opcode=opcode, paddr=paddr)
-
-
-class Simulator(Instruction):
-    """Simulator instruction class."""
-
-    def __init__(self, opcode, sequence):
-        super().__init__(opcode=opcode, sequence=sequence)
-
-
-class Scientific(Instruction):
-    """Scientific instruction class."""
-
-    def __init__(self, opcode, sequence, a, b, c):
-        super().__init__(opcode=opcode, sequence=sequence, a=a, b=b, c=c)
-
-
-class PseudoInstruction(Instruction):
-    """Pseudo-instruction class. No code is generated."""
-
-    def __init__(self, mnemonic, a, b, c):
-        super().__init__(mnemonic=mnemonic, a=a, b=b, c=c, pseudo=True)
-
-
-class AssemblyControl(PseudoInstruction):
-    """Assembly control instruction class."""
-
-    def __init__(self, mnemonic, a, b, c):
-        super().__init__(mnemonic=mnemonic, a=a, b=b, c=c)
-
-
 # ---------------------------------------------------------------------------
 # Factory helpers
 # ---------------------------------------------------------------------------
@@ -507,17 +458,10 @@ def decode_instruction(word: int, opcodes: Mapping[str, OpcodeMeta]) -> dict[str
 
 
 __all__ = [
-    "AssemblyControl",
     "Constant",
-    "GeneralMasked",
-    "GeneralUnmasked",
     "Instruction",
     "OpcodeDict",
     "OpcodeMeta",
-    "Peripheral",
-    "PseudoInstruction",
-    "Scientific",
-    "Simulator",
     "build_masked",
     "build_peripheral",
     "build_print",

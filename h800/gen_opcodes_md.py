@@ -44,7 +44,7 @@ from pathlib import Path
 
 from .cli import EncodedVariant, enumerate_encodings, fmt_binary, fmt_octal
 from .instruction import decode_instruction
-from .instructions import OPCODES
+from .opcodes import OPCODES
 
 # ---------------------------------------------------------------------------
 # Data extraction helpers

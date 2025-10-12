@@ -10,9 +10,9 @@ from h800.instruction import (
     decode_instruction,
     get_instruction,
 )
-from h800.instructions import (
+from h800.instructions import build_constant
+from h800.opcodes import (
     OPCODES,
-    build_constant,
     make_masked_opcode,
     make_peripheral_opcode,
     make_print_opcode,

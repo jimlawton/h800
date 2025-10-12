@@ -37,7 +37,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .instruction import decode_instruction
-from .instructions import OPCODES
+from .opcodes import OPCODES
 
 RAW_OCTAL_MAX_LEN = 4  # Extracted constant (was magic value 4)
 
