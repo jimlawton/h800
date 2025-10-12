@@ -19,9 +19,7 @@ from h800.opcodes import (
     make_unmasked_opcode,
 )
 
-# -----------------------------------------------------------------------------
 # Positive encoding tests using unified get_instruction factory + OPCODES metadata
-# -----------------------------------------------------------------------------
 
 MASKABLE_MNEMONICS = [
     "BA",
@@ -100,9 +98,8 @@ SIMULATOR_PARAMS = [
 CONSTANT_VALUES = (0, 1, 4095, 4096, 2**48 - 1)
 CONSTANT_PARAMS = [(m, v) for m in CONSTANT_MNEMONICS for v in CONSTANT_VALUES]
 
-# -----------------------------------------------------------------------------
+
 # Tests
-# -----------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize("mnemonic,kwargs,expected", MASKED_PARAMS)
@@ -141,9 +138,7 @@ def test_constants(mnemonic, value):
     assert const.value == value
 
 
-# -----------------------------------------------------------------------------
 # Negative / invalid argument tests (get_instruction-driven)
-# -----------------------------------------------------------------------------
 
 INVALID_MASKED = [
     ("BA", {"sequence": 0, "mask": 32}),
@@ -219,9 +214,7 @@ def test_proceed_opcode():
     assert inst.value == 0
 
 
-# -----------------------------------------------------------------------------
 # Uniqueness test
-# -----------------------------------------------------------------------------
 
 
 def test_opcode_uniqueness():
@@ -259,9 +252,7 @@ def test_opcode_uniqueness():
     assert seen, "No opcodes generated"
 
 
-# -----------------------------------------------------------------------------
 # Reverse decode (disassembly) tests
-# -----------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -307,6 +298,3 @@ def test_decode_print_collision():
 def test_decode_invalid_word():
     with pytest.raises(ValueError):
         decode_instruction(0o10000, OPCODES)  # Outside 12-bit range
-
-
-# End

@@ -52,9 +52,6 @@ def temp_argus_file(tmp_path):
     return f
 
 
-# -------------------------
-# check-instructions.py
-# -------------------------
 def test_check_instructions_basic(temp_argus_file):
     code, out, err = run_tool("check-instructions.py", temp_argus_file)
     assert code == 0, f"Unexpected non-zero exit: {code}, stderr={err}"
@@ -68,12 +65,10 @@ def test_check_instructions_count_and_sort(temp_argus_file):
     assert "BA" in out or "BS" in out or "BT" in out
 
 
-# -------------------------
-# list-instructions.py
-# -------------------------
 def test_list_instructions_valid_opcode(temp_argus_file):
     # Use opcode BA which appears twice.
     code, out, err = run_tool("list-instructions.py", "BA", temp_argus_file, "--details")
+    print(f"STDOUT:\n{out}\nSTDERR:\n{err}")
     assert code in (0, 1)
     if code == 0:
         assert "BA" in out
@@ -88,9 +83,6 @@ def test_list_instructions_invalid_opcode(temp_argus_file):
     assert "invalid opcode" in err.lower()
 
 
-# -------------------------
-# find-symbols.py
-# -------------------------
 def test_find_symbols_no_symbol_error(temp_argus_file):
     # Provide a symbol that likely does not exist; should still exit 0 or 2 depending on implementation.
     code, out, err = run_tool("find-symbols.py", "NONEXISTENT", temp_argus_file)
@@ -99,9 +91,6 @@ def test_find_symbols_no_symbol_error(temp_argus_file):
         assert "No matches" in err or "Symbol" in err
 
 
-# -------------------------
-# list-symbols.py
-# -------------------------
 def test_list_symbols_basic(temp_argus_file):
     code, out, err = run_tool("list-symbols.py", temp_argus_file)
     # Exit 3 is allowed if symbol table reports build errors; 0 otherwise.
@@ -111,9 +100,6 @@ def test_list_symbols_basic(temp_argus_file):
         assert out.strip() != ""
 
 
-# -------------------------
-# parse.py
-# -------------------------
 def test_parse_basic(temp_argus_file):
     code, out, err = run_tool("parse.py", temp_argus_file)
     assert code in (0, 1)
@@ -128,9 +114,6 @@ def test_parse_strict(temp_argus_file):
         assert "invalid" in err.lower() or "symbol table" in out.lower()
 
 
-# -------------------------
-# genlines.py
-# -------------------------
 def test_genlines_basic():
     code, out, err = run_tool("genlines.py", "1", "3")
     assert code == 0
@@ -149,9 +132,6 @@ def test_genlines_step_and_columns():
     assert "20" in out
 
 
-# -------------------------
-# genpages.py
-# -------------------------
 def test_genpages_missing_file():
     code, out, err = run_tool("genpages.py", "nonexistent_file.argus")
     # Should error due to missing file.
@@ -159,9 +139,6 @@ def test_genpages_missing_file():
     assert "does not exist" in err.lower()
 
 
-# -------------------------
-# listing.py
-# -------------------------
 def test_listing_stdout(temp_argus_file):
     code, out, err = run_tool("listing.py", "--stdout", temp_argus_file)
     assert code == 0
@@ -179,9 +156,6 @@ def test_listing_output_file(tmp_path, temp_argus_file):
     assert temp_argus_file.name in data
 
 
-# -------------------------
-# check-symbols.py
-# -------------------------
 def test_check_symbols_basic(temp_argus_file):
     code, out, err = run_tool("check-symbols.py", temp_argus_file)
     # Accept 0 (success) or a non-zero if symbol parsing flags inconsistencies.
@@ -190,9 +164,7 @@ def test_check_symbols_basic(temp_argus_file):
         assert "errors encountered building symbol table" in err.lower()
 
 
-# -------------------------
 # Negative / help tests
-# -------------------------
 @pytest.mark.parametrize(
     "script,flag",
     [
@@ -214,9 +186,7 @@ def test_help_messages(script, flag):
     assert "usage:" in out.lower()
 
 
-# -------------------------
 # Sanity: ensure tools directory presence
-# -------------------------
 def test_tools_directory_exists():
     assert TOOLS_DIR.exists(), f"Tools directory missing: {TOOLS_DIR}"
     scripts = list(TOOLS_DIR.glob("*.py"))

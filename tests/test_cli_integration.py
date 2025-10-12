@@ -25,9 +25,7 @@ def run_cli(args: list[str]) -> int:
     return cli_main(args)
 
 
-# -----------------------------------------------------------------------------
 # Decode command tests
-# -----------------------------------------------------------------------------
 
 
 def test_cli_decode_masked_ba(capsys):
@@ -94,9 +92,7 @@ def test_cli_decode_invalid_word(capsys):
     assert "ERROR" in err_out
 
 
-# -----------------------------------------------------------------------------
 # Enumerate command tests
-# -----------------------------------------------------------------------------
 
 
 def test_cli_enumerate_maskable_sample_limit(capsys):
@@ -133,9 +129,7 @@ def test_cli_enumerate_unknown(capsys):
     assert "Unknown mnemonic" in out
 
 
-# -----------------------------------------------------------------------------
 # List command tests
-# -----------------------------------------------------------------------------
 
 
 def test_cli_list_contains_known_mnemonics(capsys):
@@ -155,9 +149,7 @@ def test_cli_list_contains_known_mnemonics(capsys):
     assert "S" in out
 
 
-# -----------------------------------------------------------------------------
 # Collisions command tests
-# -----------------------------------------------------------------------------
 
 
 def test_cli_collisions_print_space(capsys):
@@ -177,9 +169,7 @@ def test_cli_collisions_no_collision(capsys):
     assert "No print collision" in out
 
 
-# -----------------------------------------------------------------------------
 # Opcode markdown generator tests
-# -----------------------------------------------------------------------------
 
 
 def test_gen_opcodes_md_default_output(tmp_path, capsys, monkeypatch):
@@ -231,8 +221,3 @@ def test_cli_disassemble_stream(monkeypatch, capsys):
     # Simulator
     assert "0o0007" in out or "0o7" in out
     assert "S" in out
-
-
-# -----------------------------------------------------------------------------
-# End
-# -----------------------------------------------------------------------------
