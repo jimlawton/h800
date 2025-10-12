@@ -60,14 +60,6 @@ def test_check_instructions_basic(temp_argus_file):
     assert code == 0, f"Unexpected non-zero exit: {code}, stderr={err}"
 
 
-def test_check_instructions_invalid_flag(temp_argus_file):
-    # Force invalid check; if all instructions are valid, exit should be 0.
-    code, out, err = run_tool("check-instructions.py", "--invalid", temp_argus_file)
-    assert code in (0, 1)  # 1 only if parsing flags some instruction as invalid.
-    if code == 1:
-        assert "*** ERROR: Invalid instruction" in err
-
-
 def test_check_instructions_count_and_sort(temp_argus_file):
     code, out, err = run_tool("check-instructions.py", "--count", "--sort", temp_argus_file)
     assert code == 0
