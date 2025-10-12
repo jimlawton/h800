@@ -68,7 +68,6 @@ def test_check_instructions_count_and_sort(temp_argus_file):
 def test_list_instructions_valid_opcode(temp_argus_file):
     # Use opcode BA which appears twice.
     code, out, err = run_tool("list-instructions.py", "BA", temp_argus_file, "--details")
-    print(f"STDOUT:\n{out}\nSTDERR:\n{err}")
     assert code in (0, 1)
     if code == 0:
         assert "BA" in out
