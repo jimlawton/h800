@@ -84,12 +84,10 @@ help:
 	@echo "  lock             - Resolve & update uv.lock (upgrade)"
 	@echo "  run-tool         - Run a tool script (TOOL=<script> ARGS=\"...\")"
 	@echo "  sync             - Install dependencies from uv.lock"
-	@echo "  test             - Run all tests (unit + tool CLI)"
-	@echo "  tool-tests       - Run tool CLI integration tests"
 	@echo "  tools-list       - List available tool scripts"
 	@echo "  tools-validate   - Basic help invocation for all tools"
 	@echo "  typecheck        - Mypy static type checks"
-	@echo "  unit             - Run core unit tests only (h800/h800/*_test.py)"
+	@echo "  test             - Run all tests (unit + tool CLI)"
 	@echo "  upgrade          - lock + sync (full dependency update)"
 
 # --------------------------------------------------------------------
@@ -124,13 +122,8 @@ typecheck:
 # --------------------------------------------------------------------
 # Testing
 # --------------------------------------------------------------------
-test: unit tool-tests
-
-unit:
-	$(UV) run pytest $(PYTEST_ARGS) h800/h800
-
-tool-tests:
-	$(UV) run pytest $(PYTEST_ARGS) $(TOOL_TEST_FILE)
+test:
+	$(UV) run pytest $(PYTEST_ARGS)
 
 coverage:
 	$(UV) run pytest --cov=$(COVERAGE_PACKAGE) --cov-report=term-missing $(PYTEST_ARGS)
