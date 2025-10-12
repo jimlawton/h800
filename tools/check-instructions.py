@@ -39,7 +39,6 @@ from collections import OrderedDict
 from collections.abc import Iterable
 
 import h800.arguscard
-from h800.opcodes import INSTRUCTIONS
 
 
 def parse_args(argv: Iterable[str]) -> argparse.Namespace:
