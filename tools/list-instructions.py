@@ -42,7 +42,7 @@ import sys
 from collections.abc import Iterable
 
 import h800.arguscard
-import h800.instructions
+from h800.opcodes import INSTRUCTIONS
 
 
 def parse_args(argv: Iterable[str]) -> argparse.Namespace:
@@ -90,7 +90,7 @@ def is_valid_base_opcode(opcode: str) -> bool:
     """
     base = opcode[:-1] if opcode.endswith(",") else opcode
     base = normalize_opcode(base)
-    return base in h800.instructions.INSTRUCTIONS
+    return base in INSTRUCTIONS
 
 
 def card_operation_for_matching(raw: str, user_has_comma: bool) -> str:

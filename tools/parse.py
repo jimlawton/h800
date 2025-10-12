@@ -29,7 +29,7 @@ import sys
 from collections.abc import Iterable
 
 import h800.arguscard
-import h800.instructions
+from h800.opcodes import INSTRUCTIONS
 from h800.symbol_table import build_symbol_table
 
 
@@ -129,7 +129,7 @@ def process_files(filenames: list[str], stats: ParseStats, args: argparse.Namesp
 
             # Instruction validation.
             instruction = card.instruction
-            if instruction not in h800.instructions.INSTRUCTIONS:
+            if instruction not in INSTRUCTIONS:
                 stats.invalid_instructions += 1
                 print(
                     f"*** ERROR: Invalid instruction '{instruction}'\n"
