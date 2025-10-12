@@ -8,7 +8,7 @@ version = "0.10"
 description = "Tools (assembler, future simulator) for the Honeywell H-800 / H-1800 mainframe family."
 readme = "README.md"
 requires-python = ">=3.13"
-license = { text = "GPL-2.0-only" }
+license = "MIT AND (Apache-2.0 OR BSD-2-Clause)"
 authors = [
   { name = "Jim Lawton", email = "jim.lawton@gmail.com" }
 ]
@@ -27,7 +27,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Assemblers",
-  "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
   "Programming Language :: Python :: 3.13",
   "Operating System :: POSIX :: Linux",
   "Environment :: Console"
