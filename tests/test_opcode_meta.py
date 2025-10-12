@@ -203,21 +203,21 @@ def test_instruction_instance_type():
         assert isinstance(inst, Instruction)
 
 
-def test_mask_and_operands_mutual_exclusion_maskable():
-    """Ensure using both mask and operands simultaneously results in expected validation behavior."""
+def test_mask_and_operands_mask_wins():
+    """Mask takes precedence: operand flags are ignored when both mask and operands are provided."""
     maskable = [m for m, meta in OPCODES.items() if meta.type == "maskable"]
     if not maskable:
         pytest.skip("No maskable instructions")
     mnem = maskable[0]
-    # Valid with mask only
-    inst = Instruction(opcode_meta=OPCODES[mnem], sequence=0, mask=0)
-    assert inst.value == make_masked_opcode(mnem, 0, 0)
-    # Valid with operands only (treated as unmasked)
-    inst2 = Instruction(opcode_meta=OPCODES[mnem], sequence=0, operands=(1, 0, 1))
-    assert inst2.value == make_unmasked_opcode(mnem, 0, 1, 0, 1)
-    # Supplying both should still generate masked form (operands ignored) or raise; verify current behavior
-    inst3 = Instruction(opcode_meta=OPCODES[mnem], sequence=1, mask=3, operands=(1, 1, 1))
-    assert inst3.value == make_masked_opcode(mnem, 1, 3)
+    # Mask present: operands ignored (even if supplied)
+    inst_mask_only = Instruction(opcode_meta=OPCODES[mnem], sequence=0, mask=0, operands=(1, 1, 1))
+    assert inst_mask_only.value == make_masked_opcode(mnem, 0, 0)
+    # Unmasked variant (mask omitted): operands encoded
+    inst_unmasked = Instruction(opcode_meta=OPCODES[mnem], sequence=0, operands=(1, 0, 1))
+    assert inst_unmasked.value == make_unmasked_opcode(mnem, 0, 1, 0, 1)
+    # Both provided again (different sequence/mask): still masked form
+    inst_both = Instruction(opcode_meta=OPCODES[mnem], sequence=1, mask=3, operands=(1, 1, 1))
+    assert inst_both.value == make_masked_opcode(mnem, 1, 3)
 
 
 def test_peripheral_address_range():

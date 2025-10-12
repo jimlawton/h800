@@ -84,6 +84,14 @@ class PunchCard:
                 else:
                     self._stripped_fields.append(field.strip())
                     self._record[fieldnames[i]] = field.strip()
+        else:
+            # Comment card: initialize empty field containers so attribute access is safe.
+            self._fields = []
+            self._stripped_fields = []
+            self._record = {}
+            if linenum != 0:
+                # Optionally include line number metadata even for comments.
+                self._record["linenum"] = linenum
 
     @property
     def line(self):
