@@ -1,38 +1,5 @@
 # h800
-### Instruction Factories and Disassembly
 
-The assembler now uses a unified factory API; all prior facade classes (e.g. `DecimalAdd`, `ReadForward`, `FloatingBinaryAdd`, etc.) have been removed.
-
-Key points:
-- Use `get_instruction(mnemonic, **kwargs)` for all 12-bit instruction words.
-  - Maskable form: `get_instruction("BA", sequence=1, mask=5)`
-  - Unmasked form of same mnemonic: `get_instruction("BA", sequence=0, a=1, b=0, c=1)`
-  - Peripheral: `get_instruction("RF", paddr=12)`
-  - Print (colliding space): `get_instruction("PRA", sequence=1, a=1, b=0, c=1)`
-  - Simulator: `get_instruction("S", sequence=0)`
-- Strict mutual exclusivity enforced:
-  - `mask` cannot be combined with `a`, `b`, or `c`.
-  - `paddr` cannot be combined with `sequence`, `mask`, or operand flags.
-- Constants use `build_constant(mnemonic, value)` (e.g. `build_constant("ALF", 0x123)`).
-
-Reverse decoding / disassembly:
-- Use `decode_instruction(word, OPCODES)` to map a 12-bit integer back to candidate mnemonics and extracted fields.
-- Print mnemonics (`PRA`, `PRD`, `PRO`) deliberately collide and will all be returned for matching opcodes.
-- Returned dict keys: `word`, `mnemonics`, `fields`, `types`.
-
-Exports:
-The modules now define explicit `__all__` lists for a cleaner public API:
-- `h800.instruction.__all__` includes: `Instruction`, `Constant`, factories, `get_instruction`, `decode_instruction`, and typing helpers.
-- `h800.instructions.__all__` includes opcode metadata tables, helper builders (`build_constant`), and numeric opcode helpers (`make_masked_opcode`, etc.).
-
-Testing:
-- Parametrized tests updated to rely solely on `get_instruction` plus `build_constant`.
-- New tests cover round-trip decoding (`decode_instruction`) including print collisions and simulator words.
-
-Migration Guide (from facade classes):
-1. Replace any `ClassName(...)` instantiation with `get_instruction("MNEMONIC", ...)`.
-2. For constants, replace `ClassName(value)` with `build_constant("MNEMONIC", value)`.
-3. Use decoding helper for disassembly workflows or listing valid encodings.
 Tools for the Honeywell H-800 and H-1800 mainframe family of computers. Initially I am working on a cross-assembler, but eventually I hope to build a simulator also.
 
 The Honeywell H-800 (https://en.wikipedia.org/wiki/Honeywell_800) was a transistorized mainframe computer developed at the end of the 1950s. It was later followed by other more-powerful versions, the H-1800 and H-1800-II. 
@@ -130,3 +97,38 @@ These items can be tackled incrementally; none (except removing obsolete compati
   - `uv add <package>` or `uv add --group dev <package>` to add dependencies.
   - `uv lock --upgrade` followed by `uv sync` to update installed versions within constraints.
   - `uv run pytest` to execute tests.
+
+### Instruction Factories and Disassembly
+
+The assembler now uses a unified factory API; all prior facade classes (e.g. `DecimalAdd`, `ReadForward`, `FloatingBinaryAdd`, etc.) have been removed.
+
+Key points:
+- Use `get_instruction(mnemonic, **kwargs)` for all 12-bit instruction words.
+  - Maskable form: `get_instruction("BA", sequence=1, mask=5)`
+  - Unmasked form of same mnemonic: `get_instruction("BA", sequence=0, a=1, b=0, c=1)`
+  - Peripheral: `get_instruction("RF", paddr=12)`
+  - Print (colliding space): `get_instruction("PRA", sequence=1, a=1, b=0, c=1)`
+  - Simulator: `get_instruction("S", sequence=0)`
+- Strict mutual exclusivity enforced:
+  - `mask` cannot be combined with `a`, `b`, or `c`.
+  - `paddr` cannot be combined with `sequence`, `mask`, or operand flags.
+- Constants use `build_constant(mnemonic, value)` (e.g. `build_constant("ALF", 0x123)`).
+
+Reverse decoding / disassembly:
+- Use `decode_instruction(word, OPCODES)` to map a 12-bit integer back to candidate mnemonics and extracted fields.
+- Print mnemonics (`PRA`, `PRD`, `PRO`) deliberately collide and will all be returned for matching opcodes.
+- Returned dict keys: `word`, `mnemonics`, `fields`, `types`.
+
+Exports:
+The modules now define explicit `__all__` lists for a cleaner public API:
+- `h800.instruction.__all__` includes: `Instruction`, `Constant`, factories, `get_instruction`, `decode_instruction`, and typing helpers.
+- `h800.instructions.__all__` includes opcode metadata tables, helper builders (`build_constant`), and numeric opcode helpers (`make_masked_opcode`, etc.).
+
+Testing:
+- Parametrized tests updated to rely solely on `get_instruction` plus `build_constant`.
+- New tests cover round-trip decoding (`decode_instruction`) including print collisions and simulator words.
+
+Migration Guide (from facade classes):
+1. Replace any `ClassName(...)` instantiation with `get_instruction("MNEMONIC", ...)`.
+2. For constants, replace `ClassName(value)` with `build_constant("MNEMONIC", value)`.
+3. Use decoding helper for disassembly workflows or listing valid encodings.
