@@ -106,7 +106,7 @@ def test_cli_enumerate_maskable_sample_limit(capsys):
     # Header
     assert "Enumerated" in out
     # Should list exactly 3 variants after header
-    variant_lines = [l for l in out.splitlines() if re.match(r"\s*0o[0-7]{4}\s", l)]
+    variant_lines = [line for line in out.splitlines() if re.match(r"\s*0o[0-7]{4}\s", line)]
     assert len(variant_lines) == 3
 
 
@@ -115,14 +115,14 @@ def test_cli_enumerate_print_all(capsys):
     assert rc == 0
     out = capsys.readouterr().out
     # Ensure multiple mnemonics appear in sample (since print-all replicates)
-    assert any("PRD" in l or "PRO" in l for l in out.splitlines())
+    assert any("PRD" in line or "PRO" in line for line in out.splitlines())
 
 
 def test_cli_enumerate_simulator(capsys):
     rc = run_cli(["enumerate", "S"])
     assert rc == 0
     out = capsys.readouterr().out
-    variant_lines = [l for l in out.splitlines() if re.match(r"\s*0o[0-7]{4}\s", l)]
+    variant_lines = [line for line in out.splitlines() if re.match(r"\s*0o[0-7]{4}\s", line)]
     assert len(variant_lines) == 2  # Only two sequence variants
 
 

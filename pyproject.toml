@@ -84,18 +84,23 @@ exclude = [
 select = ["E", "F", "W", "I", "B", "UP", "N", "S", "C4", "ERA", "PL", "RUF"]
 ignore = [
   "E501",  # Allow long lines in legacy code / docs
+  "PLR0912",  # Allow too-many-branches in legacy modules
+  "PLR0913", # Allow too-many-arguments in legacy modules
+  "PLR0915",  # Allow too-many-statements in legacy modules
+  "ERA001", # Allow commented-out code fragments in legacy modules
+  "PLR2004", # Magic value used in comparison
 ]
 
 # Per-file rule suppressions for legacy/testing patterns.
 # S101: allow assert statements in tests (pytest idiom)
-# PLR0913 / PLR0911 / PLR1714: allow current argument/count complexity in legacy modules
-# ERA001: temporarily allow commented-out code fragments in legacy modules (will be cleaned later)
 [tool.ruff.lint.per-file-ignores]
-"h800/tests/test_*.py" = ["S101"]
-"h800/bitfield.py" = ["PLR0911"]
-"h800/arguscard.py" = ["PLR0913", "PLR1714"]
-"h800/assembler.py" = ["ERA001"]
-"h800/cli.py" = ["PLR0912", "PLR0913"]
+"tests/test_*.py" = [
+    "S101", # Allow assert statements in tests (pytest idiom)
+    "RUF059", # Unpacked variable is never used
+    "S603", # `subprocess` call: check for execution of untrusted input"
+    "S311", # "Standard pseudo-random generators are not suitable for security/cryptographic purposes"
+    "PLC0415", # `import` should be at the top-level of a file
+]
 
 [tool.ruff.format]
 quote-style = "double"

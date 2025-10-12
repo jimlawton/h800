@@ -118,48 +118,44 @@ class BitField:
         """Map virtual index to real (python) index."""
         if width is None:
             width = self._width
-        if self._order == self.BIT_ORDER_MSB_LEFT:
-            if self._numbering == self.BIT_SCHEME_LSB_0:
-                return width - (index + 1)
-            if self._numbering == self.BIT_SCHEME_LSB_1:
-                return width - index
-            if self._numbering == self.BIT_SCHEME_MSB_0:
-                return index
-            if self._numbering == self.BIT_SCHEME_MSB_1:
-                return index - 1
-        else:  # LSB-left ordering
-            if self._numbering == self.BIT_SCHEME_LSB_0:
-                return index
-            if self._numbering == self.BIT_SCHEME_LSB_1:
-                return index - 1
-            if self._numbering == self.BIT_SCHEME_MSB_0:
-                return width - (index + 1)
-            if self._numbering == self.BIT_SCHEME_MSB_1:
-                return width - index
+        index_map = {
+            self.BIT_ORDER_MSB_LEFT: {
+                self.BIT_SCHEME_LSB_0: width - (index + 1),
+                self.BIT_SCHEME_LSB_1: width - index,
+                self.BIT_SCHEME_MSB_0: index,
+                self.BIT_SCHEME_MSB_1: index - 1,
+            },
+            self.BIT_ORDER_LSB_LEFT: {
+                self.BIT_SCHEME_LSB_0: index,
+                self.BIT_SCHEME_LSB_1: index - 1,
+                self.BIT_SCHEME_MSB_0: width - (index + 1),
+                self.BIT_SCHEME_MSB_1: width - index,
+            },
+        }
+        if self._order in index_map and self._numbering in index_map[self._order]:
+            return index_map[self._order][self._numbering]
         raise ValueError("Invalid numbering/order combination in _rindex")
 
     def _vindex(self, index: int, width: int | None = None) -> int:
         """Inverse mapping: real index → virtual index."""
         if width is None:
             width = self._width
-        if self._order == self.BIT_ORDER_MSB_LEFT:
-            if self._numbering == self.BIT_SCHEME_LSB_0:
-                return width - (index + 1)
-            if self._numbering == self.BIT_SCHEME_LSB_1:
-                return width - index
-            if self._numbering == self.BIT_SCHEME_MSB_0:
-                return index
-            if self._numbering == self.BIT_SCHEME_MSB_1:
-                return index + 1
-        else:  # LSB-left
-            if self._numbering == self.BIT_SCHEME_LSB_0:
-                return index
-            if self._numbering == self.BIT_SCHEME_LSB_1:
-                return index + 1
-            if self._numbering == self.BIT_SCHEME_MSB_0:
-                return width - (index + 1)
-            if self._numbering == self.BIT_SCHEME_MSB_1:
-                return width - index
+        index_map = {
+            self.BIT_ORDER_MSB_LEFT: {
+                self.BIT_SCHEME_LSB_0: width - (index + 1),
+                self.BIT_SCHEME_LSB_1: width - index,
+                self.BIT_SCHEME_MSB_0: index,
+                self.BIT_SCHEME_MSB_1: index + 1,
+            },
+            self.BIT_ORDER_LSB_LEFT: {
+                self.BIT_SCHEME_LSB_0: index,
+                self.BIT_SCHEME_LSB_1: index + 1,
+                self.BIT_SCHEME_MSB_0: width - (index + 1),
+                self.BIT_SCHEME_MSB_1: width - index,
+            },
+        }
+        if self._order in index_map and self._numbering in index_map[self._order]:
+            return index_map[self._order][self._numbering]
         raise ValueError("Invalid numbering/order combination in _vindex")
 
     def _shift(self, index: int) -> int:

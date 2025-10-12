@@ -127,7 +127,7 @@ def ensure_output_dir(path: str | None, verbose: bool, quiet: bool) -> None:
                 f"ERROR: Unable to create output directory '{path}': {exc}",
                 file=sys.stderr,
             )
-            raise SystemExit(1)
+            raise SystemExit(1) from exc
     elif not os.path.isdir(path):
         print(
             f"ERROR: Output path '{path}' exists and is not a directory.",
@@ -164,9 +164,7 @@ def write_listing_file(
         raise SystemExit(1)
 
     # Determine maximum filename display width (cap at 64 for legacy formatting).
-    max_name_len = max(
-        (len(card.filename) for card in cards), default=len(source_filename)
-    )
+    max_name_len = max((len(card.filename) for card in cards), default=len(source_filename))
     max_name_len = min(max_name_len, 64)
 
     n_written = 0
@@ -185,10 +183,8 @@ def write_listing_file(
                 f.write(f"{card.filename:<{max_name_len}} {ln} {raw_line}\n")
                 n_written += 1
     except OSError as exc:
-        print(
-            f"ERROR: Unable to write listing file '{outfile}': {exc}", file=sys.stderr
-        )
-        raise SystemExit(1)
+        print(f"ERROR: Unable to write listing file '{outfile}': {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
 
     if verbose and not quiet:
         print(
@@ -229,7 +225,7 @@ def load_deck(filename: str, verbose: bool, quiet: bool):
         deck = h800.arguscard.Deck(file=filename, verbose=verbose and not quiet)
     except Exception as exc:
         print(f"ERROR: Failed to parse '{filename}': {exc}", file=sys.stderr)
-        raise SystemExit(1)
+        raise SystemExit(1) from exc
     return deck
 
 

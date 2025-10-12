@@ -5,16 +5,16 @@ genlines.py
 Generate formatted line (card) numbers for ARGUS/MITIGUS style source files.
 
 ARGUS assembly source lines traditionally begin with a (decimal) card number
-field of up to 6 digits (columns 2–7 in some transcriptions). This utility
+field of up to 6 digits (columns 2-7 in some transcriptions). This utility
 emits a sequence of such line numbers with configurable:
   - start / end (inclusive)
   - step
   - starting column
   - ending column
-  - minimum width (zero‑padded)
+  - minimum width (zero-padded)
 The output for each generated number positions the numeric field so that its
 rightmost digit sits at `endcol`, preceded by spaces so that the field begins
-at `startcol`. The number is zero‑padded to the computed width (default >=4).
+at `startcol`. The number is zero-padded to the computed width (default >=4).
 
 Examples:
     # Basic: numbers 20..120 inclusive

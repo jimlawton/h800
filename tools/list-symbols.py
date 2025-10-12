@@ -74,7 +74,7 @@ def filter_symbols(symtab: dict[str, Any], names: Iterable[str]) -> dict[str, An
     Return a new symbol table containing only the symbols named in 'names'.
     Symbols not present are ignored (warned to stderr).
     """
-    wanted = set(n for n in names if n)
+    wanted = set(names)
     if not wanted:
         return symtab
     filtered: dict[str, Any] = {}
@@ -181,9 +181,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = parse_args(argv)
 
-    symtab, total_errors = build_combined_symbol_table(
-        args.filenames, verbose=args.verbose
-    )
+    symtab, total_errors = build_combined_symbol_table(args.filenames, verbose=args.verbose)
 
     if args.symbols:
         requested = [s.strip() for s in args.symbols.split(",")]

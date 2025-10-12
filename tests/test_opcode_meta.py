@@ -331,7 +331,7 @@ def test_opcode_meta_runtime_protocol_check():
     as an OpcodeMeta by verifying required attributes via getattr (already done above).
     This test exists mostly for clarity; it reuses the structural approach.
     """
-    for m, meta in OPCODES.items():
+    for _, meta in OPCODES.items():
         # Simulate protocol acceptance
         for attr in ("m", "b23", "b7", "op", "type"):
             getattr(meta, attr)  # Should not raise

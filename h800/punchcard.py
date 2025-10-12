@@ -148,7 +148,7 @@ class Deck:
             sys.exit("ERROR: no input supplied to class constructor!")
         self._cards = []
         if file:
-            self._cards = self._readSource(file)
+            self._cards = self._read_source(file)
             self._lines = [card.line for card in self._cards]
         else:
             self._lines = lines
@@ -201,7 +201,7 @@ class Deck:
             lines.append(str(card))
         return "\n".join(lines)
 
-    def _readSource(self, filename, recurse=True):
+    def _read_source(self, filename, recurse=True):
         """Read an ARGUS source file. If the file includes $ directives,
         include those files recursively into the deck."""
         cards = []

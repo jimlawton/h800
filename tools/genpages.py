@@ -30,7 +30,7 @@ def main():
     filename = args.filename
 
     if not os.path.exists(filename):
-        parser.error("Filename %s does not exist!" % filename)
+        parser.error(f"Filename {filename} does not exist!")
         sys.exit(1)
 
     inlines = []
@@ -51,12 +51,12 @@ def main():
                 logsection = infilename.replace("_", " ")
                 logsectioncol8 = "@"
         if line.startswith("# Pages: "):
-            pageRange = line.split()[2].strip()
-            if "-" in pageRange:
-                start = int(pageRange.split("-")[0])
-                end = int(pageRange.split("-")[1])
+            page_range = line.split()[2].strip()
+            if "-" in page_range:
+                start = int(page_range.split("-")[0])
+                end = int(page_range.split("-")[1])
             else:
-                start = end = int(pageRange)
+                start = end = int(page_range)
 
     if logsection is None:
         parser.error("Cannot determine log section!")
@@ -66,18 +66,16 @@ def main():
         parser.error("Invalid page numbers!")
         sys.exit(1)
 
-    numdigits = len(str(end))
+    _numdigits = len(str(end))
 
     outlines = []
     outlines.append("\n")
-    outlines.append("L      %s%s\n" % (logsectioncol8, logsection))
+    outlines.append(f"L      {logsectioncol8}{logsection}\n")
     for pagenum in range(start, end + 1):
         outlines.append("\n")
-        outlines.append("# Page %d\n" % pagenum)
+        outlines.append(f"# Page {pagenum}\n")
         outlines.append(
-            "#      %s%-72s USER'S OWN PAGE NO.%4s        PAGE%4s"
-            "\n"
-            % (logsectioncol8, logsection, pagenum - start + 1, pagenum - start + 1)
+            f"#      {logsectioncol8}{logsection:-72s} USER'S OWN PAGE NO.{pagenum - start + 1:4s}        PAGE{pagenum - start + 1:4s}\n"
         )
         outlines.append("\n")
 

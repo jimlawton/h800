@@ -143,7 +143,7 @@ def test_parse_strict(temp_argus_file):
 def test_genlines_basic():
     code, out, err = run_tool("genlines.py", "1", "3")
     assert code == 0
-    lines = [l for l in out.splitlines() if l and not l.startswith("#")]
+    lines = [line for line in out.splitlines() if line and not line.startswith("#")]
     assert len(lines) >= 3
     assert "1" in lines[0] or "0001" in lines[0]
 

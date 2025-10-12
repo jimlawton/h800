@@ -46,28 +46,25 @@ def main():
         symtab, errcount = buildSymbolTable(filename, symtab, verbose=args.verbose)
         toterrs += errcount
         print(
-            "%s: %d errors encountered building symbol table." % (filename, errcount),
+            f"{filename}: {errcount} errors encountered building symbol table.",
             file=sys.stderr,
         )
 
-    errSyms = checkSymbolTable(
-        symtab, verbose=args.verbose, complexOnlyError=args.complex
-    )
-    toterrs += len(errSyms)
-    if len(errSyms) > 0:
+    err_syms = checkSymbolTable(symtab, verbose=args.verbose, complexOnlyError=args.complex)
+    toterrs += len(err_syms)
+    if len(err_syms) > 0:
         print("", file=sys.stderr)
         print("Undefined symbols:", file=sys.stderr)
-        for symbol in errSyms:
+        for symbol in err_syms:
             matches = findSymbolDef(symtab, symbol, fuzzy=True)
-            # print(matches)
             if matches is None or matches == []:
-                print("  %s - No matches!" % symbol, file=sys.stderr)
+                print(f"  {symbol} - No matches!", file=sys.stderr)
             else:
-                print("  %s - Possible matches: " % symbol + " ".join(matches))
-        print("%d errors checking symbol table." % len(errSyms), file=sys.stderr)
+                print(f"  {symbol + ' '.join(matches)} - Possible matches: ")
+        print(f"{len(err_syms)} errors checking symbol table.", file=sys.stderr)
 
     if len(args.filenames) > 1:
-        print("Total: %d errors encountered." % toterrs, file=sys.stderr)
+        print(f"Total: {toterrs} errors encountered.", file=sys.stderr)
 
 
 if __name__ == "__main__":

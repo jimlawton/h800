@@ -2,7 +2,7 @@ from h800.word import InstructionWord, Word
 
 
 def my_assert(value, good):
-    assert value == good, "Value is %d, should be %d" % (value, good)
+    assert value == good, f"Value is {value}, should be {good}"
 
 
 def test_word_simple_defaults():
@@ -13,8 +13,8 @@ def test_word_simple_defaults():
     my_assert(w.value, 4095)
     w = Word(281406274007040)
     my_assert(w.value, 281406274007040)
-    w = Word(2 ** 48 - 1)
-    my_assert(w.value, 2 ** 48 - 1)
+    w = Word(2**48 - 1)
+    my_assert(w.value, 2**48 - 1)
 
 
 def test_word_invalid_args():
@@ -25,18 +25,18 @@ def test_word_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         print("TEST: test too-large value")
-        w = Word(2 ** 48)
+        w = Word(2**48)
         assert w is not None
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
@@ -49,7 +49,7 @@ def test_inst_simple_defaults():
     w = InstructionWord(4095, 0, 4095, 0)
     my_assert(w.value, 281406274007040)
     w = InstructionWord(4095, 4095, 4095, 4095)
-    my_assert(w.value, 2 ** 48 - 1)
+    my_assert(w.value, 2**48 - 1)
 
 
 def test_inst_field_set_get():

@@ -57,7 +57,7 @@ def parse_args(argv: Iterable[str]) -> argparse.Namespace:
         "-s",
         "--strict",
         action="store_true",
-        help="Return a non‑zero exit code if any invalid instructions are found.",
+        help="Return a non-zero exit code if any invalid instructions are found.",
     )
     parser.add_argument(
         "-q",
@@ -98,9 +98,7 @@ def build_symbols(filenames: list[str], verbose: bool) -> int:
     return total_errors
 
 
-def process_files(
-    filenames: list[str], stats: ParseStats, args: argparse.Namespace
-) -> None:
+def process_files(filenames: list[str], stats: ParseStats, args: argparse.Namespace) -> None:
     """
     Iterate through cards in each file, updating stats and performing validation.
     """

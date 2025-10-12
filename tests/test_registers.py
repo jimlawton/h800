@@ -4,7 +4,7 @@ from .registers import REGISTERS, Register, RegisterGroup, Registers
 
 
 def my_assert(value, good):
-    assert value == good, "Value is 0o%06o, should be 0o%06o" % (value, good)
+    assert value == good, f"Value is 0o{value:06o}, should be 0o{good:06o}"
 
 
 def test_register_16bit_simple_defaults():
@@ -15,8 +15,8 @@ def test_register_16bit_simple_defaults():
     my_assert(r.value, 4095)
     r = Register(65535)
     my_assert(r.value, 65535)
-    r = Register(2 ** 16 - 1)
-    my_assert(r.value, 2 ** 16 - 1)
+    r = Register(2**16 - 1)
+    my_assert(r.value, 2**16 - 1)
 
 
 def test_register_16bit_invalid_args():
@@ -27,24 +27,24 @@ def test_register_16bit_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
-        r = Register(2 ** 16)
+        r = Register(2**16)
         assert r is not None
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_register_16bit_args_range():
     print("TEST: register 16-bit args range.")
     r = Register()
-    for i in range(2 ** 16, 16):
+    for i in range(2**16, 16):
         r.value = i
         my_assert(r.value, i)
 
@@ -62,11 +62,11 @@ def test_register_16bit_slices():
     r[1:16] = 0
     my_assert(r[1:16], 0)
     for i in range(r.width):
-        r[i+1] = 1
-        my_assert(r[i+1], 1)
+        r[i + 1] = 1
+        my_assert(r[i + 1], 1)
         my_assert(r.value, 2 ** (16 - i - 1))
-        r[i+1] = 0
-        my_assert(r[i+1], 0)
+        r[i + 1] = 0
+        my_assert(r[i + 1], 0)
         my_assert(r.value, 0)
 
 
@@ -78,10 +78,10 @@ def test_register_24bit_simple_defaults():
     my_assert(r.value, 4095)
     r = Register(65535, width=24)
     my_assert(r.value, 65535)
-    r = Register(2 ** 16 - 1, width=24)
-    my_assert(r.value, 2 ** 16 - 1)
-    r = Register(2 ** 24 - 1, width=24)
-    my_assert(r.value, 2 ** 24 - 1)
+    r = Register(2**16 - 1, width=24)
+    my_assert(r.value, 2**16 - 1)
+    r = Register(2**24 - 1, width=24)
+    my_assert(r.value, 2**24 - 1)
 
 
 def test_register_24bit_invalid_args():
@@ -92,24 +92,24 @@ def test_register_24bit_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
-        r = Register(2 ** 24, width=24)
+        r = Register(2**24, width=24)
         assert r is not None
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
 def test_register_24bit_args_range():
     print("TEST: register 24-bit args range.")
     r = Register(width=24)
-    for i in range(2 ** 24, 16):
+    for i in range(2**24, 16):
         r.value = i
         my_assert(r.value, i)
 
@@ -121,17 +121,17 @@ def test_register_24bit_slices():
     r = Register(0o777, width=24)
     my_assert(r.value, 0o777)
     r[1] = 1
-    my_assert(r.value, 2 ** 23 + 0o0777)
+    my_assert(r.value, 2**23 + 0o0777)
     r[1] = 0
     my_assert(r.value, 0o0777)
-    r[1:r.width] = 0
-    my_assert(r[1:r.width], 0)
+    r[1 : r.width] = 0
+    my_assert(r[1 : r.width], 0)
     for i in range(r.width):
-        r[i+1] = 1
-        my_assert(r[i+1], 1)
+        r[i + 1] = 1
+        my_assert(r[i + 1], 1)
         my_assert(r.value, 2 ** (r.width - i - 1))
-        r[i+1] = 0
-        my_assert(r[i+1], 0)
+        r[i + 1] = 0
+        my_assert(r[i + 1], 0)
         my_assert(r.value, 0)
 
 
@@ -143,7 +143,7 @@ def test_registergroup_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
@@ -153,7 +153,7 @@ def test_registergroup_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
@@ -172,12 +172,12 @@ def test_registergroup_16bit_invalid_args():
     r = RegisterGroup()
     gotexc = False
     try:
-        for i in range(len(REGISTERS)+1):
+        for i in range(len(REGISTERS) + 1):
             r[i].value = 0
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
@@ -187,17 +187,17 @@ def test_registergroup_16bit_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         for i in range(len(REGISTERS)):
-            r[i].value = 2 ** 16
+            r[i].value = 2**16
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
@@ -205,7 +205,7 @@ def test_registergroup_16bit_args_range():
     print("TEST: register group 16-bit args range.")
     r = RegisterGroup()
     for i in range(len(REGISTERS)):
-        for j in range(2 ** 16, 16):
+        for j in range(2**16, 16):
             r[i].value = j
             my_assert(r[i].value, j)
 
@@ -216,8 +216,8 @@ def test_registergroup_24bit_simple_defaults():
     for i in range(len(REGISTERS)):
         my_assert(r[i].value, 0)
     for i in range(len(REGISTERS)):
-        r[i].value = 2 ** 24 - 1
-        my_assert(r[i].value, 2 ** 24 - 1)
+        r[i].value = 2**24 - 1
+        my_assert(r[i].value, 2**24 - 1)
 
 
 def test_registergroup_24bit_invalid_args():
@@ -225,12 +225,12 @@ def test_registergroup_24bit_invalid_args():
     r = RegisterGroup(24)
     gotexc = False
     try:
-        for i in range(len(REGISTERS)+1):
+        for i in range(len(REGISTERS) + 1):
             r[i].value = 0
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
@@ -240,17 +240,17 @@ def test_registergroup_24bit_invalid_args():
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
     gotexc = False
     try:
         for i in range(len(REGISTERS)):
-            r[i].value = 2 ** 24
+            r[i].value = 2**24
     except ValueError:
         gotexc = True
     else:
-        raise
+        pass
     assert gotexc is True, "Invalid value should have thrown an exception!"
 
 
@@ -258,7 +258,7 @@ def test_registergroup_24bit_args_range():
     print("TEST: register group 24-bit args range.")
     r = RegisterGroup(24)
     for i in range(len(REGISTERS)):
-        for j in range(2 ** 24, 16):
+        for j in range(2**24, 16):
             r[i].value = j
             my_assert(r[i].value, j)
 
@@ -272,7 +272,7 @@ def test_registers_16bit_simple():
     for group in registers:
         for register in group:
             register[1] = 1
-            my_assert(register.value, 2 ** 15)
+            my_assert(register.value, 2**15)
             register[1] = 0
             my_assert(register.value, 0)
 
@@ -285,7 +285,7 @@ def test_registers_16bit_clear():
             my_assert(register.value, 0)
     for group in registers:
         for register in group:
-            val = randrange(2 ** 16)
+            val = randrange(2**16)
             register.value = val
             my_assert(register.value, val)
     registers.clear()
@@ -303,7 +303,7 @@ def test_registers_24bit_simple():
     for group in registers:
         for register in group:
             register[1] = 1
-            my_assert(register.value, 2 ** 15)
+            my_assert(register.value, 2**15)
             register[1] = 0
             my_assert(register.value, 0)
 
@@ -316,7 +316,7 @@ def test_registers_24bit_clear():
             my_assert(register.value, 0)
     for group in registers:
         for register in group:
-            val = randrange(2 ** 24)
+            val = randrange(2**24)
             register.value = val
             my_assert(register.value, val)
     registers.clear()

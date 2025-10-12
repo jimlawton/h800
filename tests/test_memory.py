@@ -2,7 +2,7 @@ from h800.memory import ExpansionMemoryModule, MemoryBank, MemoryModule
 
 
 def my_assert(value, good):
-    assert value == good, "Value is 0o%016o, should be 0o%016o" % (value, good)
+    assert value == good, f"Value is 0o{value:016o}, should be 0o{good:016o}"
 
 
 def test_memorybank_simple_defaults():
@@ -13,8 +13,8 @@ def test_memorybank_simple_defaults():
     for w in m:
         my_assert(w.value, 0)
     for i in range(len(m)):
-        m[i] = 2 ** 48 - 1
-        my_assert(m[i], 2 ** 48 - 1)
+        m[i] = 2**48 - 1
+        my_assert(m[i], 2**48 - 1)
     m.clear()
     for w in m:
         my_assert(w.value, 0)
@@ -34,8 +34,8 @@ def test_memorymodule_simple_defaults():
             my_assert(m[i][j], 0)
     for i in range(len(m)):
         for j in range(len(m[i])):
-            m[i][j] = 2 ** 48 - 1
-            my_assert(m[i][j], 2 ** 48 - 1)
+            m[i][j] = 2**48 - 1
+            my_assert(m[i][j], 2**48 - 1)
     for i in range(len(m)):
         m[i].clear()
     for i in range(len(m)):
@@ -52,8 +52,8 @@ def test_expansionmemorymodule_simple_defaults():
             my_assert(m[i][j], 0)
     for i in range(len(m)):
         for j in range(len(m[i])):
-            m[i][j] = 2 ** 48 - 1
-            my_assert(m[i][j], 2 ** 48 - 1)
+            m[i][j] = 2**48 - 1
+            my_assert(m[i][j], 2**48 - 1)
     for i in range(len(m)):
         m[i].clear()
     for i in range(len(m)):

@@ -116,17 +116,17 @@ def test_deck_no_input_error():
 
     import pytest
 
-    class ExitIntercept(Exception):
+    class ExitInterceptError(Exception):
         pass
 
     def fake_exit(msg):
-        raise ExitIntercept(msg)
+        raise ExitInterceptError(msg)
 
     # Monkeypatch sys.exit
     original_exit = sys.exit
     sys.exit = fake_exit
     try:
-        with pytest.raises(ExitIntercept):
+        with pytest.raises(ExitInterceptError):
             Deck()  # type: ignore
     finally:
         sys.exit = original_exit

@@ -81,11 +81,11 @@ class Register:
 
     def __init__(self, data=0, name=None, width=16):
         if data < 0 or data > (2**width - 1):
-            raise ValueError("Invalid value for %d-bit register!" % width)
+            raise ValueError(f"Invalid value for {width}-bit register!")
         if name and name not in REGISTER_NAMES:
-            raise ValueError("Invalid register name %s!" % name)
-        if width != 16 and width != 24:
-            raise ValueError("Invalid register width %d, must be 16 or 24!" % width)
+            raise ValueError(f"Invalid register name {name}!")
+        if width not in (16, 24):
+            raise ValueError(f"Invalid register width {width}, must be 16 or 24!")
         self._data = BitField(
             0, width=width, numbering=BitField.BIT_SCHEME_MSB_1, order=BitField.BIT_ORDER_MSB_LEFT
         )
@@ -100,7 +100,7 @@ class Register:
     @value.setter
     def value(self, value):
         if value < 0 or value > (2**self._width - 1):
-            raise ValueError("Invalid value for %d-bit register!" % self._width)
+            raise ValueError(f"Invalid value for {self._width}-bit register!")
         self._data[1 : self._width] = value
 
     @property
@@ -127,7 +127,7 @@ class Register:
         return self.width
 
     def __repr__(self):
-        return "0o%06o" % self.value
+        return f"0o{self.value:06o}"
 
     def clear(self):
         self._data.clear()
@@ -139,7 +139,7 @@ class RegisterGroup:
     def __init__(self, width=16):
         self._width = width
         self._registers = {}
-        for regname in REGISTERS:
+        for regname, _ in REGISTERS.items():
             self._registers[REGISTERS[regname]] = Register(name=regname, width=width)
         self._current = 0
 
@@ -152,11 +152,11 @@ class RegisterGroup:
             raise ValueError("Slices not supported!")
         if isinstance(key, str):
             if key not in REGISTERS:
-                raise ValueError("Invalid register name %s!" % key)
+                raise ValueError(f"Invalid register name {key}!")
             return self._registers[REGISTERS[key]]
         else:
             if key < 0 or key >= len(REGISTERS):
-                raise ValueError("Invalid register number %d!" % key)
+                raise ValueError(f"Invalid register number {key}!")
             return self._registers[key]
 
     def __setitem__(self, key, value):
@@ -183,7 +183,7 @@ class RegisterGroup:
     def __repr__(self):
         text = ""
         for r in self._registers:
-            text += "%s " % self._registers[r]
+            text += f"{self._registers[r]} "
         return text
 
     def clear(self):
@@ -211,17 +211,17 @@ class Registers:
         if isinstance(key, slice):
             raise ValueError("Slices not supported!")
         if not isinstance(key, int):
-            raise ValueError("Invalid register group number %s!" % key)
+            raise ValueError(f"Invalid register group number {key}!")
         else:
             if key < 0 or key >= self._NUM_GROUPS:
-                raise ValueError("Invalid register group number %d!" % key)
+                raise ValueError(f"Invalid register group number {key}!")
             return self._registers[key]
 
     def __setitem__(self, key, value):
         if isinstance(key, slice):
             raise ValueError("Slices not supported!")
         if not isinstance(key, int):
-            raise ValueError("Invalid register group number %s!" % key)
+            raise ValueError(f"Invalid register group number {key}!")
         else:
             self._registers[key] = value
 
