@@ -40,7 +40,7 @@ Examples:
   listing.py --include-star source1.argus
   listing.py --max-width 100 source1.argus
 
-Python requirement: 3.13+
+Python requirement: 3.13+ (no symbol table usage; no snake_case adaptation needed).
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ import os
 import sys
 from collections.abc import Iterable
 
-import h800.arguscard
+import h800.arguscard  # Uses Deck only; no symbol table functions needed (snake_case migration not required here).
 
 DEFAULT_SUFFIX = ".lst"
 

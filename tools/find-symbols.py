@@ -35,17 +35,15 @@ import sys
 from collections.abc import Iterable
 from typing import Any
 
-from h800.symbol_table import buildSymbolTable, findSymbolDef
+from h800.symbol_table import build_symbol_table, find_symbol_def
 
 
-def build_combined_symbol_table(
-    filenames: Iterable[str], verbose: bool
-) -> dict[str, Any]:
+def build_combined_symbol_table(filenames: Iterable[str], verbose: bool) -> dict[str, Any]:
     """Build a combined symbol table from multiple source files."""
     symtab: dict[str, Any] = {}
     total_errors = 0
     for filename in filenames:
-        symtab, file_errors = buildSymbolTable(filename, symtab, verbose=verbose)
+        symtab, file_errors = build_symbol_table(filename, symtab, verbose=verbose)
         total_errors += file_errors
         if verbose:
             print(
@@ -110,7 +108,7 @@ def resolve_and_display(
 
     Returns an exit code (0 success, 2 no matches).
     """
-    result = findSymbolDef(
+    result = find_symbol_def(
         symtab,
         symbol,
         begin=begin,

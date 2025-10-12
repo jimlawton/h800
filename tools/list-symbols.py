@@ -4,7 +4,7 @@ list-symbols.py
 
 Generate a listing of symbols found in one or more ARGUS assembly source files.
 
-The symbol table structure (from h800.symbol_table.buildSymbolTable) looks like:
+The symbol table structure (from h800.symbol_table.build_symbol_table) looks like:
     symtab[symbol][segment][subsegment][symtype] = {
         "file": <filename>,
         "line": <line number>,
@@ -43,7 +43,7 @@ import sys
 from collections.abc import Iterable, Sequence
 from typing import Any
 
-from h800.symbol_table import buildSymbolTable
+from h800.symbol_table import build_symbol_table
 
 
 def build_combined_symbol_table(
@@ -57,7 +57,7 @@ def build_combined_symbol_table(
     symtab: dict[str, Any] = {}
     total_errors = 0
     for filename in filenames:
-        symtab, file_errors = buildSymbolTable(filename, symtab, verbose=verbose)
+        symtab, file_errors = build_symbol_table(filename, symtab, verbose=verbose)
         total_errors += file_errors
         if verbose:
             print(

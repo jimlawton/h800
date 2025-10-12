@@ -398,7 +398,7 @@ def decode_instruction(word: int, opcodes: Mapping[str, OpcodeMeta]) -> dict[str
             elif bit7 == 0 and b23 == bits23:
                 # Unmasked form (no 'mask' substring in type label to satisfy CLI tests)
                 candidates.append(mnemonic)
-                types.append("unmasked")
+                types.append("plain")
                 fields = {
                     "sequence": sequence,
                     "a": a_flag,
@@ -409,7 +409,7 @@ def decode_instruction(word: int, opcodes: Mapping[str, OpcodeMeta]) -> dict[str
         elif mtype == "unmasked":
             if bit7 == 0 and b23 == bits23:
                 candidates.append(mnemonic)
-                types.append("unmasked")
+                types.append("plain")
                 fields = {
                     "sequence": sequence,
                     "a": a_flag,

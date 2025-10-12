@@ -390,3 +390,13 @@ def find_symbol_def(symtab, name, symtype=None, begin=False, end=False, fuzzy=Fa
             else:
                 return []
     return None
+
+
+__all__ = [
+    "TAG_PREFIXES",
+    "SymbolTable",
+    "SymbolTableEntry",
+    "build_symbol_table",
+    "check_symbol_table",
+    "find_symbol_def",
+]

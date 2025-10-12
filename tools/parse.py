@@ -30,7 +30,7 @@ from collections.abc import Iterable
 
 import h800.arguscard
 import h800.instructions
-from h800.symbol_table import buildSymbolTable
+from h800.symbol_table import build_symbol_table
 
 
 def parse_args(argv: Iterable[str]) -> argparse.Namespace:
@@ -88,7 +88,7 @@ def build_symbols(filenames: list[str], verbose: bool) -> int:
     symtab = {}
     total_errors = 0
     for filename in filenames:
-        symtab, errcount = buildSymbolTable(filename, symtab, verbose=verbose)
+        symtab, errcount = build_symbol_table(filename, symtab, verbose=verbose)
         total_errors += errcount
         if verbose:
             print(

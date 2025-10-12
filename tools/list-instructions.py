@@ -151,9 +151,7 @@ def process_file(
 
         if opcode_matches(requested_opcode, candidate):
             if details:
-                matches.append(
-                    f"{card.filename:<48s} {card.linenum:6d} {card.line.rstrip()}"
-                )
+                matches.append(f"{card.filename:<48s} {card.linenum:6d} {card.line.rstrip()}")
             else:
                 matches.append(card.line.rstrip())
 

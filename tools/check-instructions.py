@@ -144,7 +144,7 @@ def process_files(
 
             instr = card.instruction
             if instr not in instrtab:
-                # Unknown instruction.
+                # Unknown instruction: treat as warning unless --invalid / --all supplied.
                 if opts.invalid or opts.all:
                     print(
                         f"*** ERROR: Invalid instruction '{instr}'\n"
@@ -152,6 +152,11 @@ def process_files(
                         file=sys.stderr,
                     )
                     invalid_errors += 1
+                else:
+                    print(
+                        f"[warning] Invalid instruction '{instr}' (file {card.filename}, line {card.linenum})",
+                        file=sys.stderr,
+                    )
                 # Do not record frequency for invalid instructions.
                 continue
 
@@ -226,8 +231,8 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(f"{invalid_errors} invalid instructions encountered.", file=sys.stderr)
 
     # Exit code logic:
-    # - If invalid checks requested and errors found -> exit 1
-    # - Else success (0)
+    # - If invalid checks requested (or --all) and errors found -> exit 1
+    # - Otherwise always succeed (warnings never force non-zero)
     if (opts.invalid or opts.all) and invalid_errors > 0:
         return 1
 
