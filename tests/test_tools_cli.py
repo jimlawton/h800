@@ -57,7 +57,6 @@ def temp_argus_file(tmp_path):
 # -------------------------
 def test_check_instructions_basic(temp_argus_file):
     code, out, err = run_tool("check-instructions.py", temp_argus_file)
-    # Without --invalid, invalid opcodes shouldn't cause non-zero exit if any were found.
     assert code == 0, f"Unexpected non-zero exit: {code}, stderr={err}"
 
 

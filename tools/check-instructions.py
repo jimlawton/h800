@@ -6,7 +6,7 @@ Validate and analyze instruction (opcode) usage in ARGUS / H-800 / H-1800 assemb
 source files.
 
 Features (modern argparse rewrite of legacy optparse script):
-  - Detect invalid instructions (mnemonics not in h800.instructions.INSTRUCTIONS).
+  - Detect invalid instructions (mnemonics not in h800.opcodes.INSTRUCTIONS).
   - Print every opcode occurrence (--print-opcodes).
   - Frequency analysis of opcode usage (--count) with optional sorting by frequency (--sort).
   - List unused instructions (--unused).
@@ -16,15 +16,15 @@ Features (modern argparse rewrite of legacy optparse script):
 
 Usage:
   check-instructions.py file1.argus
-  check-instructions.py --invalid file1.argus file2.argus
+  check-instructions.py file1.argus file2.argus
   check-instructions.py --count --sort file1.argus
   check-instructions.py --print-opcodes file1.argus
   check-instructions.py --unused --count file1.argus
   check-instructions.py --all file1.argus
 
 Exit codes:
-  0 - Success (no invalid instructions OR invalid check not requested)
-  1 - Invalid instruction(s) encountered (when --invalid or --all specified)
+  0 - Success (no invalid instructions)
+  1 - Invalid instruction(s) encountered
   2 - Usage / argument error
   3 - Other processing error
 
@@ -51,18 +51,6 @@ def parse_args(argv: Iterable[str]) -> argparse.Namespace:
         metavar="filename",
         nargs="+",
         help="ARGUS assembly source file(s) to process.",
-    )
-    parser.add_argument(
-        "-a",
-        "--all",
-        action="store_true",
-        help="Shorthand: perform invalid instruction checks (same as --invalid).",
-    )
-    parser.add_argument(
-        "-i",
-        "--invalid",
-        action="store_true",
-        help="Check for invalid instructions and report errors.",
     )
     parser.add_argument(
         "-p",
@@ -108,7 +96,7 @@ def process_files(
 ) -> int:
     """
     Iterate through all cards in each file, updating frequency table,
-    counting invalid instructions (if requested), and optionally printing occurrences.
+    counting invalid instructions, and optionally printing occurrences.
 
     Returns number of invalid instruction errors encountered.
     """
@@ -144,18 +132,12 @@ def process_files(
             instr = card.instruction
             if instr not in instrtab:
                 # Unknown instruction: treat as warning unless --invalid / --all supplied.
-                if opts.invalid or opts.all:
-                    print(
-                        f"*** ERROR: Invalid instruction '{instr}'\n"
-                        f"    File {card.filename}, line {card.linenum}: {card.line.rstrip()}",
-                        file=sys.stderr,
-                    )
-                    invalid_errors += 1
-                else:
-                    print(
-                        f"[warning] Invalid instruction '{instr}' (file {card.filename}, line {card.linenum})",
-                        file=sys.stderr,
-                    )
+                print(
+                    f"*** ERROR: Invalid instruction '{instr}'\n"
+                    f"    File {card.filename}, line {card.linenum}: {card.line.rstrip()}",
+                    file=sys.stderr,
+                )
+                invalid_errors += 1
                 # Do not record frequency for invalid instructions.
                 continue
 
@@ -204,10 +186,6 @@ def main(argv: Iterable[str] | None = None) -> int:
         argv = sys.argv[1:]
     opts = parse_args(argv)
 
-    # Legacy behavior: --all implies invalid checking.
-    if opts.all:
-        opts.invalid = True
-
     instrtab = initialize_frequency_table()
 
     invalid_errors = process_files(opts.filenames, opts, instrtab)
@@ -223,18 +201,16 @@ def main(argv: Iterable[str] | None = None) -> int:
         output_unused(instrtab)
 
     # Summary of invalid errors.
-    if opts.invalid or opts.all:
-        if invalid_errors == 1:
-            print("1 invalid instruction encountered.", file=sys.stderr)
-        elif invalid_errors > 1:
-            print(f"{invalid_errors} invalid instructions encountered.", file=sys.stderr)
+    if invalid_errors == 1:
+        print("1 invalid instruction encountered.", file=sys.stderr)
+    elif invalid_errors > 1:
+        print(f"{invalid_errors} invalid instructions encountered.", file=sys.stderr)
 
     # Exit code logic:
-    # - If invalid checks requested (or --all) and errors found -> exit 1
-    # - Otherwise always succeed (warnings never force non-zero)
-    if (opts.invalid or opts.all) and invalid_errors > 0:
+    # - If errors found -> exit 1
+    # - Otherwise always succeed
+    if invalid_errors > 0:
         return 1
-
     return 0
 
 
