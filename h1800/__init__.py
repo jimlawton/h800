@@ -51,6 +51,7 @@ from .devices import (
 )
 from .executor import ExecutionContext, Executor
 from .memory import Memory
+from .opcodes import OPCODES, OpcodeMetadata, get_categories, get_opcode, list_opcodes_by_category
 from .registers import Register, RegisterFile, RegisterGroup
 from .sim import Breakpoint, Simulator, SimulatorConfig, SimulatorState, TraceOptions
 
@@ -70,6 +71,12 @@ __all__ = [
     "DecodedInstruction",
     "Executor",
     "ExecutionContext",
+    # Opcodes
+    "OPCODES",
+    "OpcodeMetadata",
+    "get_opcode",
+    "get_categories",
+    "list_opcodes_by_category",
     # Devices
     "Device",
     "DeviceManager",

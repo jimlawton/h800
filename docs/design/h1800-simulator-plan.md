@@ -353,8 +353,8 @@ Serialization to JSON:
 ## 21. Immediate Action Items
 
 - [x] Create `docs/h1800-spec.md` with extracted register & addressing bit definitions.
-- [ ] Scaffolding: `h1800/` directory skeleton (cpu, memory, registers, decoder, executor, devices, sim, cli).
-- [ ] Port opcode metadata into a neutral structure reused by decoder & executor.
+- [x] Scaffolding: `h1800/` directory skeleton (cpu, memory, registers, decoder, executor, devices, sim, cli).
+- [x] Port opcode metadata into a neutral structure reused by decoder & executor.
 - [ ] Implement memory + register classes (with 48‑bit masking).
 - [ ] Basic decode + run loop; support BA and TX to validate control flow.
 - [ ] Simple printer device & test PRA output stub.

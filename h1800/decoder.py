@@ -54,7 +54,8 @@ Key Components:
 from dataclasses import dataclass
 
 from h800.bitfield import BitField
-from h800.opcodes import OPCODES
+
+from .opcodes import OPCODES
 
 
 @dataclass
@@ -130,6 +131,7 @@ class Decoder:
             opcodes: Opcode metadata dictionary (default: OPCODES from h800.opcodes)
         """
         self.opcodes = opcodes if opcodes is not None else OPCODES
+        self._opcode_cache = {}
 
     def decode(self, word):
         """
@@ -202,14 +204,14 @@ class Decoder:
     def _is_peripheral_opcode(self, opcode):
         """Check if opcode corresponds to a peripheral instruction."""
         for meta in self.opcodes.values():
-            if hasattr(meta, "type") and meta.type == "peripheral" and meta.op == opcode:
+            if meta.type == "peripheral" and meta.opcode == opcode:
                 return True
         return False
 
     def _is_print_opcode(self, opcode):
         """Check if opcode corresponds to a print instruction."""
         for meta in self.opcodes.values():
-            if hasattr(meta, "type") and meta.type == "print" and meta.op == opcode:
+            if meta.type == "print" and meta.opcode == opcode:
                 return True
         return False
 
@@ -226,23 +228,20 @@ class Decoder:
             Mnemonic string or None if not found
         """
         for mnemonic, meta in self.opcodes.items():
-            if meta.op != opcode:
+            if meta.opcode != opcode:
                 continue
 
-            meta_type = getattr(meta, "type", "unmasked")
-            if meta_type != instr_type:
+            if meta.type != instr_type:
                 continue
 
             # For unmasked instructions, also check variant (bits 2-3)
             if instr_type == "unmasked" and variant is not None:
-                meta_variant = getattr(meta, "b23", None)
-                if meta_variant is not None and meta_variant != variant:
+                if meta.variant is not None and meta.variant != variant:
                     continue
 
-            # For maskable instructions, check b23 = 0b10
+            # For maskable instructions, check variant = 0b10
             if instr_type == "maskable":
-                meta_variant = getattr(meta, "b23", None)
-                if meta_variant != 0b10:
+                if meta.variant != 0b10:
                     continue
 
             return mnemonic

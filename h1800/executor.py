@@ -31,6 +31,7 @@ Key Components:
 from dataclasses import dataclass
 
 from .decoder import DecodedInstruction
+from .opcodes import OPCODES, get_opcode
 
 
 class ExecutionError(Exception):
@@ -75,9 +76,10 @@ class Executor:
         memory: Memory subsystem
         registers: Register file
         decoder: Instruction decoder
+        opcodes: Opcode metadata dictionary
     """
 
-    def __init__(self, cpu=None, memory=None, registers=None, decoder=None):
+    def __init__(self, cpu=None, memory=None, registers=None, decoder=None, opcodes=None):
         """
         Initialize the executor.
 
@@ -86,11 +88,13 @@ class Executor:
             memory: Memory subsystem
             registers: Register file
             decoder: Instruction decoder
+            opcodes: Opcode metadata dictionary (default: OPCODES)
         """
         self.cpu = cpu
         self.memory = memory
         self.registers = registers
         self.decoder = decoder
+        self.opcodes = opcodes if opcodes is not None else OPCODES
 
     def execute(self, decoded):
         """
@@ -117,7 +121,15 @@ class Executor:
             decoded=decoded,
         )
 
-        # Dispatch to appropriate handler based on mnemonic
+        # Get opcode metadata for cycle count and category
+        meta = get_opcode(decoded.mnemonic)
+        if meta is None:
+            raise ExecutionError(f"Unknown mnemonic: {decoded.mnemonic}")
+
+        # Set expected cycle count from metadata
+        ctx.cycle_count = meta.cycles
+
+        # Dispatch to appropriate handler based on mnemonic first
         mnemonic = decoded.mnemonic
         handler_name = f"_execute_{mnemonic.lower()}"
 
@@ -125,8 +137,14 @@ class Executor:
             handler = getattr(self, handler_name)
             handler(ctx)
         else:
-            # Use generic handler based on instruction type
-            self._execute_generic(ctx)
+            # Fall back to category-based dispatch
+            category_handler_name = f"_execute_{meta.category}"
+            if hasattr(self, category_handler_name):
+                handler = getattr(self, category_handler_name)
+                handler(ctx)
+            else:
+                # Use generic handler as last resort
+                self._execute_generic(ctx)
 
         return ctx.cycle_count
 
@@ -140,7 +158,115 @@ class Executor:
             ctx: ExecutionContext
         """
         # TODO: Implement generic execution logic
-        ctx.cycle_count = 1
+        # Cycle count already set from metadata if available
+        pass
+
+    # -------------------------------------------------------------------------
+    # Category-based Generic Handlers
+    # -------------------------------------------------------------------------
+
+    def _execute_category_arithmetic(self, ctx):
+        """Generic handler for arithmetic instructions."""
+        # TODO: Implement generic arithmetic execution
+        pass
+
+    def _execute_category_comparison(self, ctx):
+        """Generic handler for comparison instructions."""
+        # TODO: Implement generic comparison execution
+        pass
+
+    def _execute_category_transfer(self, ctx):
+        """Generic handler for transfer instructions."""
+        # TODO: Implement generic transfer execution
+        pass
+
+    def _execute_category_shift(self, ctx):
+        """Generic handler for shift instructions."""
+        # TODO: Implement generic shift execution
+        pass
+
+    def _execute_category_logical(self, ctx):
+        """Generic handler for logical instructions."""
+        # TODO: Implement generic logical execution
+        pass
+
+    def _execute_category_peripheral(self, ctx):
+        """Generic handler for peripheral instructions."""
+        # TODO: Implement generic peripheral I/O
+        pass
+
+    def _execute_category_print(self, ctx):
+        """Generic handler for print instructions."""
+        # TODO: Implement generic print execution
+        pass
+
+    def _execute_category_control(self, ctx):
+        """Generic handler for control instructions."""
+        # TODO: Implement generic control execution
+        pass
+
+    def _execute_category_scientific(self, ctx):
+        """Generic handler for scientific instructions."""
+        # TODO: Implement generic scientific execution
+        pass
+
+    def _execute_category_simulator(self, ctx):
+        """Generic handler for simulator instructions."""
+        # TODO: Implement simulator control
+        pass
+
+    # -------------------------------------------------------------------------
+    # Category-based Execution Handlers
+    # -------------------------------------------------------------------------
+
+    def _execute_arithmetic(self, ctx):
+        """Generic handler for arithmetic instructions."""
+        # TODO: Implement generic arithmetic execution
+        pass
+
+    def _execute_comparison(self, ctx):
+        """Generic handler for comparison instructions."""
+        # TODO: Implement generic comparison execution
+        pass
+
+    def _execute_transfer(self, ctx):
+        """Generic handler for transfer instructions."""
+        # TODO: Implement generic transfer execution
+        pass
+
+    def _execute_shift(self, ctx):
+        """Generic handler for shift instructions."""
+        # TODO: Implement generic shift execution
+        pass
+
+    def _execute_logical(self, ctx):
+        """Generic handler for logical instructions."""
+        # TODO: Implement generic logical execution
+        pass
+
+    def _execute_control(self, ctx):
+        """Generic handler for control instructions."""
+        # TODO: Implement generic control execution
+        pass
+
+    def _execute_scientific(self, ctx):
+        """Generic handler for scientific (floating-point) instructions."""
+        # TODO: Implement generic scientific execution
+        pass
+
+    def _execute_peripheral(self, ctx):
+        """Generic handler for peripheral instructions."""
+        # TODO: Implement generic peripheral I/O
+        pass
+
+    def _execute_print(self, ctx):
+        """Generic handler for print instructions."""
+        # TODO: Implement generic print execution
+        pass
+
+    def _execute_simulator(self, ctx):
+        """Generic handler for simulator instructions."""
+        # TODO: Implement simulator control
         pass
 
     # -------------------------------------------------------------------------
@@ -155,49 +281,41 @@ class Executor:
         # - Perform binary addition
         # - Write result
         # - Update flags (overflow, carry, etc.)
-        ctx.cycle_count = 1
         pass
 
     def _execute_bs(self, ctx):
         """Execute Binary Subtract (BS) instruction."""
         # TODO: Implement binary subtract
-        ctx.cycle_count = 1
         pass
 
     def _execute_da(self, ctx):
         """Execute Decimal Add (DA) instruction."""
         # TODO: Implement decimal add
-        ctx.cycle_count = 1
         pass
 
     def _execute_ds(self, ctx):
         """Execute Decimal Subtract (DS) instruction."""
         # TODO: Implement decimal subtract
-        ctx.cycle_count = 1
         pass
 
     def _execute_wa(self, ctx):
         """Execute Word Add (WA) instruction."""
         # TODO: Implement word add
-        ctx.cycle_count = 1
         pass
 
     def _execute_wd(self, ctx):
         """Execute Word Difference (WD) instruction."""
         # TODO: Implement word difference
-        ctx.cycle_count = 1
         pass
 
     def _execute_bm(self, ctx):
         """Execute Binary Multiply (BM) instruction."""
         # TODO: Implement binary multiply
-        ctx.cycle_count = 2
         pass
 
     def _execute_dm(self, ctx):
         """Execute Decimal Multiply (DM) instruction."""
         # TODO: Implement decimal multiply
-        ctx.cycle_count = 2
         pass
 
     # -------------------------------------------------------------------------
@@ -207,25 +325,21 @@ class Executor:
     def _execute_na(self, ctx):
         """Execute Not Equal Alphabetic (NA) instruction."""
         # TODO: Implement alphabetic comparison
-        ctx.cycle_count = 1
         pass
 
     def _execute_nn(self, ctx):
         """Execute Not Equal Numeric (NN) instruction."""
         # TODO: Implement numeric comparison
-        ctx.cycle_count = 1
         pass
 
     def _execute_la(self, ctx):
         """Execute Less Than or Equal Alphabetic (LA) instruction."""
         # TODO: Implement alphabetic comparison
-        ctx.cycle_count = 1
         pass
 
     def _execute_ln(self, ctx):
         """Execute Less Than or Equal Numeric (LN) instruction."""
         # TODO: Implement numeric comparison
-        ctx.cycle_count = 1
         pass
 
     # -------------------------------------------------------------------------
@@ -237,37 +351,31 @@ class Executor:
         # TODO: Implement transfer
         # - Resolve source and destination addresses
         # - Transfer data based on mask or operand flags
-        ctx.cycle_count = 1
         pass
 
     def _execute_ts(self, ctx):
         """Execute Transfer and Change Sequence (TS) instruction."""
         # TODO: Implement transfer with sequence change
-        ctx.cycle_count = 1
         pass
 
     def _execute_mt(self, ctx):
         """Execute Multiple Transfer (MT) instruction."""
         # TODO: Implement multiple word transfer
-        ctx.cycle_count = 2
         pass
 
     def _execute_tn(self, ctx):
         """Execute Transfer N Words (TN) instruction."""
         # TODO: Implement N-word transfer
-        ctx.cycle_count = 2
         pass
 
     def _execute_it(self, ctx):
         """Execute Item Transfer (IT) instruction."""
         # TODO: Implement item transfer
-        ctx.cycle_count = 1
         pass
 
     def _execute_rt(self, ctx):
         """Execute Record Transfer (RT) instruction."""
         # TODO: Implement record transfer
-        ctx.cycle_count = 2
         pass
 
     # -------------------------------------------------------------------------
@@ -277,31 +385,26 @@ class Executor:
     def _execute_sws(self, ctx):
         """Execute Shift Word and Substitute (SWS) instruction."""
         # TODO: Implement shift and substitute
-        ctx.cycle_count = 1
         pass
 
     def _execute_sps(self, ctx):
         """Execute Shift Preserving Sign and Substitute (SPS) instruction."""
         # TODO: Implement shift preserving sign
-        ctx.cycle_count = 1
         pass
 
     def _execute_swe(self, ctx):
         """Execute Shift Word and Extract (SWE) instruction."""
         # TODO: Implement shift and extract
-        ctx.cycle_count = 1
         pass
 
     def _execute_spe(self, ctx):
         """Execute Shift Preserving Sign and Extract (SPE) instruction."""
         # TODO: Implement shift preserving sign and extract
-        ctx.cycle_count = 1
         pass
 
     def _execute_ssl(self, ctx):
         """Execute Shift and Select (SSL) instruction."""
         # TODO: Implement shift and select
-        ctx.cycle_count = 1
         pass
 
     def _execute_ss(self, ctx):
@@ -438,10 +541,9 @@ class Executor:
     # Miscellaneous Instructions
     # -------------------------------------------------------------------------
 
-    def _execute_ha(self, ctx):
-        """Execute Half Add (HA) instruction."""
-        # TODO: Implement half add
-        ctx.cycle_count = 1
+    def _execute_wa(self, ctx):
+        """Execute Word Add (WA) instruction."""
+        # TODO: Implement word add
         pass
 
     def _execute_sm(self, ctx):
