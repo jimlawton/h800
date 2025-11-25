@@ -352,7 +352,7 @@ Serialization to JSON:
 
 ## 21. Immediate Action Items
 
-- [ ] Create `docs/h1800-spec.md` with extracted register & addressing bit definitions.
+- [x] Create `docs/h1800-spec.md` with extracted register & addressing bit definitions.
 - [ ] Scaffolding: `h1800/` directory skeleton (cpu, memory, registers, decoder, executor, devices, sim, cli).
 - [ ] Port opcode metadata into a neutral structure reused by decoder & executor.
 - [ ] Implement memory + register classes (with 48‑bit masking).
