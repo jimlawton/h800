@@ -50,9 +50,9 @@ from .devices import (
     TapeDrive,
 )
 from .executor import ExecutionContext, Executor
-from .memory import Memory
+from .memory import Memory, MemoryError, MemoryProtection, MemoryWord
 from .opcodes import OPCODES, OpcodeMetadata, get_categories, get_opcode, list_opcodes_by_category
-from .registers import Register, RegisterFile, RegisterGroup
+from .registers import Register, RegisterError, RegisterFile, RegisterGroup
 from .sim import Breakpoint, Simulator, SimulatorConfig, SimulatorState, TraceOptions
 
 __all__ = [
@@ -64,9 +64,13 @@ __all__ = [
     "CPUState",
     "CPUFlags",
     "Memory",
+    "MemoryWord",
+    "MemoryError",
+    "MemoryProtection",
     "Register",
     "RegisterFile",
     "RegisterGroup",
+    "RegisterError",
     "Decoder",
     "DecodedInstruction",
     "Executor",

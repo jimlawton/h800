@@ -355,7 +355,7 @@ Serialization to JSON:
 - [x] Create `docs/h1800-spec.md` with extracted register & addressing bit definitions.
 - [x] Scaffolding: `h1800/` directory skeleton (cpu, memory, registers, decoder, executor, devices, sim, cli).
 - [x] Port opcode metadata into a neutral structure reused by decoder & executor.
-- [ ] Implement memory + register classes (with 48‑bit masking).
+- [x] Implement memory + register classes (with 48‑bit masking).
 - [ ] Basic decode + run loop; support BA and TX to validate control flow.
 - [ ] Simple printer device & test PRA output stub.
 - [ ] Draft initial CLI tool with `load`, `step`, `run`, `regs`, `mem`.
